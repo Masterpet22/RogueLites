@@ -24,7 +24,7 @@ ds_map_add(p_maelis.armas_obtenidas, "Hoja Rota", true);
 ds_map_add(perfiles_personaje, "Maelis", p_maelis);
 
 // --- SAREN ---
-var p_saren = scr_crear_perfil_personaje("Saren", "Duelista", "Oscuridad");
+var p_saren = scr_crear_perfil_personaje("Saren", "Duelista", "Sombra");
 ds_map_add(p_saren.armas_obtenidas, "Hoja Rota", true);
 ds_map_add(perfiles_personaje, "Saren", p_saren);
 

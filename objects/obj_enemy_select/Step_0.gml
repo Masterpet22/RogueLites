@@ -32,8 +32,17 @@ if (estado == EnemySelState.CATEGORIA) {
             enemigos_actuales = enemigos_jefe;
         }
         else if (sel == "Random") {
-            // Utilizamos mezcla total
-            enemigos_actuales = enemigos_comunes + enemigos_elite + enemigos_jefe;
+            // Selección ponderada: Común 70%, Élite 20%, Jefe 10%
+            var _roll = irandom(99);
+            var _pool;
+            if (_roll < 70)      _pool = enemigos_comunes;  // 0–69
+            else if (_roll < 90) _pool = enemigos_elite;    // 70–89
+            else                 _pool = enemigos_jefe;     // 90–99
+
+            control_juego.enemigo_seleccionado = _pool[irandom(array_length(_pool) - 1)];
+            estado = EnemySelState.CONFIRMAR;
+            io_clear();
+            exit;
         }
 
         indice_enemigo = 0;
@@ -60,16 +69,7 @@ else if (estado == EnemySelState.LISTA) {
     }
 
     if (keyboard_check_pressed(vk_enter)) {
-
-        // RANDOM especial
-        var sel_cat = categorias[indice_categoria];
-        if (sel_cat == "Random") {
-            var rand_index = irandom(array_length(enemigos_actuales) - 1);
-            control_juego.enemigo_seleccionado = enemigos_actuales[rand_index];
-        } else {
-            control_juego.enemigo_seleccionado = enemigos_actuales[indice_enemigo];
-        }
-
+        control_juego.enemigo_seleccionado = enemigos_actuales[indice_enemigo];
         estado = EnemySelState.CONFIRMAR;
     }
 }
