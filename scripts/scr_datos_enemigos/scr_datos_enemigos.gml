@@ -66,6 +66,36 @@ function scr_datos_enemigos(_e) {
                 material_drop: "Corazon del Titan"
             };
 
+        case "Coloso del Fango Viviente":
+            return {
+                vida: 1100,
+                ataque: 20,
+                defensa: 22,
+                afinidad: "Agua-Planta", // Dual
+                habilidad_fija: "maremoto_vegetal",
+                material_drop: "Corazon de Fango"
+            };
+
+        case "Sentinela del Cielo Roto":
+            return {
+                vida: 1000,
+                ataque: 28,
+                defensa: 15,
+                afinidad: "Rayo-Luz", // Dual
+                habilidad_fija: "fulgor_celestial",
+                material_drop: "Fragmento Celestial"
+            };
+
+        case "Oraculo Quebrado del Abismo":
+            return {
+                vida: 1150,
+                ataque: 24,
+                defensa: 18,
+                afinidad: "Sombra-Arcano", // Dual
+                habilidad_fija: "vacio_runico",
+                material_drop: "Cristal del Vacio"
+            };
+
         default:
             show_error("Enemigo no encontrado: " + string(_e), true);
             return undefined;

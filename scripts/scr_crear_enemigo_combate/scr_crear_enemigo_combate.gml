@@ -2,18 +2,33 @@
 function scr_crear_enemigo_combate(_nombre_enemigo) {
 
     var _data_enemigo  = scr_datos_enemigos(_nombre_enemigo);
-    var _afinidad_data = scr_datos_afinidades(_data_enemigo.afinidad);
+
+    // Detectar afinidad dual (jefes: "Fuego-Tierra" → separar)
+    var _afi_raw = _data_enemigo.afinidad;
+    var _afi_primaria   = _afi_raw;
+    var _afi_secundaria = "none";
+
+    var _sep = string_pos("-", _afi_raw);
+    if (_sep > 0) {
+        _afi_primaria   = string_copy(_afi_raw, 1, _sep - 1);
+        _afi_secundaria = string_delete(_afi_raw, 1, _sep);
+    }
+
+    var _afinidad_data  = scr_datos_afinidades(_afi_primaria);
+    var _afinidad_data2 = (_afi_secundaria != "none") ? scr_datos_afinidades(_afi_secundaria) : undefined;
 
     var enemigo = {
         nombre:         _nombre_enemigo,
         es_jugador:     false,
 
         clase:          "Enemigo",
-        afinidad:       _data_enemigo.afinidad,
+        afinidad:       _afi_primaria,
+        afinidad_secundaria: _afi_secundaria,
         arma:           undefined,
 
         clase_data:     undefined,
         afinidad_data:  _afinidad_data,
+        afinidad_data2: _afinidad_data2,
         arma_data:      undefined,
 
         vida_max:       _data_enemigo.vida,

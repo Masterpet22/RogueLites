@@ -34,7 +34,7 @@ enemigos_jefe = [
     "Titan de las Forjas Rotas",  // Fuego + Tierra
 	"Coloso del Fango Viviente", // Agua + Planta
 	"Sentinela del Cielo Roto",	 // Rayo + Luz
-	"Oráculo Quebrado del Abismo" // Sombra + Arcano
+	"Oraculo Quebrado del Abismo" // Sombra + Arcano
 ];
 
 // Random será virtual — lo manejamos sin lista propia
