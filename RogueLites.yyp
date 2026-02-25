@@ -288,6 +288,24 @@
     },
     {
       "id": {
+        "name": "scr_formula_beneficio",
+        "path": "scripts/scr_formula_beneficio/scr_formula_beneficio.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_formula_dano",
+        "path": "scripts/scr_formula_dano/scr_formula_dano.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_get_stat",
+        "path": "scripts/scr_get_stat/scr_get_stat.yy"
+      }
+    },
+    {
+      "id": {
         "name": "scr_fabricar_arma",
         "path": "scripts/scr_fabricar_arma/scr_fabricar_arma.yy"
       }
