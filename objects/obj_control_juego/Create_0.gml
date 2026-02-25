@@ -34,7 +34,7 @@ ds_map_add(p_nerya.armas_obtenidas, "Hoja Rota", true);
 ds_map_add(perfiles_personaje, "Nerya", p_nerya);
 
 // Personaje por defecto (luego tendremos menú)
-personaje_seleccionado = "Kael";
+//personaje_seleccionado = "Kael";
 
 // INVENTARIO GLOBAL DE MATERIALES (NO POR PERSONAJE)
 inventario_materiales = ds_map_create();   // <- IMPORTANTE

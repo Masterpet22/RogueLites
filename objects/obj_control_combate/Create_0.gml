@@ -3,22 +3,31 @@
 // Referencia al controlador global de juego
 control_juego = instance_find(obj_control_juego, 0);
 
-// Determinar arma inicial del jugador desde el PERFIL
-var arma_inicial = "Hoja Rota"; // fallback seguro
+// Determinar datos del jugador desde el PERFIL seleccionado
+var perfil = undefined;
+var arma_inicial = "Hoja Rota";       // fallback seguro
+var nombre_pj    = "Kael";            // fallback seguro
+var clase_pj     = "Vanguardia";      // fallback seguro
+var afinidad_pj  = "Fuego";           // fallback seguro
 
 if (instance_exists(control_juego)) {
-    var perfil = scr_get_perfil_activo(control_juego);
-    if (perfil.arma_equipada != undefined) {
-        arma_inicial = perfil.arma_equipada;
+    perfil = scr_get_perfil_activo(control_juego);
+    if (perfil != undefined) {
+        nombre_pj   = perfil.nombre;
+        clase_pj    = perfil.clase;
+        afinidad_pj = perfil.afinidad;
+        if (perfil.arma_equipada != undefined) {
+            arma_inicial = perfil.arma_equipada;
+        }
     }
 }
 
-// 1. Crear personaje del jugador usando el arma del perfil
+// 1. Crear personaje del jugador usando los datos del perfil seleccionado
 personaje_jugador = scr_crear_personaje_combate(
-    "Kael",
+    nombre_pj,
     true,
-    "Vanguardia",
-    "Fuego",
+    clase_pj,
+    afinidad_pj,
     arma_inicial
 );
 
