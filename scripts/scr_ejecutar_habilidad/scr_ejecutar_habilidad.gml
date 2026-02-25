@@ -176,13 +176,33 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         break;
 
         // ==========================================
-        // 5. JEFE FINAL (Sin Estados)
+        // 5. HABILIDADES DE JEFES (Sin Estados)
         // ==========================================
-        case "erupcion_forjada": // Titan
+        case "erupcion_forjada": // Titan de las Forjas Rotas (Fuego+Tierra)
             var dano_total = 60;
             _defensor.vida_actual -= dano_total;
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + 30);
             show_debug_message("¡EL TITÁN GOLPEA CON FUERZA BRUTA!");
+        break;
+
+        case "maremoto_vegetal": // Coloso del Fango Viviente (Agua+Planta)
+            var dano_total = 50;
+            _defensor.vida_actual -= dano_total;
+            _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + 20);
+            show_debug_message("¡EL COLOSO DESATA UN MAREMOTO VEGETAL!");
+        break;
+
+        case "fulgor_celestial": // Sentinela del Cielo Roto (Rayo+Luz)
+            var dano_total = 65;
+            _defensor.vida_actual -= dano_total;
+            show_debug_message("¡LA SENTINELA DESATA UN FULGOR CELESTIAL!");
+        break;
+
+        case "vacio_runico": // Oraculo Quebrado del Abismo (Sombra+Arcano)
+            var robo = round(_defensor.vida_actual * 0.20);
+            _defensor.vida_actual -= robo;
+            _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + round(robo * 0.5));
+            show_debug_message("¡EL ORÁCULO INVOCA EL VACÍO RÚNICO!");
         break;
 
         default:
