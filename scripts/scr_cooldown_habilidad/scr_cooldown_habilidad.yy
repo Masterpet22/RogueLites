@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_cooldown_habilidad",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_cooldown_habilidad",
+  "parent":{
+    "name":"helpers",
+    "path":"folders/scripts/helpers.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

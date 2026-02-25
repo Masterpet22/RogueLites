@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_inventario_get_material",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_inventario_get_material",
+  "parent":{
+    "name":"forja",
+    "path":"folders/scripts/forja.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

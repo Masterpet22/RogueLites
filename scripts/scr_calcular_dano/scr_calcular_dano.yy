@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_calcular_dano",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_calcular_dano",
+  "parent":{
+    "name":"combat",
+    "path":"folders/scripts/combat.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

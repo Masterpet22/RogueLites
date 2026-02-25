@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_get_perfil_activo",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_get_perfil_activo",
+  "parent":{
+    "name":"datos",
+    "path":"folders/scripts/datos.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

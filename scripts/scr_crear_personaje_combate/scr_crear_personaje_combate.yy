@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_crear_personaje_combate",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_crear_personaje_combate",
+  "parent":{
+    "name":"combat",
+    "path":"folders/scripts/combat.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

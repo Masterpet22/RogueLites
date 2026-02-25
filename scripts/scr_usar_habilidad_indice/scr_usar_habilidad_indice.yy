@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_usar_habilidad_indice",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_usar_habilidad_indice",
+  "parent":{
+    "name":"combat",
+    "path":"folders/scripts/combat.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

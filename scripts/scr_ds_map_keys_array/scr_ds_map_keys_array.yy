@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_ds_map_keys_array",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_ds_map_keys_array",
+  "parent":{
+    "name":"utils",
+    "path":"folders/scripts/utils.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_inventario_puede_fabricar_arma",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_inventario_puede_fabricar_arma",
+  "parent":{
+    "name":"forja",
+    "path":"folders/scripts/forja.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_actualizar_estados",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_actualizar_estados",
+  "parent":{
+    "name":"combat",
+    "path":"folders/scripts/combat.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

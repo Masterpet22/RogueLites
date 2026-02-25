@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_actualizar_personaje",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_actualizar_personaje",
+  "parent":{
+    "name":"combat",
+    "path":"folders/scripts/combat.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

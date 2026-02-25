@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_datos_estados",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_datos_estados",
+  "parent":{
+    "name":"datos",
+    "path":"folders/scripts/datos.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

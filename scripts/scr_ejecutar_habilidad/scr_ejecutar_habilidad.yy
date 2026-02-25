@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_ejecutar_habilidad",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_ejecutar_habilidad",
+  "parent":{
+    "name":"combat",
+    "path":"folders/scripts/combat.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

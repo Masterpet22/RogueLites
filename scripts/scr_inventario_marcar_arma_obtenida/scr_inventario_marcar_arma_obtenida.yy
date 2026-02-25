@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_inventario_marcar_arma_obtenida",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_inventario_marcar_arma_obtenida",
+  "parent":{
+    "name":"forja",
+    "path":"folders/scripts/forja.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

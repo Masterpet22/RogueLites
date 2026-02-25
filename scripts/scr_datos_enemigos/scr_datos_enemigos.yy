@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_datos_enemigos",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_datos_enemigos",
+  "parent":{
+    "name":"datos",
+    "path":"folders/scripts/datos.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

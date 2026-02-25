@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_activar_pasiva_afinidad",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_activar_pasiva_afinidad",
+  "parent":{
+    "name":"combat",
+    "path":"folders/scripts/combat.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

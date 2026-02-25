@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_crear_perfil_personaje",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_crear_perfil_personaje",
+  "parent":{
+    "name":"datos",
+    "path":"folders/scripts/datos.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
