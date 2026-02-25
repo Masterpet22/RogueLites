@@ -1,5 +1,8 @@
 /// CREATE — obj_control_juego
 
+// Semilla aleatoria — se llama UNA VEZ al inicio del juego
+randomize();
+
 // Mapa de perfiles de personaje
 perfiles_personaje = ds_map_create();
 

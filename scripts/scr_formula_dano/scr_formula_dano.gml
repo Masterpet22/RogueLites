@@ -27,9 +27,9 @@
 // ══════════════════════════════════════════════════════════════
 #macro FACTOR_DEF_GLOBAL  0.5     // Peso de la defensa en todo el juego
 #macro VAR_RANGO          0.15    // Varianza aleatoria ±15 %  (0.85 – 1.15)
-#macro CRIT_POS_CHANCE    10      // % probabilidad de crítico positivo
+#macro CRIT_POS_CHANCE    5       // % probabilidad de crítico positivo  (antes 10)
 #macro CRIT_POS_MULT      1.50    // ×1.5 daño en crítico positivo
-#macro CRIT_NEG_CHANCE    5       // % probabilidad de crítico negativo (fallo)
+#macro CRIT_NEG_CHANCE    3       // % probabilidad de crítico negativo  (antes 5)
 #macro CRIT_NEG_MULT      0.60    // ×0.6 daño en crítico negativo
 
 function scr_formula_dano(_atacante, _defensor, _p) {
