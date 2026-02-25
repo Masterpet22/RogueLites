@@ -43,7 +43,7 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
 		habilidades_arma: ["ataque_basico"],   // 1 habilidad, la básica
 		habilidades_cd:   [0],                // cooldown correspondiente
 
-        material_drop:  _data_enemigo.material_drop,
+        material_drop:  _data_enemigo.drops,  // Array de drops con probabilidades
 
         // Para futuro por si queremos algo especial
         habilidad_fija: _data_enemigo.habilidad_fija,

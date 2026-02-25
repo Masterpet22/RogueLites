@@ -93,17 +93,26 @@ if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
         else if (personaje_enemigo.vida_actual <= 0) {
             ganador = "Jugador";
 
-            // --- RECOMPENSA RESTAURADA ---
-            // Asegúrate de que el objeto global de control exista
-            if (instance_exists(obj_control_juego)) { 
+            // --- RECOMPENSA CON PROBABILIDADES ---
+            if (instance_exists(obj_control_juego)) {
 
-                var mat = personaje_enemigo.material_drop; // Ejemplo: "Fragmento Igneo"
-                var cantidad_drop = irandom_range(1, 3); 
+                var _drops = personaje_enemigo.material_drop; // Array de { material, cant_min, cant_max, chance }
+                var _log = "";
 
-                // Llamada al script de inventario
-                scr_inventario_agregar_material(obj_control_juego, mat, cantidad_drop);
+                for (var i = 0; i < array_length(_drops); i++) {
+                    var _d = _drops[i];
+                    var _roll = irandom(99); // 0–99
 
-                show_debug_message("¡Ganaste! Recompensa: " + string(cantidad_drop) + " x " + string(mat));
+                    if (_roll < _d.chance) {
+                        var _cant = irandom_range(_d.cant_min, _d.cant_max);
+                        scr_inventario_agregar_material(obj_control_juego, _d.material, _cant);
+                        _log += string(_cant) + "x " + _d.material + "  ";
+                    }
+                }
+
+                if (_log == "") _log = "(nada extra)";
+                show_debug_message("¡Ganaste! Drops: " + _log);
+
             } else {
                 show_debug_message("ERROR: No se encontró obj_control_juego para dar la recompensa.");
             }

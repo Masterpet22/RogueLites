@@ -3,97 +3,242 @@ function scr_datos_enemigos(_e) {
 
     switch (_e) {
         
-        // --- ENEMIGOS COMUNES ---
+        // =============================================================
+        // ENEMIGOS COMUNES — Drop principal (común) garantizado
+        //                     Drop secundario (raro) con baja chance
+        // =============================================================
         case "Soldado Igneo":
-            return { vida: 80, ataque: 8, defensa: 3, afinidad: "Fuego", habilidad_fija: "golpe_fuego", material_drop: "Fragmento Igneo" };
+            return {
+                vida: 80, ataque: 8, defensa: 3,
+                afinidad: "Fuego",
+                habilidad_fija: "golpe_fuego",
+                drops: [
+                    { material: "Fragmento Igneo",   cant_min: 1, cant_max: 3, chance: 100 },
+                    { material: "Brasa Carmesi",     cant_min: 1, cant_max: 1, chance: 12  },
+                ]
+            };
 
         case "Vigia Boreal":
-            return { vida: 70, ataque: 6, defensa: 5, afinidad: "Hielo", habilidad_fija: "mirada_gelida", material_drop: "Escarcha Eterna" };
+            return {
+                vida: 70, ataque: 6, defensa: 5,
+                afinidad: "Agua",
+                habilidad_fija: "mirada_gelida",
+                drops: [
+                    { material: "Escama Glaciar",    cant_min: 1, cant_max: 3, chance: 100 },
+                    { material: "Perla Abisal",      cant_min: 1, cant_max: 1, chance: 12  },
+                ]
+            };
 
         case "Halito Verde":
-            return { vida: 60, ataque: 10, defensa: 2, afinidad: "Viento", habilidad_fija: "rafaga_cortante", material_drop: "Esencia de Aire" };
+            return {
+                vida: 60, ataque: 10, defensa: 2,
+                afinidad: "Planta",
+                habilidad_fija: "rafaga_cortante",
+                drops: [
+                    { material: "Savia Espinosa",    cant_min: 1, cant_max: 3, chance: 100 },
+                    { material: "Raiz Primigenia",   cant_min: 1, cant_max: 1, chance: 12  },
+                ]
+            };
 
         case "Bestia Tronadora":
-            return { vida: 75, ataque: 12, defensa: 1, afinidad: "Rayo", habilidad_fija: "chispazo", material_drop: "Nucelo Electrico" };
+            return {
+                vida: 75, ataque: 12, defensa: 1,
+                afinidad: "Rayo",
+                habilidad_fija: "chispazo",
+                drops: [
+                    { material: "Chispa Voltica",    cant_min: 1, cant_max: 3, chance: 100 },
+                    { material: "Colmillo de Rayo",  cant_min: 1, cant_max: 1, chance: 12  },
+                ]
+            };
 
         case "Guardian Terracota":
-            return { vida: 110, ataque: 5, defensa: 10, afinidad: "Tierra", habilidad_fija: "muro_piedra", material_drop: "Arcilla Ancestral" };
+            return {
+                vida: 110, ataque: 5, defensa: 10,
+                afinidad: "Tierra",
+                habilidad_fija: "muro_piedra",
+                drops: [
+                    { material: "Arcilla Ancestral", cant_min: 1, cant_max: 3, chance: 100 },
+                    { material: "Ladrillo de Jade",  cant_min: 1, cant_max: 1, chance: 12  },
+                ]
+            };
 
         case "Naufrago de la Oscuridad":
-            return { vida: 90, ataque: 9, defensa: 4, afinidad: "Oscuridad", habilidad_fija: "abrazo_vacio", material_drop: "Polvo Estelar" };
+            return {
+                vida: 90, ataque: 9, defensa: 4,
+                afinidad: "Sombra",
+                habilidad_fija: "abrazo_vacio",
+                drops: [
+                    { material: "Fragmento Sombrio", cant_min: 1, cant_max: 3, chance: 100 },
+                    { material: "Materia Oscura",    cant_min: 1, cant_max: 1, chance: 12  },
+                ]
+            };
 
         case "Paladin Marchito":
-            return { vida: 100, ataque: 7, defensa: 8, afinidad: "Luz", habilidad_fija: "destello_debil", material_drop: "Hierro Oxidado" };
+            return {
+                vida: 100, ataque: 7, defensa: 8,
+                afinidad: "Luz",
+                habilidad_fija: "destello_debil",
+                drops: [
+                    { material: "Polvo Sagrado",     cant_min: 1, cant_max: 3, chance: 100 },
+                    { material: "Reliquia de Oro",   cant_min: 1, cant_max: 1, chance: 12  },
+                ]
+            };
 
         case "Errante Runico":
-            return { vida: 85, ataque: 8, defensa: 6, afinidad: "Arcano", habilidad_fija: "pulso_arcano", material_drop: "Runa Menor" };
+            return {
+                vida: 85, ataque: 8, defensa: 6,
+                afinidad: "Arcano",
+                habilidad_fija: "pulso_arcano",
+                drops: [
+                    { material: "Runa Menor",        cant_min: 1, cant_max: 3, chance: 100 },
+                    { material: "Runa Mayor",        cant_min: 1, cant_max: 1, chance: 12  },
+                ]
+            };
 
 
-        // --- ENEMIGOS ELITE (Stats base x 1.5 aprox) ---
+        // =============================================================
+        // ENEMIGOS ELITE — Drop raro garantizado
+        //                   Drop común de su afinidad con buena chance
+        // =============================================================
         case "Soldado Igneo Elite":
-            return { vida: 150, ataque: 12, defensa: 6, afinidad: "Fuego", habilidad_fija: "pilar_llama", material_drop: "Nucleo Igneo" };
+            return {
+                vida: 150, ataque: 12, defensa: 6,
+                afinidad: "Fuego",
+                habilidad_fija: "pilar_llama",
+                drops: [
+                    { material: "Brasa Carmesi",     cant_min: 1, cant_max: 2, chance: 100 },
+                    { material: "Fragmento Igneo",   cant_min: 2, cant_max: 4, chance: 60  },
+                ]
+            };
 
         case "Vigia Boreal Elite":
-            return { vida: 130, ataque: 10, defensa: 8, afinidad: "Hielo", habilidad_fija: "prision_glaciar", material_drop: "Cristal Boreal" };
+            return {
+                vida: 130, ataque: 10, defensa: 8,
+                afinidad: "Agua",
+                habilidad_fija: "prision_glaciar",
+                drops: [
+                    { material: "Perla Abisal",      cant_min: 1, cant_max: 2, chance: 100 },
+                    { material: "Escama Glaciar",    cant_min: 2, cant_max: 4, chance: 60  },
+                ]
+            };
 
         case "Halito Verde Elite":
-            return { vida: 110, ataque: 15, defensa: 4, afinidad: "Viento", habilidad_fija: "tornado_esmeralda", material_drop: "Pluma de Vendaval" };
+            return {
+                vida: 110, ataque: 15, defensa: 4,
+                afinidad: "Planta",
+                habilidad_fija: "tornado_esmeralda",
+                drops: [
+                    { material: "Raiz Primigenia",   cant_min: 1, cant_max: 2, chance: 100 },
+                    { material: "Savia Espinosa",    cant_min: 2, cant_max: 4, chance: 60  },
+                ]
+            };
 
         case "Bestia Tronadora Elite":
-            return { vida: 140, ataque: 18, defensa: 3, afinidad: "Rayo", habilidad_fija: "tormenta_electrica", material_drop: "Colmillo de Rayo" };
+            return {
+                vida: 140, ataque: 18, defensa: 3,
+                afinidad: "Rayo",
+                habilidad_fija: "tormenta_electrica",
+                drops: [
+                    { material: "Colmillo de Rayo",  cant_min: 1, cant_max: 2, chance: 100 },
+                    { material: "Chispa Voltica",    cant_min: 2, cant_max: 4, chance: 60  },
+                ]
+            };
 
         case "Guardian Terracota Elite":
-            return { vida: 200, ataque: 9, defensa: 15, afinidad: "Tierra", habilidad_fija: "terremoto", material_drop: "Ladrillo de Jade" };
+            return {
+                vida: 200, ataque: 9, defensa: 15,
+                afinidad: "Tierra",
+                habilidad_fija: "terremoto",
+                drops: [
+                    { material: "Ladrillo de Jade",  cant_min: 1, cant_max: 2, chance: 100 },
+                    { material: "Arcilla Ancestral", cant_min: 2, cant_max: 4, chance: 60  },
+                ]
+            };
 
         case "Naufrago de la Oscuridad Elite":
-            return { vida: 160, ataque: 14, defensa: 7, afinidad: "Oscuridad", habilidad_fija: "agujero_negro", material_drop: "Materia Oscura" };
+            return {
+                vida: 160, ataque: 14, defensa: 7,
+                afinidad: "Sombra",
+                habilidad_fija: "agujero_negro",
+                drops: [
+                    { material: "Materia Oscura",    cant_min: 1, cant_max: 2, chance: 100 },
+                    { material: "Fragmento Sombrio", cant_min: 2, cant_max: 4, chance: 60  },
+                ]
+            };
 
         case "Paladin Marchito Elite":
-            return { vida: 180, ataque: 11, defensa: 12, afinidad: "Luz", habilidad_fija: "juicio_sagrado", material_drop: "Reliquia de Oro" };
+            return {
+                vida: 180, ataque: 11, defensa: 12,
+                afinidad: "Luz",
+                habilidad_fija: "juicio_sagrado",
+                drops: [
+                    { material: "Reliquia de Oro",   cant_min: 1, cant_max: 2, chance: 100 },
+                    { material: "Polvo Sagrado",     cant_min: 2, cant_max: 4, chance: 60  },
+                ]
+            };
 
         case "Errante Runico Elite":
-            return { vida: 150, ataque: 13, defensa: 10, afinidad: "Arcano", habilidad_fija: "cometa_runico", material_drop: "Runa Mayor" };
+            return {
+                vida: 150, ataque: 13, defensa: 10,
+                afinidad: "Arcano",
+                habilidad_fija: "cometa_runico",
+                drops: [
+                    { material: "Runa Mayor",        cant_min: 1, cant_max: 2, chance: 100 },
+                    { material: "Runa Menor",        cant_min: 2, cant_max: 4, chance: 60  },
+                ]
+            };
 
 
-        // --- JEFES ---
+        // =============================================================
+        // JEFES — Drop único (legendario) garantizado
+        //         Drop raro de ambas afinidades con buena chance
+        // =============================================================
         case "Titan de las Forjas Rotas":
             return {
-                vida: 1200,
-                ataque: 25,
-                defensa: 20,
-                afinidad: "Fuego-Tierra", // Dual
+                vida: 1200, ataque: 25, defensa: 20,
+                afinidad: "Fuego-Tierra",
                 habilidad_fija: "erupcion_forjada",
-                material_drop: "Corazon del Titan"
+                drops: [
+                    { material: "Nucleo de Forja Antigua",  cant_min: 1, cant_max: 1, chance: 100 },
+                    { material: "Brasa Carmesi",            cant_min: 2, cant_max: 3, chance: 70  },
+                    { material: "Ladrillo de Jade",         cant_min: 2, cant_max: 3, chance: 70  },
+                ]
             };
 
         case "Coloso del Fango Viviente":
             return {
-                vida: 1100,
-                ataque: 20,
-                defensa: 22,
-                afinidad: "Agua-Planta", // Dual
+                vida: 1100, ataque: 20, defensa: 22,
+                afinidad: "Agua-Planta",
                 habilidad_fija: "maremoto_vegetal",
-                material_drop: "Corazon de Fango"
+                drops: [
+                    { material: "Corazon de Fango",         cant_min: 1, cant_max: 1, chance: 100 },
+                    { material: "Perla Abisal",             cant_min: 2, cant_max: 3, chance: 70  },
+                    { material: "Raiz Primigenia",          cant_min: 2, cant_max: 3, chance: 70  },
+                ]
             };
 
         case "Sentinela del Cielo Roto":
             return {
-                vida: 1000,
-                ataque: 28,
-                defensa: 15,
-                afinidad: "Rayo-Luz", // Dual
+                vida: 1000, ataque: 28, defensa: 15,
+                afinidad: "Rayo-Luz",
                 habilidad_fija: "fulgor_celestial",
-                material_drop: "Fragmento Celestial"
+                drops: [
+                    { material: "Fragmento Celestial",      cant_min: 1, cant_max: 1, chance: 100 },
+                    { material: "Colmillo de Rayo",         cant_min: 2, cant_max: 3, chance: 70  },
+                    { material: "Reliquia de Oro",          cant_min: 2, cant_max: 3, chance: 70  },
+                ]
             };
 
         case "Oraculo Quebrado del Abismo":
             return {
-                vida: 1150,
-                ataque: 24,
-                defensa: 18,
-                afinidad: "Sombra-Arcano", // Dual
+                vida: 1150, ataque: 24, defensa: 18,
+                afinidad: "Sombra-Arcano",
                 habilidad_fija: "vacio_runico",
-                material_drop: "Cristal del Vacio"
+                drops: [
+                    { material: "Cristal del Vacio",        cant_min: 1, cant_max: 1, chance: 100 },
+                    { material: "Materia Oscura",           cant_min: 2, cant_max: 3, chance: 70  },
+                    { material: "Runa Mayor",               cant_min: 2, cant_max: 3, chance: 70  },
+                ]
             };
 
         default:
