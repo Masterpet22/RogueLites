@@ -30,9 +30,9 @@ if (estado == ForjaState.PERSONAJE) {
     if (keyboard_check_pressed(vk_enter)) {
         personaje_objetivo = personajes[indice_personaje];
         
-        // --- Generar lista de armas UNA SOLA VEZ al cambiar de estado ---
+        // --- Generar lista de armas forjables desde el catálogo completo ---
         armas_forjables = [];
-        var lista_armas = ["Filo Igneo", "Mandoble Carmesi"];
+        var lista_armas = scr_lista_armas_disponibles();
 
         for (var i = 0; i < array_length(lista_armas); i++) {
             var arma = lista_armas[i];

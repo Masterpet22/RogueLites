@@ -6,10 +6,65 @@ function scr_nombre_habilidad(_id) {
         // ==========================================
         // 1. HABILIDADES DE ARMAS
         // ==========================================
+
+        // --- Arma base ---
         case "ataque_basico":           return "Golpe";
-        case "ataque_fuego_basico":     return "Golpe Ígneo";
-        case "ataque_fuego_mejorado":   return "Golpe Ígneo+";
-        case "explosion_carmesi":       return "Expl. Carmesí";
+
+        // --- FUEGO ---
+        case "ataque_fuego_basico":     return "Golpe Ígneo";         // R1
+        case "ataque_fuego_mejorado":   return "Golpe Ígneo+";        // R2
+        case "explosion_carmesi":       return "Expl. Carmesí";       // R2
+        case "llamarada_solar":         return "Llamarada Solar";     // R3
+        case "furia_del_titan":         return "Furia del Titán";     // R3
+
+        // --- AGUA ---
+        case "corte_glaciar":           return "Corte Glaciar";       // R1
+        case "lanza_marina":            return "Lanza Marina";        // R2
+        case "corriente_abisal":        return "Corr. Abisal";        // R2
+        case "tsunami":                 return "Tsunami";             // R3
+        case "diluvio_eterno":          return "Diluvio Eterno";      // R3
+
+        // --- PLANTA ---
+        case "latigazo_espina":          return "Latigazo Espina";     // R1
+        case "enredadera_voraz":         return "Enredadera Voraz";    // R2
+        case "drenaje_vital":            return "Drenaje Vital";       // R2
+        case "explosion_espora":         return "Expl. Espora";        // R3
+        case "selva_eterna":             return "Selva Eterna";        // R3
+
+        // --- RAYO ---
+        case "descarga_rapida":          return "Descarga Rápida";     // R1
+        case "cadena_electrica":         return "Cadena Eléctrica";    // R2
+        case "tormenta_fugaz":           return "Tormenta Fugaz";      // R2
+        case "rayo_fulminante":          return "Rayo Fulminante";     // R3
+        case "juicio_relampago":         return "Juicio Relámpago";    // R3
+
+        // --- TIERRA ---
+        case "golpe_sismico":            return "Golpe Sísmico";       // R1
+        case "avalancha":                return "Avalancha";           // R2
+        case "escudo_petreo":            return "Escudo Pétreo";       // R2
+        case "cataclismo":               return "Cataclismo";          // R3
+        case "furia_continental":         return "Furia Continental";   // R3
+
+        // --- SOMBRA ---
+        case "tajo_umbral":              return "Tajo Umbral";         // R1
+        case "siega_oscura":             return "Siega Oscura";        // R2
+        case "drenar_alma":              return "Drenar Alma";         // R2
+        case "noche_eterna":             return "Noche Eterna";        // R3
+        case "eclipse_total":            return "Eclipse Total";       // R3
+
+        // --- LUZ ---
+        case "hoja_radiante":            return "Hoja Radiante";       // R1
+        case "embestida_solar":          return "Embestida Solar";     // R2
+        case "bendicion_luz":            return "Bendición de Luz";    // R2
+        case "amanecer_divino":          return "Amanecer Divino";     // R3
+        case "juicio_celestial":         return "Juicio Celestial";    // R3
+
+        // --- ARCANO ---
+        case "pulso_runico":             return "Pulso Rúnico";        // R1
+        case "corte_arcano":             return "Corte Arcano";        // R2
+        case "onda_arcana":              return "Onda Arcana";         // R2
+        case "singularidad_arcana":      return "Singularidad Arc.";   // R3
+        case "ruptura_dimensional":      return "Rupt. Dimensional";   // R3
 
         // ==========================================
         // 2. HABILIDADES DE CLASES

@@ -8,7 +8,7 @@ draw_set_font(fnt_1)
 var pj = control_combate.personaje_jugador;
 var en = control_combate.personaje_enemigo;
 // ===========================
-//  BARRA DE HABILIDADES
+//  BARRA DE HABILIDADES (4 slots: Clase + Arma)
 // ===========================
 
 if (is_array(pj.habilidades_arma)) {
@@ -17,16 +17,16 @@ if (is_array(pj.habilidades_arma)) {
     var cds  = pj.habilidades_cd;
 
     var slots = array_length(habs);
-    if (slots > 3) slots = 3; // por diseño: máximo 3
+    if (slots > 4) slots = 4; // máximo 4 (1 clase + 3 arma)
 
     var x_start = 40;
     var y_start = display_get_gui_height() - 90;
 
     var slot_w = 80;
     var slot_h = 50;
-    var gap    = 16;
+    var gap    = 12;
 
-    var key_labels = ["SPC", "Q", "W"];
+    var key_labels = ["SPC", "Q", "W", "E"];
 
     for (var i = 0; i < slots; i++) {
 
@@ -37,18 +37,19 @@ if (is_array(pj.habilidades_arma)) {
 
         var id_hab = habs[i];
         var cd_actual = cds[i];
+        var es_clase = (i == 0); // slot 0 siempre es la habilidad de clase
 
-        // Marco
-        draw_set_color(c_white);
+        // Marco: dorado para clase, blanco para arma
+        draw_set_color(es_clase ? c_orange : c_white);
         draw_rectangle(sx1, sy1, sx2, sy2, false);
 
-        // Fondo
-        draw_set_color(make_color_rgb(30,30,30));
+        // Fondo: tono distinto para clase
+        draw_set_color(es_clase ? make_color_rgb(50, 35, 10) : make_color_rgb(30, 30, 30));
         draw_rectangle(sx1+1, sy1+1, sx2-1, sy2-1, false);
 
         // Nombre de habilidad
         var nombre = scr_nombre_habilidad(id_hab);
-        draw_set_color(c_white);
+        draw_set_color(es_clase ? c_orange : c_white);
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
         draw_text((sx1+sx2)/2, sy1 + 18, nombre);
@@ -63,15 +64,13 @@ if (is_array(pj.habilidades_arma)) {
 
             var ratio = clamp(cd_actual / cd_base, 0, 1);
 
-           // Color negro con alpha para el overlay de cooldown
-			draw_set_color(c_black);
-			draw_set_alpha(0.7); // 70% opaco, ajusta a gusto
+            draw_set_color(c_black);
+            draw_set_alpha(0.7);
 
-			var fill_h = slot_h * ratio;
-			draw_rectangle(sx1+1, sy2 - fill_h, sx2-1, sy2-1, false);
+            var fill_h = slot_h * ratio;
+            draw_rectangle(sx1+1, sy2 - fill_h, sx2-1, sy2-1, false);
 
-			// Restaurar alpha para no afectar otras cosas
-			draw_set_alpha(1);
+            draw_set_alpha(1);
 
             // Número de segundos restantes
             var secs = cd_actual / room_speed;

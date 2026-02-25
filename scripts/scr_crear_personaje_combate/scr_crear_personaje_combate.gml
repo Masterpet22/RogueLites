@@ -7,12 +7,35 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
 
     var _vida_max = _clase_data.vida;
 
-    // Habilidades de arma (array)
-    var _hab_arma = _arma_data.habilidades_arma;
-    var _cant_hab = array_length(_hab_arma);
+    // ===================================================================
+    // Construir array de habilidades:
+    //   Slot 0  = habilidad fija de CLASE  (siempre presente)
+    //   Slots 1-3 = habilidades de ARMA    (R1 da 1, R2 da 2, R3 da 3)
+    //   Máximo 4 habilidades en total.
+    // ===================================================================
+    var _hab_clase = _clase_data.habilidad_fija;     // string
+    var _hab_arma  = _arma_data.habilidades_arma;    // array
 
-    // Array de cooldowns, mismo tamaño
-    var _hab_cd = array_create(_cant_hab, 0);
+    var _habilidades = [_hab_clase];  // slot 0 siempre es la de clase
+
+    var _max_arma = min(array_length(_hab_arma), 3); // máximo 3 del arma
+    for (var _i = 0; _i < _max_arma; _i++) {
+        array_push(_habilidades, _hab_arma[_i]);
+    }
+
+    var _cant_hab = array_length(_habilidades);
+    var _hab_cd   = array_create(_cant_hab, 0);
+
+    // ===================================================================
+    // Buff de sinergia: si afinidad del arma == afinidad del personaje
+    //   +15% ataque_bonus y poder_elemental_bonus del arma
+    // ===================================================================
+    var _afinidad_arma = _arma_data.afinidad;
+    var _sinergia = (_afinidad_arma == _afinidad);   // true/false
+    var _mult_sin = _sinergia ? 1.15 : 1.0;
+
+    var _atq_total  = _clase_data.ataque + round(_arma_data.ataque_bonus * _mult_sin);
+    var _pelem_total = _clase_data.poder_elemental + round(_arma_data.poder_elemental_bonus * _mult_sin);
 
     var personaje = {
         nombre:         _nombre,
@@ -26,13 +49,15 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
         afinidad_data:  _afinidad_data,
         arma_data:      _arma_data,
 
+        sinergia_arma:  _sinergia,     // true si afinidades coinciden
+
         vida_max:       _vida_max,
         vida_actual:    _vida_max,
 
-        ataque_base:    _clase_data.ataque + _arma_data.ataque_bonus,
+        ataque_base:    _atq_total,
         defensa_base:   _clase_data.defensa,
         velocidad:      _clase_data.velocidad,
-        poder_elemental:_clase_data.poder_elemental + _arma_data.poder_elemental_bonus,
+        poder_elemental:_pelem_total,
 
         esencia:        0,
         esencia_llena:  100,
@@ -40,12 +65,12 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
         estados:             [],     // array de estados alterados
         defensa_bonus_temp:  0,
 
-        // Habilidades de arma
-        habilidades_arma: _hab_arma,   // array de IDs
-        habilidades_cd:   _hab_cd,     // array de cooldowns
+        // Habilidades combinadas: [clase, arma1, arma2?, arma3?]
+        habilidades_arma: _habilidades,   // array de IDs (slot 0 = clase)
+        habilidades_cd:   _hab_cd,        // array de cooldowns
 
-        // Para comodidad, la primera se considera “básica”
-        habilidad_basica: (_cant_hab > 0) ? _hab_arma[0] : "",
+        // La habilidad básica es la de clase (slot 0)
+        habilidad_basica: _hab_clase,
 
         // Cooldowns antiguos (puedes mantenerlos por compat)
         cooldowns: {

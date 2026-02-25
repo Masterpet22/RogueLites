@@ -53,19 +53,24 @@ function usar_habilidad_indice(_indice) {
 
 // INPUT HABILIDADES JUGADOR
 
-// Slot 0 → ESPACIO
+// Slot 0 (Clase) → ESPACIO
 if (keyboard_check_pressed(vk_space)) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 0);
 }
 
-// Slot 1 → Q (solo funcionará si el arma tiene 2 habilidades)
+// Slot 1 (Arma hab 1) → Q
 if (keyboard_check_pressed(ord("Q"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 1);
 }
 
-// Slot 2 → W (para armas R3)
+// Slot 2 (Arma hab 2, R2+) → W
 if (keyboard_check_pressed(ord("W"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 2);
+}
+
+// Slot 3 (Arma hab 3, R3) → E
+if (keyboard_check_pressed(ord("E"))) {
+    scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 3);
 }
 
 
