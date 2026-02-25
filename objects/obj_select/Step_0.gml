@@ -24,6 +24,7 @@ if (estado == SelState.PERSONAJE) {
         var armas = scr_ds_map_keys_array(perfil.armas_obtenidas);
         indice_arma = 0;
         estado = SelState.ARMA_POPUP;
+		io_clear();
         
         // OPCIONAL: io_clear(); // Limpia el estado de las teclas para este frame
     }

@@ -204,14 +204,14 @@ Barra de poder universal que se llena según la **clase** del personaje. Al lleg
 
 ## 8. Personajes Base
 
-| #   | Nombre     | Clase        | Afinidad | Personalidad |
-| --- | ---------- | ------------ | -------- | ------------ |
-| 1   | **Kael**   | Vanguardia   | Fuego    | Resuelto     |
-| 2   | **Lys**    | Filotormenta | Rayo     | Agresivo     |
-| 3   | **Torvan** | Quebrador    | Tierra   | Metódico     |
-| 4   | **Maelis** | Centinela    | Luz      | Metódico     |
-| 5   | **Saren**  | Duelista     | Arcano   | Resuelto     |
-| 6   | **Nerya**  | Canalizador  | Arcano   | Metódico     |
+| #   | Nombre     | Clase        | Afinidad  | Personalidad |
+| --- | ---------- | ------------ | --------- | ------------ |
+| 1   | **Kael**   | Vanguardia   | Fuego     | Resuelto     |
+| 2   | **Lys**    | Filotormenta | Rayo      | Agresivo     |
+| 3   | **Torvan** | Quebrador    | Tierra    | Metódico     |
+| 4   | **Maelis** | Centinela    | Luz       | Metódico     |
+| 5   | **Saren**  | Duelista     | Oscuridad | Resuelto     |
+| 6   | **Nerya**  | Canalizador  | Arcano    | Metódico     |
 
 Cada uno tiene habilidad fija de clase, afinidad pasiva y Súper-Habilidad personalizada.
 

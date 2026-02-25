@@ -3,6 +3,7 @@
 if (!instance_exists(control_combate)) {
     exit;
 }
+draw_set_font(fnt_1)
 
 var pj = control_combate.personaje_jugador;
 var en = control_combate.personaje_enemigo;

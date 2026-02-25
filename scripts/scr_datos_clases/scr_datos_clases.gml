@@ -1,4 +1,5 @@
-// scr_datos_clases(nombre_clase)
+/// @function scr_datos_clases(_clase)
+/// @description Retorna un struct con las estadísticas y habilidades de la clase especificada.
 function scr_datos_clases(_clase) {
 
     switch (_clase) {
@@ -19,15 +20,58 @@ function scr_datos_clases(_clase) {
                 vida: 90,
                 ataque: 12,
                 defensa: 4,
-                velocidad: 8,
+                velocidad: 10,
                 poder_elemental: 6,
                 carga_esencia: "combo_habilidades",
                 habilidad_fija: "corte_rapido",
             };
 
-        // Agregaremos el resto luego en el paso 6 del MVP
+        case "Quebrador":
+            return {
+                vida: 110,
+                ataque: 15,
+                defensa: 6,
+                velocidad: 3,
+                poder_elemental: 4,
+                carga_esencia: "ataques_pesados",
+                habilidad_fija: "impacto_tectonico",
+            };
 
+        case "Centinela":
+            return {
+                vida: 150,
+                ataque: 7,
+                defensa: 12,
+                velocidad: 2,
+                poder_elemental: 5,
+                carga_esencia: "bloqueo_exitoso",
+                habilidad_fija: "baluarte_ferreo",
+            };
+
+        case "Duelista":
+            return {
+                vida: 85,
+                ataque: 11,
+                defensa: 5,
+                velocidad: 9,
+                poder_elemental: 7,
+                carga_esencia: "parry_perfecto",
+                habilidad_fija: "estocada_critica",
+            };
+
+        case "Canalizador":
+            return {
+                vida: 80,
+                ataque: 6,
+                defensa: 4,
+                velocidad: 6,
+                poder_elemental: 15,
+                carga_esencia: "uso_elemental",
+                habilidad_fija: "descarga_esencia",
+            };
+
+        default:
+            show_error("Clase no encontrada: " + string(_clase), true);
+            return undefined;
     }
-
-    show_error("Clase no encontrada: " + string(_clase), true);
 }

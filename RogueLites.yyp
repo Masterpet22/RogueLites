@@ -10,6 +10,7 @@
   },
   "defaultScriptType":1,
   "Folders":[
+    {"$GMFolder":"","%Name":"fuentes","folderPath":"folders/fuentes.yy","name":"fuentes","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"objetos","folderPath":"folders/objetos.yy","name":"objetos","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"salas","folderPath":"folders/salas.yy","name":"salas","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"scripts","folderPath":"folders/scripts.yy","name":"scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -28,6 +29,7 @@
   },
   "name":"RogueLites",
   "resources":[
+    {"id":{"name":"fnt_1","path":"fonts/fnt_1/fnt_1.yy",},},
     {"id":{"name":"obj_actor_enemigo","path":"objects/obj_actor_enemigo/obj_actor_enemigo.yy",},},
     {"id":{"name":"obj_actor_jugador","path":"objects/obj_actor_jugador/obj_actor_jugador.yy",},},
     {"id":{"name":"obj_control_combate","path":"objects/obj_control_combate/obj_control_combate.yy",},},

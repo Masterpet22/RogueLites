@@ -3,22 +3,35 @@
 // Mapa de perfiles de personaje
 perfiles_personaje = ds_map_create();
 
-// Crear perfil inicial de Kael
+// --- KAEL ---
 var p_kael = scr_crear_perfil_personaje("Kael", "Vanguardia", "Fuego");
-
-// Agregar arma inicial a Kael
 ds_map_add(p_kael.armas_obtenidas, "Hoja Rota", true);
-
-// Guardar en el mapa de perfiles
 ds_map_add(perfiles_personaje, "Kael", p_kael);
-// Crear perfil de Lys
+
+// --- LYS ---
 var p_lys = scr_crear_perfil_personaje("Lys", "Filotormenta", "Rayo");
-
-// Arma inicial
 ds_map_add(p_lys.armas_obtenidas, "Hoja Rota", true);
-
-// Añadir al mapa de perfiles
 ds_map_add(perfiles_personaje, "Lys", p_lys);
+
+// --- TORVAN ---
+var p_torvan = scr_crear_perfil_personaje("Torvan", "Quebrador", "Tierra");
+ds_map_add(p_torvan.armas_obtenidas, "Hoja Rota", true);
+ds_map_add(perfiles_personaje, "Torvan", p_torvan);
+
+// --- MAELIS ---
+var p_maelis = scr_crear_perfil_personaje("Maelis", "Centinela", "Luz");
+ds_map_add(p_maelis.armas_obtenidas, "Hoja Rota", true);
+ds_map_add(perfiles_personaje, "Maelis", p_maelis);
+
+// --- SAREN ---
+var p_saren = scr_crear_perfil_personaje("Saren", "Duelista", "Oscuridad");
+ds_map_add(p_saren.armas_obtenidas, "Hoja Rota", true);
+ds_map_add(perfiles_personaje, "Saren", p_saren);
+
+// --- NERYA ---
+var p_nerya = scr_crear_perfil_personaje("Nerya", "Canalizador", "Arcano");
+ds_map_add(p_nerya.armas_obtenidas, "Hoja Rota", true);
+ds_map_add(perfiles_personaje, "Nerya", p_nerya);
 
 // Personaje por defecto (luego tendremos menú)
 personaje_seleccionado = "Kael";

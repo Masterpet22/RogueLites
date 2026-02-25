@@ -41,7 +41,6 @@ function scr_multiplicador_afinidad(_atk, _def) {
 
         case "Arcano":
             return 1.1;
-        break;
     }
 
     return 1.0; // neutro
