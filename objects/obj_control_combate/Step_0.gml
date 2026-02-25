@@ -73,6 +73,13 @@ if (keyboard_check_pressed(ord("E"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 3);
 }
 
+// SÚPER-HABILIDAD → R (requiere esencia llena)
+if (keyboard_check_pressed(ord("R"))) {
+    if (personaje_jugador.esencia >= personaje_jugador.esencia_llena) {
+        scr_ejecutar_super(personaje_jugador, personaje_enemigo);
+    }
+}
+
 
 
 // 3. IA corregida: Todo dentro del condicional de tiempo y vida

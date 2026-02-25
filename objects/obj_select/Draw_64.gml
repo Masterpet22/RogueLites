@@ -29,10 +29,11 @@ var perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
 draw_set_color(c_white);
 draw_text(60, y + 20, "Clase: " + perfil.clase);
 draw_text(60, y + 45, "Afinidad: " + perfil.afinidad);
+draw_text(60, y + 70, "Personalidad: " + perfil.personalidad);
 
 if (estado == SelState.PERSONAJE) {
     draw_set_color(c_yellow);
-    draw_text(60, y + 75, "ENTER: Seleccionar arma  |  ESC: Volver al menú");
+    draw_text(60, y + 100, "ENTER: Seleccionar arma  |  ESC: Volver al menú");
 }
 
 // =========================

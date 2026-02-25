@@ -83,6 +83,43 @@ if (is_array(pj.habilidades_arma)) {
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
 }
+
+// ===========================
+//  BARRA DE ESENCIA + SLOT SÚPER
+// ===========================
+{
+    var _es_x = 40;
+    var _es_y = display_get_gui_height() - 30;
+    var _es_w = 200;
+    var _es_h = 12;
+
+    var _esencia_ratio = clamp(pj.esencia / pj.esencia_llena, 0, 1);
+    var _super_lista = (pj.esencia >= pj.esencia_llena);
+
+    // Fondo barra
+    draw_set_color(make_color_rgb(30, 30, 50));
+    draw_rectangle(_es_x, _es_y, _es_x + _es_w, _es_y + _es_h, false);
+
+    // Relleno esencia
+    var _col = _super_lista ? c_yellow : make_color_rgb(80, 60, 200);
+    draw_set_color(_col);
+    draw_rectangle(_es_x, _es_y, _es_x + _es_w * _esencia_ratio, _es_y + _es_h, false);
+
+    // Marco
+    draw_set_color(_super_lista ? c_yellow : c_white);
+    draw_rectangle(_es_x, _es_y, _es_x + _es_w, _es_y + _es_h, true);
+
+    // Texto
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    draw_set_color(_super_lista ? c_yellow : c_white);
+
+    var _etiqueta = "ESENCIA: " + string(round(pj.esencia)) + "/" + string(pj.esencia_llena);
+    if (_super_lista) {
+        _etiqueta += "  [R] SÚPER!";
+    }
+    draw_text(_es_x + _es_w + 12, _es_y - 1, _etiqueta);
+}
 // Fondo
 draw_set_color(c_black);
 draw_set_alpha(0.5);
@@ -116,7 +153,7 @@ draw_rectangle(x1, y1, x1 + barra_ancho * pj_ratio, y2, false);
 // Texto
 /// DIBUJAR NOMBRE + ARMA + VIDA DEL JUGADOR
 
-var texto_jugador = pj.nombre + " [" + pj.arma + "]  HP: " 
+var texto_jugador = pj.nombre + " [" + pj.arma + " | " + pj.personalidad + "]  HP: " 
     + string(pj.vida_actual) + " / " + string(pj.vida_max);
 
 draw_set_color(c_white);

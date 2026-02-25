@@ -1,11 +1,19 @@
-/// scr_crear_personaje_combate(nombre, es_jugador, clase, afinidad, arma)
-function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _arma) {
+/// scr_crear_personaje_combate(nombre, es_jugador, clase, afinidad, arma, personalidad)
+function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _arma, _personalidad) {
 
     var _clase_data     = scr_datos_clases(_clase);
     var _afinidad_data  = scr_datos_afinidades(_afinidad);
     var _arma_data      = scr_datos_armas(_arma);
+    var _pers_data      = scr_datos_personalidades(_personalidad);
 
-    var _vida_max = _clase_data.vida;
+    // ===================================================================
+    // Stats base de clase, modificados por personalidad
+    // ===================================================================
+    var _vida_max_base = round(_clase_data.vida * _pers_data.mult_vida);
+    var _atq_base      = round(_clase_data.ataque * _pers_data.mult_ataque);
+    var _def_base      = round(_clase_data.defensa * _pers_data.mult_defensa);
+    var _vel_base      = round(_clase_data.velocidad * _pers_data.mult_velocidad);
+    var _pelem_base    = round(_clase_data.poder_elemental * _pers_data.mult_poder_elemental);
 
     // ===================================================================
     // Construir array de habilidades:
@@ -34,8 +42,8 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
     var _sinergia = (_afinidad_arma == _afinidad);   // true/false
     var _mult_sin = _sinergia ? 1.15 : 1.0;
 
-    var _atq_total  = _clase_data.ataque + round(_arma_data.ataque_bonus * _mult_sin);
-    var _pelem_total = _clase_data.poder_elemental + round(_arma_data.poder_elemental_bonus * _mult_sin);
+    var _atq_total   = _atq_base + round(_arma_data.ataque_bonus * _mult_sin);
+    var _pelem_total = _pelem_base + round(_arma_data.poder_elemental_bonus * _mult_sin);
 
     var personaje = {
         nombre:         _nombre,
@@ -44,19 +52,21 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
         clase:          _clase,
         afinidad:       _afinidad,
         arma:           _arma,
+        personalidad:   _personalidad,
 
         clase_data:     _clase_data,
         afinidad_data:  _afinidad_data,
         arma_data:      _arma_data,
+        pers_data:      _pers_data,
 
-        sinergia_arma:  _sinergia,     // true si afinidades coinciden
+        sinergia_arma:  _sinergia,
 
-        vida_max:       _vida_max,
-        vida_actual:    _vida_max,
+        vida_max:       _vida_max_base,
+        vida_actual:    _vida_max_base,
 
         ataque_base:    _atq_total,
-        defensa_base:   _clase_data.defensa,
-        velocidad:      _clase_data.velocidad,
+        defensa_base:   _def_base,
+        velocidad:      _vel_base,
         poder_elemental:_pelem_total,
 
         esencia:        0,
