@@ -1,5 +1,9 @@
 /// CREATE — obj_control_combate
 
+// Semilla aleatoria por combate — asegura variación incluso si rm_boot no la refrescó
+randomize();
+show_debug_message("🎲 randomize() ejecutado en obj_control_combate — seed refrescado");
+
 // Referencia al controlador global de juego
 control_juego = instance_find(obj_control_juego, 0);
 

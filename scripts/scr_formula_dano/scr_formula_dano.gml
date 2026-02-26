@@ -27,6 +27,7 @@
 // ══════════════════════════════════════════════════════════════
 #macro FACTOR_DEF_GLOBAL  0.5     // Peso de la defensa en todo el juego
 #macro VAR_RANGO          0.15    // Varianza aleatoria ±15 %  (0.85 – 1.15)
+#macro VAR_MIN_ABS        2       // Spread mínimo absoluto (±2 pts) — evita que daños bajos se sientan fijos
 #macro CRIT_POS_CHANCE    5       // % probabilidad de crítico positivo  (antes 10)
 #macro CRIT_POS_MULT      1.50    // ×1.5 daño en crítico positivo
 #macro CRIT_NEG_CHANCE    3       // % probabilidad de crítico negativo  (antes 5)
@@ -99,10 +100,13 @@ function scr_formula_dano(_atacante, _defensor, _p) {
         _mult_pas *= 0.80;
     }
 
-    // ─── Paso 6: Varianza aleatoria (±VAR_RANGO) ───
-    //   Genera un multiplicador entre (1 − VAR_RANGO) y (1 + VAR_RANGO)
-    //   Con VAR_RANGO = 0.15 → rango 0.85 – 1.15
-    var _mult_var = (1.0 - VAR_RANGO) + (random(VAR_RANGO * 2));
+    // ─── Paso 6: Varianza aleatoria ───
+    //   Usa el MAYOR entre spread porcentual (±VAR_RANGO) y spread absoluto (±VAR_MIN_ABS)
+    //   Así golpes débiles (~5-8 daño) igualmente sienten variación.
+    var _dano_pre = _dano_neto * _p.mult_poder * _mult_rareza * _mult_afi * _mult_pas;
+    var _spread_pct = _dano_pre * VAR_RANGO;            // spread porcentual
+    var _spread     = max(_spread_pct, VAR_MIN_ABS);    // garantiza mínimo ±VAR_MIN_ABS pts
+    var _dano_var   = _dano_pre + random_range(-_spread, _spread);
 
     // ─── Paso 7: Crítico (positivo o negativo) ───
     //   Se tira un dado de 0-99:
@@ -121,14 +125,15 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     }
 
     // ─── Paso 8: Resultado final ───
-    var _dano_final = max(1, round(_dano_neto * _p.mult_poder * _mult_rareza * _mult_afi * _mult_pas * _mult_var * _mult_crit));
+    var _dano_final = max(1, round(_dano_var * _mult_crit));
 
-    // Log de críticos para feedback visual futuro
-    if (_tipo_crit == 1) {
-        show_debug_message("💥 ¡GOLPE CRÍTICO! " + _atacante.nombre + " inflige " + string(_dano_final) + " daño.");
-    } else if (_tipo_crit == -1) {
-        show_debug_message("⚡ Golpe débil... " + _atacante.nombre + " solo inflige " + string(_dano_final) + " daño.");
-    }
+    // Debug: mostrar varianza real para verificar aleatoriedad
+    show_debug_message("⚔ " + _atacante.nombre + " → " + _defensor.nombre
+        + " | pre=" + string(round(_dano_pre*100)/100)
+        + " spread=±" + string(round(_spread*100)/100)
+        + " var=" + string(round(_dano_var*100)/100)
+        + " crit=" + string(_mult_crit)
+        + " FINAL=" + string(_dano_final));
 
     // Generar esencia (crítico positivo genera +50 % esencia extra)
     if (_p.esencia_gen > 0) {

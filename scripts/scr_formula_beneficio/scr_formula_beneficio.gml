@@ -50,8 +50,12 @@ function scr_formula_beneficio(_usuario, _p) {
         }
     }
 
-    // ─── Paso 4: Varianza aleatoria (±VAR_RANGO) ───
-    var _mult_var = (1.0 - VAR_RANGO) + (random(VAR_RANGO * 2));
+    // ─── Paso 4: Varianza aleatoria ───
+    //   Usa el MAYOR entre spread porcentual (±VAR_RANGO) y spread absoluto (±VAR_MIN_ABS)
+    var _benef_pre  = _beneficio * _p.mult_poder * _mult_rareza * _mult_pas;
+    var _spread_pct = _benef_pre * VAR_RANGO;
+    var _spread     = max(_spread_pct, VAR_MIN_ABS);
+    var _benef_var  = _benef_pre + random_range(-_spread, _spread);
 
     // ─── Paso 5: Crítico curativo / fallo ───
     //   Crítico positivo = curación extra  │  Crítico negativo = curación reducida
@@ -67,7 +71,7 @@ function scr_formula_beneficio(_usuario, _p) {
     }
 
     // ─── Paso 6: Resultado final ───
-    var _resultado = max(1, round(_beneficio * _p.mult_poder * _mult_rareza * _mult_pas * _mult_var * _mult_crit));
+    var _resultado = max(1, round(_benef_var * _mult_crit));
 
     // Log de críticos curativos
     if (_tipo_crit == 1) {
