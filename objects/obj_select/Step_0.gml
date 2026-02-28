@@ -99,43 +99,36 @@ else if (estado == SelState.OBJETOS_POPUP) {
         indice_objeto = (indice_objeto + 1) mod n_obj;
     }
 
-    // ENTER: alternar selección del objeto actual
-    if (keyboard_check_pressed(vk_enter)) {
+    // TAB: alternar selección del objeto actual
+    if (keyboard_check_pressed(vk_tab)) {
         var _obj_nombre = objetos_disponibles[indice_objeto];
 
-        // ¿Ya está seleccionado? → deseleccionar
-        var _idx_found = -1;
+        // Contar cuántas veces ya está seleccionado este objeto
+        var _veces_sel = 0;
         for (var i = 0; i < array_length(objetos_seleccionados); i++) {
-            if (objetos_seleccionados[i] == _obj_nombre) {
-                _idx_found = i;
-                break;
-            }
+            if (objetos_seleccionados[i] == _obj_nombre) _veces_sel++;
         }
 
-        if (_idx_found >= 0) {
-            // Deseleccionar
-            array_delete(objetos_seleccionados, _idx_found, 1);
-        } else {
-            // Seleccionar solo si aún no tiene 3
-            if (array_length(objetos_seleccionados) < 3) {
+        var _cant_inv = scr_inventario_get_objeto(control_juego, _obj_nombre);
 
-                // Contar cuántas veces ya está seleccionado este objeto
-                var _veces_sel = 0;
-                for (var i = 0; i < array_length(objetos_seleccionados); i++) {
-                    if (objetos_seleccionados[i] == _obj_nombre) _veces_sel++;
-                }
-
-                // Solo permitir si tiene suficiente cantidad en inventario
-                var _cant_inv = scr_inventario_get_objeto(control_juego, _obj_nombre);
-                if (_veces_sel < _cant_inv) {
-                    array_push(objetos_seleccionados, _obj_nombre);
+        // Si aún cabe (total < 3) y tiene inventario disponible → agregar
+        if (array_length(objetos_seleccionados) < 3 && _veces_sel < _cant_inv) {
+            array_push(objetos_seleccionados, _obj_nombre);
+        }
+        // Si ya está al máximo de inventario para este objeto → quitar uno
+        else if (_veces_sel > 0) {
+            // Buscar la última ocurrencia y eliminarla
+            for (var i = array_length(objetos_seleccionados) - 1; i >= 0; i--) {
+                if (objetos_seleccionados[i] == _obj_nombre) {
+                    array_delete(objetos_seleccionados, i, 1);
+                    break;
                 }
             }
         }
     }
 
-    // TAB: confirmar y pasar a seleccionar enemigo
-    if (keyboard_check_pressed(vk_tab)) {
+    // ENTER: confirmar y pasar a seleccionar enemigo
+    if (keyboard_check_pressed(vk_enter)) {
         // Guardar objetos seleccionados en control_juego para que combate los lea
         control_juego.objetos_para_combate = [];
         array_copy(control_juego.objetos_para_combate, 0, objetos_seleccionados, 0, array_length(objetos_seleccionados));

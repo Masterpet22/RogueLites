@@ -161,5 +161,5 @@ if (estado == SelState.OBJETOS_POPUP) {
     }
 
     draw_set_color(c_white);
-    draw_text(x1 + 20, y1 + h - 22, "ENTER: Sel/Desel  |  TAB: Confirmar  |  ESC: Volver");
+    draw_text(x1 + 20, y1 + h - 22, "TAB: Sel/Desel  |  ENTER: Confirmar  |  ESC: Volver");
 }

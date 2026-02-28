@@ -273,11 +273,9 @@ if (control_combate.combate_terminado) {
 scr_notif_dibujar();
 
 // ===========================
-//  SLOTS DE OBJETOS EQUIPADOS (teclas 1, 2, 3)
+//  SLOTS DE OBJETOS EQUIPADOS (teclas 1, 2, 3) — siempre 3 slots
 // ===========================
-if (is_array(control_combate.objetos_equipados)
-    && array_length(control_combate.objetos_equipados) > 0
-    && !control_combate.combate_terminado) {
+if (!control_combate.combate_terminado) {
 
     var _obj_arr  = control_combate.objetos_equipados;
     var _used_arr = control_combate.objetos_usados;
@@ -289,41 +287,50 @@ if (is_array(control_combate.objetos_equipados)
     var _oh = 50;
     var _ogap = 10;
 
-    for (var i = 0; i < array_length(_obj_arr); i++) {
+    for (var i = 0; i < 3; i++) {
 
         var _ox1 = _ox_start + i * (_ow + _ogap);
         var _oy1 = _oy_start;
         var _ox2 = _ox1 + _ow;
         var _oy2 = _oy1 + _oh;
 
-        var _obj_nombre = _obj_arr[i];
-        var _usado = _used_arr[i];
+        // Determinar si este slot tiene objeto
+        var _tiene_obj = (is_array(_obj_arr) && i < array_length(_obj_arr));
+        var _obj_nombre = _tiene_obj ? _obj_arr[i] : "";
+        var _usado = (_tiene_obj && is_array(_used_arr)) ? _used_arr[i] : false;
+        var _vacio = (!_tiene_obj || _obj_nombre == "" || _obj_nombre == undefined);
 
         // Marco
-        draw_set_color(_usado ? c_dkgray : c_lime);
+        if (_vacio) {
+            draw_set_color(c_dkgray);
+        } else {
+            draw_set_color(_usado ? c_dkgray : c_lime);
+        }
         draw_rectangle(_ox1, _oy1, _ox2, _oy2, false);
 
         // Fondo
-        draw_set_color(_usado ? make_color_rgb(20, 20, 20) : make_color_rgb(15, 40, 15));
+        draw_set_color(_vacio ? make_color_rgb(25, 25, 25) : (_usado ? make_color_rgb(20, 20, 20) : make_color_rgb(15, 40, 15)));
         draw_rectangle(_ox1+1, _oy1+1, _ox2-1, _oy2-1, false);
 
         // Nombre del objeto (abreviado)
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
 
-        if (_usado) {
+        if (_vacio) {
+            draw_set_color(c_dkgray);
+            draw_text((_ox1+_ox2)/2, _oy1 + 16, "Vacío");
+        } else if (_usado) {
             draw_set_color(c_dkgray);
             draw_text((_ox1+_ox2)/2, _oy1 + 16, "USADO");
         } else {
             draw_set_color(c_white);
-            // Mostrar solo las primeras 10 letras para que quepa
             var _txt = _obj_nombre;
             if (string_length(_txt) > 10) _txt = string_copy(_txt, 1, 10) + ".";
             draw_text((_ox1+_ox2)/2, _oy1 + 16, _txt);
         }
 
         // Tecla
-        draw_set_color(_usado ? c_dkgray : c_yellow);
+        draw_set_color(_vacio ? c_dkgray : (_usado ? c_dkgray : c_yellow));
         draw_text((_ox1+_ox2)/2, _oy2 - 10, string(i + 1));
     }
 
