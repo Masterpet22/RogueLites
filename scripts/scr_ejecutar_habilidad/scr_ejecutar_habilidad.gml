@@ -17,7 +17,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         {
             scr_activar_pasiva_afinidad(_atacante, "uso_habilidad");
             var _p = { stat1:"ataque", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             scr_activar_pasiva_afinidad(_defensor, "recibir_dano");
@@ -28,10 +28,10 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "ataque_fuego_basico":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.5, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
-            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 3), round(_atacante.poder_elemental * 0.4));
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 3), round(_atacante.poder_elemental * 0.2));
         }
         break;
 
@@ -39,20 +39,20 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "ataque_fuego_mejorado":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.8, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
-            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 3), round(_atacante.poder_elemental * 0.6));
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 3), round(_atacante.poder_elemental * 0.3));
         }
         break;
 
         case "explosion_carmesi":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.2, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:20, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:20, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
-            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 4), round(_atacante.poder_elemental * 0.8));
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 4), round(_atacante.poder_elemental * 0.4));
         }
         break;
 
@@ -60,17 +60,17 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "llamarada_solar":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.5, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:15, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:15, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
-            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 5), round(_atacante.poder_elemental * 1.0));
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 5), round(_atacante.poder_elemental * 0.5));
         }
         break;
 
         case "furia_del_titan":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.0, base_fija:0,
-                       mult_poder:2.0, penetracion:1.0, esencia_gen:25, es_arma:true };
+                       mult_poder:2.0, penetracion:1.0, esencia_gen:25, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -80,7 +80,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "corte_glaciar":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.4, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -90,7 +90,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "lanza_marina":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.7, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -99,7 +99,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "corriente_abisal":  // Daño + autocuración 30 %
         {
             var _p = { stat1:"poder", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:8, es_arma:true };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:8, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + round(dano * 0.3));
@@ -110,7 +110,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "tsunami":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.4, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:18, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:18, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -119,7 +119,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "diluvio_eterno":  // Daño + autocuración 40 %
         {
             var _p = { stat1:"poder", escala1:2.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:20, es_arma:true };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:20, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + round(dano * 0.4));
@@ -130,7 +130,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "latigazo_espina":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.4, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -140,7 +140,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "enredadera_voraz":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.6, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -149,7 +149,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "drenaje_vital":  // Daño + autocuración 50 %
         {
             var _p = { stat1:"poder", escala1:0.8, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:8, es_arma:true };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:8, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + round(dano * 0.5));
@@ -160,7 +160,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "explosion_espora":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.3, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:15, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:15, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -169,7 +169,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "selva_eterna":  // Daño + autocuración 60 %
         {
             var _p = { stat1:"poder", escala1:1.8, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:20, es_arma:true };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:20, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + round(dano * 0.6));
@@ -180,7 +180,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "descarga_rapida":
         {
             var _p = { stat1:"ataque", escala1:0.8, stat2:"poder", escala2:0.5, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:12, es_arma:true };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:12, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -190,7 +190,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "cadena_electrica":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.7, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -199,7 +199,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "tormenta_fugaz":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:15, es_arma:true };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:15, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -209,7 +209,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "rayo_fulminante":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.5, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:18, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:18, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -218,7 +218,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "juicio_relampago":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.0, base_fija:0,
-                       mult_poder:2.0, penetracion:1.0, esencia_gen:25, es_arma:true };
+                       mult_poder:2.0, penetracion:1.0, esencia_gen:25, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -228,7 +228,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "golpe_sismico":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"defensa", escala2:0.5, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -238,7 +238,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "avalancha":
         {
             var _p = { stat1:"ataque", escala1:1.8, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -258,7 +258,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "cataclismo":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"defensa", escala2:1.0, base_fija:0,
-                       mult_poder:2.0, penetracion:1.0, esencia_gen:20, es_arma:true };
+                       mult_poder:2.0, penetracion:1.0, esencia_gen:20, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -267,7 +267,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "furia_continental":  // Daño + buff de defensa
         {
             var _p = { stat1:"ataque", escala1:2.5, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:25, es_arma:true };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:25, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             _atacante.defensa_bonus_temp += round(_atacante.defensa_base * 0.6);
@@ -278,7 +278,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "tajo_umbral":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.5, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -288,7 +288,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "siega_oscura":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.8, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -307,7 +307,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "noche_eterna":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.5, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:18, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:18, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -326,7 +326,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "hoja_radiante":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.4, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -336,7 +336,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "embestida_solar":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.7, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -355,7 +355,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "amanecer_divino":  // Daño + autocuración 20 % del daño
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.5, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:18, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:18, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + round(dano * 0.2));
@@ -365,7 +365,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "juicio_celestial":  // Daño fuerte + curación aparte
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.0, base_fija:0,
-                       mult_poder:2.0, penetracion:1.0, esencia_gen:25, es_arma:true };
+                       mult_poder:2.0, penetracion:1.0, esencia_gen:25, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             // Curación extra (poder×0.8)
@@ -380,7 +380,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "pulso_runico":
         {
             var _p = { stat1:"poder", escala1:0.8, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:12, es_arma:true };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:12, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -390,7 +390,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "corte_arcano":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:0.7, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true };
+                       mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -399,7 +399,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "onda_arcana":
         {
             var _p = { stat1:"poder", escala1:1.2, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:15, es_arma:true };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:15, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -409,7 +409,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "singularidad_arcana":
         {
             var _p = { stat1:"poder", escala1:2.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:20, es_arma:true };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:20, es_arma:true, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -418,7 +418,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "ruptura_dimensional":
         {
             var _p = { stat1:"poder", escala1:2.5, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:30, es_arma:true };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:30, es_arma:true, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -432,7 +432,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "golpe_guardia": // Vanguardia
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"defensa", escala2:1.5, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:15, es_arma:false };
+                       mult_poder:1.0, penetracion:0, esencia_gen:15, es_arma:false, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -441,7 +441,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "corte_rapido": // Filotormenta
         {
             var _p = { stat1:"ataque", escala1:0.7, stat2:"velocidad", escala2:0.6, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:8, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:8, es_arma:false, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -450,7 +450,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "impacto_tectonico": // Quebrador
         {
             var _p = { stat1:"ataque", escala1:2.5, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:5, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:5, es_arma:false, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -469,7 +469,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "estocada_critica": // Duelista
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"velocidad", escala2:1.0, base_fija:0,
-                       mult_poder:1.2, penetracion:1.0, esencia_gen:15, es_arma:false };
+                       mult_poder:1.2, penetracion:1.0, esencia_gen:15, es_arma:false, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -478,7 +478,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "descarga_esencia": // Canalizador
         {
             var _p = { stat1:"poder", escala1:2.5, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:0.5, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -492,7 +492,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "golpe_fuego": // Soldado Igneo
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:4,
-                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -501,7 +501,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "mirada_gelida": // Vigia Boreal
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:2,
-                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -510,7 +510,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "rafaga_cortante": // Halito Verde
         {
             var _p = { stat1:"ataque", escala1:1.3, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -519,7 +519,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "chispazo": // Bestia Tronadora
         {
             var _p = { stat1:"ninguno", escala1:0, stat2:"ninguno", escala2:0, base_fija:12,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -537,7 +537,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "abrazo_vacio": // Naufrago — robo de vida plano
         {
             var _p = { stat1:"ninguno", escala1:0, stat2:"ninguno", escala2:0, base_fija:10,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + dano);
@@ -547,7 +547,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "destello_debil": // Paladin Marchito
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -556,7 +556,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "pulso_arcano": // Errante Runico
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:8,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -569,7 +569,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "pilar_llama":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:10,
-                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false };
+                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -578,7 +578,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "prision_glaciar":
         {
             var _p = { stat1:"ataque", escala1:0.8, stat2:"ninguno", escala2:0, base_fija:8,
-                       mult_poder:1.1, penetracion:0.5, esencia_gen:0, es_arma:false };
+                       mult_poder:1.1, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -587,7 +587,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "tornado_esmeralda":
         {
             var _p = { stat1:"ataque", escala1:1.2, stat2:"ninguno", escala2:0, base_fija:10,
-                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false };
+                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -596,7 +596,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "tormenta_electrica":
         {
             var _p = { stat1:"ataque", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:8,
-                       mult_poder:1.15, penetracion:0.5, esencia_gen:0, es_arma:false };
+                       mult_poder:1.15, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -605,7 +605,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "terremoto":
         {
             var _p = { stat1:"ataque", escala1:1.3, stat2:"ninguno", escala2:0, base_fija:12,
-                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false };
+                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -621,7 +621,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "juicio_sagrado":
         {
             var _p = { stat1:"ataque", escala1:1.5, stat2:"ninguno", escala2:0, base_fija:15,
-                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false };
+                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -630,7 +630,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "cometa_runico":
         {
             var _p = { stat1:"ataque", escala1:1.5, stat2:"ninguno", escala2:0, base_fija:18,
-                       mult_poder:1.25, penetracion:0.5, esencia_gen:0, es_arma:false };
+                       mult_poder:1.25, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
         }
@@ -643,7 +643,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "erupcion_forjada": // Titan de las Forjas Rotas (Fuego+Tierra)
         {
             var _p = { stat1:"ataque", escala1:2.0, stat2:"ninguno", escala2:0, base_fija:15,
-                       mult_poder:1.3, penetracion:0.5, esencia_gen:0, es_arma:false };
+                       mult_poder:1.3, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             // Autocuración
@@ -658,7 +658,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "maremoto_vegetal": // Coloso del Fango Viviente (Agua+Planta)
         {
             var _p = { stat1:"ataque", escala1:1.8, stat2:"ninguno", escala2:0, base_fija:12,
-                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false };
+                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             var _pc = { stat1:"ninguno", escala1:0, stat2:"ninguno", escala2:0, base_fija:20,
@@ -672,7 +672,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "fulgor_celestial": // Sentinela del Cielo Roto (Rayo+Luz)
         {
             var _p = { stat1:"ataque", escala1:2.2, stat2:"ninguno", escala2:0, base_fija:18,
-                       mult_poder:1.3, penetracion:0.5, esencia_gen:0, es_arma:false };
+                       mult_poder:1.3, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
             show_debug_message("¡LA SENTINELA DESATA UN FULGOR CELESTIAL!");

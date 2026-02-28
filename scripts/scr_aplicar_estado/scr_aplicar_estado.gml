@@ -4,6 +4,10 @@ function scr_aplicar_estado(_p, _id, _duracion, _pot_extra) {
     var conf = scr_datos_estados(_id);
     if (conf == undefined) return;
 
+    // Tope global de duración: ningún estado dura más de ESTADO_DUR_MAX_SEG
+    var _dur_max = round(GAME_FPS * ESTADO_DUR_MAX_SEG);
+    _duracion = min(_duracion, _dur_max);
+
     // Inicializar array de estados si hace falta
     if (!is_array(_p.estados)) {
         _p.estados = [];
@@ -36,11 +40,23 @@ function scr_aplicar_estado(_p, _id, _duracion, _pot_extra) {
 
         // buff defensa
         defensa_bonus: (variable_struct_exists(conf, "defensa_bonus") ? conf.defensa_bonus : 0),
+
+        // buff defensa mágica
+        defensa_magica_bonus: (variable_struct_exists(conf, "defensa_magica_bonus") ? conf.defensa_magica_bonus : 0),
+
+        // buff velocidad
+        velocidad_bonus: (variable_struct_exists(conf, "velocidad_bonus") ? conf.velocidad_bonus : 0),
     };
 
     // Aplicar efectos inmediatos de ciertos estados (ej: buff defensa)
     if (nuevo.tipo == "buff_defensa" && nuevo.defensa_bonus != 0) {
         _p.defensa_bonus_temp += nuevo.defensa_bonus;
+    }
+    if (nuevo.tipo == "buff_defensa_magica" && nuevo.defensa_magica_bonus != 0) {
+        _p.defensa_magica_bonus_temp += nuevo.defensa_magica_bonus;
+    }
+    if (nuevo.tipo == "buff_velocidad" && nuevo.velocidad_bonus != 0) {
+        _p.velocidad += nuevo.velocidad_bonus;
     }
 
     array_push(_p.estados, nuevo);

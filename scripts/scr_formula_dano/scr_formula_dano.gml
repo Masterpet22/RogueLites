@@ -41,7 +41,13 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     var _dano_bruto = _val1 + _val2 + _p.base_fija;
 
     // ─── Paso 2: Reducción por defensa del defensor ───
-    var _def_total = _defensor.defensa_base + _defensor.defensa_bonus_temp;
+    //   tipo_dano "fisico" → usa defensa; "magico" → usa defensa_magica
+    var _def_total;
+    if (variable_struct_exists(_p, "tipo_dano") && _p.tipo_dano == "magico") {
+        _def_total = _defensor.defensa_magica_base + _defensor.defensa_magica_bonus_temp;
+    } else {
+        _def_total = _defensor.defensa_base + _defensor.defensa_bonus_temp;
+    }
     var _reduccion = _def_total * FACTOR_DEF_GLOBAL * (1.0 - _p.penetracion);
     var _dano_neto = max(1, _dano_bruto - _reduccion);
 
@@ -57,7 +63,7 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     if (_p.es_arma
         && variable_struct_exists(_atacante, "arma_data")
         && _atacante.arma_data != undefined
-        && _atacante.arma_data.afinidad != "none") {
+        && _atacante.arma_data.afinidad != "Neutra") {
         // Habilidad de arma → afinidad del ARMA vs defensor
         _mult_afi = scr_multiplicador_afinidad(_atacante.arma_data.afinidad, _defensor.afinidad);
         // Checa afinidad secundaria del defensor (jefes duales)
@@ -109,14 +115,12 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     var _dano_var   = _dano_pre + random_range(-_spread, _spread);
 
     // ─── Paso 7: Crítico (positivo o negativo) ───
-    //   Se tira un dado de 0-99:
-    //     < CRIT_POS_CHANCE             → Golpe crítico  (×1.5)
-    //     >= 100 − CRIT_NEG_CHANCE      → Golpe débil    (×0.6)
-    //     Resto                         → Normal         (×1.0)
+    //   Crit chance dinámica: base + floor(ataque / divisor)
+    var _crit_chance = CRIT_BASE_CHANCE + floor(_atacante.ataque_base / CRIT_ATK_DIVISOR);
     var _mult_crit = 1.0;
     var _tipo_crit = 0;  // 0 = normal, 1 = crit+, -1 = crit-
     var _roll = irandom(99);
-    if (_roll < CRIT_POS_CHANCE) {
+    if (_roll < _crit_chance) {
         _mult_crit = CRIT_POS_MULT;
         _tipo_crit = 1;
     } else if (_roll >= (100 - CRIT_NEG_CHANCE)) {
@@ -135,11 +139,18 @@ function scr_formula_dano(_atacante, _defensor, _p) {
         + " crit=" + string(_mult_crit)
         + " FINAL=" + string(_dano_final));
 
-    // Generar esencia (crítico positivo genera +50 % esencia extra)
+    // Generar esencia dinámica
+    //   base (del param) + % del daño + bonus velocidad + bonus poder (si mágico)
+    //   crit positivo multiplica el total por ESENCIA_CRIT_BONUS
     if (_p.esencia_gen > 0) {
-        var _esen = _p.esencia_gen;
-        if (_tipo_crit == 1) _esen = round(_esen * 1.5);
-        _atacante.esencia = clamp(_atacante.esencia + _esen, 0, _atacante.esencia_llena);
+        var _esen_base = _p.esencia_gen;
+        var _esen_dano = round(_dano_final * ESENCIA_PCT_DANO);
+        var _esen_vel  = round(_atacante.velocidad * ESENCIA_MULT_VEL);
+        var _esen_mag  = (variable_struct_exists(_p, "tipo_dano") && _p.tipo_dano == "magico")
+                         ? round(_atacante.poder_elemental * ESENCIA_MULT_PODER_MAG) : 0;
+        var _esen_total = _esen_base + _esen_dano + _esen_vel + _esen_mag;
+        if (_tipo_crit == 1) _esen_total = round(_esen_total * ESENCIA_CRIT_BONUS);
+        _atacante.esencia = clamp(_atacante.esencia + _esen_total, 0, _atacante.esencia_llena);
     }
 
     return _dano_final;

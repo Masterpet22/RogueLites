@@ -8,7 +8,7 @@ function scr_datos_estados(_id) {
             return {
                 id: _id,
                 tipo: "dot", // daño en el tiempo
-                tick_interval: round(GAME_FPS * 0.5), // cada 0.5s
+                tick_interval: round(GAME_FPS * 1.0), // cada 1s (antes 0.5s)
                 potencia_base: 3, // daño base por tick
             };
 
@@ -17,6 +17,13 @@ function scr_datos_estados(_id) {
                 id: _id,
                 tipo: "buff_defensa",
                 defensa_bonus: 4,          // +4 defensa mientras dure
+            };
+
+        case "aceleracion_rayo":
+            return {
+                id: _id,
+                tipo: "buff_velocidad",
+                velocidad_bonus: 3,        // +3 velocidad mientras dure
             };
 
         // Aquí vas añadiendo más estados en el futuro

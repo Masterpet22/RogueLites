@@ -35,6 +35,7 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
         vida_actual:    _data_enemigo.vida,
         ataque_base:    _data_enemigo.ataque,
         defensa_base:   _data_enemigo.defensa,
+        defensa_magica_base: _data_enemigo.defensa_magica,
         velocidad:      4,
         poder_elemental:5,
 
@@ -57,6 +58,7 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
 		// Buffs / estados
         estados:             [],     // array de estados alterados
         defensa_bonus_temp:  0,
+        defensa_magica_bonus_temp: 0,
 
         cooldowns: {
             ataque_basico: 0,

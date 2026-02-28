@@ -8,7 +8,7 @@ function scr_datos_armas(_arma) {
         // =====================================================================
         case "Hoja Rota":
             return {
-                afinidad: "none",
+                afinidad: "Neutra",
                 rareza: 0,
                 ataque_bonus: 0,
                 poder_elemental_bonus: 0,

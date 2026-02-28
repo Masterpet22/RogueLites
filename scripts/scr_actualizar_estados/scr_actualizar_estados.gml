@@ -39,6 +39,12 @@ function scr_actualizar_estados(_p) {
             if (est.tipo == "buff_defensa" && est.defensa_bonus != 0) {
                 _p.defensa_bonus_temp -= est.defensa_bonus;
             }
+            if (est.tipo == "buff_defensa_magica" && est.defensa_magica_bonus != 0) {
+                _p.defensa_magica_bonus_temp -= est.defensa_magica_bonus;
+            }
+            if (est.tipo == "buff_velocidad" && est.velocidad_bonus != 0) {
+                _p.velocidad -= est.velocidad_bonus;
+            }
         }
 
         _p.estados[i] = est;

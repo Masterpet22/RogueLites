@@ -47,6 +47,9 @@ function _multiplicador_simple(_atk, _def) {
 
         case "Arcano":
             return 1.1;
+
+        case "Neutra":
+            return 1.0; // Neutra no tiene ventaja ni desventaja
     }
 
     return 1.0; // neutro

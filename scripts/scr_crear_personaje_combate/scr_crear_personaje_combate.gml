@@ -12,6 +12,7 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
     var _vida_max_base = round(_clase_data.vida * _pers_data.mult_vida);
     var _atq_base      = round(_clase_data.ataque * _pers_data.mult_ataque);
     var _def_base      = round(_clase_data.defensa * _pers_data.mult_defensa);
+    var _defm_base     = round(_clase_data.defensa_magica * _pers_data.mult_defensa);
     var _vel_base      = round(_clase_data.velocidad * _pers_data.mult_velocidad);
     var _pelem_base    = round(_clase_data.poder_elemental * _pers_data.mult_poder_elemental);
 
@@ -66,6 +67,7 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
 
         ataque_base:    _atq_total,
         defensa_base:   _def_base,
+        defensa_magica_base: _defm_base,
         velocidad:      _vel_base,
         poder_elemental:_pelem_total,
 
@@ -74,6 +76,7 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
 		// Buffs / estados
         estados:             [],     // array de estados alterados
         defensa_bonus_temp:  0,
+        defensa_magica_bonus_temp: 0,
 
         // Habilidades combinadas: [clase, arma1, arma2?, arma3?]
         habilidades_arma: _habilidades,   // array de IDs (slot 0 = clase)

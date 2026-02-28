@@ -21,7 +21,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Embestida Volcánica" — Golpe masivo sin defensa propia
             var _p = { stat1:"ataque", escala1:3.5, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
         }
@@ -42,7 +42,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Sacrificio del Titán" — Daño enorme, se hiere a sí mismo
             var _p = { stat1:"ataque", escala1:5.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
             _atk.vida_actual = max(1, _atk.vida_actual - round(_atk.vida_max * 0.15));
@@ -53,7 +53,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Golpe del Guardián" — Golpe sólido + cura parcial
             var _p = { stat1:"ataque", escala1:3.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
             _atk.vida_actual = min(_atk.vida_max, _atk.vida_actual + round(d * 0.3));
@@ -68,7 +68,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Ráfaga Imparable" — 5 golpes rápidos
             var _p = { stat1:"ataque", escala1:0.6, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             for (var i = 0; i < 5; i++) {
                 var d = scr_formula_dano(_atk, _def, _p);
                 _def.vida_actual = max(0, _def.vida_actual - d);
@@ -80,7 +80,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Corte Preciso" — 3 golpes fuertes + reduce defensa enemiga
             var _p = { stat1:"ataque", escala1:0.9, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             for (var i = 0; i < 3; i++) {
                 var d = scr_formula_dano(_atk, _def, _p);
                 _def.vida_actual = max(0, _def.vida_actual - d);
@@ -93,7 +93,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Tormenta de Acero" — 7 golpes que pierden vida propia
             var _p = { stat1:"ataque", escala1:0.5, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             for (var i = 0; i < 7; i++) {
                 var d = scr_formula_dano(_atk, _def, _p);
                 _def.vida_actual = max(0, _def.vida_actual - d);
@@ -106,7 +106,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Danza del Filo" — 4 golpes equilibrados
             var _p = { stat1:"ataque", escala1:0.7, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             for (var i = 0; i < 4; i++) {
                 var d = scr_formula_dano(_atk, _def, _p);
                 _def.vida_actual = max(0, _def.vida_actual - d);
@@ -122,7 +122,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Cataclismo Furioso" — Un impacto devastador
             var _p = { stat1:"ataque", escala1:1.0, stat2:"poder", escala2:1.0, base_fija:0,
-                       mult_poder:4.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:4.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
         }
@@ -132,10 +132,10 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Pulverizar" — Daño fuerte + aplicar quemadura
             var _p = { stat1:"ataque", escala1:3.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
-            scr_aplicar_estado(_def, "quemadura_fuego", round(GAME_FPS * 5), round(_atk.poder_elemental * 0.8));
+            scr_aplicar_estado(_def, "quemadura_fuego", round(GAME_FPS * 5), round(_atk.poder_elemental * 0.4));
         }
         break;
 
@@ -143,7 +143,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Impacto Suicida" — Daño máximo, pierde mucha vida
             var _p = { stat1:"ataque", escala1:6.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
             _atk.vida_actual = max(1, _atk.vida_actual - round(_atk.vida_max * 0.25));
@@ -154,7 +154,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Martillazo Firme" — Buen daño + buff defensa
             var _p = { stat1:"ataque", escala1:3.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
             _atk.defensa_bonus_temp += round(_atk.defensa_base * 0.3);
@@ -169,7 +169,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Contraataque Blindado" — Daño basado en defensa
             var _p = { stat1:"defensa", escala1:3.5, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
         }
@@ -191,7 +191,7 @@ function scr_ejecutar_super(_atk, _def) {
             // "Explosión de Hierro" — Sacrifica escudo por daño masivo
             var bonus_def = max(0, _atk.defensa_bonus_temp);
             var _p = { stat1:"defensa", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:bonus_def,
-                       mult_poder:4.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:4.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
             _atk.defensa_bonus_temp = 0; // pierde todo buff de defensa
@@ -202,7 +202,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Muro Inquebrantable" — Curación moderada + escudo moderado + daño leve
             var _pd = { stat1:"defensa", escala1:1.5, stat2:"ninguno", escala2:0, base_fija:0,
-                        mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                        mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _pd);
             _def.vida_actual = max(0, _def.vida_actual - d);
             var _pb = { stat1:"vida_max", escala1:0.20, stat2:"ninguno", escala2:0, base_fija:0,
@@ -221,7 +221,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Estocada Mortal" — Golpe crítico garantizado
             var _p = { stat1:"ataque", escala1:1.0, stat2:"velocidad", escala2:1.0, base_fija:0,
-                       mult_poder:3.5, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:3.5, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
         }
@@ -231,7 +231,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Mil Cortes" — Muchos golpes pequeños pero seguros
             var _p = { stat1:"ataque", escala1:0.5, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             for (var i = 0; i < 6; i++) {
                 var d = scr_formula_dano(_atk, _def, _p);
                 _def.vida_actual = max(0, _def.vida_actual - d);
@@ -244,7 +244,7 @@ function scr_ejecutar_super(_atk, _def) {
             // "Apuesta Final" — Daño basado en vida perdida (especial)
             var vida_perdida = _atk.vida_max - _atk.vida_actual;
             var _p = { stat1:"ataque", escala1:2.5, stat2:"ninguno", escala2:0, base_fija:round(vida_perdida * 1.5),
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
         }
@@ -254,7 +254,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Golpe Certero" — Buen daño + roba vida
             var _p = { stat1:"ataque", escala1:1.0, stat2:"velocidad", escala2:1.0, base_fija:0,
-                       mult_poder:2.5, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:2.5, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
             _atk.vida_actual = min(_atk.vida_max, _atk.vida_actual + round(d * 0.25));
@@ -269,7 +269,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Nova Arcana" — Explosión de poder elemental puro
             var _p = { stat1:"poder", escala1:5.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
         }
@@ -279,7 +279,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Canalización Estable" — Daño elemental + curación
             var _pd = { stat1:"poder", escala1:3.0, stat2:"ninguno", escala2:0, base_fija:0,
-                        mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                        mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var d = scr_formula_dano(_atk, _def, _pd);
             _def.vida_actual = max(0, _def.vida_actual - d);
             var _pb = { stat1:"poder", escala1:1.5, stat2:"ninguno", escala2:0, base_fija:0,
@@ -293,7 +293,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Detonación Interior" — Poder devastador, se daña
             var _p = { stat1:"poder", escala1:7.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
             _atk.vida_actual = max(1, _atk.vida_actual - round(_atk.vida_max * 0.20));
@@ -304,7 +304,7 @@ function scr_ejecutar_super(_atk, _def) {
         {
             // "Flujo Arcano" — Daño constante + resetea cooldowns
             var _p = { stat1:"poder", escala1:3.0, stat2:"ninguno", escala2:0, base_fija:0,
-                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
+                       mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
             // Resetear cooldowns de todas las habilidades

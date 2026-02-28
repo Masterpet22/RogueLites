@@ -58,11 +58,12 @@ function scr_formula_beneficio(_usuario, _p) {
     var _benef_var  = _benef_pre + random_range(-_spread, _spread);
 
     // ─── Paso 5: Crítico curativo / fallo ───
-    //   Crítico positivo = curación extra  │  Crítico negativo = curación reducida
+    //   Crit chance dinámica: base + floor(ataque / divisor)
+    var _crit_chance = CRIT_BASE_CHANCE + floor(_usuario.ataque_base / CRIT_ATK_DIVISOR);
     var _mult_crit = 1.0;
     var _tipo_crit = 0;
     var _roll = irandom(99);
-    if (_roll < CRIT_POS_CHANCE) {
+    if (_roll < _crit_chance) {
         _mult_crit = CRIT_POS_MULT;
         _tipo_crit = 1;
     } else if (_roll >= (100 - CRIT_NEG_CHANCE)) {
@@ -80,9 +81,13 @@ function scr_formula_beneficio(_usuario, _p) {
         show_debug_message("💫 Curación débil... " + _usuario.nombre + " solo recupera " + string(_resultado) + ".");
     }
 
-    // Generar esencia
+    // Generar esencia dinámica (base + bonus velocidad)
     if (_p.esencia_gen > 0) {
-        _usuario.esencia = clamp(_usuario.esencia + _p.esencia_gen, 0, _usuario.esencia_llena);
+        var _esen_base = _p.esencia_gen;
+        var _esen_vel  = round(_usuario.velocidad * ESENCIA_MULT_VEL);
+        var _esen_total = _esen_base + _esen_vel;
+        if (_tipo_crit == 1) _esen_total = round(_esen_total * ESENCIA_CRIT_BONUS);
+        _usuario.esencia = clamp(_usuario.esencia + _esen_total, 0, _usuario.esencia_llena);
     }
 
     return _resultado;

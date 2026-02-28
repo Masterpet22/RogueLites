@@ -12,11 +12,14 @@ function scr_actualizar_personaje(_p) {
     }
 
     // Nuevo: cooldowns por habilidad de arma
+    //   CDR dinámica: cada punto de velocidad reduce CD un CDR_POR_VEL extra
+    //   cd_tick = 1 + (velocidad * CDR_POR_VEL)   →  vel 5 = 1.10, vel 10 = 1.20
     if (is_array(_p.habilidades_cd)) {
+        var _cd_tick = 1 + (_p.velocidad * CDR_POR_VEL);
         var n = array_length(_p.habilidades_cd);
         for (var i = 0; i < n; i++) {
             if (_p.habilidades_cd[i] > 0) {
-                _p.habilidades_cd[i] -= 1;
+                _p.habilidades_cd[i] -= _cd_tick;
                 if (_p.habilidades_cd[i] < 0) _p.habilidades_cd[i] = 0;
             }
         }

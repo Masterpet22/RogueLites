@@ -67,6 +67,14 @@ function scr_datos_afinidades(_afi) {
                 cooldown: 4,
             };
 
+        case "Neutra":
+            return {
+                activador: "ninguno",
+                bono: 1.0,             // sin bono
+                penalizacion: 0,       // sin penalización
+                cooldown: 0,
+            };
+
     }
 
     show_error("Afinidad no encontrada: " + string(_afi), true);
