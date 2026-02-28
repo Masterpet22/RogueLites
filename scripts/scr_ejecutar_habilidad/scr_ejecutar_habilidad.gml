@@ -31,7 +31,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
                        mult_poder:1.0, penetracion:0, esencia_gen:10, es_arma:true };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
-            scr_aplicar_estado(_defensor, "quemadura_fuego", round(room_speed * 3), round(_atacante.poder_elemental * 0.4));
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 3), round(_atacante.poder_elemental * 0.4));
         }
         break;
 
@@ -42,7 +42,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
                        mult_poder:1.0, penetracion:0, esencia_gen:12, es_arma:true };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
-            scr_aplicar_estado(_defensor, "quemadura_fuego", round(room_speed * 3), round(_atacante.poder_elemental * 0.6));
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 3), round(_atacante.poder_elemental * 0.6));
         }
         break;
 
@@ -52,7 +52,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
                        mult_poder:1.0, penetracion:0, esencia_gen:20, es_arma:true };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
-            scr_aplicar_estado(_defensor, "quemadura_fuego", round(room_speed * 4), round(_atacante.poder_elemental * 0.8));
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 4), round(_atacante.poder_elemental * 0.8));
         }
         break;
 
@@ -63,7 +63,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
                        mult_poder:1.0, penetracion:0, esencia_gen:15, es_arma:true };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
-            scr_aplicar_estado(_defensor, "quemadura_fuego", round(room_speed * 5), round(_atacante.poder_elemental * 1.0));
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 5), round(_atacante.poder_elemental * 1.0));
         }
         break;
 

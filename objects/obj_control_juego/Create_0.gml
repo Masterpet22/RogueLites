@@ -1,5 +1,8 @@
 /// CREATE — obj_control_juego
 
+// Establecer velocidad del juego (usa la macro GAME_FPS = 60)
+game_set_speed(GAME_FPS, gamespeed_fps);
+
 // Semilla aleatoria — se llama UNA VEZ al inicio del juego
 randomize();
 

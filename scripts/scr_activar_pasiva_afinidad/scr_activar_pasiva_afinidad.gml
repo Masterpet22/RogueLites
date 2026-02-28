@@ -10,8 +10,8 @@ function scr_activar_pasiva_afinidad(_p, _event) {
             if (_event == "uso_habilidad") {
 
                 _p.pasiva_activa = true;
-                _p.pasiva_timer = room_speed * 1; // dura 1 s
-                _p.pasiva_cooldown = room_speed * 3; // 3 s de cd
+                _p.pasiva_timer = GAME_FPS * 1; // dura 1 s
+                _p.pasiva_cooldown = GAME_FPS * 3; // 3 s de cd
             }
         break;
 
@@ -20,8 +20,8 @@ function scr_activar_pasiva_afinidad(_p, _event) {
             if (_event == "hit_rapido") {
 
                 _p.pasiva_activa = true;
-                _p.pasiva_timer = room_speed * 1;
-                _p.pasiva_cooldown = room_speed * 4;
+                _p.pasiva_timer = GAME_FPS * 1;
+                _p.pasiva_cooldown = GAME_FPS * 4;
             }
         break;
 
@@ -29,8 +29,8 @@ function scr_activar_pasiva_afinidad(_p, _event) {
             if (_event == "recibir_dano") {
 
                 _p.pasiva_activa = true;
-                _p.pasiva_timer = room_speed * 2;
-                _p.pasiva_cooldown = room_speed * 5;
+                _p.pasiva_timer = GAME_FPS * 2;
+                _p.pasiva_cooldown = GAME_FPS * 5;
             }
         break;
     }

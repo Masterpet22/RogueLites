@@ -155,7 +155,7 @@ else if (estado == ForjaState.ARMAS) {
             var _hab_id = dat.habilidades_arma[h];
             var _hab_nom = scr_nombre_habilidad(_hab_id);
             var _hab_cd  = scr_cooldown_habilidad(_hab_id);
-            var _cd_seg  = string_format(_hab_cd / room_speed, 1, 1);
+            var _cd_seg  = string_format(_hab_cd / GAME_FPS, 1, 1);
             draw_set_color(c_aqua);
             draw_text(_det_x + 10, _det_y, _hab_nom + "  (CD: " + _cd_seg + "s)");
             _det_y += 20;

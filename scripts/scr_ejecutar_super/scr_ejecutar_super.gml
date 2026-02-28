@@ -135,7 +135,7 @@ function scr_ejecutar_super(_atk, _def) {
                        mult_poder:1.0, penetracion:1.0, esencia_gen:0, es_arma:false };
             var d = scr_formula_dano(_atk, _def, _p);
             _def.vida_actual = max(0, _def.vida_actual - d);
-            scr_aplicar_estado(_def, "quemadura_fuego", round(room_speed * 5), round(_atk.poder_elemental * 0.8));
+            scr_aplicar_estado(_def, "quemadura_fuego", round(GAME_FPS * 5), round(_atk.poder_elemental * 0.8));
         }
         break;
 

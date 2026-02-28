@@ -47,7 +47,7 @@ function usar_habilidad_indice(_indice) {
     scr_ejecutar_habilidad(personaje_jugador, personaje_enemigo, id_hab);
 
     // Cooldown simple: 0.5 s para todo (luego lo afinamos por habilidad)
-    cds[_indice] = round(room_speed * 0.5);
+    cds[_indice] = round(GAME_FPS * 0.5);
 }
 
 
@@ -89,7 +89,7 @@ if (enemigo_cd_ataque <= 0 && personaje_enemigo.vida_actual > 0 && personaje_jug
     scr_ejecutar_habilidad(personaje_enemigo, personaje_jugador, hab_enemigo);
 
     // Reiniciar el timer
-    enemigo_cd_ataque = round(room_speed * 0.75);
+    enemigo_cd_ataque = round(GAME_FPS * 0.75);
 }
 
 

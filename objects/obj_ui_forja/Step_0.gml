@@ -77,6 +77,6 @@ else if (estado == ForjaState.ARMAS) {
             mensaje = "No tienes materiales suficientes.";
         }
 
-        mensaje_timer = room_speed * 2;
+        mensaje_timer = GAME_FPS * 2;
     }
 }

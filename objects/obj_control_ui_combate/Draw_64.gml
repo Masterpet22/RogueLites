@@ -73,7 +73,7 @@ if (is_array(pj.habilidades_arma)) {
             draw_set_alpha(1);
 
             // Número de segundos restantes
-            var secs = cd_actual / room_speed;
+            var secs = cd_actual / GAME_FPS;
             draw_set_color(c_aqua);
             draw_text((sx1+sx2)/2, sy1 + 5, string_format(secs, 1, 1));
         }

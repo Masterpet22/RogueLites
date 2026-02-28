@@ -8,7 +8,7 @@ function scr_datos_estados(_id) {
             return {
                 id: _id,
                 tipo: "dot", // daño en el tiempo
-                tick_interval: round(room_speed * 0.5), // cada 0.5s
+                tick_interval: round(GAME_FPS * 0.5), // cada 0.5s
                 potencia_base: 3, // daño base por tick
             };
 
