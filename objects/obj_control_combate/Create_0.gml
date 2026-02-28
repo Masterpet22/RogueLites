@@ -49,3 +49,19 @@ oro_recompensa = 0;  // oro ganado al derrotar al enemigo
 
 // 4. Sistema de notificaciones
 notificaciones = [];  // array de structs { quien, texto, color, timer, alpha }
+
+// 5. Objetos equipados para este combate (máx 3)
+objetos_equipados = []; // nombres de objetos
+objetos_usados   = []; // booleanos: true si ya se usó
+
+if (instance_exists(control_juego)
+    && variable_struct_exists(control_juego, "objetos_para_combate")
+    && is_array(control_juego.objetos_para_combate)) {
+
+    var _src = control_juego.objetos_para_combate;
+    for (var i = 0; i < array_length(_src); i++) {
+        array_push(objetos_equipados, _src[i]);
+        array_push(objetos_usados, false);
+    }
+}
+show_debug_message("Objetos equipados para combate: " + string(objetos_equipados));

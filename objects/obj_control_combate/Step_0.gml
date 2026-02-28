@@ -80,6 +80,17 @@ if (keyboard_check_pressed(ord("R"))) {
     }
 }
 
+// OBJETOS EQUIPADOS → teclas 1, 2, 3
+if (keyboard_check_pressed(ord("1"))) {
+    scr_usar_objeto_combate(0);
+}
+if (keyboard_check_pressed(ord("2"))) {
+    scr_usar_objeto_combate(1);
+}
+if (keyboard_check_pressed(ord("3"))) {
+    scr_usar_objeto_combate(2);
+}
+
 
 
 // 3. IA del enemigo — Máquina de estados (esperando → preparando → atacando)
@@ -94,6 +105,17 @@ if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
 
     if (!combate_terminado) { // Para que solo entre una vez
         combate_terminado = true;
+
+        // --- CONSUMIR OBJETOS EQUIPADOS DEL INVENTARIO (usados o no) ---
+        if (instance_exists(obj_control_juego) && is_array(objetos_equipados)) {
+            for (var i = 0; i < array_length(objetos_equipados); i++) {
+                var _obj_eq = objetos_equipados[i];
+                if (_obj_eq != "" && _obj_eq != undefined) {
+                    scr_inventario_agregar_objeto(obj_control_juego, _obj_eq, -1);
+                }
+            }
+            show_debug_message("Objetos consumidos tras combate: " + string(objetos_equipados));
+        }
 
         if (personaje_jugador.vida_actual <= 0 && personaje_enemigo.vida_actual <= 0) {
             ganador = "Empate";

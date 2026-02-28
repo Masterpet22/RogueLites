@@ -19,8 +19,15 @@ indice_arma = 0;
 // Estados de selección
 enum SelState {
     PERSONAJE,
-    ARMA_POPUP
+    ARMA_POPUP,
+    OBJETOS_POPUP
 }
 
 // Estado inicial: solo personaje
 estado = SelState.PERSONAJE;
+
+// --- SISTEMA DE EQUIPAR OBJETOS ---
+// Objetos seleccionados para llevar al combate (máx 3)
+objetos_seleccionados = [];   // array de nombres de objeto
+objetos_disponibles = [];     // objetos que el jugador posee (cantidad > 0)
+indice_objeto = 0;            // cursor en la lista de objetos disponibles
