@@ -23,5 +23,9 @@
 #macro IA_PREP_FRAMES         30    // wind-up antes de atacar (0.5 s)
 #macro IA_VARIACION           0.15  // ±15 % aleatorio sobre el timer de espera
 
+// ── Notificaciones de combate ──
+#macro NOTIF_DURACION  120    // duración de cada notificación (2 s a 60 fps)
+#macro NOTIF_MAX       2      // máximo de notificaciones visibles a la vez
+
 // ── Estados alterados ──
 #macro ESTADO_DUR_MAX_SEG  5   // duración máxima de cualquier estado (segundos)

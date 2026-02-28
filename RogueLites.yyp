@@ -222,6 +222,12 @@
     },
     {
       "id": {
+        "name": "scr_notificacion_combate",
+        "path": "scripts/scr_notificacion_combate/scr_notificacion_combate.yy"
+      }
+    },
+    {
+      "id": {
         "name": "scr_crear_perfil_personaje",
         "path": "scripts/scr_crear_perfil_personaje/scr_crear_perfil_personaje.yy"
       }

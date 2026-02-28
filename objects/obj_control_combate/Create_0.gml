@@ -45,3 +45,6 @@ personaje_enemigo = scr_crear_enemigo_combate(enemigo_nombre);
 // 3. Control de combate
 combate_terminado = false;
 ganador = "";
+
+// 4. Sistema de notificaciones
+notificaciones = [];  // array de structs { quien, texto, color, timer, alpha }

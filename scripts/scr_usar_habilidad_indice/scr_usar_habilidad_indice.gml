@@ -19,6 +19,11 @@ function scr_usar_habilidad_indice(_atacante, _defensor, _indice) {
     // Ejecutar habilidad
     scr_ejecutar_habilidad(_atacante, _defensor, id_hab);
 
+    // Notificación de acción
+    var _nombre_hab = scr_nombre_habilidad(id_hab);
+    var _col = _atacante.es_jugador ? c_lime : c_red;
+    scr_notif_agregar(_atacante.nombre, "usa " + _nombre_hab, _col);
+
     // Asignar cooldown usando los datos de la habilidad
     var cd_base = scr_cooldown_habilidad(id_hab);
     cds[_indice] = cd_base;

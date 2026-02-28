@@ -322,5 +322,10 @@ function scr_ejecutar_super(_atk, _def) {
     // Consumir esencia
     _atk.esencia = 0;
     show_debug_message(_atk.nombre + " usó SÚPER: " + _key);
+
+    // Notificación de súper
+    var _col_super = _atk.es_jugador ? c_yellow : c_fuchsia;
+    scr_notif_agregar(_atk.nombre, "¡SÚPER! " + _key, _col_super);
+
     return true;
 }

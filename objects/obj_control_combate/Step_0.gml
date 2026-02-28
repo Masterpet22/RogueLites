@@ -85,6 +85,9 @@ if (keyboard_check_pressed(ord("R"))) {
 // 3. IA del enemigo — Máquina de estados (esperando → preparando → atacando)
 scr_ia_enemigo(personaje_enemigo, personaje_jugador);
 
+// 3b. Actualizar notificaciones
+scr_notif_actualizar();
+
 
 // 4. Comprobar fin de combate
 if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {

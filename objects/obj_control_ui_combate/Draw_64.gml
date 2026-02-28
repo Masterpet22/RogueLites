@@ -257,3 +257,8 @@ if (control_combate.combate_terminado) {
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
 }
+
+// ===========================
+//  NOTIFICACIONES DE ACCIONES
+// ===========================
+scr_notif_dibujar();
