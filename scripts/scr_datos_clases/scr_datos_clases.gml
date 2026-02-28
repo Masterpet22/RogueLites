@@ -14,6 +14,7 @@ function scr_datos_clases(_clase) {
                 poder_elemental: 5,
                 carga_esencia: "recibir_dano",
                 habilidad_fija: "golpe_guardia",
+                precio: 0,  // clase inicial
             };
 
         case "Filotormenta":
@@ -26,6 +27,7 @@ function scr_datos_clases(_clase) {
                 poder_elemental: 6,
                 carga_esencia: "combo_habilidades",
                 habilidad_fija: "corte_rapido",
+                precio: 500,
             };
 
         case "Quebrador":
@@ -38,6 +40,7 @@ function scr_datos_clases(_clase) {
                 poder_elemental: 4,
                 carga_esencia: "ataques_pesados",
                 habilidad_fija: "impacto_tectonico",
+                precio: 500,
             };
 
         case "Centinela":
@@ -50,6 +53,7 @@ function scr_datos_clases(_clase) {
                 poder_elemental: 5,
                 carga_esencia: "bloqueo_exitoso",
                 habilidad_fija: "baluarte_ferreo",
+                precio: 750,
             };
 
         case "Duelista":
@@ -62,6 +66,7 @@ function scr_datos_clases(_clase) {
                 poder_elemental: 7,
                 carga_esencia: "parry_perfecto",
                 habilidad_fija: "estocada_critica",
+                precio: 750,
             };
 
         case "Canalizador":
@@ -74,6 +79,7 @@ function scr_datos_clases(_clase) {
                 poder_elemental: 15,
                 carga_esencia: "uso_elemental",
                 habilidad_fija: "descarga_esencia",
+                precio: 1000,
             };
 
         default:

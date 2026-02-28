@@ -44,5 +44,18 @@ ds_map_add(perfiles_personaje, "Nerya", p_nerya);
 
 // INVENTARIO GLOBAL DE MATERIALES (NO POR PERSONAJE)
 inventario_materiales = ds_map_create();   // <- IMPORTANTE
+
+// INVENTARIO GLOBAL DE OBJETOS / CONSUMIBLES
+inventario_objetos = ds_map_create();
+
+// ENEMIGOS DESBLOQUEADOS PARA COMBATIR
+enemigos_desbloqueados = ds_map_create();
+ds_map_add(enemigos_desbloqueados, "Soldado Igneo", true);
+ds_map_add(enemigos_desbloqueados, "Vigia Boreal", true);
+ds_map_add(enemigos_desbloqueados, "Halito Verde", true);
+
+// ORO DEL JUGADOR
+oro = 100;
+
 enemigo_seleccionado = ""; // Inicialización segura
 room_goto(rm_menu);

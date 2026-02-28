@@ -45,6 +45,7 @@ personaje_enemigo = scr_crear_enemigo_combate(enemigo_nombre);
 // 3. Control de combate
 combate_terminado = false;
 ganador = "";
+oro_recompensa = 0;  // oro ganado al derrotar al enemigo
 
 // 4. Sistema de notificaciones
 notificaciones = [];  // array de structs { quien, texto, color, timer, alpha }

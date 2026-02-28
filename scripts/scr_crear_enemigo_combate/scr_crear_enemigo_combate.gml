@@ -58,6 +58,10 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
 
         material_drop:  _data_enemigo.drops,  // Array de drops con probabilidades
 
+        // Recompensa de oro al derrotar
+        oro_min: variable_struct_exists(_data_enemigo, "oro_min") ? _data_enemigo.oro_min : 10,
+        oro_max: variable_struct_exists(_data_enemigo, "oro_max") ? _data_enemigo.oro_max : 25,
+
         // Para futuro por si queremos algo especial
         habilidad_fija: _data_enemigo.habilidad_fija,
 

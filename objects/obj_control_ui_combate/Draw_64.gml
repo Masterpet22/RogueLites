@@ -254,6 +254,15 @@ if (control_combate.combate_terminado) {
 
     draw_text(w_gui * 0.5, 60, "Ganador: " + control_combate.ganador);
 
+    // Mostrar oro ganado si el jugador ganó
+    if (control_combate.ganador == "Jugador" && control_combate.oro_recompensa > 0) {
+        draw_set_color(make_color_rgb(255, 215, 0)); // dorado
+        draw_text(w_gui * 0.5, 85, "+" + string(control_combate.oro_recompensa) + " Oro");
+    }
+
+    draw_set_color(c_gray);
+    draw_text(w_gui * 0.5, 110, "Pulsa ENTER o ESC para continuar");
+
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
 }

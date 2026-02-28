@@ -13,6 +13,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 4, poder_elemental: 5,
                 afinidad: "Fuego",
                 habilidad_fija: "golpe_fuego",
+                oro_min: 10, oro_max: 25,
+                precio: 200,
                 drops: [
                     { material: "Fragmento Igneo",   cant_min: 1, cant_max: 3, chance: 100 },
                     { material: "Brasa Carmesi",     cant_min: 1, cant_max: 1, chance: 12  },
@@ -25,6 +27,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 3, poder_elemental: 7,
                 afinidad: "Agua",
                 habilidad_fija: "mirada_gelida",
+                oro_min: 10, oro_max: 25,
+                precio: 200,
                 drops: [
                     { material: "Escama Glaciar",    cant_min: 1, cant_max: 3, chance: 100 },
                     { material: "Perla Abisal",      cant_min: 1, cant_max: 1, chance: 12  },
@@ -37,6 +41,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 6, poder_elemental: 4,
                 afinidad: "Planta",
                 habilidad_fija: "rafaga_cortante",
+                oro_min: 10, oro_max: 20,
+                precio: 150,
                 drops: [
                     { material: "Savia Espinosa",    cant_min: 1, cant_max: 3, chance: 100 },
                     { material: "Raiz Primigenia",   cant_min: 1, cant_max: 1, chance: 12  },
@@ -49,6 +55,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 7, poder_elemental: 3,
                 afinidad: "Rayo",
                 habilidad_fija: "chispazo",
+                oro_min: 12, oro_max: 28,
+                precio: 200,
                 drops: [
                     { material: "Chispa Voltica",    cant_min: 1, cant_max: 3, chance: 100 },
                     { material: "Colmillo de Rayo",  cant_min: 1, cant_max: 1, chance: 12  },
@@ -61,6 +69,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 2, poder_elemental: 3,
                 afinidad: "Tierra",
                 habilidad_fija: "muro_piedra",
+                oro_min: 15, oro_max: 30,
+                precio: 250,
                 drops: [
                     { material: "Arcilla Ancestral", cant_min: 1, cant_max: 3, chance: 100 },
                     { material: "Ladrillo de Jade",  cant_min: 1, cant_max: 1, chance: 12  },
@@ -73,6 +83,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 4, poder_elemental: 6,
                 afinidad: "Sombra",
                 habilidad_fija: "abrazo_vacio",
+                oro_min: 12, oro_max: 25,
+                precio: 200,
                 drops: [
                     { material: "Fragmento Sombrio", cant_min: 1, cant_max: 3, chance: 100 },
                     { material: "Materia Oscura",    cant_min: 1, cant_max: 1, chance: 12  },
@@ -85,6 +97,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 3, poder_elemental: 5,
                 afinidad: "Luz",
                 habilidad_fija: "destello_debil",
+                oro_min: 15, oro_max: 30,
+                precio: 250,
                 drops: [
                     { material: "Polvo Sagrado",     cant_min: 1, cant_max: 3, chance: 100 },
                     { material: "Reliquia de Oro",   cant_min: 1, cant_max: 1, chance: 12  },
@@ -97,6 +111,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 4, poder_elemental: 8,
                 afinidad: "Arcano",
                 habilidad_fija: "pulso_arcano",
+                oro_min: 12, oro_max: 28,
+                precio: 200,
                 drops: [
                     { material: "Runa Menor",        cant_min: 1, cant_max: 3, chance: 100 },
                     { material: "Runa Mayor",        cant_min: 1, cant_max: 1, chance: 12  },
@@ -115,6 +131,8 @@ function scr_datos_enemigos(_e) {
                 afinidad: "Fuego",
                 habilidad_fija: "pilar_llama",
                 habilidad_secundaria: "llamarada_furia",
+                oro_min: 40, oro_max: 80,
+                precio: 600,
                 drops: [
                     { material: "Brasa Carmesi",     cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Fragmento Igneo",   cant_min: 2, cant_max: 4, chance: 60  },
@@ -128,6 +146,8 @@ function scr_datos_enemigos(_e) {
                 afinidad: "Agua",
                 habilidad_fija: "prision_glaciar",
                 habilidad_secundaria: "ventisca_polar",
+                oro_min: 40, oro_max: 75,
+                precio: 600,
                 drops: [
                     { material: "Perla Abisal",      cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Escama Glaciar",    cant_min: 2, cant_max: 4, chance: 60  },
@@ -141,6 +161,8 @@ function scr_datos_enemigos(_e) {
                 afinidad: "Planta",
                 habilidad_fija: "tornado_esmeralda",
                 habilidad_secundaria: "esporas_toxicas",
+                oro_min: 35, oro_max: 70,
+                precio: 500,
                 drops: [
                     { material: "Raiz Primigenia",   cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Savia Espinosa",    cant_min: 2, cant_max: 4, chance: 60  },
@@ -154,6 +176,8 @@ function scr_datos_enemigos(_e) {
                 afinidad: "Rayo",
                 habilidad_fija: "tormenta_electrica",
                 habilidad_secundaria: "impulso_voltaico",
+                oro_min: 45, oro_max: 85,
+                precio: 650,
                 drops: [
                     { material: "Colmillo de Rayo",  cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Chispa Voltica",    cant_min: 2, cant_max: 4, chance: 60  },
@@ -167,6 +191,8 @@ function scr_datos_enemigos(_e) {
                 afinidad: "Tierra",
                 habilidad_fija: "terremoto",
                 habilidad_secundaria: "fortaleza_petrea",
+                oro_min: 50, oro_max: 90,
+                precio: 700,
                 drops: [
                     { material: "Ladrillo de Jade",  cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Arcilla Ancestral", cant_min: 2, cant_max: 4, chance: 60  },
@@ -180,6 +206,8 @@ function scr_datos_enemigos(_e) {
                 afinidad: "Sombra",
                 habilidad_fija: "agujero_negro",
                 habilidad_secundaria: "marca_sombria",
+                oro_min: 45, oro_max: 80,
+                precio: 600,
                 drops: [
                     { material: "Materia Oscura",    cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Fragmento Sombrio", cant_min: 2, cant_max: 4, chance: 60  },
@@ -193,6 +221,8 @@ function scr_datos_enemigos(_e) {
                 afinidad: "Luz",
                 habilidad_fija: "juicio_sagrado",
                 habilidad_secundaria: "plegaria_marchita",
+                oro_min: 50, oro_max: 85,
+                precio: 650,
                 drops: [
                     { material: "Reliquia de Oro",   cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Polvo Sagrado",     cant_min: 2, cant_max: 4, chance: 60  },
@@ -206,6 +236,8 @@ function scr_datos_enemigos(_e) {
                 afinidad: "Arcano",
                 habilidad_fija: "cometa_runico",
                 habilidad_secundaria: "sello_arcano",
+                oro_min: 45, oro_max: 80,
+                precio: 600,
                 drops: [
                     { material: "Runa Mayor",        cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Runa Menor",        cant_min: 2, cant_max: 4, chance: 60  },
@@ -223,6 +255,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 3, poder_elemental: 12,
                 afinidad: "Fuego-Tierra",
                 habilidad_fija: "erupcion_forjada",
+                oro_min: 200, oro_max: 400,
+                precio: 2500,
                 drops: [
                     { material: "Nucleo de Forja Antigua",  cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Brasa Carmesi",            cant_min: 2, cant_max: 3, chance: 70  },
@@ -236,6 +270,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 2, poder_elemental: 10,
                 afinidad: "Agua-Planta",
                 habilidad_fija: "maremoto_vegetal",
+                oro_min: 180, oro_max: 380,
+                precio: 2500,
                 drops: [
                     { material: "Corazon de Fango",         cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Perla Abisal",             cant_min: 2, cant_max: 3, chance: 70  },
@@ -249,6 +285,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 6, poder_elemental: 15,
                 afinidad: "Rayo-Luz",
                 habilidad_fija: "fulgor_celestial",
+                oro_min: 220, oro_max: 450,
+                precio: 3000,
                 drops: [
                     { material: "Fragmento Celestial",      cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Colmillo de Rayo",         cant_min: 2, cant_max: 3, chance: 70  },
@@ -262,6 +300,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 4, poder_elemental: 18,
                 afinidad: "Sombra-Arcano",
                 habilidad_fija: "vacio_runico",
+                oro_min: 250, oro_max: 500,
+                precio: 3500,
                 drops: [
                     { material: "Cristal del Vacio",        cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Materia Oscura",           cant_min: 2, cant_max: 3, chance: 70  },

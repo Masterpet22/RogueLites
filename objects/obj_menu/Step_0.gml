@@ -21,5 +21,9 @@ if (keyboard_check_pressed(vk_enter)) {
         case 1:
             room_goto(rm_forja);
         break;
+
+        case 2:
+            room_goto(rm_tienda);
+        break;
     }
 }

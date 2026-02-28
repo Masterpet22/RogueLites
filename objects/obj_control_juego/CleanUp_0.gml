@@ -5,6 +5,16 @@ if (ds_exists(inventario_materiales, ds_type_map)) {
     ds_map_destroy(inventario_materiales);
 }
 
+// 1b. Destruir inventario de objetos/consumibles
+if (ds_exists(inventario_objetos, ds_type_map)) {
+    ds_map_destroy(inventario_objetos);
+}
+
+// 1c. Destruir mapa de enemigos desbloqueados
+if (ds_exists(enemigos_desbloqueados, ds_type_map)) {
+    ds_map_destroy(enemigos_desbloqueados);
+}
+
 // 2. Destruir el mapa de perfiles
 if (ds_exists(perfiles_personaje, ds_type_map)) {
     

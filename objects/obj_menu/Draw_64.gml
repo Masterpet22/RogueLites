@@ -19,4 +19,10 @@ for (var i = 0; i < array_length(opciones); i++) {
     draw_text(cx, cy + i * 40, texto);
 }
 
+// Mostrar oro del jugador
+if (instance_exists(obj_control_juego)) {
+    draw_set_color(make_color_rgb(255, 215, 0));
+    draw_text(cx, cy + array_length(opciones) * 40 + 30, "Oro: " + string(obj_control_juego.oro) + " G");
+}
+
 draw_set_color(c_white);

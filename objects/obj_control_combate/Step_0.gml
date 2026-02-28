@@ -118,6 +118,14 @@ if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
                     }
                 }
 
+                // --- RECOMPENSA DE ORO ---
+                var _oro_min = variable_struct_exists(personaje_enemigo, "oro_min") ? personaje_enemigo.oro_min : 10;
+                var _oro_max = variable_struct_exists(personaje_enemigo, "oro_max") ? personaje_enemigo.oro_max : 25;
+                var _oro_ganado = irandom_range(_oro_min, _oro_max);
+                obj_control_juego.oro += _oro_ganado;
+                oro_recompensa = _oro_ganado;  // guardamos para mostrar en UI
+                _log += " | +" + string(_oro_ganado) + " oro";
+
                 if (_log == "") _log = "(nada extra)";
                 show_debug_message("¡Ganaste! Drops: " + _log);
 

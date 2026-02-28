@@ -6,8 +6,8 @@ if (!instance_exists(control_juego)) {
     show_error("No existe obj_control_juego en rm_enemy_select", true);
 }
 
-// Enemigos por categoría
-enemigos_comunes = [
+// Enemigos por categoría — solo los desbloqueados
+var _all_comunes = [
     "Soldado Igneo",
     "Vigia Boreal",
     "Halito Verde",
@@ -18,7 +18,7 @@ enemigos_comunes = [
     "Errante Runico"
 ];
 
-enemigos_elite = [
+var _all_elite = [
     "Soldado Igneo Elite",
     "Vigia Boreal Elite",
     "Halito Verde Elite",
@@ -30,12 +30,34 @@ enemigos_elite = [
 ];
 
 // Jefe dual-elemental
-enemigos_jefe = [
+var _all_jefe = [
     "Titan de las Forjas Rotas",  // Fuego + Tierra
 	"Coloso del Fango Viviente", // Agua + Planta
 	"Sentinela del Cielo Roto",	 // Rayo + Luz
 	"Oraculo Quebrado del Abismo" // Sombra + Arcano
 ];
+
+// Filtrar: solo mostrar los desbloqueados
+enemigos_comunes = [];
+for (var i = 0; i < array_length(_all_comunes); i++) {
+    if (ds_map_exists(control_juego.enemigos_desbloqueados, _all_comunes[i])) {
+        array_push(enemigos_comunes, _all_comunes[i]);
+    }
+}
+
+enemigos_elite = [];
+for (var i = 0; i < array_length(_all_elite); i++) {
+    if (ds_map_exists(control_juego.enemigos_desbloqueados, _all_elite[i])) {
+        array_push(enemigos_elite, _all_elite[i]);
+    }
+}
+
+enemigos_jefe = [];
+for (var i = 0; i < array_length(_all_jefe); i++) {
+    if (ds_map_exists(control_juego.enemigos_desbloqueados, _all_jefe[i])) {
+        array_push(enemigos_jefe, _all_jefe[i]);
+    }
+}
 
 // Random será virtual — lo manejamos sin lista propia
 
