@@ -85,7 +85,7 @@ else if (estado == TiendaState.LISTA) {
 
         var _etiqueta = _it.nombre;
         if (_it.comprado && _it.tipo != "objeto") {
-            _etiqueta += "  [COMPRADO]";
+            _etiqueta += "  [DESBLOQUEADO]";
         }
         if (_it.tipo == "objeto") {
             var _cant = variable_struct_exists(_it, "cantidad") ? _it.cantidad : 0;

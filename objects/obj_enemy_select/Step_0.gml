@@ -32,16 +32,22 @@ if (estado == EnemySelState.CATEGORIA) {
             enemigos_actuales = enemigos_jefe;
         }
         else if (sel == "Random") {
-            // Selección ponderada: Común 70%, Élite 20%, Jefe 10%
-            var _roll = irandom(99);
-            var _pool;
-            if (_roll < 70)      _pool = enemigos_comunes;  // 0–69
-            else if (_roll < 90) _pool = enemigos_elite;    // 70–89
-            else                 _pool = enemigos_jefe;     // 90–99
+            // Construir pool combinado solo con categorías que tengan enemigos
+            var _pool_total = [];
+            for (var _ri = 0; _ri < array_length(enemigos_comunes); _ri++) array_push(_pool_total, enemigos_comunes[_ri]);
+            for (var _ri = 0; _ri < array_length(enemigos_elite); _ri++)  array_push(_pool_total, enemigos_elite[_ri]);
+            for (var _ri = 0; _ri < array_length(enemigos_jefe); _ri++)   array_push(_pool_total, enemigos_jefe[_ri]);
 
-            control_juego.enemigo_seleccionado = _pool[irandom(array_length(_pool) - 1)];
+            if (array_length(_pool_total) == 0) exit;
+
+            control_juego.enemigo_seleccionado = _pool_total[irandom(array_length(_pool_total) - 1)];
             estado = EnemySelState.CONFIRMAR;
             io_clear();
+            exit;
+        }
+
+        // Si la categoría está vacía, no avanzar
+        if (array_length(enemigos_actuales) == 0) {
             exit;
         }
 
@@ -56,12 +62,18 @@ if (estado == EnemySelState.CATEGORIA) {
 // ==============================
 else if (estado == EnemySelState.LISTA) {
 
+    var _len = array_length(enemigos_actuales);
+    if (_len == 0) {
+        estado = EnemySelState.CATEGORIA;
+        exit;
+    }
+
     if (keyboard_check_pressed(vk_up)) {
-        indice_enemigo = (indice_enemigo - 1 + array_length(enemigos_actuales)) mod array_length(enemigos_actuales);
+        indice_enemigo = (indice_enemigo - 1 + _len) mod _len;
     }
 
     if (keyboard_check_pressed(vk_down)) {
-        indice_enemigo = (indice_enemigo + 1) mod array_length(enemigos_actuales);
+        indice_enemigo = (indice_enemigo + 1) mod _len;
     }
 
     if (keyboard_check_pressed(vk_escape)) {

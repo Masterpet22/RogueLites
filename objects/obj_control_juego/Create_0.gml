@@ -53,6 +53,8 @@ enemigos_desbloqueados = ds_map_create();
 ds_map_add(enemigos_desbloqueados, "Soldado Igneo", true);
 ds_map_add(enemigos_desbloqueados, "Vigia Boreal", true);
 ds_map_add(enemigos_desbloqueados, "Halito Verde", true);
+ds_map_add(enemigos_desbloqueados, "Soldado Igneo Elite", true);
+ds_map_add(enemigos_desbloqueados, "Titan de las Forjas Rotas", true);
 
 // ORO DEL JUGADOR
 oro = 100;
