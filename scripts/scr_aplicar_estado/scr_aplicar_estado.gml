@@ -46,6 +46,11 @@ function scr_aplicar_estado(_p, _id, _duracion, _pot_extra) {
 
         // buff velocidad
         velocidad_bonus: (variable_struct_exists(conf, "velocidad_bonus") ? conf.velocidad_bonus : 0),
+
+        // debuffs
+        velocidad_penalty: (variable_struct_exists(conf, "velocidad_penalty") ? conf.velocidad_penalty : 0),
+        defensa_penalty:   (variable_struct_exists(conf, "defensa_penalty")   ? conf.defensa_penalty   : 0),
+        poder_penalty:     (variable_struct_exists(conf, "poder_penalty")     ? conf.poder_penalty     : 0),
     };
 
     // Aplicar efectos inmediatos de ciertos estados (ej: buff defensa)
@@ -57,6 +62,15 @@ function scr_aplicar_estado(_p, _id, _duracion, _pot_extra) {
     }
     if (nuevo.tipo == "buff_velocidad" && nuevo.velocidad_bonus != 0) {
         _p.velocidad += nuevo.velocidad_bonus;
+    }
+    if (nuevo.tipo == "debuff_velocidad" && nuevo.velocidad_penalty != 0) {
+        _p.velocidad = max(1, _p.velocidad - nuevo.velocidad_penalty);
+    }
+    if (nuevo.tipo == "debuff_defensa" && nuevo.defensa_penalty != 0) {
+        _p.defensa_bonus_temp -= nuevo.defensa_penalty;
+    }
+    if (nuevo.tipo == "debuff_poder" && nuevo.poder_penalty != 0) {
+        _p.poder_elemental = max(0, _p.poder_elemental - nuevo.poder_penalty);
     }
 
     array_push(_p.estados, nuevo);

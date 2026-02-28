@@ -17,5 +17,11 @@
 // ── Velocidad → Cooldown Reduction ──
 #macro CDR_POR_VEL  0.02   // 2% CDR por punto de velocidad
 
+// ── IA Enemigo — Máquina de estados ──
+#macro IA_ACCION_BASE_FRAMES  180   // base de espera entre acciones (3 s a 60 fps)
+#macro IA_VEL_FACTOR          0.12  // cada punto de velocidad reduce la espera
+#macro IA_PREP_FRAMES         30    // wind-up antes de atacar (0.5 s)
+#macro IA_VARIACION           0.15  // ±15 % aleatorio sobre el timer de espera
+
 // ── Estados alterados ──
 #macro ESTADO_DUR_MAX_SEG  5   // duración máxima de cualquier estado (segundos)

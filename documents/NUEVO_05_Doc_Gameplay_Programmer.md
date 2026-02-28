@@ -304,10 +304,16 @@ function scr_ejecutar_super(_atk, _def) {
 
 ### 7.1. Tipos Existentes
 
-| ID             | Tipo           | Efecto                   |
-| -------------- | -------------- | ------------------------ |
-| `quemadura`    | `dot`          | Daño periódico por ticks |
-| `buff_defensa` | `buff_defensa` | +defensa temporal        |
+| ID                 | Tipo               | Efecto                         |
+| ------------------ | ------------------ | ------------------------------ |
+| `quemadura_fuego`  | `dot`              | Daño periódico (tick 1s)       |
+| `veneno`           | `dot`              | Daño periódico suave (tick 1s) |
+| `regeneracion`     | `hot`              | Curación periódica (tick 1s)   |
+| `muro_tierra`      | `buff_defensa`     | +4 defensa temporal            |
+| `aceleracion_rayo` | `buff_velocidad`   | +3 velocidad temporal          |
+| `ralentizacion`    | `debuff_velocidad` | -3 velocidad temporal          |
+| `vulnerabilidad`   | `debuff_defensa`   | -4 defensa temporal            |
+| `supresion_arcana` | `debuff_poder`     | -3 poder_elemental temporal    |
 
 ### 7.2. Cómo Crear un Estado Nuevo
 
@@ -412,16 +418,29 @@ if (_p.afinidad == "Agua" && _p.pasiva_activa) {
 
 ## 9. IA del Enemigo
 
-### 9.1. IA Básica (timer simple)
+### 9.1. IA Multi-Habilidad (Todos los enemigos)
+
+La IA usa `scr_usar_habilidad_indice` con prioridad descendente. Los cooldowns se gestionan por `scr_actualizar_personaje`.
 
 ```gml
-// Enemigos comunes: atacan en intervalos fijos
-enemigo.ia_timer--;
-if (enemigo.ia_timer <= 0) {
-    scr_ejecutar_habilidad(enemigo, jugador, enemigo.habilidad_fija);
-    enemigo.ia_timer = enemigo.ia_cooldown;
+// Prioriza habilidades de mayor índice: secundaria > fija > básica
+if (personaje_enemigo.vida_actual > 0 && personaje_jugador.vida_actual > 0) {
+    var _habs_e = personaje_enemigo.habilidades_arma;
+    var _cds_e  = personaje_enemigo.habilidades_cd;
+    var _n_e    = array_length(_habs_e);
+    for (var i = _n_e - 1; i >= 0; i--) {
+        if (_cds_e[i] <= 0) {
+            scr_usar_habilidad_indice(personaje_enemigo, personaje_jugador, i);
+            break;
+        }
+    }
 }
 ```
+
+Composición de habilidades:
+
+- **Comunes:** `["ataque_basico", habilidad_fija]` — 2 habilidades
+- **Élites:** `["ataque_basico", habilidad_fija, habilidad_secundaria]` — 3 habilidades (secundaria aplica estados)
 
 ### 9.2. IA por Patrones (Jefes)
 

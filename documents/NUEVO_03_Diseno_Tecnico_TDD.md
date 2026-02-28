@@ -141,23 +141,33 @@ Devuelto por `scr_datos_enemigos`:
     vida: real,
     ataque: real,
     defensa: real,
+    defensa_magica: real,
+    velocidad: real,
+    poder_elemental: real,
     afinidad: string,
     habilidad_fija: string,
-    material_drop: string
+    habilidad_secundaria: string,  // solo élites
+    drops: [                       // array con probabilidades
+        { material: string, cant_min: real, cant_max: real, chance: real }
+    ]
 }
 ```
 
 ### 2.8. Estado Alterado (Datos)
 
-Devuelto por `scr_datos_estados`:
+Devuelto por `scr_datos_estados`. Tipos: `"dot"`, `"hot"`, `"buff_defensa"`, `"buff_defensa_magica"`, `"buff_velocidad"`, `"debuff_velocidad"`, `"debuff_defensa"`, `"debuff_poder"`.
 
 ```gml
 {
     id: string,
-    tipo: string,              // "dot", "buff_defensa"
-    tick_interval: real,
-    potencia_base: real,
-    defensa_bonus: real        // (solo para buff_defensa)
+    tipo: string,
+    tick_interval: real,       // solo dot/hot
+    potencia_base: real,       // solo dot/hot
+    defensa_bonus: real,       // solo buff_defensa
+    velocidad_bonus: real,     // solo buff_velocidad
+    velocidad_penalty: real,   // solo debuff_velocidad
+    defensa_penalty: real,     // solo debuff_defensa
+    poder_penalty: real        // solo debuff_poder
 }
 ```
 
@@ -172,9 +182,16 @@ Estado Alterado activo (en combate):
     tick_timer: real,
     potencia: real,
     defensa_bonus: real,
+    defensa_magica_bonus: real,
+    velocidad_bonus: real,
+    velocidad_penalty: real,
+    defensa_penalty: real,
+    poder_penalty: real,
     activo: bool
 }
 ```
+
+8 estados implementados: `quemadura_fuego`, `muro_tierra`, `aceleracion_rayo`, `veneno`, `regeneracion`, `ralentizacion`, `vulnerabilidad`, `supresion_arcana`.
 
 ---
 
@@ -434,16 +451,30 @@ return true;
 
 ## 8. IA del Enemigo
 
-### 8.1. IA Básica (Enemigos Comunes)
+### 8.1. IA Multi-Habilidad (Todos los enemigos)
+
+La IA recorre `habilidades_arma` de mayor a menor índice (prioridad: secundaria > fija > básica). Usa la primera habilidad con cooldown disponible. Los cooldowns se gestionan automáticamente por `scr_actualizar_personaje`.
 
 ```gml
 // En obj_control_combate Step
-enemigo.ia_timer--;
-if (enemigo.ia_timer <= 0) {
-    scr_ejecutar_habilidad(enemigo, jugador, enemigo.habilidad_fija);
-    enemigo.ia_timer = enemigo.ia_cooldown;
+if (personaje_enemigo.vida_actual > 0 && personaje_jugador.vida_actual > 0) {
+    var _habs_e = personaje_enemigo.habilidades_arma;
+    var _cds_e  = personaje_enemigo.habilidades_cd;
+    var _n_e    = array_length(_habs_e);
+    for (var i = _n_e - 1; i >= 0; i--) {
+        if (_cds_e[i] <= 0) {
+            scr_usar_habilidad_indice(personaje_enemigo, personaje_jugador, i);
+            break;
+        }
+    }
 }
 ```
+
+Composición de habilidades por categoría:
+
+- **Comunes:** `["ataque_basico", habilidad_fija]` — 2 habilidades
+- **Élites:** `["ataque_basico", habilidad_fija, habilidad_secundaria]` — 3 habilidades (la secundaria aplica estados)
+- **Jefes:** `["ataque_basico", habilidad_fija]` — 2 habilidades (con mecánicas temáticas)
 
 ### 8.2. IA de Jefes (Patrones)
 

@@ -133,12 +133,14 @@ El arma aparece en la forja, se puede equipar y funciona en combate con su UI.
 ```gml
 case "Bestia Tronadora":
     return {
-        vida: 100,
-        ataque: 10,
-        defensa: 5,
+        vida: 75, ataque: 12, defensa: 1, defensa_magica: 2,
+        velocidad: 7, poder_elemental: 3,
         afinidad: "Rayo",
-        habilidad_fija: "golpe_rayo",
-        material_drop: "Chispa Voltica"
+        habilidad_fija: "chispazo",
+        drops: [
+            { material: "Chispa Voltica",    cant_min: 1, cant_max: 3, chance: 100 },
+            { material: "Colmillo de Rayo",  cant_min: 1, cant_max: 1, chance: 12  },
+        ]
     };
 ```
 
@@ -162,15 +164,20 @@ break;
 
 ### 3.2. Enemigo Élite
 
+Los élites tienen `habilidad_secundaria` que aplica un estado alterado. La IA la prioriza automáticamente.
+
 ```gml
 case "Bestia Tronadora Elite":
     return {
-        vida: 160,
-        ataque: 14,
-        defensa: 7,
+        vida: 140, ataque: 18, defensa: 3, defensa_magica: 4,
+        velocidad: 8, poder_elemental: 5,
         afinidad: "Rayo",
-        habilidad_fija: "golpe_rayo_elite",
-        material_drop: "Cristal de Tormenta"   // material raro
+        habilidad_fija: "tormenta_electrica",
+        habilidad_secundaria: "impulso_voltaico",   // aplica aceleracion_rayo
+        drops: [
+            { material: "Colmillo de Rayo",  cant_min: 1, cant_max: 2, chance: 100 },
+            { material: "Chispa Voltica",    cant_min: 2, cant_max: 4, chance: 60  },
+        ]
     };
 ```
 
@@ -275,14 +282,15 @@ receta: [
 
 ### Paso 1 — Definir en `scr_datos_estados`
 
+Tipos soportados: `"dot"`, `"hot"`, `"buff_defensa"`, `"buff_defensa_magica"`, `"buff_velocidad"`, `"debuff_velocidad"`, `"debuff_defensa"`, `"debuff_poder"`.
+
 ```gml
-case "shock_electrico":
+case "veneno":
     return {
-        id: "shock_electrico",
+        id: _id,
         tipo: "dot",
-        tick_interval: room_speed * 0.4,
+        tick_interval: round(GAME_FPS * 1.0),
         potencia_base: 2,
-        defensa_bonus: 0
     };
 ```
 
@@ -290,23 +298,24 @@ case "shock_electrico":
 
 ```gml
 // Dentro de scr_ejecutar_habilidad, en el case de la habilidad:
-scr_aplicar_estado(_defensor, "shock_electrico", room_speed * 2, _atacante.poder_elemental);
+scr_aplicar_estado(_defensor, "veneno", round(GAME_FPS * 3), round(_atacante.poder_elemental * 0.2));
 ```
 
 ### Paso 3 — Verificar tipo en `scr_actualizar_estados`
 
 Si el tipo es nuevo (no es "dot" ni "buff_defensa"), añadir la lógica correspondiente en el switch/if del script.
 
-### Tipos de estado sugeridos para expansión
+### Tipos de estado implementados
 
-| Tipo             | Efecto                                    |
-| ---------------- | ----------------------------------------- |
-| `dot`            | Daño periódico (quemadura, shock, veneno) |
-| `buff_defensa`   | Incremento temporal de defensa            |
-| `debuff_defensa` | Reducción temporal de defensa             |
-| `slow`           | Incremento de cooldowns del afectado      |
-| `stun`           | Bloquea acciones temporalmente            |
-| `vulnerability`  | Aumenta el daño recibido                  |
+| Tipo               | Efecto                      | Estados usando          |
+| ------------------ | --------------------------- | ----------------------- |
+| `dot`              | Daño periódico por tick     | quemadura_fuego, veneno |
+| `hot`              | Curación periódica por tick | regeneracion            |
+| `buff_defensa`     | +defensa temporal           | muro_tierra             |
+| `buff_velocidad`   | +velocidad temporal         | aceleracion_rayo        |
+| `debuff_velocidad` | -velocidad temporal         | ralentizacion           |
+| `debuff_defensa`   | -defensa temporal           | vulnerabilidad          |
+| `debuff_poder`     | -poder_elemental temporal   | supresion_arcana        |
 
 ---
 

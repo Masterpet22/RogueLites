@@ -12,36 +12,42 @@ Arcadium es un roguelite táctico 1v1 en tiempo real desarrollado en **GameMaker
 
 ### 1.2. Estado Actual del MVP
 
-| Componente                                  | Estado       |
-| ------------------------------------------- | ------------ |
-| Combate funcional 1v1                       | ✔ Completado |
-| Armas con efecto en daño real               | ✔ Completado |
-| Afinidades con pasivas                      | ✔ Completado |
-| Perfiles de personaje escalables            | ✔ Completado |
-| Forja completa y funcional                  | ✔ Completado |
-| Pantalla de selección profesional           | ✔ Completado |
-| HUD de combate limpio y expandible          | ✔ Completado |
-| IA básica del enemigo                       | ✔ Completado |
-| Arquitectura escalable                      | ✔ Completado |
-| Estados alterados (quemadura, buff defensa) | ✔ Completado |
-| Armas R1 y R2 funcionales                   | ✔ Completado |
-| Selector de enemigos por categoría          | ✔ Completado |
+| Componente                                          | Estado       |
+| --------------------------------------------------- | ------------ |
+| Combate funcional 1v1                               | ✔ Completado |
+| Armas con efecto en daño real                       | ✔ Completado |
+| Afinidades con pasivas                              | ✔ Completado |
+| Perfiles de personaje escalables                    | ✔ Completado |
+| Forja completa y funcional                          | ✔ Completado |
+| Pantalla de selección profesional                   | ✔ Completado |
+| HUD de combate limpio y expandible                  | ✔ Completado |
+| IA básica del enemigo                               | ✔ Completado |
+| Arquitectura escalable                              | ✔ Completado |
+| Estados alterados (quemadura, buff defensa)         | ✔ Completado |
+| Armas R1 y R2 funcionales                           | ✔ Completado |
+| Selector de enemigos por categoría                  | ✔ Completado |
+| Overhaul de stats (def. mágica, crit, CDR, esencia) | ✔ Completado |
+| Sistema daño físico/mágico (tipo_dano)              | ✔ Completado |
+| 8 estados alterados con handlers completos          | ✔ Completado |
+| IA multi-habilidad para enemigos                    | ✔ Completado |
+| Enemigos élite con hab. secundaria + estados        | ✔ Completado |
+| Velocidad/poder_elemental por enemigo               | ✔ Completado |
 
 ### 1.3. Funcionalidades Pendientes
 
-| Prioridad | Funcionalidad                                           |
-| --------- | ------------------------------------------------------- |
-| Alta      | Habilidades activas adicionales (más slots, UI)         |
-| Alta      | Más armas por afinidad                                  |
-| Alta      | Armas R3 con 3 habilidades                              |
-| Alta      | Estados alterados: shock, ralentización, vulnerabilidad |
-| Media     | Mejorar UI visual (iconos, barras estilizadas)          |
-| Media     | Enemigos por afinidad completos (×8)                    |
-| Media     | Enemigos élite y jefes                                  |
-| Media     | Animaciones de combate (impacto, casteo)                |
-| Baja      | Sistema de historia / Camino del Héroe                  |
-| Baja      | Sistema de builds profundas                             |
-| Baja      | El Devorador (jefe final)                               |
+| Prioridad | Funcionalidad                                                                   |
+| --------- | ------------------------------------------------------------------------------- |
+| Alta      | Habilidades activas adicionales (más slots, UI)                                 |
+| Alta      | Más armas por afinidad                                                          |
+| Alta      | Armas R3 con 3 habilidades                                                      |
+| ~~Alta~~  | ~~Estados alterados: shock, ralentización, vulnerabilidad~~ → HECHO (8 estados) |
+| Media     | Mejorar UI visual (iconos, barras estilizadas)                                  |
+| Media     | Enemigos por afinidad completos (×8)                                            |
+| Media     | Enemigos élite y jefes                                                          |
+| Media     | Animaciones de combate (impacto, casteo)                                        |
+| Baja      | Sistema de historia / Camino del Héroe                                          |
+| Baja      | Sistema de builds profundas                                                     |
+| Baja      | El Devorador (jefe final)                                                       |
 
 ---
 
@@ -215,22 +221,35 @@ Cada personaje tiene un perfil persistente gestionado por `obj_control_juego`:
 
 ### 5.4. Estados Alterados
 
-Estados implementados:
+Estados implementados (8 tipos):
 
-- **Quemadura** — Daño por tick (DoT).
-- **Buff de defensa** — Incremento temporal de defensa.
+- **quemadura_fuego** — DoT de fuego (tick cada 1s).
+- **muro_tierra** — Buff de defensa (+4 defensa temporal).
+- **aceleracion_rayo** — Buff de velocidad (+3 velocidad temporal).
+- **veneno** — DoT de planta (tick cada 1s, más suave que quemadura).
+- **regeneracion** — HoT: curación periódica (tick cada 1s).
+- **ralentizacion** — Debuff de velocidad (-3 velocidad temporal).
+- **vulnerabilidad** — Debuff de defensa (-4 defensa temporal).
+- **supresion_arcana** — Debuff de poder (-3 poder_elemental temporal).
+
+Tipos soportados: `dot`, `hot`, `buff_defensa`, `buff_defensa_magica`, `buff_velocidad`, `debuff_velocidad`, `debuff_defensa`, `debuff_poder`.
 
 Estructura de un estado activo:
 
 ```gml
 {
     id,
-    tipo,              // "dot", "buff_defensa"
+    tipo,              // "dot", "hot", "buff_defensa", "debuff_velocidad", etc.
     tiempo_rest,
     tick_interval,
     tick_timer,
     potencia,
     defensa_bonus,
+    defensa_magica_bonus,
+    velocidad_bonus,
+    velocidad_penalty,
+    defensa_penalty,
+    poder_penalty,
     activo
 }
 ```
@@ -282,10 +301,12 @@ Estructura de un estado activo:
 
 ### Fase 2 — Contenido Base
 
-- [ ] Completar los 8 enemigos comunes (uno por afinidad).
-- [ ] Primer enemigo élite con drop de material raro.
-- [ ] Arma R3 con 3 habilidades.
-- [ ] Más estados: shock, ralentización, vulnerabilidad.
+- [x] Completar los 8 enemigos comunes (uno por afinidad).
+- [x] 8 enemigos élite con habilidad secundaria + estados alterados.
+- [ ] Arma R3 con 3 habilidades (estructura lista, balance pendiente).
+- [x] 8 estados alterados implementados y asociados a habilidades.
+- [x] IA multi-habilidad con priorización (secundaria > fija > básica).
+- [x] Overhaul de stats: defensa_magica, tipo_dano, CDR, crit dinámico, esencia dinámica.
 - [ ] Animaciones básicas (impacto, casteo).
 
 ### Fase 3 — Jefes y Profundidad

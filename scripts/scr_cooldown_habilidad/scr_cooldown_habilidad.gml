@@ -101,6 +101,18 @@ function scr_cooldown_habilidad(_id) {
         case "cometa_runico":           return round(GAME_FPS * 2.0);  // Errante Runico Elite
 
         // ==========================================
+        // 4b. SECUNDARIAS ELITE (con estados)
+        // ==========================================
+        case "llamarada_furia":         return round(GAME_FPS * 3.0);  // Soldado Igneo Elite
+        case "ventisca_polar":          return round(GAME_FPS * 3.5);  // Vigia Boreal Elite
+        case "esporas_toxicas":         return round(GAME_FPS * 3.0);  // Halito Verde Elite
+        case "impulso_voltaico":        return round(GAME_FPS * 3.5);  // Bestia Tronadora Elite
+        case "fortaleza_petrea":        return round(GAME_FPS * 4.0);  // Guardian Terracota Elite
+        case "marca_sombria":           return round(GAME_FPS * 3.5);  // Naufrago Elite
+        case "plegaria_marchita":       return round(GAME_FPS * 4.0);  // Paladin Marchito Elite
+        case "sello_arcano":            return round(GAME_FPS * 3.5);  // Errante Runico Elite
+
+        // ==========================================
         // 5. HABILIDADES DE JEFES
         // ==========================================
         case "erupcion_forjada":        return round(GAME_FPS * 3.0);  // Titan (Fuego+Tierra)

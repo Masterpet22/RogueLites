@@ -20,7 +20,7 @@ scr_actualizar_estados(personaje_jugador);
 scr_actualizar_estados(personaje_enemigo);
 
 // Reducir timer del enemigo manualmente si no se hace en scr_actualizar
-if (enemigo_cd_ataque > 0) enemigo_cd_ataque -= 1;
+// (Ya no se necesita — los CDs del enemigo los gestiona scr_actualizar_personaje)
 
 
 // 2. Input del jugador
@@ -82,15 +82,8 @@ if (keyboard_check_pressed(ord("R"))) {
 
 
 
-// 3. IA corregida: Todo dentro del condicional de tiempo y vida
-if (enemigo_cd_ataque <= 0 && personaje_enemigo.vida_actual > 0 && personaje_jugador.vida_actual > 0) {
-    
-    var hab_enemigo = personaje_enemigo.habilidad_basica;
-    scr_ejecutar_habilidad(personaje_enemigo, personaje_jugador, hab_enemigo);
-
-    // Reiniciar el timer
-    enemigo_cd_ataque = round(GAME_FPS * 0.75);
-}
+// 3. IA del enemigo — Máquina de estados (esperando → preparando → atacando)
+scr_ia_enemigo(personaje_enemigo, personaje_jugador);
 
 
 // 4. Comprobar fin de combate

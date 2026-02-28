@@ -10,6 +10,7 @@ function scr_datos_enemigos(_e) {
         case "Soldado Igneo":
             return {
                 vida: 80, ataque: 8, defensa: 3, defensa_magica: 4,
+                velocidad: 4, poder_elemental: 5,
                 afinidad: "Fuego",
                 habilidad_fija: "golpe_fuego",
                 drops: [
@@ -21,6 +22,7 @@ function scr_datos_enemigos(_e) {
         case "Vigia Boreal":
             return {
                 vida: 70, ataque: 6, defensa: 5, defensa_magica: 6,
+                velocidad: 3, poder_elemental: 7,
                 afinidad: "Agua",
                 habilidad_fija: "mirada_gelida",
                 drops: [
@@ -32,6 +34,7 @@ function scr_datos_enemigos(_e) {
         case "Halito Verde":
             return {
                 vida: 60, ataque: 10, defensa: 2, defensa_magica: 3,
+                velocidad: 6, poder_elemental: 4,
                 afinidad: "Planta",
                 habilidad_fija: "rafaga_cortante",
                 drops: [
@@ -43,6 +46,7 @@ function scr_datos_enemigos(_e) {
         case "Bestia Tronadora":
             return {
                 vida: 75, ataque: 12, defensa: 1, defensa_magica: 2,
+                velocidad: 7, poder_elemental: 3,
                 afinidad: "Rayo",
                 habilidad_fija: "chispazo",
                 drops: [
@@ -54,6 +58,7 @@ function scr_datos_enemigos(_e) {
         case "Guardian Terracota":
             return {
                 vida: 110, ataque: 5, defensa: 10, defensa_magica: 4,
+                velocidad: 2, poder_elemental: 3,
                 afinidad: "Tierra",
                 habilidad_fija: "muro_piedra",
                 drops: [
@@ -65,6 +70,7 @@ function scr_datos_enemigos(_e) {
         case "Naufrago de la Oscuridad":
             return {
                 vida: 90, ataque: 9, defensa: 4, defensa_magica: 5,
+                velocidad: 4, poder_elemental: 6,
                 afinidad: "Sombra",
                 habilidad_fija: "abrazo_vacio",
                 drops: [
@@ -76,6 +82,7 @@ function scr_datos_enemigos(_e) {
         case "Paladin Marchito":
             return {
                 vida: 100, ataque: 7, defensa: 8, defensa_magica: 8,
+                velocidad: 3, poder_elemental: 5,
                 afinidad: "Luz",
                 habilidad_fija: "destello_debil",
                 drops: [
@@ -87,6 +94,7 @@ function scr_datos_enemigos(_e) {
         case "Errante Runico":
             return {
                 vida: 85, ataque: 8, defensa: 6, defensa_magica: 7,
+                velocidad: 4, poder_elemental: 8,
                 afinidad: "Arcano",
                 habilidad_fija: "pulso_arcano",
                 drops: [
@@ -103,8 +111,10 @@ function scr_datos_enemigos(_e) {
         case "Soldado Igneo Elite":
             return {
                 vida: 150, ataque: 12, defensa: 6, defensa_magica: 7,
+                velocidad: 5, poder_elemental: 7,
                 afinidad: "Fuego",
                 habilidad_fija: "pilar_llama",
+                habilidad_secundaria: "llamarada_furia",
                 drops: [
                     { material: "Brasa Carmesi",     cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Fragmento Igneo",   cant_min: 2, cant_max: 4, chance: 60  },
@@ -114,8 +124,10 @@ function scr_datos_enemigos(_e) {
         case "Vigia Boreal Elite":
             return {
                 vida: 130, ataque: 10, defensa: 8, defensa_magica: 10,
+                velocidad: 4, poder_elemental: 9,
                 afinidad: "Agua",
                 habilidad_fija: "prision_glaciar",
+                habilidad_secundaria: "ventisca_polar",
                 drops: [
                     { material: "Perla Abisal",      cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Escama Glaciar",    cant_min: 2, cant_max: 4, chance: 60  },
@@ -125,8 +137,10 @@ function scr_datos_enemigos(_e) {
         case "Halito Verde Elite":
             return {
                 vida: 110, ataque: 15, defensa: 4, defensa_magica: 5,
+                velocidad: 7, poder_elemental: 6,
                 afinidad: "Planta",
                 habilidad_fija: "tornado_esmeralda",
+                habilidad_secundaria: "esporas_toxicas",
                 drops: [
                     { material: "Raiz Primigenia",   cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Savia Espinosa",    cant_min: 2, cant_max: 4, chance: 60  },
@@ -136,8 +150,10 @@ function scr_datos_enemigos(_e) {
         case "Bestia Tronadora Elite":
             return {
                 vida: 140, ataque: 18, defensa: 3, defensa_magica: 4,
+                velocidad: 8, poder_elemental: 5,
                 afinidad: "Rayo",
                 habilidad_fija: "tormenta_electrica",
+                habilidad_secundaria: "impulso_voltaico",
                 drops: [
                     { material: "Colmillo de Rayo",  cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Chispa Voltica",    cant_min: 2, cant_max: 4, chance: 60  },
@@ -147,8 +163,10 @@ function scr_datos_enemigos(_e) {
         case "Guardian Terracota Elite":
             return {
                 vida: 200, ataque: 9, defensa: 15, defensa_magica: 7,
+                velocidad: 3, poder_elemental: 5,
                 afinidad: "Tierra",
                 habilidad_fija: "terremoto",
+                habilidad_secundaria: "fortaleza_petrea",
                 drops: [
                     { material: "Ladrillo de Jade",  cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Arcilla Ancestral", cant_min: 2, cant_max: 4, chance: 60  },
@@ -158,8 +176,10 @@ function scr_datos_enemigos(_e) {
         case "Naufrago de la Oscuridad Elite":
             return {
                 vida: 160, ataque: 14, defensa: 7, defensa_magica: 9,
+                velocidad: 5, poder_elemental: 8,
                 afinidad: "Sombra",
                 habilidad_fija: "agujero_negro",
+                habilidad_secundaria: "marca_sombria",
                 drops: [
                     { material: "Materia Oscura",    cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Fragmento Sombrio", cant_min: 2, cant_max: 4, chance: 60  },
@@ -169,8 +189,10 @@ function scr_datos_enemigos(_e) {
         case "Paladin Marchito Elite":
             return {
                 vida: 180, ataque: 11, defensa: 12, defensa_magica: 13,
+                velocidad: 4, poder_elemental: 7,
                 afinidad: "Luz",
                 habilidad_fija: "juicio_sagrado",
+                habilidad_secundaria: "plegaria_marchita",
                 drops: [
                     { material: "Reliquia de Oro",   cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Polvo Sagrado",     cant_min: 2, cant_max: 4, chance: 60  },
@@ -180,8 +202,10 @@ function scr_datos_enemigos(_e) {
         case "Errante Runico Elite":
             return {
                 vida: 150, ataque: 13, defensa: 10, defensa_magica: 12,
+                velocidad: 5, poder_elemental: 10,
                 afinidad: "Arcano",
                 habilidad_fija: "cometa_runico",
+                habilidad_secundaria: "sello_arcano",
                 drops: [
                     { material: "Runa Mayor",        cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Runa Menor",        cant_min: 2, cant_max: 4, chance: 60  },
@@ -196,6 +220,7 @@ function scr_datos_enemigos(_e) {
         case "Titan de las Forjas Rotas":
             return {
                 vida: 1200, ataque: 25, defensa: 20, defensa_magica: 15,
+                velocidad: 3, poder_elemental: 12,
                 afinidad: "Fuego-Tierra",
                 habilidad_fija: "erupcion_forjada",
                 drops: [
@@ -208,6 +233,7 @@ function scr_datos_enemigos(_e) {
         case "Coloso del Fango Viviente":
             return {
                 vida: 1100, ataque: 20, defensa: 22, defensa_magica: 18,
+                velocidad: 2, poder_elemental: 10,
                 afinidad: "Agua-Planta",
                 habilidad_fija: "maremoto_vegetal",
                 drops: [
@@ -220,6 +246,7 @@ function scr_datos_enemigos(_e) {
         case "Sentinela del Cielo Roto":
             return {
                 vida: 1000, ataque: 28, defensa: 15, defensa_magica: 12,
+                velocidad: 6, poder_elemental: 15,
                 afinidad: "Rayo-Luz",
                 habilidad_fija: "fulgor_celestial",
                 drops: [
@@ -232,6 +259,7 @@ function scr_datos_enemigos(_e) {
         case "Oraculo Quebrado del Abismo":
             return {
                 vida: 1150, ataque: 24, defensa: 18, defensa_magica: 20,
+                velocidad: 4, poder_elemental: 18,
                 afinidad: "Sombra-Arcano",
                 habilidad_fija: "vacio_runico",
                 drops: [

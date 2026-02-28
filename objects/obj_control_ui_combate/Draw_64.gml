@@ -185,6 +185,67 @@ var texto_enemigo = en.nombre + "  HP: "
 draw_text(display_get_gui_width() - 240, 45, texto_enemigo);
 
 
+// ===========================
+//  INDICADOR DE ESTADO IA ENEMIGA
+// ===========================
+{
+    var _ia_x = display_get_gui_width() - 240;
+    var _ia_y = 62;
+
+    var _estado_txt = "";
+    var _estado_col = c_white;
+
+    switch (en.ia_estado) {
+        case "ia_esperando":
+            var _secs_left = en.ia_timer / GAME_FPS;
+            _estado_txt = "Esperando... " + string_format(_secs_left, 1, 1) + "s";
+            _estado_col = c_gray;
+            break;
+
+        case "ia_preparando":
+            var _prep_left = en.ia_prep_timer / GAME_FPS;
+            _estado_txt = "¡Preparando ataque! " + string_format(_prep_left, 1, 1) + "s";
+            _estado_col = c_orange;
+            break;
+
+        case "ia_atacando":
+            _estado_txt = "¡ATACANDO!";
+            _estado_col = c_red;
+            break;
+    }
+
+    draw_set_color(_estado_col);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    draw_text(_ia_x, _ia_y, _estado_txt);
+
+    // Barra de progreso del timer (pequeña, debajo del estado)
+    if (en.ia_estado == "ia_esperando" || en.ia_estado == "ia_preparando") {
+        var _bar_w = 150;
+        var _bar_h = 4;
+        var _bar_x = _ia_x;
+        var _bar_y = _ia_y + 16;
+
+        // Calcular ratio
+        var _ratio = 0;
+        if (en.ia_estado == "ia_esperando") {
+            var _max_t = scr_ia_calcular_espera(en.velocidad);
+            _ratio = clamp(1 - (en.ia_timer / _max_t), 0, 1);
+        } else {
+            _ratio = clamp(1 - (en.ia_prep_timer / IA_PREP_FRAMES), 0, 1);
+        }
+
+        // Fondo
+        draw_set_color(make_color_rgb(40, 40, 40));
+        draw_rectangle(_bar_x, _bar_y, _bar_x + _bar_w, _bar_y + _bar_h, false);
+
+        // Relleno
+        draw_set_color(_estado_col);
+        draw_rectangle(_bar_x, _bar_y, _bar_x + _bar_w * _ratio, _bar_y + _bar_h, false);
+    }
+}
+
+
 // Mensaje de fin de combate
 if (control_combate.combate_terminado) {
     draw_set_halign(fa_center);

@@ -31,6 +31,21 @@ function scr_actualizar_estados(_p) {
             }
         }
 
+        // Curación en el tiempo (HOT)
+        if (est.tipo == "hot") {
+
+            est.tick_timer--;
+            if (est.tick_timer <= 0) {
+
+                var cura = max(1, est.potencia);
+                _p.vida_actual = min(_p.vida_max, _p.vida_actual + cura);
+
+                est.tick_timer = est.tick_interval;
+
+                show_debug_message("Estado HOT " + est.id + " cura " + string(cura) + " HP.");
+            }
+        }
+
         // Si ya se acabó la duración → limpiar
         if (est.tiempo_rest <= 0) {
 
@@ -44,6 +59,15 @@ function scr_actualizar_estados(_p) {
             }
             if (est.tipo == "buff_velocidad" && est.velocidad_bonus != 0) {
                 _p.velocidad -= est.velocidad_bonus;
+            }
+            if (est.tipo == "debuff_velocidad" && est.velocidad_penalty != 0) {
+                _p.velocidad += est.velocidad_penalty;
+            }
+            if (est.tipo == "debuff_defensa" && est.defensa_penalty != 0) {
+                _p.defensa_bonus_temp += est.defensa_penalty;
+            }
+            if (est.tipo == "debuff_poder" && est.poder_penalty != 0) {
+                _p.poder_elemental += est.poder_penalty;
             }
         }
 

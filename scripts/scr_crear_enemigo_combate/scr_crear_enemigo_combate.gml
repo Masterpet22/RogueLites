@@ -17,6 +17,18 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
     var _afinidad_data  = scr_datos_afinidades(_afi_primaria);
     var _afinidad_data2 = (_afi_secundaria != "none") ? scr_datos_afinidades(_afi_secundaria) : undefined;
 
+    // Leer velocidad y poder elemental desde datos (fallback si no existen)
+    var _vel  = (variable_struct_exists(_data_enemigo, "velocidad")       ? _data_enemigo.velocidad       : 4);
+    var _pow  = (variable_struct_exists(_data_enemigo, "poder_elemental") ? _data_enemigo.poder_elemental : 5);
+
+    // Construir array de habilidades dinámicamente
+    var _habs = ["ataque_basico", _data_enemigo.habilidad_fija];
+    var _cds  = [0, 0];
+    if (variable_struct_exists(_data_enemigo, "habilidad_secundaria")) {
+        array_push(_habs, _data_enemigo.habilidad_secundaria);
+        array_push(_cds, 0);
+    }
+
     var enemigo = {
         nombre:         _nombre_enemigo,
         es_jugador:     false,
@@ -36,13 +48,13 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
         ataque_base:    _data_enemigo.ataque,
         defensa_base:   _data_enemigo.defensa,
         defensa_magica_base: _data_enemigo.defensa_magica,
-        velocidad:      4,
-        poder_elemental:5,
+        velocidad:      _vel,
+        poder_elemental:_pow,
 
         esencia:        0,
         esencia_llena:  100,
-		habilidades_arma: ["ataque_basico"],   // 1 habilidad, la básica
-		habilidades_cd:   [0],                // cooldown correspondiente
+		habilidades_arma: _habs,
+		habilidades_cd:   _cds,
 
         material_drop:  _data_enemigo.drops,  // Array de drops con probabilidades
 
@@ -65,6 +77,12 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
         },
 
         estado:         "normal",
+
+        // ── Máquina de estados IA ──
+        ia_estado:        "ia_esperando",       // ia_esperando | ia_preparando | ia_atacando
+        ia_timer:         scr_ia_calcular_espera(_vel),  // frames hasta próxima acción
+        ia_prep_timer:    0,                     // frames de wind-up restantes
+        ia_hab_elegida:   -1,                    // índice de habilidad elegida en preparación
     };
 
     return enemigo;

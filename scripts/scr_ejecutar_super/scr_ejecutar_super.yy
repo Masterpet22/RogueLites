@@ -1,13 +1,13 @@
 {
-  "$GMScript": "v1",
-  "%Name": "scr_ejecutar_super",
-  "isCompatibility": false,
-  "isDnD": false,
-  "name": "scr_ejecutar_super",
-  "parent": {
-    "name": "scripts",
-    "path": "folders/scripts.yy"
+  "$GMScript":"v1",
+  "%Name":"scr_ejecutar_super",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_ejecutar_super",
+  "parent":{
+    "name":"combat",
+    "path":"folders/scripts/combat.yy",
   },
-  "resourceType": "GMScript",
-  "resourceVersion": "2.0"
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }
