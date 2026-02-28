@@ -16,6 +16,8 @@ function scr_datos_tienda() {
             { nombre: "Maelis", clase: "Centinela",     afinidad: "Luz",    personalidad: "Metodico" },
             { nombre: "Saren",  clase: "Duelista",      afinidad: "Sombra", personalidad: "Resuelto" },
             { nombre: "Nerya",  clase: "Canalizador",   afinidad: "Arcano", personalidad: "Metodico" },
+            { nombre: "Thalys", clase: "Centinela",     afinidad: "Agua",   personalidad: "Temerario" },
+            { nombre: "Brenn",  clase: "Quebrador",     afinidad: "Planta", personalidad: "Agresivo" },
         ],
 
         // ── ENEMIGOS ──

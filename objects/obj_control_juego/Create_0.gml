@@ -39,6 +39,16 @@ var p_nerya = scr_crear_perfil_personaje("Nerya", "Canalizador", "Arcano", "Meto
 ds_map_add(p_nerya.armas_obtenidas, "Hoja Rota", true);
 ds_map_add(perfiles_personaje, "Nerya", p_nerya);
 
+// --- THALYS ---
+var p_thalys = scr_crear_perfil_personaje("Thalys", "Centinela", "Agua", "Temerario");
+ds_map_add(p_thalys.armas_obtenidas, "Hoja Rota", true);
+ds_map_add(perfiles_personaje, "Thalys", p_thalys);
+
+// --- BRENN ---
+var p_brenn = scr_crear_perfil_personaje("Brenn", "Quebrador", "Planta", "Agresivo");
+ds_map_add(p_brenn.armas_obtenidas, "Hoja Rota", true);
+ds_map_add(perfiles_personaje, "Brenn", p_brenn);
+
 // Personaje por defecto (luego tendremos menú)
 //personaje_seleccionado = "Kael";
 

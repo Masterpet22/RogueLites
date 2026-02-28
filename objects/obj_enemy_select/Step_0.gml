@@ -1,10 +1,5 @@
 /// STEP — obj_enemy_select
 
-// ESC = volver a selección de personaje
-if (keyboard_check_pressed(vk_escape)) {
-    room_goto(rm_select);
-}
-
 // ==============================
 // ESTADO 1 → ELEGIR CATEGORÍA
 // ==============================
@@ -16,6 +11,11 @@ if (estado == EnemySelState.CATEGORIA) {
 
     if (keyboard_check_pressed(vk_down)) {
         indice_categoria = (indice_categoria + 1) mod array_length(categorias);
+    }
+
+    // ESC en categoría → volver a selección de personaje
+    if (keyboard_check_pressed(vk_escape)) {
+        room_goto(rm_select);
     }
 
     if (keyboard_check_pressed(vk_enter)) {
