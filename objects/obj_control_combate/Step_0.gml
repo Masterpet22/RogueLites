@@ -73,9 +73,9 @@ if (keyboard_check_pressed(ord("E"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 3);
 }
 
-// SÚPER-HABILIDAD → R (requiere esencia llena)
+// SÚPER-HABILIDAD → R (requiere al menos 50% de esencia)
 if (keyboard_check_pressed(ord("R"))) {
-    if (personaje_jugador.esencia >= personaje_jugador.esencia_llena) {
+    if (personaje_jugador.esencia >= personaje_jugador.esencia_llena * 0.5) {
         scr_ejecutar_super(personaje_jugador, personaje_enemigo);
     }
 }
@@ -96,7 +96,13 @@ if (keyboard_check_pressed(ord("3"))) {
 // 3. IA del enemigo — Máquina de estados (esperando → preparando → atacando)
 scr_ia_enemigo(personaje_enemigo, personaje_jugador);
 
-// 3b. Actualizar notificaciones
+// 3b. Actualizar mecánicas especiales del enemigo
+scr_mec_actualizar(personaje_enemigo);
+
+// 3c. Timer de combate (tracking para logros)
+personaje_enemigo.combate_timer += 1;
+
+// 3d. Actualizar notificaciones
 scr_notif_actualizar();
 
 

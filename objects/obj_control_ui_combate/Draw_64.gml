@@ -85,7 +85,7 @@ if (is_array(pj.habilidades_arma)) {
 }
 
 // ===========================
-//  BARRA DE ESENCIA + SLOT SÚPER
+//  BARRA DE ESENCIA + SLOT SÚPER (TIERS: 50% / 75% / 100%)
 // ===========================
 {
     var _es_x = 40;
@@ -94,29 +94,57 @@ if (is_array(pj.habilidades_arma)) {
     var _es_h = 12;
 
     var _esencia_ratio = clamp(pj.esencia / pj.esencia_llena, 0, 1);
-    var _super_lista = (pj.esencia >= pj.esencia_llena);
+
+    // Determinar tier actual
+    var _tier = 0;       // 0 = no disponible, 1 = 50%, 2 = 75%, 3 = 100%
+    var _tier_txt = "";
+    var _tier_col = make_color_rgb(80, 60, 200); // púrpura base
+
+    if (pj.esencia >= pj.esencia_llena) {
+        _tier = 3;
+        _tier_txt = "100%";
+        _tier_col = c_yellow;
+    } else if (pj.esencia >= pj.esencia_llena * 0.75) {
+        _tier = 2;
+        _tier_txt = "75%";
+        _tier_col = c_orange;
+    } else if (pj.esencia >= pj.esencia_llena * 0.5) {
+        _tier = 1;
+        _tier_txt = "50%";
+        _tier_col = make_color_rgb(100, 180, 255);
+    }
+
+    var _super_disponible = (_tier >= 1);
 
     // Fondo barra
     draw_set_color(make_color_rgb(30, 30, 50));
     draw_rectangle(_es_x, _es_y, _es_x + _es_w, _es_y + _es_h, false);
 
-    // Relleno esencia
-    var _col = _super_lista ? c_yellow : make_color_rgb(80, 60, 200);
-    draw_set_color(_col);
+    // Relleno esencia (color según tier)
+    draw_set_color(_super_disponible ? _tier_col : make_color_rgb(80, 60, 200));
     draw_rectangle(_es_x, _es_y, _es_x + _es_w * _esencia_ratio, _es_y + _es_h, false);
 
+    // Marcadores de tier (líneas verticales al 50% y 75%)
+    draw_set_color(make_color_rgb(180, 180, 180));
+    draw_set_alpha(0.6);
+    var _mark_50 = _es_x + _es_w * 0.50;
+    var _mark_75 = _es_x + _es_w * 0.75;
+    draw_line(_mark_50, _es_y, _mark_50, _es_y + _es_h);
+    draw_line(_mark_75, _es_y, _mark_75, _es_y + _es_h);
+    draw_set_alpha(1);
+
     // Marco
-    draw_set_color(_super_lista ? c_yellow : c_white);
+    draw_set_color(_super_disponible ? _tier_col : c_white);
     draw_rectangle(_es_x, _es_y, _es_x + _es_w, _es_y + _es_h, true);
 
     // Texto
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
-    draw_set_color(_super_lista ? c_yellow : c_white);
+    draw_set_color(_super_disponible ? _tier_col : c_white);
 
     var _etiqueta = "ESENCIA: " + string(round(pj.esencia)) + "/" + string(pj.esencia_llena);
-    if (_super_lista) {
-        _etiqueta += "  [R] SÚPER!";
+    if (_super_disponible) {
+        _etiqueta += "  [R] SÚPER " + _tier_txt + "!";
     }
     draw_text(_es_x + _es_w + 12, _es_y - 1, _etiqueta);
 }
@@ -245,6 +273,59 @@ draw_text(display_get_gui_width() - 240, 45, texto_enemigo);
     }
 }
 
+// ===========================
+//  INDICADORES DE MECÁNICAS ESPECIALES
+// ===========================
+if (variable_struct_exists(en, "mecanicas") && is_array(en.mecanicas) && array_length(en.mecanicas) > 0) {
+    var _mec_indicadores = scr_mec_obtener_indicadores(en);
+    var _mec_x = display_get_gui_width() - 240;
+    var _mec_y = 86;
+
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+
+    for (var _mi = 0; _mi < array_length(_mec_indicadores); _mi++) {
+        var _ind = _mec_indicadores[_mi];
+        draw_set_color(_ind.color);
+        draw_text(_mec_x, _mec_y + _mi * 14, _ind.texto);
+    }
+}
+
+// ===========================
+//  TIMER DE COMBATE
+// ===========================
+{
+    var _timer_frames = en.combate_timer;
+    var _timer_secs = _timer_frames / GAME_FPS;
+    var _mins = floor(_timer_secs / 60);
+    var _secs = floor(_timer_secs) mod 60;
+
+    var _timer_txt = string(_mins) + ":" + ((_secs < 10) ? "0" : "") + string(_secs);
+
+    // Si hay timer límite, mostrar con color según urgencia
+    var _timer_col = c_white;
+    var _timer_limite = en.timer_limite;
+    if (_timer_limite > 0) {
+        var _ratio_t = _timer_secs / _timer_limite;
+        if (_ratio_t >= 1.0) {
+            _timer_col = c_red;
+        } else if (_ratio_t >= 0.75) {
+            _timer_col = c_orange;
+        } else if (_ratio_t >= 0.50) {
+            _timer_col = c_yellow;
+        }
+        _timer_txt += " / " + string(floor(_timer_limite / 60)) + ":"
+            + ((floor(_timer_limite) mod 60 < 10) ? "0" : "")
+            + string(floor(_timer_limite) mod 60);
+    }
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_top);
+    draw_set_color(_timer_col);
+    draw_text(w_gui * 0.5, 5, _timer_txt);
+    draw_set_halign(fa_left);
+}
+
 
 // Mensaje de fin de combate
 if (control_combate.combate_terminado) {
@@ -259,6 +340,24 @@ if (control_combate.combate_terminado) {
         draw_set_color(make_color_rgb(255, 215, 0)); // dorado
         draw_text(w_gui * 0.5, 85, "+" + string(control_combate.oro_recompensa) + " Oro");
     }
+
+    // Mostrar tiempo de combate en pantalla de fin
+    var _final_time = en.combate_timer / GAME_FPS;
+    var _fm = floor(_final_time / 60);
+    var _fs = floor(_final_time) mod 60;
+    var _timp_txt = "Tiempo: " + string(_fm) + ":" + ((_fs < 10) ? "0" : "") + string(_fs);
+    if (en.timer_limite > 0) {
+        if (_final_time <= en.timer_limite) {
+            draw_set_color(c_lime);
+            _timp_txt += " ✓ ¡En tiempo!";
+        } else {
+            draw_set_color(c_orange);
+            _timp_txt += " ✗ Fuera de tiempo";
+        }
+    } else {
+        draw_set_color(c_white);
+    }
+    draw_text(w_gui * 0.5, 135, _timp_txt);
 
     draw_set_color(c_gray);
     draw_text(w_gui * 0.5, 110, "Pulsa ENTER o ESC para continuar");

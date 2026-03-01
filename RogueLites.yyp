@@ -349,6 +349,12 @@
     },
     {
       "id": {
+        "name": "scr_mecanicas_combate",
+        "path": "scripts/scr_mecanicas_combate/scr_mecanicas_combate.yy"
+      }
+    },
+    {
+      "id": {
         "name": "scr_inventario_agregar_material",
         "path": "scripts/scr_inventario_agregar_material/scr_inventario_agregar_material.yy"
       }
