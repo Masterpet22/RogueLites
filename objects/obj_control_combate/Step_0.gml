@@ -11,6 +11,11 @@ if (combate_terminado)
     exit;
 }
 
+// ── PAUSADO: no actualizar nada ──
+if (instance_exists(obj_control_ui_combate) && obj_control_ui_combate.pausado) {
+    exit;
+}
+
 // 1. Actualizar personajes (cooldowns, etc.)
 scr_actualizar_personaje(personaje_jugador);
 scr_actualizar_personaje(personaje_enemigo);
@@ -53,28 +58,28 @@ function usar_habilidad_indice(_indice) {
 
 // INPUT HABILIDADES JUGADOR
 
-// Slot 0 (Clase) → ESPACIO
-if (keyboard_check_pressed(vk_space)) {
+// Slot 0 (Clase) → Q
+if (keyboard_check_pressed(ord("Q"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 0);
 }
 
-// Slot 1 (Arma hab 1) → Q
-if (keyboard_check_pressed(ord("Q"))) {
+// Slot 1 (Arma hab 1) → W
+if (keyboard_check_pressed(ord("W"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 1);
 }
 
-// Slot 2 (Arma hab 2, R2+) → W
-if (keyboard_check_pressed(ord("W"))) {
+// Slot 2 (Arma hab 2, R2+) → E
+if (keyboard_check_pressed(ord("E"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 2);
 }
 
-// Slot 3 (Arma hab 3, R3) → E
-if (keyboard_check_pressed(ord("E"))) {
+// Slot 3 (Arma hab 3, R3) → R
+if (keyboard_check_pressed(ord("R"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 3);
 }
 
-// SÚPER-HABILIDAD → R (requiere al menos 50% de esencia)
-if (keyboard_check_pressed(ord("R"))) {
+// SÚPER-HABILIDAD → TAB (requiere al menos 50% de esencia)
+if (keyboard_check_pressed(vk_tab)) {
     if (personaje_jugador.esencia >= personaje_jugador.esencia_llena * 0.5) {
         scr_ejecutar_super(personaje_jugador, personaje_enemigo);
     }
