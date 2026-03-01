@@ -379,12 +379,12 @@ if (!control_combate.combate_terminado) {
     var _obj_arr  = control_combate.objetos_equipados;
     var _used_arr = control_combate.objetos_usados;
 
-    var _ox_start = display_get_gui_width() - 300;
-    var _oy_start = display_get_gui_height() - 90;
-
-    var _ow = 85;
+    var _ow = 80;
     var _oh = 50;
-    var _ogap = 10;
+    var _ogap = 8;
+    var _total_slots_w = 3 * (_ow + _ogap) + 15 + _ow + 15; // 3 obj + gap runa + runa + margen
+    var _ox_start = display_get_gui_width() - _total_slots_w;
+    var _oy_start = display_get_gui_height() - 90;
 
     for (var i = 0; i < 3; i++) {
 
@@ -440,7 +440,7 @@ if (!control_combate.combate_terminado) {
         var _runa_nom = control_combate.runa_activa;
         var _runa_vacia = (_runa_nom == "" || _runa_nom == undefined);
 
-        var _rx1 = _ox_start + 3 * (_ow + _ogap) + 10; // después de los 3 slots + gap extra
+        var _rx1 = _ox_start + 3 * (_ow + _ogap) + 15; // después de los 3 slots + gap extra para separar runa
         var _ry1 = _oy_start;
         var _rx2 = _rx1 + _ow;
         var _ry2 = _ry1 + _oh;
