@@ -19,10 +19,14 @@ if (keyboard_check_pressed(vk_enter)) {
         break;
 
         case 1:
-            room_goto(rm_forja);
+            room_goto(rm_torre);
         break;
 
         case 2:
+            room_goto(rm_forja);
+        break;
+
+        case 3:
             room_goto(rm_tienda);
         break;
     }

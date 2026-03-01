@@ -42,6 +42,25 @@ personaje_jugador = scr_crear_personaje_combate(
 var enemigo_nombre = control_juego.enemigo_seleccionado;
 personaje_enemigo = scr_crear_enemigo_combate(enemigo_nombre);
 
+// 2b. MODO TORRE: aplicar multiplicador de HP al enemigo
+if (variable_struct_exists(control_juego, "modo_torre") && control_juego.modo_torre) {
+    var _mult = control_juego.torre_hp_mult;
+    personaje_enemigo.vida_max    = round(personaje_enemigo.vida_max * _mult);
+    personaje_enemigo.vida_actual = personaje_enemigo.vida_max;
+    show_debug_message("🏰 Torre HP mult: x" + string(_mult) + " → HP enemigo: " + string(personaje_enemigo.vida_max));
+}
+
+// 2c. MODO TORRE: restaurar HP del jugador del piso anterior
+if (variable_struct_exists(control_juego, "modo_torre") && control_juego.modo_torre) {
+    if (instance_exists(obj_control_torre) && obj_control_torre.torre_pj_vida_max > 0) {
+        // Mantener HP del piso anterior (esencia se resetea)
+        personaje_jugador.vida_max    = obj_control_torre.torre_pj_vida_max;
+        personaje_jugador.vida_actual = obj_control_torre.torre_pj_vida_actual;
+        personaje_jugador.esencia     = 0; // Reset esencia cada piso
+        show_debug_message("🏰 Torre HP restaurado: " + string(personaje_jugador.vida_actual) + "/" + string(personaje_jugador.vida_max));
+    }
+}
+
 // 3. Control de combate
 combate_terminado = false;
 ganador = "";

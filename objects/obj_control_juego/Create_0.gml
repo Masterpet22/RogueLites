@@ -76,4 +76,10 @@ oro = 100;
 
 enemigo_seleccionado = ""; // Inicialización segura
 runa_equipada = "";       // Runa rúnica equipada para el próximo combate
+
+// ── MODO TORRE ──
+modo_torre = false;
+torre_hp_mult = 1;
+torre_oro_mult = 1;
+
 room_goto(rm_menu);

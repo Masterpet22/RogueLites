@@ -444,6 +444,17 @@ if (!control_combate.combate_terminado) {
 
     draw_set_color((_t2 >= 1) ? _t2_col : c_white);
     draw_rectangle(_es_bar_x, _es_bar_y, _es_bar_x + _es_bar_w, _es_bar_y + _es_bar_h, true);
+
+    // Texto esencia + indicador súper
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_middle);
+    draw_set_color((_t2 >= 1) ? _t2_col : c_white);
+    var _es_label2 = "ESENCIA " + string(round(pj.esencia)) + "/" + string(pj.esencia_llena);
+    if (_t2 == 3) _es_label2 += "  [TAB] SÚPER 100%";
+    else if (_t2 == 2) _es_label2 += "  [TAB] SÚPER 75%";
+    else if (_t2 == 1) _es_label2 += "  [TAB] SÚPER 50%";
+    draw_text(_es_bar_x + _es_bar_w + 10, _es_bar_y + _es_bar_h / 2, _es_label2);
+    draw_set_valign(fa_top);
 }
 
 // ===========================
@@ -591,9 +602,14 @@ if (control_combate.combate_terminado) {
 }
 
 // ===========================
-//  NOTIFICACIONES
+//  NOTIFICACIONES (ocultar si el combate terminó)
 // ===========================
-scr_notif_dibujar();
+if (!control_combate.combate_terminado) {
+    scr_notif_dibujar();
+} else {
+    // Limpiar notificaciones para que no se acumulen al volver
+    control_combate.notificaciones = [];
+}
 
 // ╔═══════════════════════════════════════════════════════════════╗
 // ║  MENÚ DE PAUSA

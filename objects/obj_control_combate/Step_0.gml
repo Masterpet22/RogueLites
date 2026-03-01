@@ -6,7 +6,17 @@ if (combate_terminado)
     // Corregido: Ahora coincide con el comentario o usa la tecla que prefieras
     if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_escape))
     {
-        room_goto(rm_menu);
+        // MODO TORRE: delegar al controlador de torre
+        if (instance_exists(obj_control_juego)
+            && variable_struct_exists(obj_control_juego, "modo_torre")
+            && obj_control_juego.modo_torre
+            && instance_exists(obj_control_torre)) {
+            with (obj_control_torre) {
+                scr_torre_post_combate(other.ganador, other.personaje_jugador, other.oro_recompensa);
+            }
+        } else {
+            room_goto(rm_menu);
+        }
     }
     exit;
 }
@@ -137,12 +147,21 @@ if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
     if (!combate_terminado) { // Para que solo entre una vez
         combate_terminado = true;
 
-        // --- CONSUMIR OBJETOS EQUIPADOS DEL INVENTARIO (usados o no) ---
+        // --- CONSUMIR OBJETOS EQUIPADOS DEL INVENTARIO ---
         if (instance_exists(obj_control_juego) && is_array(objetos_equipados)) {
+            var _es_torre = (variable_struct_exists(obj_control_juego, "modo_torre") && obj_control_juego.modo_torre);
             for (var i = 0; i < array_length(objetos_equipados); i++) {
                 var _obj_eq = objetos_equipados[i];
                 if (_obj_eq != "" && _obj_eq != undefined) {
-                    scr_inventario_agregar_objeto(obj_control_juego, _obj_eq, -1);
+                    if (_es_torre) {
+                        // Torre: solo consumir los que se usaron
+                        if (is_array(objetos_usados) && objetos_usados[i]) {
+                            scr_inventario_agregar_objeto(obj_control_juego, _obj_eq, -1);
+                        }
+                    } else {
+                        // Modo normal: siempre se consumen
+                        scr_inventario_agregar_objeto(obj_control_juego, _obj_eq, -1);
+                    }
                 }
             }
             show_debug_message("Objetos consumidos tras combate: " + string(objetos_equipados));
@@ -182,6 +201,12 @@ if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
                 var _oro_min = variable_struct_exists(personaje_enemigo, "oro_min") ? personaje_enemigo.oro_min : 10;
                 var _oro_max = variable_struct_exists(personaje_enemigo, "oro_max") ? personaje_enemigo.oro_max : 25;
                 var _oro_ganado = irandom_range(_oro_min, _oro_max);
+
+                // MODO TORRE: aplicar multiplicador de oro
+                if (variable_struct_exists(obj_control_juego, "modo_torre") && obj_control_juego.modo_torre) {
+                    _oro_ganado = round(_oro_ganado * obj_control_juego.torre_oro_mult);
+                }
+
                 obj_control_juego.oro += _oro_ganado;
                 oro_recompensa = _oro_ganado;  // guardamos para mostrar en UI
                 _log += " | +" + string(_oro_ganado) + " oro";
