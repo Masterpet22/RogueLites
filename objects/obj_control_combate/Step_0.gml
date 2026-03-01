@@ -73,9 +73,9 @@ if (keyboard_check_pressed(ord("E"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 3);
 }
 
-// SÚPER-HABILIDAD → R (requiere esencia llena)
+// SÚPER-HABILIDAD → R (requiere al menos 50% de esencia)
 if (keyboard_check_pressed(ord("R"))) {
-    if (personaje_jugador.esencia >= personaje_jugador.esencia_llena) {
+    if (personaje_jugador.esencia >= personaje_jugador.esencia_llena * 0.5) {
         scr_ejecutar_super(personaje_jugador, personaje_enemigo);
     }
 }

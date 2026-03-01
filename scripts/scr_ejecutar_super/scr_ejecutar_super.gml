@@ -1,13 +1,38 @@
 /// scr_ejecutar_super(atacante, defensor)
 /// Ejecuta la Súper-Habilidad del personaje según Clase × Personalidad.
-/// Requiere esencia == esencia_llena (100). La consume al usarla.
+/// Se puede usar con 50%+, 75%+ o 100% de esencia (efecto escalado).
+///   - 50–74%:  potencia ×0.50
+///   - 75–99%:  potencia ×0.75
+///   - 100%:    potencia ×1.00
+/// Siempre vacía toda la esencia al usarla.
 /// Total: 24 variantes (6 clases × 4 personalidades).
 /// Usa scr_formula_dano / scr_formula_beneficio para consistencia.
 
 function scr_ejecutar_super(_atk, _def) {
 
-    // Seguridad: necesita esencia llena
-    if (_atk.esencia < _atk.esencia_llena) return false;
+    // Seguridad: necesita al menos 50 % de esencia
+    var _umbral_min = _atk.esencia_llena * 0.5;
+    if (_atk.esencia < _umbral_min) return false;
+
+    // Determinar multiplicador de potencia según tier de esencia
+    var _mult_esencia = 1.0;
+    var _tier_nombre  = "100%";
+    if (_atk.esencia >= _atk.esencia_llena) {
+        _mult_esencia = 1.0;
+        _tier_nombre  = "100%";
+    } else if (_atk.esencia >= _atk.esencia_llena * 0.75) {
+        _mult_esencia = 0.75;
+        _tier_nombre  = "75%";
+    } else {
+        _mult_esencia = 0.5;
+        _tier_nombre  = "50%";
+    }
+
+    // Snapshot de estado antes de ejecutar la súper (para escalado retroactivo)
+    var _vida_def_pre  = _def.vida_actual;
+    var _vida_atk_pre  = _atk.vida_actual;
+    var _defb_atk_pre  = _atk.defensa_bonus_temp;
+    var _defb_def_pre  = _def.defensa_bonus_temp;
 
     var _key = _atk.clase + "_" + _atk.personalidad;
 
@@ -319,13 +344,46 @@ function scr_ejecutar_super(_atk, _def) {
             return false;
     }
 
-    // Consumir esencia
-    _atk.esencia = 0;
-    show_debug_message(_atk.nombre + " usó SÚPER: " + _key);
+    // ═══ ESCALADO RETROACTIVO POR TIER DE ESENCIA ═══
+    // Recalcular deltas y aplicar _mult_esencia a todos los efectos
+    if (_mult_esencia < 1.0) {
 
-    // Notificación de súper
+        // Daño infligido al defensor
+        var _delta_vida_def = _vida_def_pre - _def.vida_actual;
+        if (_delta_vida_def > 0) {
+            _def.vida_actual = max(0, _vida_def_pre - round(_delta_vida_def * _mult_esencia));
+        }
+
+        // Curación o autodaño del atacante
+        var _delta_vida_atk = _atk.vida_actual - _vida_atk_pre;
+        if (_delta_vida_atk != 0) {
+            _atk.vida_actual = clamp(
+                _vida_atk_pre + round(_delta_vida_atk * _mult_esencia),
+                1, _atk.vida_max
+            );
+        }
+
+        // Buffs/debuffs de defensa del atacante
+        var _delta_defb_atk = _atk.defensa_bonus_temp - _defb_atk_pre;
+        if (_delta_defb_atk != 0) {
+            _atk.defensa_bonus_temp = _defb_atk_pre + round(_delta_defb_atk * _mult_esencia);
+        }
+
+        // Buffs/debuffs de defensa del defensor
+        var _delta_defb_def = _def.defensa_bonus_temp - _defb_def_pre;
+        if (_delta_defb_def != 0) {
+            _def.defensa_bonus_temp = _defb_def_pre + round(_delta_defb_def * _mult_esencia);
+        }
+    }
+
+    // Consumir TODA la esencia (independientemente del tier)
+    _atk.esencia = 0;
+    show_debug_message(_atk.nombre + " usó SÚPER (" + _tier_nombre + "): " + _key);
+
+    // Notificación de súper con tier
     var _col_super = _atk.es_jugador ? c_yellow : c_fuchsia;
-    scr_notif_agregar(_atk.nombre, "¡SÚPER! " + _key, _col_super);
+    var _notif_txt = "¡SÚPER " + _tier_nombre + "! " + _key;
+    scr_notif_agregar(_atk.nombre, _notif_txt, _col_super);
 
     return true;
 }
