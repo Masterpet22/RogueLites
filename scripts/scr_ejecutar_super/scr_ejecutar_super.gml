@@ -380,6 +380,12 @@ function scr_ejecutar_super(_atk, _def) {
     _atk.esencia = 0;
     show_debug_message(_atk.nombre + " usó SÚPER (" + _tier_nombre + "): " + _key);
 
+    // Hook: Mecánica de Absorción de Esencia del defensor
+    if (_atk.es_jugador && variable_struct_exists(_def, "mecanicas")) {
+        var _dano_super = max(0, _vida_def_pre - _def.vida_actual);
+        scr_mec_absorcion_esencia(_def, _atk, _tier_nombre, _dano_super);
+    }
+
     // Notificación de súper con tier
     var _col_super = _atk.es_jugador ? c_yellow : c_fuchsia;
     var _notif_txt = "¡SÚPER " + _tier_nombre + "! " + _key;

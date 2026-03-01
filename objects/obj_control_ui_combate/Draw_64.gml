@@ -273,6 +273,59 @@ draw_text(display_get_gui_width() - 240, 45, texto_enemigo);
     }
 }
 
+// ===========================
+//  INDICADORES DE MECÁNICAS ESPECIALES
+// ===========================
+if (variable_struct_exists(en, "mecanicas") && is_array(en.mecanicas) && array_length(en.mecanicas) > 0) {
+    var _mec_indicadores = scr_mec_obtener_indicadores(en);
+    var _mec_x = display_get_gui_width() - 240;
+    var _mec_y = 86;
+
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+
+    for (var _mi = 0; _mi < array_length(_mec_indicadores); _mi++) {
+        var _ind = _mec_indicadores[_mi];
+        draw_set_color(_ind.color);
+        draw_text(_mec_x, _mec_y + _mi * 14, _ind.texto);
+    }
+}
+
+// ===========================
+//  TIMER DE COMBATE
+// ===========================
+{
+    var _timer_frames = en.combate_timer;
+    var _timer_secs = _timer_frames / GAME_FPS;
+    var _mins = floor(_timer_secs / 60);
+    var _secs = floor(_timer_secs) mod 60;
+
+    var _timer_txt = string(_mins) + ":" + ((_secs < 10) ? "0" : "") + string(_secs);
+
+    // Si hay timer límite, mostrar con color según urgencia
+    var _timer_col = c_white;
+    var _timer_limite = en.timer_limite;
+    if (_timer_limite > 0) {
+        var _ratio_t = _timer_secs / _timer_limite;
+        if (_ratio_t >= 1.0) {
+            _timer_col = c_red;
+        } else if (_ratio_t >= 0.75) {
+            _timer_col = c_orange;
+        } else if (_ratio_t >= 0.50) {
+            _timer_col = c_yellow;
+        }
+        _timer_txt += " / " + string(floor(_timer_limite / 60)) + ":"
+            + ((floor(_timer_limite) mod 60 < 10) ? "0" : "")
+            + string(floor(_timer_limite) mod 60);
+    }
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_top);
+    draw_set_color(_timer_col);
+    draw_text(w_gui * 0.5, 5, _timer_txt);
+    draw_set_halign(fa_left);
+}
+
 
 // Mensaje de fin de combate
 if (control_combate.combate_terminado) {
@@ -287,6 +340,24 @@ if (control_combate.combate_terminado) {
         draw_set_color(make_color_rgb(255, 215, 0)); // dorado
         draw_text(w_gui * 0.5, 85, "+" + string(control_combate.oro_recompensa) + " Oro");
     }
+
+    // Mostrar tiempo de combate en pantalla de fin
+    var _final_time = en.combate_timer / GAME_FPS;
+    var _fm = floor(_final_time / 60);
+    var _fs = floor(_final_time) mod 60;
+    var _timp_txt = "Tiempo: " + string(_fm) + ":" + ((_fs < 10) ? "0" : "") + string(_fs);
+    if (en.timer_limite > 0) {
+        if (_final_time <= en.timer_limite) {
+            draw_set_color(c_lime);
+            _timp_txt += " ✓ ¡En tiempo!";
+        } else {
+            draw_set_color(c_orange);
+            _timp_txt += " ✗ Fuera de tiempo";
+        }
+    } else {
+        draw_set_color(c_white);
+    }
+    draw_text(w_gui * 0.5, 135, _timp_txt);
 
     draw_set_color(c_gray);
     draw_text(w_gui * 0.5, 110, "Pulsa ENTER o ESC para continuar");

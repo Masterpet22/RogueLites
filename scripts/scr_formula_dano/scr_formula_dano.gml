@@ -131,6 +131,26 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     // ─── Paso 8: Resultado final ───
     var _dano_final = max(1, round(_dano_var * _mult_crit));
 
+    // ─── Paso 9: Mecánicas especiales de combate ───
+    // Si el defensor es un enemigo con mecánicas → modificar daño recibido
+    if (!_defensor.es_jugador && variable_struct_exists(_defensor, "mecanicas")) {
+        var _afi_ataque = _atacante.afinidad; // afinidad del ataque
+        if (_p.es_arma && variable_struct_exists(_atacante, "arma_data") && _atacante.arma_data != undefined) {
+            _afi_ataque = _atacante.arma_data.afinidad;
+        }
+        _dano_final = scr_mec_modificar_dano_recibido(_atacante, _defensor, _dano_final, _afi_ataque);
+        // Acumular reflejo diferido
+        scr_mec_reflejo_acumular(_defensor, _dano_final);
+        // Registrar habilidad para penalización por repetición
+        // (usamos la afinidad como key de tracking simplificada)
+        scr_mec_registrar_habilidad(_defensor, _afi_ataque);
+    }
+    // Si el atacante es un enemigo con mecánicas → modificar daño infligido
+    if (!_atacante.es_jugador && variable_struct_exists(_atacante, "mecanicas")) {
+        // Necesitamos referencia al jugador (el defensor en este caso)
+        _dano_final = scr_mec_modificar_dano_infligido(_atacante, _defensor, _dano_final);
+    }
+
     // Debug: mostrar varianza real para verificar aleatoriedad
     show_debug_message("⚔ " + _atacante.nombre + " → " + _defensor.nombre
         + " | pre=" + string(round(_dano_pre*100)/100)

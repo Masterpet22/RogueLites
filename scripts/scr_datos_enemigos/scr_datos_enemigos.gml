@@ -178,6 +178,8 @@ function scr_datos_enemigos(_e) {
                 habilidad_secundaria: "impulso_voltaico",
                 oro_min: 45, oro_max: 85,
                 precio: 650,
+                mecanicas: ["mec_penalizacion_repeticion"],
+                timer_limite: 60,
                 drops: [
                     { material: "Colmillo de Rayo",  cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Chispa Voltica",    cant_min: 2, cant_max: 4, chance: 60  },
@@ -193,6 +195,8 @@ function scr_datos_enemigos(_e) {
                 habilidad_secundaria: "fortaleza_petrea",
                 oro_min: 50, oro_max: 90,
                 precio: 700,
+                mecanicas: ["mec_penalizacion_repeticion"],
+                timer_limite: 90,
                 drops: [
                     { material: "Ladrillo de Jade",  cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Arcilla Ancestral", cant_min: 2, cant_max: 4, chance: 60  },
@@ -208,6 +212,8 @@ function scr_datos_enemigos(_e) {
                 habilidad_secundaria: "marca_sombria",
                 oro_min: 45, oro_max: 80,
                 precio: 600,
+                mecanicas: ["mec_reflejo_diferido"],
+                timer_limite: 75,
                 drops: [
                     { material: "Materia Oscura",    cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Fragmento Sombrio", cant_min: 2, cant_max: 4, chance: 60  },
@@ -223,6 +229,8 @@ function scr_datos_enemigos(_e) {
                 habilidad_secundaria: "plegaria_marchita",
                 oro_min: 50, oro_max: 85,
                 precio: 650,
+                mecanicas: ["mec_escalado_vida_jugador"],
+                timer_limite: 90,
                 drops: [
                     { material: "Reliquia de Oro",   cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Polvo Sagrado",     cant_min: 2, cant_max: 4, chance: 60  },
@@ -257,6 +265,8 @@ function scr_datos_enemigos(_e) {
                 habilidad_fija: "erupcion_forjada",
                 oro_min: 200, oro_max: 400,
                 precio: 2500,
+                mecanicas: ["mec_ventana_invertida"],
+                timer_limite: 180,
                 drops: [
                     { material: "Nucleo de Forja Antigua",  cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Brasa Carmesi",            cant_min: 2, cant_max: 3, chance: 70  },
@@ -272,6 +282,8 @@ function scr_datos_enemigos(_e) {
                 habilidad_fija: "maremoto_vegetal",
                 oro_min: 180, oro_max: 380,
                 precio: 2500,
+                mecanicas: ["mec_escalado_vida_jugador", "mec_penalizacion_repeticion"],
+                timer_limite: 180,
                 drops: [
                     { material: "Corazon de Fango",         cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Perla Abisal",             cant_min: 2, cant_max: 3, chance: 70  },
@@ -287,6 +299,8 @@ function scr_datos_enemigos(_e) {
                 habilidad_fija: "fulgor_celestial",
                 oro_min: 220, oro_max: 450,
                 precio: 3000,
+                mecanicas: ["mec_afinidad_reactiva", "mec_reflejo_diferido"],
+                timer_limite: 150,
                 drops: [
                     { material: "Fragmento Celestial",      cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Colmillo de Rayo",         cant_min: 2, cant_max: 3, chance: 70  },
@@ -302,6 +316,8 @@ function scr_datos_enemigos(_e) {
                 habilidad_fija: "vacio_runico",
                 oro_min: 250, oro_max: 500,
                 precio: 3500,
+                mecanicas: ["mec_absorcion_esencia"],
+                timer_limite: 180,
                 drops: [
                     { material: "Cristal del Vacio",        cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Materia Oscura",           cant_min: 2, cant_max: 3, chance: 70  },

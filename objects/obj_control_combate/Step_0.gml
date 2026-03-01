@@ -96,7 +96,13 @@ if (keyboard_check_pressed(ord("3"))) {
 // 3. IA del enemigo — Máquina de estados (esperando → preparando → atacando)
 scr_ia_enemigo(personaje_enemigo, personaje_jugador);
 
-// 3b. Actualizar notificaciones
+// 3b. Actualizar mecánicas especiales del enemigo
+scr_mec_actualizar(personaje_enemigo);
+
+// 3c. Timer de combate (tracking para logros)
+personaje_enemigo.combate_timer += 1;
+
+// 3d. Actualizar notificaciones
 scr_notif_actualizar();
 
 

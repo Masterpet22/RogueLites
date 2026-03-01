@@ -84,6 +84,9 @@ function scr_ia_enemigo(_en, _jug) {
                     + string(_en.habilidades_arma[_en.ia_hab_elegida]));
             }
 
+            // Mecánica: Reflejo Diferido — descargar daño acumulado al jugador
+            scr_mec_reflejo_descargar(_en, _jug);
+
             // Volver a esperando con nuevo timer basado en velocidad
             _en.ia_hab_elegida = -1;
             _en.ia_timer       = scr_ia_calcular_espera(_en.velocidad);
