@@ -131,6 +131,35 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     // ─── Paso 8: Resultado final ───
     var _dano_final = max(1, round(_dano_var * _mult_crit));
 
+    // ─── Paso 8b: Modificadores de RUNAS ───
+    if (instance_exists(obj_control_combate)) {
+        var _cc = instance_find(obj_control_combate, 0);
+
+        // Runa del Último Aliento: primer ataque del jugador hace 0 daño
+        if (_atacante.es_jugador && _cc.runa_primer_ataque) {
+            _dano_final = 0;
+            _cc.runa_primer_ataque = false;
+            scr_notif_agregar("Jugador", "¡Primer ataque nulo! (Runa)", c_purple);
+        }
+
+        // Runa de Fortaleza: jugador hace -25% daño
+        if (_atacante.es_jugador && _cc.runa_fortaleza) {
+            _dano_final = max(1, round(_dano_final * 0.75));
+        }
+
+        // Runa de Cristal: +50% daño infligido y +50% daño recibido
+        if (_cc.runa_cristal) {
+            if (_atacante.es_jugador) {
+                _dano_final = round(_dano_final * 1.50);
+            }
+            if (_defensor.es_jugador) {
+                _dano_final = round(_dano_final * 1.50);
+            }
+        }
+
+        // Runa Vampírica: -40% generación de esencia (aplicado abajo)
+    }
+
     // ─── Paso 9: Mecánicas especiales de combate ───
     // Si el defensor es un enemigo con mecánicas → modificar daño recibido
     if (!_defensor.es_jugador && variable_struct_exists(_defensor, "mecanicas")) {
@@ -170,6 +199,15 @@ function scr_formula_dano(_atacante, _defensor, _p) {
                          ? round(_atacante.poder_elemental * ESENCIA_MULT_PODER_MAG) : 0;
         var _esen_total = _esen_base + _esen_dano + _esen_vel + _esen_mag;
         if (_tipo_crit == 1) _esen_total = round(_esen_total * ESENCIA_CRIT_BONUS);
+
+        // Runa Vampírica: -40% generación de esencia
+        if (instance_exists(obj_control_combate)) {
+            var _cc2 = instance_find(obj_control_combate, 0);
+            if (_cc2.runa_vampirica && _atacante.es_jugador) {
+                _esen_total = round(_esen_total * 0.60);
+            }
+        }
+
         _atacante.esencia = clamp(_atacante.esencia + _esen_total, 0, _atacante.esencia_llena);
     }
 

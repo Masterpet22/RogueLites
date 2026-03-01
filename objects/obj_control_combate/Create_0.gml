@@ -65,3 +65,59 @@ if (instance_exists(control_juego)
     }
 }
 show_debug_message("Objetos equipados para combate: " + string(objetos_equipados));
+
+// 6. Runa equipada — aplicar modificadores de stats al jugador
+runa_activa = "";
+runa_ultimo_aliento_disponible = false;
+runa_primer_ataque = false;
+runa_vampirica = false;
+runa_cristal = false;
+runa_fortaleza = false;
+
+if (instance_exists(control_juego)
+    && variable_struct_exists(control_juego, "runa_equipada")
+    && control_juego.runa_equipada != "") {
+
+    runa_activa = control_juego.runa_equipada;
+    var _pj = personaje_jugador;
+
+    switch (runa_activa) {
+        case "Runa de Furia":
+            // +30% ataque, -20% vida máx
+            _pj.ataque_base = round(_pj.ataque_base * 1.30);
+            _pj.vida_max    = round(_pj.vida_max * 0.80);
+            _pj.vida_actual = min(_pj.vida_actual, _pj.vida_max);
+            break;
+
+        case "Runa de Fortaleza":
+            // +40% vida máx, -25% daño infligido (flag)
+            _pj.vida_max    = round(_pj.vida_max * 1.40);
+            _pj.vida_actual = _pj.vida_max;
+            runa_fortaleza  = true;
+            break;
+
+        case "Runa de Celeridad":
+            // +50% velocidad, -30% defensa
+            _pj.velocidad     = round(_pj.velocidad * 1.50);
+            _pj.defensa_base  = round(_pj.defensa_base * 0.70);
+            break;
+
+        case "Runa del Ultimo Aliento":
+            // Sobrevive 1 golpe letal (una vez), primer ataque hace 0 daño
+            runa_ultimo_aliento_disponible = true;
+            runa_primer_ataque = true;
+            break;
+
+        case "Runa Vampirica":
+            // 15% lifesteal, -40% generación de esencia
+            runa_vampirica = true;
+            break;
+
+        case "Runa de Cristal":
+            // +50% daño infligido Y recibido
+            runa_cristal = true;
+            break;
+    }
+
+    show_debug_message("Runa activa: " + runa_activa);
+}

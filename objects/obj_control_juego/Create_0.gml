@@ -70,4 +70,5 @@ ds_map_add(enemigos_desbloqueados, "Titan de las Forjas Rotas", true);
 oro = 100;
 
 enemigo_seleccionado = ""; // Inicialización segura
+runa_equipada = "";       // Runa rúnica equipada para el próximo combate
 room_goto(rm_menu);

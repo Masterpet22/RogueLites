@@ -107,6 +107,26 @@ scr_notif_actualizar();
 
 
 // 4. Comprobar fin de combate
+
+// ─── Runa del Último Aliento: sobrevivir un golpe letal (una vez) ───
+if (personaje_jugador.vida_actual <= 0 && runa_ultimo_aliento_disponible) {
+    personaje_jugador.vida_actual = 1;
+    runa_ultimo_aliento_disponible = false;
+    scr_notif_agregar("Jugador", "¡Último Aliento! Sobrevive con 1 HP", c_purple);
+}
+
+// ─── Runa Vampírica: 15% lifesteal del daño infligido ───
+// Se procesa cada frame comparando vida previa del enemigo
+if (runa_vampirica && variable_struct_exists(personaje_enemigo, "vida_prev_runa")) {
+    var _dano_hecho = personaje_enemigo.vida_prev_runa - personaje_enemigo.vida_actual;
+    if (_dano_hecho > 0) {
+        var _heal = max(1, round(_dano_hecho * 0.15));
+        personaje_jugador.vida_actual = min(personaje_jugador.vida_actual + _heal, personaje_jugador.vida_max);
+    }
+}
+// Guardar vida previa del enemigo para siguiente frame
+personaje_enemigo.vida_prev_runa = personaje_enemigo.vida_actual;
+
 if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
 
     if (!combate_terminado) { // Para que solo entre una vez
@@ -121,6 +141,13 @@ if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
                 }
             }
             show_debug_message("Objetos consumidos tras combate: " + string(objetos_equipados));
+        }
+
+        // --- CONSUMIR RUNA EQUIPADA DEL INVENTARIO ---
+        if (runa_activa != "" && instance_exists(obj_control_juego)) {
+            scr_inventario_agregar_objeto(obj_control_juego, runa_activa, -1);
+            show_debug_message("Runa consumida tras combate: " + runa_activa);
+            obj_control_juego.runa_equipada = "";
         }
 
         if (personaje_jugador.vida_actual <= 0 && personaje_enemigo.vida_actual <= 0) {

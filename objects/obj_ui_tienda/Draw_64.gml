@@ -74,7 +74,7 @@ else if (estado == TiendaState.LISTA) {
         var _it = items_lista[i];
 
         // Color
-        if (_it.comprado && _it.tipo != "objeto") {
+        if (_it.comprado && _it.tipo != "objeto" && _it.tipo != "runico") {
             // Ya comprado → gris
             if (i == indice_item) draw_set_color(make_color_rgb(180, 180, 100));
             else                  draw_set_color(c_gray);
@@ -84,10 +84,10 @@ else if (estado == TiendaState.LISTA) {
         }
 
         var _etiqueta = _it.nombre;
-        if (_it.comprado && _it.tipo != "objeto") {
+        if (_it.comprado && _it.tipo != "objeto" && _it.tipo != "runico") {
             _etiqueta += "  [DESBLOQUEADO]";
         }
-        if (_it.tipo == "objeto") {
+        if (_it.tipo == "objeto" || _it.tipo == "runico") {
             var _cant = variable_struct_exists(_it, "cantidad") ? _it.cantidad : 0;
             _etiqueta += "  (x" + string(_cant) + ")";
         }
@@ -154,9 +154,27 @@ else if (estado == TiendaState.LISTA) {
             var _do = scr_datos_objetos(_sel.datos_extra);
             _det_y += 10;
             draw_set_color(c_white);
-            draw_text(_det_x, _det_y, "Tipo: " + _do.tipo);             _det_y += 20;
+            draw_text(_det_x, _det_y, "Tipo: Consumible");             _det_y += 20;
             draw_set_color(c_ltgray);
             draw_text(_det_x, _det_y, _do.descripcion);                 _det_y += 20;
+            draw_set_color(c_white);
+            var _cant_inv = scr_inventario_get_objeto(control_juego, _sel.datos_extra);
+            draw_text(_det_x, _det_y, "En inventario: x" + string(_cant_inv));
+        }
+        else if (_sel.tipo == "runico") {
+            var _dr = scr_datos_objetos(_sel.datos_extra);
+            _det_y += 10;
+            draw_set_color(make_color_rgb(180, 120, 255));
+            draw_text(_det_x, _det_y, "Tipo: Objeto Runico");          _det_y += 25;
+            draw_set_color(c_ltgray);
+            draw_text(_det_x, _det_y, _dr.descripcion);                 _det_y += 25;
+            draw_set_color(c_lime);
+            draw_text(_det_x, _det_y, "+ " + _dr.ventaja);             _det_y += 22;
+            draw_set_color(c_red);
+            draw_text(_det_x, _det_y, "- " + _dr.desventaja);          _det_y += 25;
+            draw_set_color(c_gray);
+            draw_text(_det_x, _det_y, "Se equipa 1 por combate.");     _det_y += 20;
+            draw_text(_det_x, _det_y, "Desaparece al terminar.");      _det_y += 25;
             draw_set_color(c_white);
             var _cant_inv = scr_inventario_get_objeto(control_juego, _sel.datos_extra);
             draw_text(_det_x, _det_y, "En inventario: x" + string(_cant_inv));

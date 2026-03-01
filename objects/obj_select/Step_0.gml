@@ -73,10 +73,29 @@ else if (estado == SelState.ARMA_POPUP) {
         objetos_seleccionados = [];
         indice_objeto = 0;
 
-        // Si no tiene objetos, ir directo a seleccionar enemigo
+        // Si no tiene objetos, saltar a runas o enemigo
         if (array_length(objetos_disponibles) == 0) {
             control_juego.objetos_para_combate = [];
-            room_goto(rm_enemy_select);
+
+            // Preparar lista de runas disponibles
+            runas_disponibles = [];
+            var _todas_runas = scr_lista_runicos_disponibles();
+            for (var i = 0; i < array_length(_todas_runas); i++) {
+                var _cant = scr_inventario_get_objeto(control_juego, _todas_runas[i]);
+                if (_cant > 0) {
+                    array_push(runas_disponibles, _todas_runas[i]);
+                }
+            }
+            runa_seleccionada = "";
+            indice_runa = 0;
+
+            if (array_length(runas_disponibles) == 0) {
+                control_juego.runa_equipada = "";
+                room_goto(rm_enemy_select);
+            } else {
+                estado = SelState.RUNA_POPUP;
+                io_clear();
+            }
         } else {
             estado = SelState.OBJETOS_POPUP;
             io_clear();
@@ -127,17 +146,71 @@ else if (estado == SelState.OBJETOS_POPUP) {
         }
     }
 
-    // ENTER: confirmar y pasar a seleccionar enemigo
+    // ENTER: confirmar y pasar a seleccionar runa
     if (keyboard_check_pressed(vk_enter)) {
         // Guardar objetos seleccionados en control_juego para que combate los lea
         control_juego.objetos_para_combate = [];
         array_copy(control_juego.objetos_para_combate, 0, objetos_seleccionados, 0, array_length(objetos_seleccionados));
-        room_goto(rm_enemy_select);
+
+        // Preparar lista de runas disponibles
+        runas_disponibles = [];
+        var _todas_runas = scr_lista_runicos_disponibles();
+        for (var i = 0; i < array_length(_todas_runas); i++) {
+            var _cant = scr_inventario_get_objeto(control_juego, _todas_runas[i]);
+            if (_cant > 0) {
+                array_push(runas_disponibles, _todas_runas[i]);
+            }
+        }
+
+        runa_seleccionada = "";
+        indice_runa = 0;
+
+        // Si no tiene runas, ir directo a seleccionar enemigo
+        if (array_length(runas_disponibles) == 0) {
+            control_juego.runa_equipada = "";
+            room_goto(rm_enemy_select);
+        } else {
+            estado = SelState.RUNA_POPUP;
+            io_clear();
+        }
     }
 
     // ESC: volver a selección de arma sin equipar objetos
     if (keyboard_check_pressed(vk_escape)) {
         objetos_seleccionados = [];
         estado = SelState.ARMA_POPUP;
+    }
+}
+
+// =========================
+// ESTADO: SELECCIONAR RUNA
+// =========================
+else if (estado == SelState.RUNA_POPUP) {
+
+    var n_runas = array_length(runas_disponibles);
+
+    // Navegar con flechas
+    if (keyboard_check_pressed(vk_up)) {
+        indice_runa = (indice_runa - 1 + (n_runas + 1)) mod (n_runas + 1);
+    }
+    if (keyboard_check_pressed(vk_down)) {
+        indice_runa = (indice_runa + 1) mod (n_runas + 1);
+    }
+
+    // ENTER: confirmar y pasar a seleccionar enemigo
+    if (keyboard_check_pressed(vk_enter)) {
+        if (indice_runa < n_runas) {
+            runa_seleccionada = runas_disponibles[indice_runa];
+        } else {
+            runa_seleccionada = ""; // Opción "Sin runa"
+        }
+        control_juego.runa_equipada = runa_seleccionada;
+        room_goto(rm_enemy_select);
+    }
+
+    // ESC: volver a objetos
+    if (keyboard_check_pressed(vk_escape)) {
+        runa_seleccionada = "";
+        estado = SelState.OBJETOS_POPUP;
     }
 }

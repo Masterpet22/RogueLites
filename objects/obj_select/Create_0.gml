@@ -20,7 +20,8 @@ indice_arma = 0;
 enum SelState {
     PERSONAJE,
     ARMA_POPUP,
-    OBJETOS_POPUP
+    OBJETOS_POPUP,
+    RUNA_POPUP
 }
 
 // Estado inicial: solo personaje
@@ -31,3 +32,8 @@ estado = SelState.PERSONAJE;
 objetos_seleccionados = [];   // array de nombres de objeto
 objetos_disponibles = [];     // objetos que el jugador posee (cantidad > 0)
 indice_objeto = 0;            // cursor en la lista de objetos disponibles
+
+// --- SISTEMA DE EQUIPAR RUNAS ---
+runas_disponibles = [];       // runas que el jugador posee
+runa_seleccionada = "";       // runa elegida para el combate (solo 1)
+indice_runa = 0;              // cursor en la lista de runas

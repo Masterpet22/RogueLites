@@ -433,6 +433,45 @@ if (!control_combate.combate_terminado) {
         draw_text((_ox1+_ox2)/2, _oy2 - 10, string(i + 1));
     }
 
+    // ===========================
+    //  SLOT DE RUNA EQUIPADA (siempre visible)
+    // ===========================
+    {
+        var _runa_nom = control_combate.runa_activa;
+        var _runa_vacia = (_runa_nom == "" || _runa_nom == undefined);
+
+        var _rx1 = _ox_start + 3 * (_ow + _ogap) + 10; // después de los 3 slots + gap extra
+        var _ry1 = _oy_start;
+        var _rx2 = _rx1 + _ow;
+        var _ry2 = _ry1 + _oh;
+
+        // Marco: púrpura si hay runa, gris si vacío
+        draw_set_color(_runa_vacia ? c_dkgray : make_color_rgb(180, 120, 255));
+        draw_rectangle(_rx1, _ry1, _rx2, _ry2, false);
+
+        // Fondo
+        draw_set_color(_runa_vacia ? make_color_rgb(25, 25, 25) : make_color_rgb(35, 20, 50));
+        draw_rectangle(_rx1+1, _ry1+1, _rx2-1, _ry2-1, false);
+
+        // Texto
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+
+        if (_runa_vacia) {
+            draw_set_color(c_dkgray);
+            draw_text((_rx1+_rx2)/2, _ry1 + 16, "Sin Runa");
+        } else {
+            draw_set_color(make_color_rgb(220, 180, 255));
+            var _rtxt = _runa_nom;
+            if (string_length(_rtxt) > 10) _rtxt = string_copy(_rtxt, 1, 10) + ".";
+            draw_text((_rx1+_rx2)/2, _ry1 + 16, _rtxt);
+        }
+
+        // Etiqueta "RUNA"
+        draw_set_color(_runa_vacia ? c_dkgray : make_color_rgb(180, 120, 255));
+        draw_text((_rx1+_rx2)/2, _ry2 - 10, "RUNA");
+    }
+
     // Restaurar alineación
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
