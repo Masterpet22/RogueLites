@@ -23,7 +23,18 @@ if (pausado) {
         } else {
             // Salir al menú
             pausado = false;
-            room_goto(rm_menu);
+
+            // Si estamos en modo torre, resetear el controlador
+            if (instance_exists(obj_control_torre)
+                && instance_exists(obj_control_juego)
+                && variable_struct_exists(obj_control_juego, "modo_torre")
+                && obj_control_juego.modo_torre) {
+                with (obj_control_torre) {
+                    scr_torre_finalizar("abandono_pausa");
+                }
+            } else {
+                room_goto(rm_menu);
+            }
         }
     }
 }

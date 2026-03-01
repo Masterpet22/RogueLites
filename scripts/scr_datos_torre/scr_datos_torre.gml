@@ -56,7 +56,7 @@ function scr_torre_get_dificultades() {
             pisos_total:      10,
             tienda_cada:      3,     // tienda después del piso 3, 6, 9
             hp_bonus_pct:     0,     // +0% HP enemigos
-            oro_bonus_pct:    10,    // +10% oro ganado
+            oro_bonus_pct:    0,     // sin bonus de oro
             usa_elites:       false,
             tiene_jefe_final: false,
         },
@@ -67,7 +67,7 @@ function scr_torre_get_dificultades() {
             pisos_total:      14,
             tienda_cada:      4,     // tienda después del piso 4, 8, 12
             hp_bonus_pct:     25,    // +25% HP enemigos
-            oro_bonus_pct:    0,
+            oro_bonus_pct:    25,    // +25% oro por combate
             usa_elites:       true,
             tiene_jefe_final: false,
         },
@@ -78,7 +78,7 @@ function scr_torre_get_dificultades() {
             pisos_total:      18,
             tienda_cada:      5,     // tienda después del piso 5, 10, 15
             hp_bonus_pct:     50,    // +50% HP enemigos
-            oro_bonus_pct:    -15,   // -15% oro pero más drops
+            oro_bonus_pct:    50,    // +50% oro por combate
             usa_elites:       true,
             tiene_jefe_final: true,  // jefe en el último piso
         },

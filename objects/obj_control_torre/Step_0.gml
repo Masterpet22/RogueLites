@@ -1,7 +1,15 @@
 /// STEP — obj_control_torre
 
 // No procesar input durante el combate (rm_combate tiene su propio controlador)
-if (torre_fase == "combate") exit;
+// Pero si estamos en rm_torre con fase "combate", algo fue mal → resetear
+if (torre_fase == "combate") {
+    if (room == rm_torre) {
+        torre_fase = "seleccion_ala";
+        show_debug_message("⚠ Torre: fase 'combate' detectada en rm_torre — reseteando a seleccion_ala");
+    } else {
+        exit;
+    }
+}
 
 // Solo procesar input en rm_torre
 if (room != rm_torre) exit;
