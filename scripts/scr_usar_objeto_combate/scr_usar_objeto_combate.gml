@@ -38,12 +38,12 @@ function scr_usar_objeto_combate(_slot) {
             break;
 
         case "buff_ataque":
-            _pj.ataque += _datos.valor_efecto;
+            _pj.ataque_base += _datos.valor_efecto;
             scr_notif_agregar(_pj.nombre, "usa " + _nombre + " (ATQ +" + string(_datos.valor_efecto) + ")", c_orange);
             break;
 
         case "buff_defensa":
-            _pj.defensa += _datos.valor_efecto;
+            _pj.defensa_bonus_temp += _datos.valor_efecto;
             scr_notif_agregar(_pj.nombre, "usa " + _nombre + " (DEF +" + string(_datos.valor_efecto) + ")", c_orange);
             break;
 

@@ -3,6 +3,11 @@
 // Establecer velocidad del juego (usa la macro GAME_FPS = 60)
 game_set_speed(GAME_FPS, gamespeed_fps);
 
+// Resolución fija de GUI: 1280×720
+display_set_gui_size(1280, 720);
+window_set_size(1280, 720);
+surface_resize(application_surface, 1280, 720);
+
 // Semilla aleatoria — se llama UNA VEZ al inicio del juego
 randomize();
 
@@ -70,4 +75,11 @@ ds_map_add(enemigos_desbloqueados, "Titan de las Forjas Rotas", true);
 oro = 100;
 
 enemigo_seleccionado = ""; // Inicialización segura
+runa_equipada = "";       // Runa rúnica equipada para el próximo combate
+
+// ── MODO TORRE ──
+modo_torre = false;
+torre_hp_mult = 1;
+torre_oro_mult = 1;
+
 room_goto(rm_menu);

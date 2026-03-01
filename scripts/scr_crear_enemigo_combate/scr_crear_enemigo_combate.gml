@@ -17,6 +17,14 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
     var _afinidad_data  = scr_datos_afinidades(_afi_primaria);
     var _afinidad_data2 = (_afi_secundaria != "none") ? scr_datos_afinidades(_afi_secundaria) : undefined;
 
+    // Determinar rango del enemigo según sus datos
+    var _rango = "Común";
+    if (variable_struct_exists(_data_enemigo, "patron")) {
+        _rango = "Jefe";
+    } else if (variable_struct_exists(_data_enemigo, "habilidad_secundaria")) {
+        _rango = "Elite";
+    }
+
     // Leer velocidad y poder elemental desde datos (fallback si no existen)
     var _vel  = (variable_struct_exists(_data_enemigo, "velocidad")       ? _data_enemigo.velocidad       : 4);
     var _pow  = (variable_struct_exists(_data_enemigo, "poder_elemental") ? _data_enemigo.poder_elemental : 5);
@@ -34,6 +42,7 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
         es_jugador:     false,
 
         clase:          "Enemigo",
+        rango:          _rango,
         afinidad:       _afi_primaria,
         afinidad_secundaria: _afi_secundaria,
         arma:           undefined,
@@ -87,12 +96,19 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
         ia_timer:         scr_ia_calcular_espera(_vel),  // frames hasta próxima acción
         ia_prep_timer:    0,                     // frames de wind-up restantes
         ia_hab_elegida:   -1,                    // índice de habilidad elegida en preparación
+        ia_patron_hab:    "",                    // ID de habilidad elegida por patrón
 
         // ── Timer de combate (para logros/tracking) ──
         combate_timer:    0,                     // frames transcurridos (se incrementa en Step)
         timer_limite:     variable_struct_exists(_data_enemigo, "timer_limite")
                           ? _data_enemigo.timer_limite : 0,  // 0 = sin límite
     };
+
+    // ── Inicializar patrón secuencial (jefes) ──
+    if (variable_struct_exists(_data_enemigo, "patron") && is_array(_data_enemigo.patron)) {
+        enemigo.patron  = _data_enemigo.patron;
+        enemigo.p_index = 0;
+    }
 
     // ── Inicializar mecánicas especiales ──
     var _mecs = variable_struct_exists(_data_enemigo, "mecanicas") ? _data_enemigo.mecanicas : [];

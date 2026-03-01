@@ -6,8 +6,23 @@ if (combate_terminado)
     // Corregido: Ahora coincide con el comentario o usa la tecla que prefieras
     if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_escape))
     {
-        room_goto(rm_menu);
+        // MODO TORRE: delegar al controlador de torre
+        if (instance_exists(obj_control_juego)
+            && variable_struct_exists(obj_control_juego, "modo_torre")
+            && obj_control_juego.modo_torre
+            && instance_exists(obj_control_torre)) {
+            with (obj_control_torre) {
+                scr_torre_post_combate(other.ganador, other.personaje_jugador, other.oro_recompensa);
+            }
+        } else {
+            room_goto(rm_menu);
+        }
     }
+    exit;
+}
+
+// ── PAUSADO: no actualizar nada ──
+if (instance_exists(obj_control_ui_combate) && obj_control_ui_combate.pausado) {
     exit;
 }
 
@@ -53,28 +68,28 @@ function usar_habilidad_indice(_indice) {
 
 // INPUT HABILIDADES JUGADOR
 
-// Slot 0 (Clase) → ESPACIO
-if (keyboard_check_pressed(vk_space)) {
+// Slot 0 (Clase) → Q
+if (keyboard_check_pressed(ord("Q"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 0);
 }
 
-// Slot 1 (Arma hab 1) → Q
-if (keyboard_check_pressed(ord("Q"))) {
+// Slot 1 (Arma hab 1) → W
+if (keyboard_check_pressed(ord("W"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 1);
 }
 
-// Slot 2 (Arma hab 2, R2+) → W
-if (keyboard_check_pressed(ord("W"))) {
+// Slot 2 (Arma hab 2, R2+) → E
+if (keyboard_check_pressed(ord("E"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 2);
 }
 
-// Slot 3 (Arma hab 3, R3) → E
-if (keyboard_check_pressed(ord("E"))) {
+// Slot 3 (Arma hab 3, R3) → R
+if (keyboard_check_pressed(ord("R"))) {
     scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 3);
 }
 
-// SÚPER-HABILIDAD → R (requiere al menos 50% de esencia)
-if (keyboard_check_pressed(ord("R"))) {
+// SÚPER-HABILIDAD → TAB (requiere al menos 50% de esencia)
+if (keyboard_check_pressed(vk_tab)) {
     if (personaje_jugador.esencia >= personaje_jugador.esencia_llena * 0.5) {
         scr_ejecutar_super(personaje_jugador, personaje_enemigo);
     }
@@ -107,20 +122,56 @@ scr_notif_actualizar();
 
 
 // 4. Comprobar fin de combate
+
+// ─── Runa del Último Aliento: sobrevivir un golpe letal (una vez) ───
+if (personaje_jugador.vida_actual <= 0 && runa_ultimo_aliento_disponible) {
+    personaje_jugador.vida_actual = 1;
+    runa_ultimo_aliento_disponible = false;
+    scr_notif_agregar("Jugador", "¡Último Aliento! Sobrevive con 1 HP", c_purple);
+}
+
+// ─── Runa Vampírica: 15% lifesteal del daño infligido ───
+// Se procesa cada frame comparando vida previa del enemigo
+if (runa_vampirica && variable_struct_exists(personaje_enemigo, "vida_prev_runa")) {
+    var _dano_hecho = personaje_enemigo.vida_prev_runa - personaje_enemigo.vida_actual;
+    if (_dano_hecho > 0) {
+        var _heal = max(1, round(_dano_hecho * 0.15));
+        personaje_jugador.vida_actual = min(personaje_jugador.vida_actual + _heal, personaje_jugador.vida_max);
+    }
+}
+// Guardar vida previa del enemigo para siguiente frame
+personaje_enemigo.vida_prev_runa = personaje_enemigo.vida_actual;
+
 if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
 
     if (!combate_terminado) { // Para que solo entre una vez
         combate_terminado = true;
 
-        // --- CONSUMIR OBJETOS EQUIPADOS DEL INVENTARIO (usados o no) ---
+        // --- CONSUMIR OBJETOS EQUIPADOS DEL INVENTARIO ---
         if (instance_exists(obj_control_juego) && is_array(objetos_equipados)) {
+            var _es_torre = (variable_struct_exists(obj_control_juego, "modo_torre") && obj_control_juego.modo_torre);
             for (var i = 0; i < array_length(objetos_equipados); i++) {
                 var _obj_eq = objetos_equipados[i];
                 if (_obj_eq != "" && _obj_eq != undefined) {
-                    scr_inventario_agregar_objeto(obj_control_juego, _obj_eq, -1);
+                    if (_es_torre) {
+                        // Torre: solo consumir los que se usaron
+                        if (is_array(objetos_usados) && objetos_usados[i]) {
+                            scr_inventario_agregar_objeto(obj_control_juego, _obj_eq, -1);
+                        }
+                    } else {
+                        // Modo normal: siempre se consumen
+                        scr_inventario_agregar_objeto(obj_control_juego, _obj_eq, -1);
+                    }
                 }
             }
             show_debug_message("Objetos consumidos tras combate: " + string(objetos_equipados));
+        }
+
+        // --- CONSUMIR RUNA EQUIPADA DEL INVENTARIO ---
+        if (runa_activa != "" && instance_exists(obj_control_juego)) {
+            scr_inventario_agregar_objeto(obj_control_juego, runa_activa, -1);
+            show_debug_message("Runa consumida tras combate: " + runa_activa);
+            obj_control_juego.runa_equipada = "";
         }
 
         if (personaje_jugador.vida_actual <= 0 && personaje_enemigo.vida_actual <= 0) {
@@ -150,6 +201,12 @@ if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
                 var _oro_min = variable_struct_exists(personaje_enemigo, "oro_min") ? personaje_enemigo.oro_min : 10;
                 var _oro_max = variable_struct_exists(personaje_enemigo, "oro_max") ? personaje_enemigo.oro_max : 25;
                 var _oro_ganado = irandom_range(_oro_min, _oro_max);
+
+                // MODO TORRE: aplicar multiplicador de oro
+                if (variable_struct_exists(obj_control_juego, "modo_torre") && obj_control_juego.modo_torre) {
+                    _oro_ganado = round(_oro_ganado * obj_control_juego.torre_oro_mult);
+                }
+
                 obj_control_juego.oro += _oro_ganado;
                 oro_recompensa = _oro_ganado;  // guardamos para mostrar en UI
                 _log += " | +" + string(_oro_ganado) + " oro";

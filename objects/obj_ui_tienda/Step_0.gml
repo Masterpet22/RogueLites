@@ -80,8 +80,23 @@ if (estado == TiendaState.CATEGORIA) {
                     cantidad: _cant_inv,
                 });
             }
+        }        else if (_cat == "Runicos") {
+            var _runs = catalogo.runicos;
+            for (var i = 0; i < array_length(_runs); i++) {
+                var _run_nombre = _runs[i];
+                var _datos_run  = scr_datos_objetos(_run_nombre);
+                var _cant_inv   = scr_inventario_get_objeto(control_juego, _run_nombre);
+                array_push(items_lista, {
+                    nombre: _run_nombre,
+                    subtitulo: _datos_run.descripcion,
+                    precio: _datos_run.precio,
+                    comprado: false,
+                    tipo: "runico",
+                    datos_extra: _run_nombre,
+                    cantidad: _cant_inv,
+                });
+            }
         }
-
         indice_item = 0;
         estado = TiendaState.LISTA;
     }
@@ -109,7 +124,7 @@ else if (estado == TiendaState.LISTA) {
         var _item = items_lista[indice_item];
 
         // Ya comprado (personajes/enemigos)
-        if (_item.comprado && _item.tipo != "objeto") {
+        if (_item.comprado && _item.tipo != "objeto" && _item.tipo != "runico") {
             mensaje = "Ya tienes este elemento desbloqueado.";
             mensaje_color = c_red;
             mensaje_timer = GAME_FPS * 2;
@@ -155,6 +170,14 @@ else if (estado == TiendaState.LISTA) {
                 _item.cantidad = scr_inventario_get_objeto(control_juego, _on);
                 mensaje = "¡Compraste " + _on + "! (x" + string(_item.cantidad) + ")";
                 mensaje_color = c_lime;
+                break;
+
+            case "runico":
+                var _rn = _item.datos_extra;
+                scr_inventario_agregar_objeto(control_juego, _rn, 1);
+                _item.cantidad = scr_inventario_get_objeto(control_juego, _rn);
+                mensaje = "¡Compraste " + _rn + "! (x" + string(_item.cantidad) + ")";
+                mensaje_color = make_color_rgb(180, 120, 255);
                 break;
         }
 

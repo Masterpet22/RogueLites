@@ -42,6 +42,25 @@ personaje_jugador = scr_crear_personaje_combate(
 var enemigo_nombre = control_juego.enemigo_seleccionado;
 personaje_enemigo = scr_crear_enemigo_combate(enemigo_nombre);
 
+// 2b. MODO TORRE: aplicar multiplicador de HP al enemigo
+if (variable_struct_exists(control_juego, "modo_torre") && control_juego.modo_torre) {
+    var _mult = control_juego.torre_hp_mult;
+    personaje_enemigo.vida_max    = round(personaje_enemigo.vida_max * _mult);
+    personaje_enemigo.vida_actual = personaje_enemigo.vida_max;
+    show_debug_message("🏰 Torre HP mult: x" + string(_mult) + " → HP enemigo: " + string(personaje_enemigo.vida_max));
+}
+
+// 2c. MODO TORRE: restaurar HP del jugador del piso anterior
+if (variable_struct_exists(control_juego, "modo_torre") && control_juego.modo_torre) {
+    if (instance_exists(obj_control_torre) && obj_control_torre.torre_pj_vida_max > 0) {
+        // Mantener HP del piso anterior (esencia se resetea)
+        personaje_jugador.vida_max    = obj_control_torre.torre_pj_vida_max;
+        personaje_jugador.vida_actual = obj_control_torre.torre_pj_vida_actual;
+        personaje_jugador.esencia     = 0; // Reset esencia cada piso
+        show_debug_message("🏰 Torre HP restaurado: " + string(personaje_jugador.vida_actual) + "/" + string(personaje_jugador.vida_max));
+    }
+}
+
 // 3. Control de combate
 combate_terminado = false;
 ganador = "";
@@ -65,3 +84,59 @@ if (instance_exists(control_juego)
     }
 }
 show_debug_message("Objetos equipados para combate: " + string(objetos_equipados));
+
+// 6. Runa equipada — aplicar modificadores de stats al jugador
+runa_activa = "";
+runa_ultimo_aliento_disponible = false;
+runa_primer_ataque = false;
+runa_vampirica = false;
+runa_cristal = false;
+runa_fortaleza = false;
+
+if (instance_exists(control_juego)
+    && variable_struct_exists(control_juego, "runa_equipada")
+    && control_juego.runa_equipada != "") {
+
+    runa_activa = control_juego.runa_equipada;
+    var _pj = personaje_jugador;
+
+    switch (runa_activa) {
+        case "Runa de Furia":
+            // +30% ataque, -20% vida máx
+            _pj.ataque_base = round(_pj.ataque_base * 1.30);
+            _pj.vida_max    = round(_pj.vida_max * 0.80);
+            _pj.vida_actual = min(_pj.vida_actual, _pj.vida_max);
+            break;
+
+        case "Runa de Fortaleza":
+            // +40% vida máx, -25% daño infligido (flag)
+            _pj.vida_max    = round(_pj.vida_max * 1.40);
+            _pj.vida_actual = _pj.vida_max;
+            runa_fortaleza  = true;
+            break;
+
+        case "Runa de Celeridad":
+            // +50% velocidad, -30% defensa
+            _pj.velocidad     = round(_pj.velocidad * 1.50);
+            _pj.defensa_base  = round(_pj.defensa_base * 0.70);
+            break;
+
+        case "Runa del Ultimo Aliento":
+            // Sobrevive 1 golpe letal (una vez), primer ataque hace 0 daño
+            runa_ultimo_aliento_disponible = true;
+            runa_primer_ataque = true;
+            break;
+
+        case "Runa Vampirica":
+            // 15% lifesteal, -40% generación de esencia
+            runa_vampirica = true;
+            break;
+
+        case "Runa de Cristal":
+            // +50% daño infligido Y recibido
+            runa_cristal = true;
+            break;
+    }
+
+    show_debug_message("Runa activa: " + runa_activa);
+}

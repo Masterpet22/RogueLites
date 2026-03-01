@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_formula_dano",
+  "%Name":"scr_datos_torre",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_formula_dano",
+  "name":"scr_datos_torre",
   "parent":{
-    "name":"combat",
-    "path":"folders/scripts/combat.yy",
+    "name":"datos",
+    "path":"folders/scripts/datos.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

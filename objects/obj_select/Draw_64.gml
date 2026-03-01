@@ -163,3 +163,76 @@ if (estado == SelState.OBJETOS_POPUP) {
     draw_set_color(c_white);
     draw_text(x1 + 20, y1 + h - 22, "TAB: Sel/Desel  |  ENTER: Confirmar  |  ESC: Volver");
 }
+
+// =========================
+// POPUP DE RUNAS
+// =========================
+if (estado == SelState.RUNA_POPUP) {
+
+    var w = 480;
+    var h = 380;
+    var cx = display_get_gui_width() / 2;
+    var cy = display_get_gui_height() / 2;
+
+    var x1 = cx - w / 2;
+    var y1 = cy - h / 2;
+
+    // Fondo semi-transparente
+    draw_set_color(c_black);
+    draw_set_alpha(0.85);
+    draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+    draw_set_alpha(1);
+
+    // Ventana
+    draw_set_color(c_black);
+    draw_rectangle(x1, y1, x1 + w, y1 + h, false);
+
+    draw_set_color(make_color_rgb(180, 120, 255));
+    draw_text(x1 + 20, y1 + 15, "EQUIPAR RUNA (máx. 1)");
+    draw_set_color(c_gray);
+    draw_text(x1 + 20, y1 + 35, "Ventaja a cambio de desventaja. Se consume al terminar.");
+
+    var ry = y1 + 65;
+    var n_runas = array_length(runas_disponibles);
+
+    for (var i = 0; i < n_runas; i++) {
+        var _runa_nom = runas_disponibles[i];
+        var _cant = scr_inventario_get_objeto(control_juego, _runa_nom);
+
+        if (i == indice_runa) {
+            draw_set_color(make_color_rgb(220, 180, 255));
+            draw_text(x1 + 30, ry, "> " + _runa_nom + "  (x" + string(_cant) + ")");
+        } else {
+            draw_set_color(c_ltgray);
+            draw_text(x1 + 50, ry, _runa_nom + "  (x" + string(_cant) + ")");
+        }
+        ry += 28;
+    }
+
+    // Opción "Sin runa"
+    if (indice_runa == n_runas) {
+        draw_set_color(c_yellow);
+        draw_text(x1 + 30, ry, "> Sin runa");
+    } else {
+        draw_set_color(c_gray);
+        draw_text(x1 + 50, ry, "Sin runa");
+    }
+    ry += 35;
+
+    // Descripción de la runa seleccionada
+    if (indice_runa < n_runas) {
+        var _sel_runa = runas_disponibles[indice_runa];
+        var _datos_r = scr_datos_objetos(_sel_runa);
+        draw_set_color(c_ltgray);
+        draw_text(x1 + 20, ry, _datos_r.descripcion);
+        ry += 22;
+        draw_set_color(c_lime);
+        draw_text(x1 + 20, ry, "+ " + _datos_r.ventaja);
+        ry += 20;
+        draw_set_color(c_red);
+        draw_text(x1 + 20, ry, "- " + _datos_r.desventaja);
+    }
+
+    draw_set_color(c_white);
+    draw_text(x1 + 20, y1 + h - 22, "ENTER: Confirmar  |  ESC: Volver a objetos");
+}

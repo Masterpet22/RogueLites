@@ -1,474 +1,113 @@
 {
-  "$GMProject": "v1",
-  "%Name": "RogueLites",
-  "AudioGroups": [
-    {
-      "$GMAudioGroup": "v1",
-      "%Name": "audiogroup_default",
-      "exportDir": "",
-      "name": "audiogroup_default",
-      "resourceType": "GMAudioGroup",
-      "resourceVersion": "2.0",
-      "targets": -1
-    }
+  "$GMProject":"v1",
+  "%Name":"RogueLites",
+  "AudioGroups":[
+    {"$GMAudioGroup":"v1","%Name":"audiogroup_default","exportDir":"","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
   ],
-  "configs": {
-    "children": [],
-    "name": "Default"
+  "configs":{
+    "children":[],
+    "name":"Default",
   },
-  "defaultScriptType": 1,
-  "Folders": [
-    {
-      "$GMFolder": "",
-      "%Name": "fuentes",
-      "folderPath": "folders/fuentes.yy",
-      "name": "fuentes",
-      "resourceType": "GMFolder",
-      "resourceVersion": "2.0"
-    },
-    {
-      "$GMFolder": "",
-      "%Name": "objetos",
-      "folderPath": "folders/objetos.yy",
-      "name": "objetos",
-      "resourceType": "GMFolder",
-      "resourceVersion": "2.0"
-    },
-    {
-      "$GMFolder": "",
-      "%Name": "salas",
-      "folderPath": "folders/salas.yy",
-      "name": "salas",
-      "resourceType": "GMFolder",
-      "resourceVersion": "2.0"
-    },
-    {
-      "$GMFolder": "",
-      "%Name": "scripts",
-      "folderPath": "folders/scripts.yy",
-      "name": "scripts",
-      "resourceType": "GMFolder",
-      "resourceVersion": "2.0"
-    },
-    {
-      "$GMFolder": "",
-      "%Name": "combat",
-      "folderPath": "folders/scripts/combat.yy",
-      "name": "combat",
-      "resourceType": "GMFolder",
-      "resourceVersion": "2.0"
-    },
-    {
-      "$GMFolder": "",
-      "%Name": "datos",
-      "folderPath": "folders/scripts/datos.yy",
-      "name": "datos",
-      "resourceType": "GMFolder",
-      "resourceVersion": "2.0"
-    },
-    {
-      "$GMFolder": "",
-      "%Name": "forja",
-      "folderPath": "folders/scripts/forja.yy",
-      "name": "forja",
-      "resourceType": "GMFolder",
-      "resourceVersion": "2.0"
-    },
-    {
-      "$GMFolder": "",
-      "%Name": "helpers",
-      "folderPath": "folders/scripts/helpers.yy",
-      "name": "helpers",
-      "resourceType": "GMFolder",
-      "resourceVersion": "2.0"
-    },
-    {
-      "$GMFolder": "",
-      "%Name": "utils",
-      "folderPath": "folders/scripts/utils.yy",
-      "name": "utils",
-      "resourceType": "GMFolder",
-      "resourceVersion": "2.0"
-    }
+  "defaultScriptType":1,
+  "Folders":[
+    {"$GMFolder":"","%Name":"fuentes","folderPath":"folders/fuentes.yy","name":"fuentes","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"objetos","folderPath":"folders/objetos.yy","name":"objetos","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"salas","folderPath":"folders/salas.yy","name":"salas","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"scripts","folderPath":"folders/scripts.yy","name":"scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"combat","folderPath":"folders/scripts/combat.yy","name":"combat","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"datos","folderPath":"folders/scripts/datos.yy","name":"datos","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"forja","folderPath":"folders/scripts/forja.yy","name":"forja","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"helpers","folderPath":"folders/scripts/helpers.yy","name":"helpers","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"utils","folderPath":"folders/scripts/utils.yy","name":"utils","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
-  "ForcedPrefabProjectReferences": [],
-  "IncludedFiles": [],
-  "isEcma": false,
-  "LibraryEmitters": [],
-  "MetaData": {
-    "IDEVersion": "2024.14.3.217"
+  "ForcedPrefabProjectReferences":[],
+  "IncludedFiles":[],
+  "isEcma":false,
+  "LibraryEmitters":[],
+  "MetaData":{
+    "IDEVersion":"2024.14.3.217",
   },
-  "name": "RogueLites",
-  "resources": [
-    { "id": { "name": "fnt_1", "path": "fonts/fnt_1/fnt_1.yy" } },
-    {
-      "id": {
-        "name": "obj_actor_enemigo",
-        "path": "objects/obj_actor_enemigo/obj_actor_enemigo.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "obj_actor_jugador",
-        "path": "objects/obj_actor_jugador/obj_actor_jugador.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "obj_control_combate",
-        "path": "objects/obj_control_combate/obj_control_combate.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "obj_control_juego",
-        "path": "objects/obj_control_juego/obj_control_juego.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "obj_control_ui_combate",
-        "path": "objects/obj_control_ui_combate/obj_control_ui_combate.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "obj_enemy_select",
-        "path": "objects/obj_enemy_select/obj_enemy_select.yy"
-      }
-    },
-    { "id": { "name": "obj_menu", "path": "objects/obj_menu/obj_menu.yy" } },
-    {
-      "id": { "name": "obj_select", "path": "objects/obj_select/obj_select.yy" }
-    },
-    {
-      "id": {
-        "name": "obj_ui_forja",
-        "path": "objects/obj_ui_forja/obj_ui_forja.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "obj_ui_tienda",
-        "path": "objects/obj_ui_tienda/obj_ui_tienda.yy"
-      }
-    },
-    { "id": { "name": "rm_boot", "path": "rooms/rm_boot/rm_boot.yy" } },
-    {
-      "id": { "name": "rm_combate", "path": "rooms/rm_combate/rm_combate.yy" }
-    },
-    {
-      "id": {
-        "name": "rm_enemy_select",
-        "path": "rooms/rm_enemy_select/rm_enemy_select.yy"
-      }
-    },
-    { "id": { "name": "rm_forja", "path": "rooms/rm_forja/rm_forja.yy" } },
-    { "id": { "name": "rm_menu", "path": "rooms/rm_menu/rm_menu.yy" } },
-    { "id": { "name": "rm_select", "path": "rooms/rm_select/rm_select.yy" } },
-    { "id": { "name": "rm_tienda", "path": "rooms/rm_tienda/rm_tienda.yy" } },
-    {
-      "id": {
-        "name": "scr_activar_pasiva_afinidad",
-        "path": "scripts/scr_activar_pasiva_afinidad/scr_activar_pasiva_afinidad.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_actualizar_estados",
-        "path": "scripts/scr_actualizar_estados/scr_actualizar_estados.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_actualizar_pasivas",
-        "path": "scripts/scr_actualizar_pasivas/scr_actualizar_pasivas.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_actualizar_personaje",
-        "path": "scripts/scr_actualizar_personaje/scr_actualizar_personaje.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_aplicar_estado",
-        "path": "scripts/scr_aplicar_estado/scr_aplicar_estado.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_calcular_dano",
-        "path": "scripts/scr_calcular_dano/scr_calcular_dano.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_config_juego",
-        "path": "scripts/scr_config_juego/scr_config_juego.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_cooldown_habilidad",
-        "path": "scripts/scr_cooldown_habilidad/scr_cooldown_habilidad.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_crear_enemigo_combate",
-        "path": "scripts/scr_crear_enemigo_combate/scr_crear_enemigo_combate.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_crear_perfil_personaje",
-        "path": "scripts/scr_crear_perfil_personaje/scr_crear_perfil_personaje.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_crear_personaje_combate",
-        "path": "scripts/scr_crear_personaje_combate/scr_crear_personaje_combate.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_datos_afinidades",
-        "path": "scripts/scr_datos_afinidades/scr_datos_afinidades.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_datos_armas",
-        "path": "scripts/scr_datos_armas/scr_datos_armas.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_datos_clases",
-        "path": "scripts/scr_datos_clases/scr_datos_clases.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_datos_enemigos",
-        "path": "scripts/scr_datos_enemigos/scr_datos_enemigos.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_datos_estados",
-        "path": "scripts/scr_datos_estados/scr_datos_estados.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_datos_materiales",
-        "path": "scripts/scr_datos_materiales/scr_datos_materiales.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_datos_objetos",
-        "path": "scripts/scr_datos_objetos/scr_datos_objetos.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_datos_personalidades",
-        "path": "scripts/scr_datos_personalidades/scr_datos_personalidades.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_datos_recetas_forja",
-        "path": "scripts/scr_datos_recetas_forja/scr_datos_recetas_forja.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_datos_tienda",
-        "path": "scripts/scr_datos_tienda/scr_datos_tienda.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_ds_map_keys_array",
-        "path": "scripts/scr_ds_map_keys_array/scr_ds_map_keys_array.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_ejecutar_habilidad",
-        "path": "scripts/scr_ejecutar_habilidad/scr_ejecutar_habilidad.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_ejecutar_super",
-        "path": "scripts/scr_ejecutar_super/scr_ejecutar_super.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_fabricar_arma",
-        "path": "scripts/scr_fabricar_arma/scr_fabricar_arma.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_formula_beneficio",
-        "path": "scripts/scr_formula_beneficio/scr_formula_beneficio.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_formula_dano",
-        "path": "scripts/scr_formula_dano/scr_formula_dano.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_get_perfil_activo",
-        "path": "scripts/scr_get_perfil_activo/scr_get_perfil_activo.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_get_stat",
-        "path": "scripts/scr_get_stat/scr_get_stat.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_ia_enemigo",
-        "path": "scripts/scr_ia_enemigo/scr_ia_enemigo.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_mecanicas_combate",
-        "path": "scripts/scr_mecanicas_combate/scr_mecanicas_combate.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_inventario_agregar_material",
-        "path": "scripts/scr_inventario_agregar_material/scr_inventario_agregar_material.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_inventario_get_material",
-        "path": "scripts/scr_inventario_get_material/scr_inventario_get_material.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_inventario_marcar_arma_obtenida",
-        "path": "scripts/scr_inventario_marcar_arma_obtenida/scr_inventario_marcar_arma_obtenida.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_inventario_objetos",
-        "path": "scripts/scr_inventario_objetos/scr_inventario_objetos.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_inventario_puede_fabricar_arma",
-        "path": "scripts/scr_inventario_puede_fabricar_arma/scr_inventario_puede_fabricar_arma.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_inventario_tiene_arma",
-        "path": "scripts/scr_inventario_tiene_arma/scr_inventario_tiene_arma.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_lista_armas_disponibles",
-        "path": "scripts/scr_lista_armas_disponibles/scr_lista_armas_disponibles.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_multiplicador_afinidad",
-        "path": "scripts/scr_multiplicador_afinidad/scr_multiplicador_afinidad.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_nombre_habilidad",
-        "path": "scripts/scr_nombre_habilidad/scr_nombre_habilidad.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_notificacion_combate",
-        "path": "scripts/scr_notificacion_combate/scr_notificacion_combate.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_usar_habilidad_indice",
-        "path": "scripts/scr_usar_habilidad_indice/scr_usar_habilidad_indice.yy"
-      }
-    },
-    {
-      "id": {
-        "name": "scr_usar_objeto_combate",
-        "path": "scripts/scr_usar_objeto_combate/scr_usar_objeto_combate.yy"
-      }
-    }
+  "name":"RogueLites",
+  "resources":[
+    {"id":{"name":"fnt_1","path":"fonts/fnt_1/fnt_1.yy",},},
+    {"id":{"name":"obj_actor_enemigo","path":"objects/obj_actor_enemigo/obj_actor_enemigo.yy",},},
+    {"id":{"name":"obj_actor_jugador","path":"objects/obj_actor_jugador/obj_actor_jugador.yy",},},
+    {"id":{"name":"obj_control_combate","path":"objects/obj_control_combate/obj_control_combate.yy",},},
+    {"id":{"name":"obj_control_juego","path":"objects/obj_control_juego/obj_control_juego.yy",},},
+    {"id":{"name":"obj_control_torre","path":"objects/obj_control_torre/obj_control_torre.yy",},},
+    {"id":{"name":"obj_control_ui_combate","path":"objects/obj_control_ui_combate/obj_control_ui_combate.yy",},},
+    {"id":{"name":"obj_enemy_select","path":"objects/obj_enemy_select/obj_enemy_select.yy",},},
+    {"id":{"name":"obj_menu","path":"objects/obj_menu/obj_menu.yy",},},
+    {"id":{"name":"obj_select","path":"objects/obj_select/obj_select.yy",},},
+    {"id":{"name":"obj_ui_forja","path":"objects/obj_ui_forja/obj_ui_forja.yy",},},
+    {"id":{"name":"obj_ui_tienda","path":"objects/obj_ui_tienda/obj_ui_tienda.yy",},},
+    {"id":{"name":"rm_boot","path":"rooms/rm_boot/rm_boot.yy",},},
+    {"id":{"name":"rm_combate","path":"rooms/rm_combate/rm_combate.yy",},},
+    {"id":{"name":"rm_enemy_select","path":"rooms/rm_enemy_select/rm_enemy_select.yy",},},
+    {"id":{"name":"rm_forja","path":"rooms/rm_forja/rm_forja.yy",},},
+    {"id":{"name":"rm_menu","path":"rooms/rm_menu/rm_menu.yy",},},
+    {"id":{"name":"rm_select","path":"rooms/rm_select/rm_select.yy",},},
+    {"id":{"name":"rm_tienda","path":"rooms/rm_tienda/rm_tienda.yy",},},
+    {"id":{"name":"rm_torre","path":"rooms/rm_torre/rm_torre.yy",},},
+    {"id":{"name":"scr_activar_pasiva_afinidad","path":"scripts/scr_activar_pasiva_afinidad/scr_activar_pasiva_afinidad.yy",},},
+    {"id":{"name":"scr_actualizar_estados","path":"scripts/scr_actualizar_estados/scr_actualizar_estados.yy",},},
+    {"id":{"name":"scr_actualizar_pasivas","path":"scripts/scr_actualizar_pasivas/scr_actualizar_pasivas.yy",},},
+    {"id":{"name":"scr_actualizar_personaje","path":"scripts/scr_actualizar_personaje/scr_actualizar_personaje.yy",},},
+    {"id":{"name":"scr_aplicar_estado","path":"scripts/scr_aplicar_estado/scr_aplicar_estado.yy",},},
+    {"id":{"name":"scr_calcular_dano","path":"scripts/scr_calcular_dano/scr_calcular_dano.yy",},},
+    {"id":{"name":"scr_config_juego","path":"scripts/scr_config_juego/scr_config_juego.yy",},},
+    {"id":{"name":"scr_cooldown_habilidad","path":"scripts/scr_cooldown_habilidad/scr_cooldown_habilidad.yy",},},
+    {"id":{"name":"scr_crear_enemigo_combate","path":"scripts/scr_crear_enemigo_combate/scr_crear_enemigo_combate.yy",},},
+    {"id":{"name":"scr_crear_perfil_personaje","path":"scripts/scr_crear_perfil_personaje/scr_crear_perfil_personaje.yy",},},
+    {"id":{"name":"scr_crear_personaje_combate","path":"scripts/scr_crear_personaje_combate/scr_crear_personaje_combate.yy",},},
+    {"id":{"name":"scr_datos_afinidades","path":"scripts/scr_datos_afinidades/scr_datos_afinidades.yy",},},
+    {"id":{"name":"scr_datos_armas","path":"scripts/scr_datos_armas/scr_datos_armas.yy",},},
+    {"id":{"name":"scr_datos_clases","path":"scripts/scr_datos_clases/scr_datos_clases.yy",},},
+    {"id":{"name":"scr_datos_enemigos","path":"scripts/scr_datos_enemigos/scr_datos_enemigos.yy",},},
+    {"id":{"name":"scr_datos_estados","path":"scripts/scr_datos_estados/scr_datos_estados.yy",},},
+    {"id":{"name":"scr_datos_materiales","path":"scripts/scr_datos_materiales/scr_datos_materiales.yy",},},
+    {"id":{"name":"scr_datos_objetos","path":"scripts/scr_datos_objetos/scr_datos_objetos.yy",},},
+    {"id":{"name":"scr_datos_personalidades","path":"scripts/scr_datos_personalidades/scr_datos_personalidades.yy",},},
+    {"id":{"name":"scr_datos_recetas_forja","path":"scripts/scr_datos_recetas_forja/scr_datos_recetas_forja.yy",},},
+    {"id":{"name":"scr_datos_tienda","path":"scripts/scr_datos_tienda/scr_datos_tienda.yy",},},
+    {"id":{"name":"scr_datos_torre","path":"scripts/scr_datos_torre/scr_datos_torre.yy",},},
+    {"id":{"name":"scr_ds_map_keys_array","path":"scripts/scr_ds_map_keys_array/scr_ds_map_keys_array.yy",},},
+    {"id":{"name":"scr_ejecutar_habilidad","path":"scripts/scr_ejecutar_habilidad/scr_ejecutar_habilidad.yy",},},
+    {"id":{"name":"scr_ejecutar_super","path":"scripts/scr_ejecutar_super/scr_ejecutar_super.yy",},},
+    {"id":{"name":"scr_fabricar_arma","path":"scripts/scr_fabricar_arma/scr_fabricar_arma.yy",},},
+    {"id":{"name":"scr_formula_beneficio","path":"scripts/scr_formula_beneficio/scr_formula_beneficio.yy",},},
+    {"id":{"name":"scr_formula_dano","path":"scripts/scr_formula_dano/scr_formula_dano.yy",},},
+    {"id":{"name":"scr_get_perfil_activo","path":"scripts/scr_get_perfil_activo/scr_get_perfil_activo.yy",},},
+    {"id":{"name":"scr_get_stat","path":"scripts/scr_get_stat/scr_get_stat.yy",},},
+    {"id":{"name":"scr_ia_enemigo","path":"scripts/scr_ia_enemigo/scr_ia_enemigo.yy",},},
+    {"id":{"name":"scr_inventario_agregar_material","path":"scripts/scr_inventario_agregar_material/scr_inventario_agregar_material.yy",},},
+    {"id":{"name":"scr_inventario_get_material","path":"scripts/scr_inventario_get_material/scr_inventario_get_material.yy",},},
+    {"id":{"name":"scr_inventario_marcar_arma_obtenida","path":"scripts/scr_inventario_marcar_arma_obtenida/scr_inventario_marcar_arma_obtenida.yy",},},
+    {"id":{"name":"scr_inventario_objetos","path":"scripts/scr_inventario_objetos/scr_inventario_objetos.yy",},},
+    {"id":{"name":"scr_inventario_puede_fabricar_arma","path":"scripts/scr_inventario_puede_fabricar_arma/scr_inventario_puede_fabricar_arma.yy",},},
+    {"id":{"name":"scr_inventario_tiene_arma","path":"scripts/scr_inventario_tiene_arma/scr_inventario_tiene_arma.yy",},},
+    {"id":{"name":"scr_lista_armas_disponibles","path":"scripts/scr_lista_armas_disponibles/scr_lista_armas_disponibles.yy",},},
+    {"id":{"name":"scr_mecanicas_combate","path":"scripts/scr_mecanicas_combate/scr_mecanicas_combate.yy",},},
+    {"id":{"name":"scr_multiplicador_afinidad","path":"scripts/scr_multiplicador_afinidad/scr_multiplicador_afinidad.yy",},},
+    {"id":{"name":"scr_nombre_habilidad","path":"scripts/scr_nombre_habilidad/scr_nombre_habilidad.yy",},},
+    {"id":{"name":"scr_notificacion_combate","path":"scripts/scr_notificacion_combate/scr_notificacion_combate.yy",},},
+    {"id":{"name":"scr_usar_habilidad_indice","path":"scripts/scr_usar_habilidad_indice/scr_usar_habilidad_indice.yy",},},
+    {"id":{"name":"scr_usar_objeto_combate","path":"scripts/scr_usar_objeto_combate/scr_usar_objeto_combate.yy",},},
   ],
-  "resourceType": "GMProject",
-  "resourceVersion": "2.0",
-  "RoomOrderNodes": [
-    { "roomId": { "name": "rm_boot", "path": "rooms/rm_boot/rm_boot.yy" } },
-    {
-      "roomId": {
-        "name": "rm_combate",
-        "path": "rooms/rm_combate/rm_combate.yy"
-      }
-    },
-    { "roomId": { "name": "rm_menu", "path": "rooms/rm_menu/rm_menu.yy" } },
-    { "roomId": { "name": "rm_forja", "path": "rooms/rm_forja/rm_forja.yy" } },
-    {
-      "roomId": { "name": "rm_select", "path": "rooms/rm_select/rm_select.yy" }
-    },
-    {
-      "roomId": {
-        "name": "rm_enemy_select",
-        "path": "rooms/rm_enemy_select/rm_enemy_select.yy"
-      }
-    },
-    {
-      "roomId": { "name": "rm_tienda", "path": "rooms/rm_tienda/rm_tienda.yy" }
-    }
+  "resourceType":"GMProject",
+  "resourceVersion":"2.0",
+  "RoomOrderNodes":[
+    {"roomId":{"name":"rm_boot","path":"rooms/rm_boot/rm_boot.yy",},},
+    {"roomId":{"name":"rm_combate","path":"rooms/rm_combate/rm_combate.yy",},},
+    {"roomId":{"name":"rm_menu","path":"rooms/rm_menu/rm_menu.yy",},},
+    {"roomId":{"name":"rm_forja","path":"rooms/rm_forja/rm_forja.yy",},},
+    {"roomId":{"name":"rm_select","path":"rooms/rm_select/rm_select.yy",},},
+    {"roomId":{"name":"rm_enemy_select","path":"rooms/rm_enemy_select/rm_enemy_select.yy",},},
+    {"roomId":{"name":"rm_tienda","path":"rooms/rm_tienda/rm_tienda.yy",},},
+    {"roomId":{"name":"rm_torre","path":"rooms/rm_torre/rm_torre.yy",},},
   ],
-  "templateType": "game",
-  "TextureGroups": [
-    {
-      "$GMTextureGroup": "",
-      "%Name": "Default",
-      "autocrop": true,
-      "border": 2,
-      "compressFormat": "bz2",
-      "customOptions": "",
-      "directory": "",
-      "groupParent": null,
-      "isScaled": true,
-      "loadType": "default",
-      "mipsToGenerate": 0,
-      "name": "Default",
-      "resourceType": "GMTextureGroup",
-      "resourceVersion": "2.0",
-      "targets": -1
-    }
-  ]
+  "templateType":"game",
+  "TextureGroups":[
+    {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+  ],
 }

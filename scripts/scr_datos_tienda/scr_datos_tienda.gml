@@ -4,7 +4,7 @@
 
 function scr_datos_tienda() {
     return {
-        categorias: ["Personajes", "Enemigos", "Objetos"],
+        categorias: ["Personajes", "Enemigos", "Objetos", "Runicos"],
 
         // ── PERSONAJES ──
         // Los personajes desbloqueables (Kael es gratis y ya viene desbloqueado).
@@ -54,6 +54,18 @@ function scr_datos_tienda() {
             "Elixir de Esencia",
             "Tonico de Ataque",
             "Tonico de Defensa",
+        ],
+
+        // ── RÚNICOS ──
+        // Objetos rúnicos que se equipan antes del combate (máx 1).
+        // Se consumen al terminar el combate. Ventaja + desventaja.
+        runicos: [
+            "Runa de Furia",
+            "Runa de Fortaleza",
+            "Runa de Celeridad",
+            "Runa del Ultimo Aliento",
+            "Runa Vampirica",
+            "Runa de Cristal",
         ],
     };
 }

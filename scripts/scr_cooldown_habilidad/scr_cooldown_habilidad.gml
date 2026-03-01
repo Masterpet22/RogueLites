@@ -115,10 +115,26 @@ function scr_cooldown_habilidad(_id) {
         // ==========================================
         // 5. HABILIDADES DE JEFES
         // ==========================================
-        case "erupcion_forjada":        return round(GAME_FPS * 3.0);  // Titan (Fuego+Tierra)
-        case "maremoto_vegetal":        return round(GAME_FPS * 3.5);  // Coloso (Agua+Planta)
-        case "fulgor_celestial":        return round(GAME_FPS * 2.5);  // Sentinela (Rayo+Luz)
-        case "vacio_runico":            return round(GAME_FPS * 4.0);  // Oraculo (Sombra+Arcano)
+        // ── Titán de las Forjas Rotas ──
+        case "erupcion_forjada":        return round(GAME_FPS * 3.0);
+        case "martillo_incandescente":  return round(GAME_FPS * 2.0);
+        case "muro_magmatico":          return round(GAME_FPS * 5.0);
+        case "cataclismo_forjado":      return round(GAME_FPS * 6.0);
+        // ── Coloso del Fango Viviente ──
+        case "maremoto_vegetal":        return round(GAME_FPS * 3.5);
+        case "torrente_fangoso":        return round(GAME_FPS * 2.5);
+        case "esporas_regenerativas":   return round(GAME_FPS * 5.0);
+        case "aplastamiento_pantano":   return round(GAME_FPS * 6.0);
+        // ── Sentinela del Cielo Roto ──
+        case "fulgor_celestial":        return round(GAME_FPS * 2.5);
+        case "relampago_sagrado":       return round(GAME_FPS * 1.5);
+        case "destello_purificador":    return round(GAME_FPS * 4.0);
+        case "tormenta_divina":         return round(GAME_FPS * 6.0);
+        // ── Oráculo Quebrado del Abismo ──
+        case "vacio_runico":            return round(GAME_FPS * 4.0);
+        case "pulso_abismal":           return round(GAME_FPS * 2.5);
+        case "sifon_sombrio":           return round(GAME_FPS * 3.5);
+        case "apocalipsis_runico":      return round(GAME_FPS * 6.0);
     }
 
     // Fallback — habilidad sin cooldown registrado
