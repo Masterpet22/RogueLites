@@ -748,22 +748,62 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         //  5.  J E F E S
         // ==========================================================
 
-        case "erupcion_forjada": // Titan de las Forjas Rotas (Fuego+Tierra)
+        // ──────────────────────────────────────────────────
+        //  TITÁN DE LAS FORJAS ROTAS  (Fuego + Tierra)
+        // ──────────────────────────────────────────────────
+
+        case "erupcion_forjada": // Nuke principal — Daño fuerte + autocuración
         {
             var _p = { stat1:"ataque", escala1:2.0, stat2:"ninguno", escala2:0, base_fija:15,
                        mult_poder:1.3, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
-            // Autocuración
             var _pc = { stat1:"ninguno", escala1:0, stat2:"ninguno", escala2:0, base_fija:30,
                         mult_poder:1.0, esencia_gen:0, es_arma:false };
             var cura = scr_formula_beneficio(_atacante, _pc);
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + cura);
-            show_debug_message("¡EL TITÁN GOLPEA CON FUERZA BRUTA!");
+            show_debug_message("🔥🪨 TITÁN — Erupción Forjada");
         }
         break;
 
-        case "maremoto_vegetal": // Coloso del Fango Viviente (Agua+Planta)
+        case "martillo_incandescente": // Bread & butter — Físico + quemadura
+        {
+            var _p = { stat1:"ataque", escala1:1.5, stat2:"ninguno", escala2:0, base_fija:10,
+                       mult_poder:1.1, penetracion:0.3, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 3), round(_atacante.poder_elemental * 0.3));
+            show_debug_message("🔥🪨 TITÁN — Martillo Incandescente");
+        }
+        break;
+
+        case "muro_magmatico": // Defensiva — Curación + muro_tierra
+        {
+            var _pc = { stat1:"defensa", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:25,
+                        mult_poder:1.0, esencia_gen:0, es_arma:false };
+            var cura = scr_formula_beneficio(_atacante, _pc);
+            _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + cura);
+            scr_aplicar_estado(_atacante, "muro_tierra", round(GAME_FPS * 5), 0);
+            show_debug_message("🔥🪨 TITÁN — Muro Magmático");
+        }
+        break;
+
+        case "cataclismo_forjado": // Ultimate — Daño máximo + vulnerabilidad
+        {
+            var _p = { stat1:"ataque", escala1:2.5, stat2:"ninguno", escala2:0, base_fija:20,
+                       mult_poder:1.5, penetracion:0.8, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "vulnerabilidad", round(GAME_FPS * 3), 0);
+            show_debug_message("🔥🪨 TITÁN — ¡¡CATACLISMO FORJADO!!");
+        }
+        break;
+
+        // ──────────────────────────────────────────────────
+        //  COLOSO DEL FANGO VIVIENTE  (Agua + Planta)
+        // ──────────────────────────────────────────────────
+
+        case "maremoto_vegetal": // Nuke principal — Daño + autocuración
         {
             var _p = { stat1:"ataque", escala1:1.8, stat2:"ninguno", escala2:0, base_fija:12,
                        mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
@@ -773,26 +813,147 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
                         mult_poder:1.0, esencia_gen:0, es_arma:false };
             var cura = scr_formula_beneficio(_atacante, _pc);
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + cura);
-            show_debug_message("¡EL COLOSO DESATA UN MAREMOTO VEGETAL!");
+            show_debug_message("🌊🌿 COLOSO — Maremoto Vegetal");
         }
         break;
 
-        case "fulgor_celestial": // Sentinela del Cielo Roto (Rayo+Luz)
+        case "torrente_fangoso": // Debuff — Daño + ralentización
+        {
+            var _p = { stat1:"ataque", escala1:1.2, stat2:"ninguno", escala2:0, base_fija:8,
+                       mult_poder:1.1, penetracion:0.3, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "ralentizacion", round(GAME_FPS * 3), 0);
+            show_debug_message("🌊🌿 COLOSO — Torrente Fangoso");
+        }
+        break;
+
+        case "esporas_regenerativas": // Curación pura — Gran heal + regeneración
+        {
+            var _pc = { stat1:"ninguno", escala1:0, stat2:"ninguno", escala2:0, base_fija:40,
+                        mult_poder:1.0, esencia_gen:0, es_arma:false };
+            var cura = scr_formula_beneficio(_atacante, _pc);
+            _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + cura);
+            scr_aplicar_estado(_atacante, "regeneracion", round(GAME_FPS * 4), round(_atacante.poder_elemental * 0.4));
+            show_debug_message("🌊🌿 COLOSO — Esporas Regenerativas");
+        }
+        break;
+
+        case "aplastamiento_pantano": // Ultimate — Daño físico devastador
+        {
+            var _p = { stat1:"ataque", escala1:2.5, stat2:"defensa", escala2:0.5, base_fija:15,
+                       mult_poder:1.3, penetracion:0.8, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            show_debug_message("🌊🌿 COLOSO — ¡¡APLASTAMIENTO PANTANO!!");
+        }
+        break;
+
+        // ──────────────────────────────────────────────────
+        //  SENTINELA DEL CIELO ROTO  (Rayo + Luz)
+        // ──────────────────────────────────────────────────
+
+        case "fulgor_celestial": // Nuke principal — Daño mágico fuerte
         {
             var _p = { stat1:"ataque", escala1:2.2, stat2:"ninguno", escala2:0, base_fija:18,
                        mult_poder:1.3, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
-            show_debug_message("¡LA SENTINELA DESATA UN FULGOR CELESTIAL!");
+            show_debug_message("⚡✨ SENTINELA — Fulgor Celestial");
         }
         break;
 
-        case "vacio_runico": // Oraculo Quebrado del Abismo (Sombra+Arcano) — % HP
+        case "relampago_sagrado": // Rápido — Daño + auto-aceleración
+        {
+            var _p = { stat1:"ataque", escala1:1.3, stat2:"ninguno", escala2:0, base_fija:10,
+                       mult_poder:1.1, penetracion:0.3, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_atacante, "aceleracion_rayo", round(GAME_FPS * 3), 0);
+            show_debug_message("⚡✨ SENTINELA — Relámpago Sagrado");
+        }
+        break;
+
+        case "destello_purificador": // Anti-buff — Daño + purga estados positivos del defensor
+        {
+            var _p = { stat1:"ataque", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:12,
+                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            // Purga: eliminar buffs positivos del jugador
+            var _estados = _defensor.estados;
+            var _limpios = [];
+            for (var _i = 0; _i < array_length(_estados); _i++) {
+                var _tipo = _estados[_i].tipo;
+                // Mantener solo debuffs y DoTs, eliminar buffs
+                if (_tipo != "buff_defensa" && _tipo != "buff_velocidad" && _tipo != "hot") {
+                    array_push(_limpios, _estados[_i]);
+                }
+            }
+            _defensor.estados = _limpios;
+            _defensor.defensa_bonus_temp = 0;
+            show_debug_message("⚡✨ SENTINELA — Destello Purificador (buffs purgados)");
+        }
+        break;
+
+        case "tormenta_divina": // Ultimate — Daño máximo con penetración total
+        {
+            var _p = { stat1:"ataque", escala1:2.8, stat2:"ninguno", escala2:0, base_fija:22,
+                       mult_poder:1.5, penetracion:1.0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            show_debug_message("⚡✨ SENTINELA — ¡¡TORMENTA DIVINA!!");
+        }
+        break;
+
+        // ──────────────────────────────────────────────────
+        //  ORÁCULO QUEBRADO DEL ABISMO  (Sombra + Arcano)
+        // ──────────────────────────────────────────────────
+
+        case "vacio_runico": // Signature — %HP drain + self-heal
         {
             var robo = round(_defensor.vida_actual * 0.20);
             _defensor.vida_actual = max(0, _defensor.vida_actual - robo);
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + round(robo * 0.5));
-            show_debug_message("¡EL ORÁCULO INVOCA EL VACÍO RÚNICO!");
+            show_debug_message("🌑🔮 ORÁCULO — Vacío Rúnico");
+        }
+        break;
+
+        case "pulso_abismal": // Debuff — Daño arcano + supresión arcana
+        {
+            var _p = { stat1:"ataque", escala1:1.5, stat2:"ninguno", escala2:0, base_fija:12,
+                       mult_poder:1.2, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "supresion_arcana", round(GAME_FPS * 4), 0);
+            show_debug_message("🌑🔮 ORÁCULO — Pulso Abismal");
+        }
+        break;
+
+        case "sifon_sombrio": // Resource denial — Daño + drena esencia del jugador
+        {
+            var _p = { stat1:"ataque", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:8,
+                       mult_poder:1.1, penetracion:0.3, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            // Drenar esencia del jugador
+            var _drenado = min(_defensor.esencia, 15);
+            _defensor.esencia = max(0, _defensor.esencia - _drenado);
+            if (_drenado > 0) {
+                scr_notif_agregar(_atacante.nombre, "Sifón: -" + string(_drenado) + " esencia", c_purple);
+            }
+            show_debug_message("🌑🔮 ORÁCULO — Sifón Sombrío (-" + string(_drenado) + " esencia)");
+        }
+        break;
+
+        case "apocalipsis_runico": // Ultimate — Daño masivo + self-heal 40% del daño
+        {
+            var _p = { stat1:"ataque", escala1:2.5, stat2:"ninguno", escala2:0, base_fija:20,
+                       mult_poder:1.5, penetracion:0.8, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + round(dano * 0.4));
+            show_debug_message("🌑🔮 ORÁCULO — ¡¡APOCALIPSIS RÚNICO!!");
         }
         break;
 

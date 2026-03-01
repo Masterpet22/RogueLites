@@ -101,12 +101,40 @@ function scr_nombre_habilidad(_id) {
         case "cometa_runico":           return "Cometa Rúnico";      // Errante Runico Elite
 
         // ==========================================
+        // 4b. SECUNDARIAS ELITE (con estados)
+        // ==========================================
+        case "llamarada_furia":         return "Llamarada Furia";   // Soldado Igneo Elite
+        case "ventisca_polar":          return "Ventisca Polar";    // Vigia Boreal Elite
+        case "esporas_toxicas":         return "Esporas Tóxicas";   // Halito Verde Elite
+        case "impulso_voltaico":        return "Impulso Voltaico";  // Bestia Tronadora Elite
+        case "fortaleza_petrea":        return "Fortaleza Pétrea";  // Guardian Terracota Elite
+        case "marca_sombria":           return "Marca Sombría";     // Naufrago Elite
+        case "plegaria_marchita":       return "Plegaria Marchita"; // Paladin Marchito Elite
+        case "sello_arcano":            return "Sello Arcano";      // Errante Runico Elite
+
+        // ==========================================
         // 5. HABILIDADES DE JEFES
         // ==========================================
-        case "erupcion_forjada":        return "Erupción Forjada";   // Titan (Fuego+Tierra)
-        case "maremoto_vegetal":        return "Maremoto Vegetal";   // Coloso (Agua+Planta)
-        case "fulgor_celestial":        return "Fulgor Celestial";   // Sentinela (Rayo+Luz)
-        case "vacio_runico":            return "Vacío Rúnico";       // Oraculo (Sombra+Arcano)
+        // ── Titán de las Forjas Rotas ──
+        case "erupcion_forjada":        return "Erupción Forjada";
+        case "martillo_incandescente":  return "Mart. Incandescente";
+        case "muro_magmatico":          return "Muro Magmático";
+        case "cataclismo_forjado":      return "Cataclismo Forjado";
+        // ── Coloso del Fango Viviente ──
+        case "maremoto_vegetal":        return "Maremoto Vegetal";
+        case "torrente_fangoso":        return "Torrente Fangoso";
+        case "esporas_regenerativas":   return "Esporas Regen.";
+        case "aplastamiento_pantano":   return "Aplast. Pantano";
+        // ── Sentinela del Cielo Roto ──
+        case "fulgor_celestial":        return "Fulgor Celestial";
+        case "relampago_sagrado":       return "Relámpago Sagrado";
+        case "destello_purificador":    return "Dest. Purificador";
+        case "tormenta_divina":         return "Tormenta Divina";
+        // ── Oráculo Quebrado del Abismo ──
+        case "vacio_runico":            return "Vacío Rúnico";
+        case "pulso_abismal":           return "Pulso Abismal";
+        case "sifon_sombrio":           return "Sifón Sombrío";
+        case "apocalipsis_runico":      return "Apocalipsis Rúnico";
     }
 
     // Fallback — habilidad sin nombre registrado

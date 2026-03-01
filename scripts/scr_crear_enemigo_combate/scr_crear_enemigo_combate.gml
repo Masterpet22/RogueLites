@@ -87,12 +87,19 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
         ia_timer:         scr_ia_calcular_espera(_vel),  // frames hasta próxima acción
         ia_prep_timer:    0,                     // frames de wind-up restantes
         ia_hab_elegida:   -1,                    // índice de habilidad elegida en preparación
+        ia_patron_hab:    "",                    // ID de habilidad elegida por patrón
 
         // ── Timer de combate (para logros/tracking) ──
         combate_timer:    0,                     // frames transcurridos (se incrementa en Step)
         timer_limite:     variable_struct_exists(_data_enemigo, "timer_limite")
                           ? _data_enemigo.timer_limite : 0,  // 0 = sin límite
     };
+
+    // ── Inicializar patrón secuencial (jefes) ──
+    if (variable_struct_exists(_data_enemigo, "patron") && is_array(_data_enemigo.patron)) {
+        enemigo.patron  = _data_enemigo.patron;
+        enemigo.p_index = 0;
+    }
 
     // ── Inicializar mecánicas especiales ──
     var _mecs = variable_struct_exists(_data_enemigo, "mecanicas") ? _data_enemigo.mecanicas : [];
