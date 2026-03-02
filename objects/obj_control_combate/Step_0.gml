@@ -14,6 +14,15 @@ if (combate_terminado)
             with (obj_control_torre) {
                 scr_torre_post_combate(other.ganador, other.personaje_jugador, other.oro_recompensa);
             }
+        }
+        // MODO CAMINO: delegar al controlador de camino
+        else if (instance_exists(obj_control_juego)
+            && variable_struct_exists(obj_control_juego, "modo_camino")
+            && obj_control_juego.modo_camino
+            && instance_exists(obj_control_camino)) {
+            with (obj_control_camino) {
+                scr_camino_post_combate(other.ganador, other.personaje_jugador, other.oro_recompensa);
+            }
         } else {
             room_goto(rm_menu);
         }
@@ -153,11 +162,12 @@ if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
         // --- CONSUMIR OBJETOS EQUIPADOS DEL INVENTARIO ---
         if (instance_exists(obj_control_juego) && is_array(objetos_equipados)) {
             var _es_torre = (variable_struct_exists(obj_control_juego, "modo_torre") && obj_control_juego.modo_torre);
+            var _es_camino = (variable_struct_exists(obj_control_juego, "modo_camino") && obj_control_juego.modo_camino);
             for (var i = 0; i < array_length(objetos_equipados); i++) {
                 var _obj_eq = objetos_equipados[i];
                 if (_obj_eq != "" && _obj_eq != undefined) {
-                    if (_es_torre) {
-                        // Torre: solo consumir los que se usaron
+                    if (_es_torre || _es_camino) {
+                        // Torre/Camino: solo consumir los que se usaron
                         if (is_array(objetos_usados) && objetos_usados[i]) {
                             scr_inventario_agregar_objeto(obj_control_juego, _obj_eq, -1);
                         }
@@ -208,6 +218,11 @@ if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
                 // MODO TORRE: aplicar multiplicador de oro
                 if (variable_struct_exists(obj_control_juego, "modo_torre") && obj_control_juego.modo_torre) {
                     _oro_ganado = round(_oro_ganado * obj_control_juego.torre_oro_mult);
+                }
+
+                // MODO CAMINO: aplicar multiplicador de oro
+                if (variable_struct_exists(obj_control_juego, "modo_camino") && obj_control_juego.modo_camino) {
+                    _oro_ganado = round(_oro_ganado * obj_control_juego.camino_oro_mult);
                 }
 
                 obj_control_juego.oro += _oro_ganado;

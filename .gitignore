@@ -64,5 +64,5 @@ Build
 # imagenes
 *.png
 *.jpg
-
-.ps1
+*.pdf
+*.ps1

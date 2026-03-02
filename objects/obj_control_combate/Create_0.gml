@@ -50,6 +50,14 @@ if (variable_struct_exists(control_juego, "modo_torre") && control_juego.modo_to
     show_debug_message("🏰 Torre HP mult: x" + string(_mult) + " → HP enemigo: " + string(personaje_enemigo.vida_max));
 }
 
+// 2b2. MODO CAMINO: aplicar multiplicador de HP al enemigo
+if (variable_struct_exists(control_juego, "modo_camino") && control_juego.modo_camino) {
+    var _mult_c = control_juego.camino_hp_mult;
+    personaje_enemigo.vida_max    = round(personaje_enemigo.vida_max * _mult_c);
+    personaje_enemigo.vida_actual = personaje_enemigo.vida_max;
+    show_debug_message("⚔️ Camino HP mult: x" + string(_mult_c) + " → HP enemigo: " + string(personaje_enemigo.vida_max));
+}
+
 // 2c. MODO TORRE: restaurar HP del jugador del piso anterior
 if (variable_struct_exists(control_juego, "modo_torre") && control_juego.modo_torre) {
     if (instance_exists(obj_control_torre) && obj_control_torre.torre_pj_vida_max > 0) {

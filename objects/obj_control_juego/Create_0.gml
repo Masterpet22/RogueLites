@@ -82,4 +82,9 @@ modo_torre = false;
 torre_hp_mult = 1;
 torre_oro_mult = 1;
 
+// ── MODO CAMINO DEL HÉROE ──
+modo_camino = false;
+camino_hp_mult = 1;
+camino_oro_mult = 1;
+
 room_goto(rm_menu);

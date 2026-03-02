@@ -15,18 +15,22 @@ if (keyboard_check_pressed(vk_enter)) {
     switch (opcion) {
 
         case 0:
-            room_goto(rm_select);
+            room_goto(rm_camino);
         break;
 
         case 1:
-            room_goto(rm_torre);
+            room_goto(rm_select);
         break;
 
         case 2:
-            room_goto(rm_forja);
+            room_goto(rm_torre);
         break;
 
         case 3:
+            room_goto(rm_forja);
+        break;
+
+        case 4:
             room_goto(rm_tienda);
         break;
     }
