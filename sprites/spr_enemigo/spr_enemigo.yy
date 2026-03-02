@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_enemigo",
   "bboxMode":0,
-  "bbox_bottom":127,
+  "bbox_bottom":511,
   "bbox_left":0,
-  "bbox_right":127,
+  "bbox_right":511,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":128,
+  "height":512,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"80c6e997-6549-4598-a5cd-82aab445fc74","blendMode":0,"displayName":"default","isLocked":false,"name":"80c6e997-6549-4598-a5cd-82aab445fc74","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_enemigo",
   "nineSlice":null,
   "origin":4,
-    "parent": {
-    "name": "enemigos",
-    "path": "folders/sprites/enemigos.yy"
+  "parent":{
+    "name":"enemigos",
+    "path":"folders/sprites/enemigos.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -75,8 +75,8 @@
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":64,
-    "yorigin":64,
+    "xorigin":256,
+    "yorigin":256,
   },
   "swatchColours":null,
   "swfPrecision":0.5,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":512,
 }

@@ -34,7 +34,8 @@ if (estado == ForjaState.PERSONAJE) {
         var _aff_txt = (_perfil_i != undefined) ? (" [" + _perfil_i.afinidad + "]") : "";
 
         if (i == indice_personaje) {
-            draw_sprite_ext(spr_cursor_select, 0, _x + 2, _y + 4, 0.5, 0.5, 0, c_yellow, 1);
+            var _cur_s = 16 / sprite_get_width(spr_cursor_select);
+            draw_sprite_ext(spr_cursor_select, 0, _x + 2, _y + 4, _cur_s, _cur_s, 0, c_yellow, 1);
             draw_set_color(c_yellow);
         }
         else                       draw_set_color(c_white);

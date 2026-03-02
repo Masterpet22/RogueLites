@@ -116,11 +116,11 @@ else if (estado == TiendaState.LISTA) {
         // Icono del item según tipo
         if (_sel.tipo == "objeto") {
             var _obj_ico_t = scr_sprite_icono_objeto(_sel.datos_extra);
-            if (_obj_ico_t != -1) draw_sprite_ext(_obj_ico_t, 0, _det_x, _det_y, 1, 1, 0, c_white, 1);
+            if (_obj_ico_t != -1) { var _oi_s = 32 / sprite_get_width(_obj_ico_t); draw_sprite_ext(_obj_ico_t, 0, _det_x, _det_y, _oi_s, _oi_s, 0, c_white, 1); }
             _det_x += 38;
         } else if (_sel.tipo == "runico") {
             var _run_ico_t = scr_sprite_icono_runa(_sel.datos_extra);
-            if (_run_ico_t != -1) draw_sprite_ext(_run_ico_t, 0, _det_x, _det_y, 1, 1, 0, c_white, 1);
+            if (_run_ico_t != -1) { var _ri_s = 32 / sprite_get_width(_run_ico_t); draw_sprite_ext(_run_ico_t, 0, _det_x, _det_y, _ri_s, _ri_s, 0, c_white, 1); }
             _det_x += 38;
         }
 

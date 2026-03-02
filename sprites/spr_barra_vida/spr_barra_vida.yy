@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_barra_vida",
   "bboxMode":0,
-  "bbox_bottom":19,
+  "bbox_bottom":47,
   "bbox_left":0,
-  "bbox_right":255,
+  "bbox_right":511,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":20,
+  "height":48,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"5a9836c1-0668-4b15-a44f-332369eb79b8","blendMode":0,"displayName":"default","isLocked":false,"name":"5a9836c1-0668-4b15-a44f-332369eb79b8","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_barra_vida",
   "nineSlice":null,
   "origin":0,
-    "parent": {
-    "name": "ui",
-    "path": "folders/sprites/ui.yy"
+  "parent":{
+    "name":"ui",
+    "path":"folders/sprites/ui.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":256,
+  "width":512,
 }

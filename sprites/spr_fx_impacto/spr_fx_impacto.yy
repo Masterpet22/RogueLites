@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_fx_impacto",
   "bboxMode":0,
-  "bbox_bottom":63,
+  "bbox_bottom":255,
   "bbox_left":0,
-  "bbox_right":63,
+  "bbox_right":255,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":64,
+  "height":256,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"13f683e7-a13f-44b4-beb5-fff4bad629ed","blendMode":0,"displayName":"default","isLocked":false,"name":"13f683e7-a13f-44b4-beb5-fff4bad629ed","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_fx_impacto",
   "nineSlice":null,
   "origin":4,
-    "parent": {
-    "name": "fx",
-    "path": "folders/sprites/fx.yy"
+  "parent":{
+    "name":"fx",
+    "path":"folders/sprites/fx.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -75,8 +75,8 @@
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":32,
-    "yorigin":32,
+    "xorigin":128,
+    "yorigin":128,
   },
   "swatchColours":null,
   "swfPrecision":0.5,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":64,
+  "width":256,
 }

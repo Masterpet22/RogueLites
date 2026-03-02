@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_jugador_kael",
   "bboxMode":0,
-  "bbox_bottom":127,
+  "bbox_bottom":511,
   "bbox_left":0,
-  "bbox_right":127,
+  "bbox_right":511,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,21 +12,21 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"64aea6a0-ab39-4ad6-8d3b-503390b9c93f","name":"64aea6a0-ab39-4ad6-8d3b-503390b9c93f","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"ec582865-bf2e-46c7-8cb6-a8da8445c21f","name":"ec582865-bf2e-46c7-8cb6-a8da8445c21f","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":128,
+  "height":512,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"21840f1c-5a6b-43d2-9f17-25d28691e0ec","blendMode":0,"displayName":"default","isLocked":false,"name":"21840f1c-5a6b-43d2-9f17-25d28691e0ec","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"cc6ab1ef-4239-4c05-abb5-c833733d5acf","blendMode":0,"displayName":"default","isLocked":false,"name":"cc6ab1ef-4239-4c05-abb5-c833733d5acf","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_jugador_kael",
   "nineSlice":null,
   "origin":4,
-    "parent": {
-    "name": "personajes",
-    "path": "folders/sprites/personajes.yy"
+  "parent":{
+    "name":"personajes",
+    "path":"folders/sprites/personajes.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -69,14 +69,14 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"64aea6a0-ab39-4ad6-8d3b-503390b9c93f","path":"sprites/spr_jugador_kael/spr_jugador_kael.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"b5fc9fa2-8b6c-4ef0-b320-88a7f2a4ea24","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"ec582865-bf2e-46c7-8cb6-a8da8445c21f","path":"sprites/spr_jugador_kael/spr_jugador_kael.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"f64db9cc-41ae-4e61-b5eb-a4df4d9bb19f","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":64,
-    "yorigin":64,
+    "xorigin":256,
+    "yorigin":256,
   },
   "swatchColours":null,
   "swfPrecision":0.5,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":512,
 }

@@ -25,7 +25,8 @@ if (estado == EnemySelState.CATEGORIA) {
     for (var i = 0; i < array_length(categorias); i++) {
 
         if (i == indice_categoria) {
-            draw_sprite_ext(spr_cursor_select, 0, x + 2, y + 4, 0.5, 0.5, 0, c_yellow, 1);
+            var _cur_s = 16 / sprite_get_width(spr_cursor_select);
+            draw_sprite_ext(spr_cursor_select, 0, x + 2, y + 4, _cur_s, _cur_s, 0, c_yellow, 1);
             draw_set_color(c_yellow);
         }
         else                       draw_set_color(c_gray);

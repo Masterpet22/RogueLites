@@ -17,8 +17,9 @@ y = 120;
 for (var i = 0; i < array_length(personajes); i++) {
 
     if (i == indice_personaje) {
-        // Cursor de selección (sprite)
-        draw_sprite_ext(spr_cursor_select, 0, 42, y + 4, 0.6, 0.6, 0, c_yellow, 1);
+        // Cursor de selección (escala dinámica)
+        var _cur_s = 19 / sprite_get_width(spr_cursor_select);
+        draw_sprite_ext(spr_cursor_select, 0, 42, y + 4, _cur_s, _cur_s, 0, c_yellow, 1);
         draw_set_color(c_yellow);
         draw_text(60, y, personajes[i]);
     } else {
@@ -34,8 +35,10 @@ var perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
 
 // Retrato del personaje seleccionado
 var _sel_rostro = scr_sprite_personaje(personajes[indice_personaje], true);
-draw_sprite_ext(_sel_rostro, 0, display_get_gui_width() - 200, 120, 1.2, 1.2, 0, c_white, 1);
-draw_sprite_stretched(spr_marco_retrato, 0, display_get_gui_width() - 204, 116, 128 * 1.2 + 8, 128 * 1.2 + 8);
+var _ret_display = 154;
+var _ret_s = _ret_display / sprite_get_width(_sel_rostro);
+draw_sprite_ext(_sel_rostro, 0, display_get_gui_width() - 200, 120, _ret_s, _ret_s, 0, c_white, 1);
+draw_sprite_stretched(spr_marco_retrato, 0, display_get_gui_width() - 204, 116, _ret_display + 8, _ret_display + 8);
 
 draw_set_color(c_white);
 draw_text(60, y + 20, "Clase: " + perfil.clase);

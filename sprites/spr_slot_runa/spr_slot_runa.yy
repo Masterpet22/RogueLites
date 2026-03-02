@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_slot_runa",
   "bboxMode":0,
-  "bbox_bottom":47,
+  "bbox_bottom":127,
   "bbox_left":0,
-  "bbox_right":47,
+  "bbox_right":191,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":48,
+  "height":128,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"63ae9513-abdd-42da-bfe3-c2b5932ce006","blendMode":0,"displayName":"default","isLocked":false,"name":"63ae9513-abdd-42da-bfe3-c2b5932ce006","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_slot_runa",
   "nineSlice":null,
   "origin":0,
-    "parent": {
-    "name": "ui",
-    "path": "folders/sprites/ui.yy"
+  "parent":{
+    "name":"ui",
+    "path":"folders/sprites/ui.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":48,
+  "width":192,
 }

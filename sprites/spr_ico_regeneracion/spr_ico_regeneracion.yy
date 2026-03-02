@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_ico_regeneracion",
   "bboxMode":0,
-  "bbox_bottom":31,
+  "bbox_bottom":127,
   "bbox_left":0,
-  "bbox_right":31,
+  "bbox_right":127,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":32,
+  "height":128,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"f5907802-375b-440b-a398-847aa3ddad2b","blendMode":0,"displayName":"default","isLocked":false,"name":"f5907802-375b-440b-a398-847aa3ddad2b","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_ico_regeneracion",
   "nineSlice":null,
   "origin":0,
-    "parent": {
-    "name": "iconos",
-    "path": "folders/sprites/iconos.yy"
+  "parent":{
+    "name":"iconos",
+    "path":"folders/sprites/iconos.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":32,
+  "width":128,
 }

@@ -9,8 +9,9 @@ draw_set_valign(fa_middle);
 var cx = display_get_gui_width() * 0.5;
 var cy = display_get_gui_height() * 0.3;
 
-// Logo del juego
-draw_sprite_ext(spr_logo_arcadium, 0, cx, cy - 90, 0.8, 0.8, 0, c_white, 1);
+// Logo del juego (escala dinámica)
+var _logo_s = 410 / sprite_get_width(spr_logo_arcadium);
+draw_sprite_ext(spr_logo_arcadium, 0, cx, cy - 90, _logo_s, _logo_s, 0, c_white, 1);
 
 draw_text(cx, cy - 40, "MENU PRINCIPAL");
 

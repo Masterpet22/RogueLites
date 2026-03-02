@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"spr_bg_combate",
   "bboxMode":0,
-  "bbox_bottom":719,
+  "bbox_bottom":1079,
   "bbox_left":0,
-  "bbox_right":1279,
+  "bbox_right":1919,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":720,
+  "height":1080,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"c13c61aa-38ea-41ea-a840-99aa33853652","blendMode":0,"displayName":"default","isLocked":false,"name":"c13c61aa-38ea-41ea-a840-99aa33853652","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":1280,
+  "width":1920,
 }

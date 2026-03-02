@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_marco_retrato",
   "bboxMode":0,
-  "bbox_bottom":135,
+  "bbox_bottom":279,
   "bbox_left":0,
-  "bbox_right":135,
+  "bbox_right":279,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":136,
+  "height":280,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"0ca4177f-875d-475f-b866-5e66261d3536","blendMode":0,"displayName":"default","isLocked":false,"name":"0ca4177f-875d-475f-b866-5e66261d3536","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_marco_retrato",
   "nineSlice":null,
   "origin":0,
-    "parent": {
-    "name": "ui",
-    "path": "folders/sprites/ui.yy"
+  "parent":{
+    "name":"ui",
+    "path":"folders/sprites/ui.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":136,
+  "width":280,
 }

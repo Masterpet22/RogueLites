@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_jugador_thalys",
   "bboxMode":0,
-  "bbox_bottom":127,
+  "bbox_bottom":511,
   "bbox_left":0,
-  "bbox_right":127,
+  "bbox_right":511,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":128,
+  "height":512,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"f66fe31b-14d2-457e-a96c-20a3d08f93f0","blendMode":0,"displayName":"default","isLocked":false,"name":"f66fe31b-14d2-457e-a96c-20a3d08f93f0","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_jugador_thalys",
   "nineSlice":null,
   "origin":4,
-    "parent": {
-    "name": "personajes",
-    "path": "folders/sprites/personajes.yy"
+  "parent":{
+    "name":"personajes",
+    "path":"folders/sprites/personajes.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -75,8 +75,8 @@
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":64,
-    "yorigin":64,
+    "xorigin":256,
+    "yorigin":256,
   },
   "swatchColours":null,
   "swfPrecision":0.5,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":512,
 }

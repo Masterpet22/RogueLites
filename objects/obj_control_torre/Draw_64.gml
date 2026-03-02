@@ -472,7 +472,7 @@ else if (torre_fase == "victoria") {
     draw_text(cx, h_gui * 0.3 + 80, "Oro total ganado: " + string(torre_oro_ganado) + " G");
 
     draw_set_color(c_white);
-    draw_text(cx, h_gui * 0.3 + 120, torre_pisos_total + " pisos completados");
+    draw_text(cx, h_gui * 0.3 + 120, string(torre_pisos_total) + " pisos completados");
 
     draw_set_color(c_gray);
     draw_text(cx, h_gui * 0.7, "Pulsa ENTER para volver al menú");

@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_bg_select",
   "bboxMode":0,
-  "bbox_bottom":719,
+  "bbox_bottom":1079,
   "bbox_left":0,
-  "bbox_right":1279,
+  "bbox_right":1919,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":720,
+  "height":1080,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"69764bac-6301-490c-994b-10e6e21624cf","blendMode":0,"displayName":"default","isLocked":false,"name":"69764bac-6301-490c-994b-10e6e21624cf","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_bg_select",
   "nineSlice":null,
   "origin":0,
-    "parent": {
-    "name": "fondos",
-    "path": "folders/sprites/fondos.yy"
+  "parent":{
+    "name":"fondos",
+    "path":"folders/sprites/fondos.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":1280,
+  "width":1920,
 }

@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_jefe_primer_conductor",
   "bboxMode":0,
-  "bbox_bottom":191,
+  "bbox_bottom":767,
   "bbox_left":0,
-  "bbox_right":191,
+  "bbox_right":767,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":192,
+  "height":768,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"d021bc35-895a-4020-8ea5-4a31b953a03a","blendMode":0,"displayName":"default","isLocked":false,"name":"d021bc35-895a-4020-8ea5-4a31b953a03a","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_jefe_primer_conductor",
   "nineSlice":null,
   "origin":4,
-    "parent": {
-    "name": "jefes",
-    "path": "folders/sprites/jefes.yy"
+  "parent":{
+    "name":"jefes",
+    "path":"folders/sprites/jefes.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -75,8 +75,8 @@
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":96,
-    "yorigin":96,
+    "xorigin":384,
+    "yorigin":384,
   },
   "swatchColours":null,
   "swfPrecision":0.5,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":192,
+  "width":768,
 }

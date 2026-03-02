@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_elite_halito_verde",
   "bboxMode":0,
-  "bbox_bottom":143,
+  "bbox_bottom":575,
   "bbox_left":0,
-  "bbox_right":143,
+  "bbox_right":575,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":144,
+  "height":576,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"00665854-1fe5-494f-8d28-bb73d32d3ed2","blendMode":0,"displayName":"default","isLocked":false,"name":"00665854-1fe5-494f-8d28-bb73d32d3ed2","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_elite_halito_verde",
   "nineSlice":null,
   "origin":4,
-    "parent": {
-    "name": "elites",
-    "path": "folders/sprites/elites.yy"
+  "parent":{
+    "name":"elites",
+    "path":"folders/sprites/elites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -75,8 +75,8 @@
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":72,
-    "yorigin":72,
+    "xorigin":288,
+    "yorigin":288,
   },
   "swatchColours":null,
   "swfPrecision":0.5,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":144,
+  "width":576,
 }

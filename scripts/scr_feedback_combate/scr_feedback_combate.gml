@@ -312,8 +312,8 @@ function scr_feedback_dibujar_sprites() {
     var _en_x = _gui_w * 0.78;
     var _en_y = _gui_h * 0.55;
 
-    // Escala: sprite es 128x128, queremos ~200px de alto
-    var _escala = 1.8;
+    // Escala dinámica: tamaño de pantalla deseado / tamaño real del sprite
+    var _display_h = 230;
 
     // ── JUGADOR BODY SPRITE ──
     {
@@ -335,7 +335,8 @@ function scr_feedback_dibujar_sprites() {
         // Usar sprite individual del personaje si existe
         var _spr_j = (variable_struct_exists(_c, "personaje_jugador") && variable_struct_exists(_c.personaje_jugador, "sprite_cuerpo"))
                      ? _c.personaje_jugador.sprite_cuerpo : spr_jugador;
-        draw_sprite_ext(_spr_j, 0, _sx, _sy, _escala, _escala, 0, _blend, _alpha);
+        var _escala_j = _display_h / sprite_get_height(_spr_j);
+        draw_sprite_ext(_spr_j, 0, _sx, _sy, _escala_j, _escala_j, 0, _blend, _alpha);
     }
 
     // ── ENEMIGO BODY SPRITE ──
@@ -357,7 +358,8 @@ function scr_feedback_dibujar_sprites() {
         // Usar sprite individual del enemigo si existe
         var _spr_e = (variable_struct_exists(_c, "personaje_enemigo") && variable_struct_exists(_c.personaje_enemigo, "sprite_cuerpo"))
                      ? _c.personaje_enemigo.sprite_cuerpo : spr_enemigo;
-        draw_sprite_ext(_spr_e, 0, _sx, _sy, _escala, _escala, 0, _blend, _alpha);
+        var _escala_e = _display_h / sprite_get_height(_spr_e);
+        draw_sprite_ext(_spr_e, 0, _sx, _sy, _escala_e, _escala_e, 0, _blend, _alpha);
     }
 }
 
@@ -381,8 +383,8 @@ function scr_feedback_dibujar_retrato(_es_jugador, _rx, _ry, _tam) {
                ? _c.personaje_enemigo.sprite_rostro : spr_enemigo_rostro;
     }
 
-    // Escala del sprite (128x128 → _tam x _tam)
-    var _escala = _tam / 128;
+    // Escala dinámica (cualquier resolución → _tam x _tam)
+    var _escala = _tam / sprite_get_height(_spr);
 
     // Aplicar shake al retrato también (más sutil)
     var _offset_x = _c.fb_shake_offset_x[_idx] * 0.4;
@@ -465,9 +467,11 @@ function scr_feedback_dibujar_fx() {
         var _fx = _c.fb_fx_list[i];
         _fx.timer -= 1;
 
-        // Escala crece y luego decrece
+        // Escala crece y luego decrece (normalizada a 64px deseados)
         var _progreso = 1 - (_fx.timer / FB_FX_DURACION);
-        _fx.escala = (_progreso < 0.3) ? lerp(0.5, 1.5, _progreso / 0.3) : lerp(1.5, 0.8, (_progreso - 0.3) / 0.7);
+        var _fx_base = 64 / sprite_get_width(_fx.sprite);
+        var _fx_anim = (_progreso < 0.3) ? lerp(0.5, 1.5, _progreso / 0.3) : lerp(1.5, 0.8, (_progreso - 0.3) / 0.7);
+        _fx.escala = _fx_base * _fx_anim;
         _fx.alpha = (_fx.timer < FB_FX_DURACION * 0.3) ? clamp(_fx.timer / (FB_FX_DURACION * 0.3), 0, 1) : 1.0;
 
         draw_sprite_ext(_fx.sprite, 0, _fx.x, _fx.y, _fx.escala, _fx.escala, 0, c_white, _fx.alpha);

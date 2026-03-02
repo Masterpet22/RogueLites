@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_rostro_errante_runico",
   "bboxMode":0,
-  "bbox_bottom":127,
+  "bbox_bottom":255,
   "bbox_left":0,
-  "bbox_right":127,
+  "bbox_right":255,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":128,
+  "height":256,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"cd36a2d5-8007-4bb4-bc48-671dc1316a7d","blendMode":0,"displayName":"default","isLocked":false,"name":"cd36a2d5-8007-4bb4-bc48-671dc1316a7d","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_rostro_errante_runico",
   "nineSlice":null,
   "origin":0,
-    "parent": {
-    "name": "enemigos",
-    "path": "folders/sprites/enemigos.yy"
+  "parent":{
+    "name":"enemigos",
+    "path":"folders/sprites/enemigos.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":256,
 }

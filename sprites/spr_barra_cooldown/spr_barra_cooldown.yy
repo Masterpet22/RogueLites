@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_barra_cooldown",
   "bboxMode":0,
   "bbox_bottom":47,
   "bbox_left":0,
-  "bbox_right":47,
+  "bbox_right":511,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -24,9 +24,9 @@
   "name":"spr_barra_cooldown",
   "nineSlice":null,
   "origin":0,
-    "parent": {
-    "name": "ui",
-    "path": "folders/sprites/ui.yy"
+  "parent":{
+    "name":"ui",
+    "path":"folders/sprites/ui.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":48,
+  "width":512,
 }

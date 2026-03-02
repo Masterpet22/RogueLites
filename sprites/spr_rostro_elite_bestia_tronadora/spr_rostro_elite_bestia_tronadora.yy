@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_rostro_elite_bestia_tronadora",
   "bboxMode":0,
-  "bbox_bottom":127,
+  "bbox_bottom":255,
   "bbox_left":0,
-  "bbox_right":127,
+  "bbox_right":255,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":128,
+  "height":256,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"33e6d997-b8ef-48bb-9984-9ad494c1652c","blendMode":0,"displayName":"default","isLocked":false,"name":"33e6d997-b8ef-48bb-9984-9ad494c1652c","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_rostro_elite_bestia_tronadora",
   "nineSlice":null,
   "origin":0,
-    "parent": {
-    "name": "elites",
-    "path": "folders/sprites/elites.yy"
+  "parent":{
+    "name":"elites",
+    "path":"folders/sprites/elites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":256,
 }

@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_rostro_nerya",
   "bboxMode":0,
-  "bbox_bottom":127,
+  "bbox_bottom":255,
   "bbox_left":0,
-  "bbox_right":127,
+  "bbox_right":255,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":128,
+  "height":256,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"d418b2ef-82c5-47af-9d00-0493e559f0a7","blendMode":0,"displayName":"default","isLocked":false,"name":"d418b2ef-82c5-47af-9d00-0493e559f0a7","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -24,9 +24,9 @@
   "name":"spr_rostro_nerya",
   "nineSlice":null,
   "origin":0,
-    "parent": {
-    "name": "personajes",
-    "path": "folders/sprites/personajes.yy"
+  "parent":{
+    "name":"personajes",
+    "path":"folders/sprites/personajes.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":256,
 }

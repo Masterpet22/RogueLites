@@ -1,10 +1,10 @@
-﻿{
+{
   "$GMSprite":"v2",
   "%Name":"spr_logo_arcadium",
   "bboxMode":0,
-  "bbox_bottom":255,
+  "bbox_bottom":511,
   "bbox_left":0,
-  "bbox_right":511,
+  "bbox_right":1023,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,17 +16,17 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":256,
+  "height":512,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"314e903a-9bc6-4ea2-a1aa-0fa609a524e9","blendMode":0,"displayName":"default","isLocked":false,"name":"314e903a-9bc6-4ea2-a1aa-0fa609a524e9","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_logo_arcadium",
   "nineSlice":null,
-  "origin":0,
-    "parent": {
-    "name": "ui",
-    "path": "folders/sprites/ui.yy"
+  "origin":4,
+  "parent":{
+    "name":"ui",
+    "path":"folders/sprites/ui.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -75,8 +75,8 @@
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":0,
-    "yorigin":0,
+    "xorigin":512,
+    "yorigin":256,
   },
   "swatchColours":null,
   "swfPrecision":0.5,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":512,
+  "width":1024,
 }

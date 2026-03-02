@@ -474,8 +474,9 @@ if (!control_combate.combate_terminado) {
     draw_set_color((_t2 >= 1) ? _t2_col : c_white);
     var _es_label2 = "ESENCIA " + string(round(pj.esencia)) + "/" + string(pj.esencia_llena);
     if (_t2 >= 1) {
-        // Icono de súper
-        draw_sprite_ext(spr_ico_super, 0, _es_bar_x + _es_bar_w + 10, _es_bar_y - 6, 0.6, 0.6, 0, _t2_col, 1);
+        // Icono de súper (escala dinámica)
+        var _sup_s = 29 / sprite_get_width(spr_ico_super);
+        draw_sprite_ext(spr_ico_super, 0, _es_bar_x + _es_bar_w + 10, _es_bar_y - 6, _sup_s, _sup_s, 0, _t2_col, 1);
         if (_t2 == 3) _es_label2 += "  [TAB] SÚPER 100%";
         else if (_t2 == 2) _es_label2 += "  [TAB] SÚPER 75%";
         else if (_t2 == 1) _es_label2 += "  [TAB] SÚPER 50%";
