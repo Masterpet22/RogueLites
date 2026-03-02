@@ -31,7 +31,17 @@ case "ClaseDelPj":
     };
 ```
 
-### Paso 3 — Validar la afinidad en `scr_datos_afinidades`
+### Paso 3 — Asignar personalidad
+
+La personalidad se define al registrar el perfil. Las 4 opciones existentes (`Agresivo`, `Metódico`, `Temerario`, `Resuelto`) están en `scr_datos_personalidades` y modifican stats base.
+
+```gml
+var p_nuevo = scr_crear_perfil_personaje("NombrePj", "Clase", "Afinidad");
+// La personalidad se asocia a cada personaje en obj_control_juego Create
+// Ejemplo: Kael = "Resuelto", Lys = "Agresivo"
+```
+
+### Paso 4 — Validar la afinidad en `scr_datos_afinidades`
 
 Si la afinidad ya existe (Fuego, Agua, etc.), no se necesita este paso. Si es nueva, ver sección 5.
 
@@ -43,8 +53,11 @@ El personaje aparecerá automáticamente en `rm_select`. No se necesita editar n
 
 - [ ] Perfil registrado en `obj_control_juego`
 - [ ] Clase definida en `scr_datos_clases`
+- [ ] Personalidad asignada (Agresivo/Metódico/Temerario/Resuelto)
 - [ ] Afinidad existente o creada
 - [ ] Habilidad fija de clase implementada en `scr_ejecutar_habilidad`
+- [ ] Súper-habilidad registrada en `scr_ejecutar_super` (×4 variantes: clase×personalidad)
+- [ ] Añadido a `scr_datos_tienda` si debe ser comprable
 
 ---
 
@@ -341,11 +354,11 @@ Cada modo solo altera:
 
 ### Modos sugeridos
 
-| Modo                             | Descripción                                       |
-| -------------------------------- | ------------------------------------------------- |
-| **Historia**                     | Secuencia fija de enemigos → jefes → El Devorador |
-| **Roguelite (Camino del Héroe)** | Enemigos aleatorios, run con progresión temporal  |
-| **Arena**                        | Combates consecutivos con dificultad creciente    |
+| Modo                       | Descripción                                       | Estado    |
+| -------------------------- | ------------------------------------------------- | --------- |
+| **Historia**               | Secuencia fija de enemigos → jefes → El Devorador | Pendiente |
+| **Roguelite (Modo Torre)** | 3 alas, 3 dificultades, tienda de piso, HP pers.  | ✔ HECHO   |
+| **Arena**                  | Combates consecutivos con dificultad creciente    | Pendiente |
 
 ---
 
@@ -366,27 +379,27 @@ Cada modo solo altera:
 
 ### Enemigos pendientes
 
-| Afinidad | Común                    | Élite                    |
-| -------- | ------------------------ | ------------------------ |
-| Fuego    | Soldado Ígneo            | Soldado Ígneo Élite      |
-| Agua     | Vigía Boreal             | Vigía Boreal Élite       |
-| Planta   | Hálito Verde             | Hálito Verde Élite       |
-| Rayo     | Bestia Tronadora         | Bestia Tronadora Élite   |
-| Tierra   | Guardián Terracota       | Guardián Terracota Élite |
-| Sombra   | Náufrago de la Oscuridad | Náufrago Élite           |
-| Luz      | Paladín Marchito         | Paladín Marchito Élite   |
-| Arcano   | Errante Rúnico           | Errante Rúnico Élite     |
+| Afinidad | Común                    | Élite                    | Estado  |
+| -------- | ------------------------ | ------------------------ | ------- |
+| Fuego    | Soldado Ígneo            | Soldado Ígneo Élite      | ✔ HECHO |
+| Agua     | Vigía Boreal             | Vigía Boreal Élite       | ✔ HECHO |
+| Planta   | Hálito Verde             | Hálito Verde Élite       | ✔ HECHO |
+| Rayo     | Bestia Tronadora         | Bestia Tronadora Élite   | ✔ HECHO |
+| Tierra   | Guardián Terracota       | Guardián Terracota Élite | ✔ HECHO |
+| Sombra   | Náufrago de la Oscuridad | Náufrago Élite           | ✔ HECHO |
+| Luz      | Paladín Marchito         | Paladín Marchito Élite   | ✔ HECHO |
+| Arcano   | Errante Rúnico           | Errante Rúnico Élite     | ✔ HECHO |
 
 ### Jefes pendientes
 
-| #   | Jefe                        | Afinidades      | Material Único          |
-| --- | --------------------------- | --------------- | ----------------------- |
-| 1   | Titán de las Forjas Rotas   | Fuego + Tierra  | Núcleo de Forja Antigua |
-| 2   | Coloso del Fango Viviente   | Agua + Planta   | Corazón de Fango        |
-| 3   | Sentinela del Cielo Roto    | Rayo + Luz      | Fragmento Celestial     |
-| 4   | Oráculo Quebrado del Abismo | Sombra + Arcano | Cristal del Vacío       |
-| 5   | El Devorador                | Ninguna         | —                       |
-| 6   | El Primer Conductor         | Ninguna         | —                       |
+| #   | Jefe                        | Afinidades      | Material Único          | Estado  |
+| --- | --------------------------- | --------------- | ----------------------- | ------- |
+| 1   | Titán de las Forjas Rotas   | Fuego + Tierra  | Núcleo de Forja Antigua | ✔ Datos |
+| 2   | Coloso del Fango Viviente   | Agua + Planta   | Corazón de Fango        | ✔ Datos |
+| 3   | Sentinela del Cielo Roto    | Rayo + Luz      | Fragmento Celestial     | ✔ Datos |
+| 4   | Oráculo Quebrado del Abismo | Sombra + Arcano | Cristal del Vacío       | ✔ Datos |
+| 5   | El Devorador                | Ninguna         | —                       | ✔ Datos |
+| 6   | El Primer Conductor         | Ninguna         | —                       | ✔ Datos |
 
 ---
 
@@ -420,3 +433,109 @@ Cada modo solo altera:
 1. Definir en `scr_datos_materiales`
 2. Asignar como drop de enemigo
 3. Usar en recetas de arma
+
+---
+
+## 10. Agregar un Objeto Consumible
+
+### Paso 1 — Definir en `scr_datos_objetos`
+
+```gml
+case "Pocion Superior":
+    return {
+        tipo: "consumible",
+        descripcion: "Restaura 150 HP al instante",
+        efecto: "curar_hp",
+        valor: 150,
+        precio: 300,
+        venta: 90
+    };
+```
+
+### Paso 2 — Implementar efecto en `scr_usar_objeto_combate`
+
+Si el efecto (`curar_hp`, `buff_ataque`, etc.) ya existe, no se necesita cambio. Si es un efecto nuevo, añadir case en el switch.
+
+### Paso 3 — Registrar en `scr_datos_tienda` (categoría "Objetos")
+
+### Checklist rápido — Consumible
+
+- [ ] Datos en `scr_datos_objetos` con tipo `"consumible"`
+- [ ] Efecto implementado en `scr_usar_objeto_combate`
+- [ ] Añadido a `scr_datos_tienda` categoría Objetos
+
+---
+
+## 11. Agregar un Rúnico
+
+### Paso 1 — Definir en `scr_datos_objetos`
+
+```gml
+case "Runa de Velocidad":
+    return {
+        tipo: "runico",
+        descripcion: "Aumenta velocidad pero reduce vida máxima",
+        efecto_positivo: "buff_velocidad",
+        efecto_negativo: "reducir_vida",
+        valor_positivo: 0.40,
+        valor_negativo: 0.15,
+        precio: 220,
+        venta: 65
+    };
+```
+
+### Paso 2 — Implementar aplicación al inicio de combate
+
+Los rúnicos se aplican automáticamente en `obj_control_combate` Create. Si el efecto es nuevo, añadir lógica ahí.
+
+### Paso 3 — Registrar en `scr_datos_tienda` (categoría "Rúnicos")
+
+### Checklist rápido — Rúnico
+
+- [ ] Datos en `scr_datos_objetos` con tipo `"runico"`
+- [ ] Efectos implementados en `obj_control_combate` Create
+- [ ] Añadido a `scr_datos_tienda` categoría Rúnicos
+
+---
+
+## 12. Agregar Contenido a la Tienda
+
+### Categorías disponibles
+
+| Categoría  | Script de datos    | Tipo de contenido                 |
+| ---------- | ------------------ | --------------------------------- |
+| Personajes | `scr_datos_tienda` | Personajes desbloqueables con oro |
+| Enemigos   | `scr_datos_tienda` | Enemigos para selección libre     |
+| Objetos    | `scr_datos_tienda` | Consumibles                       |
+| Rúnicos    | `scr_datos_tienda` | Runas especiales                  |
+
+Para añadir un item a la tienda, agregar su entrada en `scr_datos_tienda` con nombre y precio.
+
+---
+
+## 13. Agregar una Mecánica Especial de Combate
+
+### Paso 1 — Definir ID en `scr_mecanicas_combate`
+
+```gml
+case "mec_nueva_mecanica":
+    // Lógica de la mecánica
+    break;
+```
+
+### Paso 2 — Asignar al enemigo en `scr_datos_enemigos`
+
+```gml
+mecanicas: ["mec_nueva_mecanica"]
+```
+
+### Mecánicas existentes (6)
+
+| ID                            | Usado por                                  |
+| ----------------------------- | ------------------------------------------ |
+| `mec_ventana_invertida`       | Titán de las Forjas Rotas                  |
+| `mec_penalizacion_repeticion` | Bestia Tronadora Elite, G. Terracota Elite |
+| `mec_reflejo_diferido`        | Náufrago Elite, Sentinela Cielo            |
+| `mec_escalado_vida_jugador`   | Paladín Elite, Coloso Fango                |
+| `mec_afinidad_reactiva`       | Sentinela del Cielo Roto                   |
+| `mec_absorcion_esencia`       | Oráculo Quebrado del Abismo                |

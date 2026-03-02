@@ -100,6 +100,7 @@
     {"id":{"name":"spr_enemigo","path":"sprites/spr_enemigo/spr_enemigo.yy",},},
     {"id":{"name":"spr_jugador_rostro","path":"sprites/spr_jugador_rostro/spr_jugador_rostro.yy",},},
     {"id":{"name":"spr_jugador","path":"sprites/spr_jugador/spr_jugador.yy",},},
+    {"id":{"name":"spr_personajes","path":"sprites/spr_personajes/spr_personajes.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

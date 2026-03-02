@@ -35,19 +35,25 @@ Arcadium es un roguelite táctico 1v1 en tiempo real desarrollado en **GameMaker
 
 ### 1.3. Funcionalidades Pendientes
 
-| Prioridad | Funcionalidad                                                                   |
-| --------- | ------------------------------------------------------------------------------- |
-| Alta      | Habilidades activas adicionales (más slots, UI)                                 |
-| Alta      | Más armas por afinidad                                                          |
-| Alta      | Armas R3 con 3 habilidades                                                      |
-| ~~Alta~~  | ~~Estados alterados: shock, ralentización, vulnerabilidad~~ → HECHO (8 estados) |
-| Media     | Mejorar UI visual (iconos, barras estilizadas)                                  |
-| Media     | Enemigos por afinidad completos (×8)                                            |
-| Media     | Enemigos élite y jefes                                                          |
-| Media     | Animaciones de combate (impacto, casteo)                                        |
-| Baja      | Sistema de historia / Camino del Héroe                                          |
-| Baja      | Sistema de builds profundas                                                     |
-| Baja      | El Devorador (jefe final)                                                       |
+| Prioridad | Funcionalidad                                                                        |
+| --------- | ------------------------------------------------------------------------------------ |
+| Alta      | Habilidades activas adicionales (más slots, UI)                                      |
+| Alta      | Más armas por afinidad                                                               |
+| Alta      | Armas R3 con 3 habilidades                                                           |
+| ~~Alta~~  | ~~Estados alterados: shock, ralentización, vulnerabilidad~~ → HECHO (8 estados)      |
+| ~~Alta~~  | ~~Sistema de Tienda~~ → HECHO (4 categorías: personajes, enemigos, objetos, rúnicos) |
+| ~~Alta~~  | ~~Sistema de Objetos Consumibles~~ → HECHO (5 consumibles)                           |
+| ~~Alta~~  | ~~Sistema de Rúnicos~~ → HECHO (6 runas con trade-offs)                              |
+| ~~Alta~~  | ~~24 Súper-habilidades~~ → HECHO (6 clases × 4 personalidades)                       |
+| ~~Alta~~  | ~~Mecánicas de combate especiales~~ → HECHO (6 mecánicas élite/jefe)                 |
+| ~~Media~~ | ~~Modo Torre~~ → HECHO (3 alas, 3 dificultades, tienda de piso)                      |
+| Media     | Mejorar UI visual (iconos, barras estilizadas)                                       |
+| ~~Media~~ | ~~Enemigos por afinidad completos (×8)~~ → HECHO                                     |
+| ~~Media~~ | ~~Enemigos élite y jefes~~ → HECHO (8 élites + 6 jefes definidos)                    |
+| Media     | Animaciones de combate (impacto, casteo)                                             |
+| Baja      | Sistema de historia / Camino del Héroe                                               |
+| Baja      | Sistema de builds profundas                                                          |
+| Baja      | El Devorador (jefe final)                                                            |
 
 ---
 
@@ -63,6 +69,8 @@ Arcadium es un roguelite táctico 1v1 en tiempo real desarrollado en **GameMaker
 | `rm_enemy_select` | Selector de enemigos (categorías + lista)   |
 | `rm_combate`      | Escena del combate 1v1 en tiempo real       |
 | `rm_forja`        | Sistema de forja de armas                   |
+| `rm_tienda`       | Tienda de desbloqueo (personajes, objetos)  |
+| `rm_torre`        | Modo Torre (roguelite por pisos)            |
 
 ### 2.2. Objetos Principales
 
@@ -76,12 +84,14 @@ Arcadium es un roguelite táctico 1v1 en tiempo real desarrollado en **GameMaker
 
 #### UI / Flujo
 
-| Objeto             | Responsabilidad                                            |
-| ------------------ | ---------------------------------------------------------- |
-| `obj_menu`         | Navegación del menú principal                              |
-| `obj_select`       | Selección de personaje + popup de armas desbloqueadas      |
-| `obj_enemy_select` | Selector de enemigos por categoría (comunes, élite, jefes) |
-| `obj_ui_forja`     | UI de forja escalable por personaje                        |
+| Objeto              | Responsabilidad                                                        |
+| ------------------- | ---------------------------------------------------------------------- |
+| `obj_menu`          | Navegación del menú principal                                          |
+| `obj_select`        | Selección de personaje + popup de armas desbloqueadas                  |
+| `obj_enemy_select`  | Selector de enemigos por categoría (comunes, élite, jefes)             |
+| `obj_ui_forja`      | UI de forja escalable por personaje                                    |
+| `obj_ui_tienda`     | UI de tienda con 4 categorías (personajes, enemigos, objetos, rúnicos) |
+| `obj_control_torre` | Controlador del Modo Torre (pisos, alas, dificultad, HP persistente)   |
 
 #### Actores (Solo Visual)
 
@@ -131,6 +141,34 @@ scripts/
 │ ├── scr_inventario_puede_fabricar_arma
 │ └── scr_fabricar_arma
 │
+├── objetos/ # Sistema de objetos y rúnicos
+│ ├── scr_datos_objetos
+│ ├── scr_inventario_objetos
+│ └── scr_usar_objeto_combate
+│
+├── tienda/ # Tienda de desbloqueo
+│ ├── scr_datos_tienda
+│ └── scr_lista_armas_disponibles
+│
+├── torre/ # Modo Torre
+│ └── scr_datos_torre
+│
+├── mecanicas/ # Mecánicas especiales y fórmulas
+│ ├── scr_mecanicas_combate
+│ ├── scr_ejecutar_super
+│ ├── scr_formula_dano
+│ ├── scr_formula_beneficio
+│ ├── scr_config_juego
+│ └── scr_get_stat
+│
+├── feedback/ # Feedback visual
+│ ├── scr_feedback_combate
+│ └── scr_notificacion_combate
+│
+├── datos_extra/ # Datos adicionales
+│ ├── scr_datos_personalidades
+│ └── scr_datos_materiales
+│
 └── utilidades/
 └── scr_ds_map_keys_array # Helper para iterar ds_map
 
@@ -144,8 +182,14 @@ rm_boot
 │ └──→ rm_enemy_select (enemigo)
 │ └──→ rm_combate (1v1)
 │ └──→ rm_menu (al terminar)
-└──→ rm_forja
-└──→ rm_menu (ESC para volver)
+├──→ rm_forja
+│ └──→ rm_menu (ESC para volver)
+├──→ rm_tienda
+│ └──→ rm_menu (ESC para volver)
+└──→ rm_torre
+├──→ rm_combate (piso actual)
+├──→ tienda de piso (cada N pisos)
+└──→ rm_menu (al terminar/morir)
 
 ### 3.1. Pantalla de Selección
 
@@ -218,6 +262,52 @@ Cada personaje tiene un perfil persistente gestionado por `obj_control_juego`:
 - Materiales se obtienen al vencer enemigos.
 - Gestión a través de scripts `scr_inventario_*`.
 - Verificación y gasto automático durante la forja.
+
+### 5.5. Objetos Consumibles
+
+- 5 objetos consumibles comprables en tienda.
+- Se equipan antes del combate (máx. 3 por combate).
+- Se usan con teclas 1, 2, 3 durante el combate.
+- Tipos: Pociones (HP), Elixir de Esencia, Tónicos (buffs temporales).
+- Se consumen al usarse.
+
+### 5.6. Rúnicos
+
+- 6 runas especiales con ventaja/desventaja.
+- Se equipan antes del combate (máx. 1 por combate).
+- Se aplican automáticamente al inicio del combate.
+- Se consumen al terminar el combate (gane o pierda).
+
+### 5.7. Tienda
+
+- 4 categorías: Personajes, Enemigos, Objetos, Rúnicos.
+- Compra con oro ganado en combates.
+- UI gestionada por `obj_ui_tienda`.
+- Datos definidos en `scr_datos_tienda`.
+
+### 5.8. Modo Torre
+
+- Modalidad roguelite con pisos consecutivos.
+- 3 alas (Oeste/Este/Central) con enemigos temáticos.
+- 3 dificultades (Normal 10 pisos / Difícil 14 / Extremo 18).
+- HP persistente entre pisos.
+- Tienda de piso con catálogo progresivo.
+- Jefes finales en dificultad Extremo.
+- Controlado por `obj_control_torre`.
+
+### 5.9. Súper-Habilidades
+
+- 24 variantes (6 clases × 4 personalidades).
+- Se activan con TAB cuando esencia ≥ 50%.
+- Potencia escala por tier: 50% → ×0.50, 75% → ×0.75, 100% → ×1.00.
+- Tras uso, esencia vuelve a 0.
+- Implementadas en `scr_ejecutar_super`.
+
+### 5.10. Mecánicas Especiales de Combate
+
+- 6 mecánicas para enemigos élite y jefes.
+- Ventana invertida, penalización por repetición, reflejo diferido, escalado por vida, afinidad reactiva, absorción de esencia.
+- Implementadas en `scr_mecanicas_combate`.
 
 ### 5.4. Estados Alterados
 
@@ -308,20 +398,27 @@ Estructura de un estado activo:
 - [x] IA multi-habilidad con priorización (secundaria > fija > básica).
 - [x] Overhaul de stats: defensa_magica, tipo_dano, CDR, crit dinámico, esencia dinámica.
 - [ ] Animaciones básicas (impacto, casteo).
+- [x] 5 objetos consumibles implementados.
+- [x] 6 rúnicos implementados.
+- [x] Sistema de tienda con 4 categorías.
+- [x] 8 personalidades (Agresivo, Metódico, Temerario, Resuelto).
+- [x] 8 personajes jugables (Kael, Lys, Torvan, Nerya, Saren, Maelis, Thalys, Brenn).
 
 ### Fase 3 — Jefes y Profundidad
 
-- [ ] 4 jefes duales con mecánicas temáticas.
+- [x] 6 jefes definidos con mecánicas temáticas (Titán, Coloso, Sentinela, Bestia, Oráculo, Devorador).
+- [x] 6 mecánicas especiales de combate para élites/jefes.
 - [ ] Armas legendarias R3 para cada afinidad.
-- [ ] Sistema de ESENCIA avanzado con las 24 súper-habilidades.
+- [x] Sistema de ESENCIA avanzado con las 24 súper-habilidades.
 - [ ] Mejorar IA de enemigos (patrones, escalado).
 
 ### Fase 4 — Modos de Juego
 
-- [ ] Camino del Héroe (modo roguelite).
+- [x] Modo Torre implementado (3 alas, 3 dificultades, tienda de piso).
+- [ ] Camino del Héroe (modo narrativo).
 - [ ] Sistema de historia con fragmentos de memoria.
-- [ ] El Devorador (jefe final).
-- [ ] El Primer Conductor (jefe secreto).
+- [ ] El Devorador (jefe final — datos definidos, implementación pendiente).
+- [ ] El Primer Conductor (jefe secreto — datos definidos, implementación pendiente).
 
 ### Fase 5 — Pulido
 

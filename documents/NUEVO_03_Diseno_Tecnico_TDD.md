@@ -193,6 +193,86 @@ Estado Alterado activo (en combate):
 
 8 estados implementados: `quemadura_fuego`, `muro_tierra`, `aceleracion_rayo`, `veneno`, `regeneracion`, `ralentizacion`, `vulnerabilidad`, `supresion_arcana`.
 
+### 2.9. Personalidad (Datos)
+
+Devuelta por `scr_datos_personalidades`:
+
+```gml
+{
+    ataque_mod: real,       // ej. 0.20 = +20%
+    defensa_mod: real,      // ej. -0.20 = -20%
+    vida_mod: real,         // ej. -0.10 = -10%
+    velocidad_mod: real,    // ej. 0.15 = +15%
+    poder_mod: real         // ej. 0.10 = +10%
+}
+```
+
+4 personalidades: `Agresivo`, `Metódico`, `Temerario`, `Resuelto`.
+
+### 2.10. Objeto Consumible (Datos)
+
+Devuelto por `scr_datos_objetos`:
+
+```gml
+{
+    tipo: "consumible",
+    descripcion: string,
+    efecto: string,       // "curar_hp", "restaurar_esencia", "buff_ataque", "buff_defensa"
+    valor: real,           // magnitud del efecto
+    precio: real,
+    venta: real
+}
+```
+
+5 consumibles: `Pocion Basica`, `Pocion Media`, `Elixir de Esencia`, `Tonico de Ataque`, `Tonico de Defensa`.
+
+### 2.11. Objeto Rúnico (Datos)
+
+Devuelto por `scr_datos_objetos`:
+
+```gml
+{
+    tipo: "runico",
+    descripcion: string,
+    efecto_positivo: string,
+    efecto_negativo: string,
+    valor_positivo: real,
+    valor_negativo: real,
+    precio: real,
+    venta: real
+}
+```
+
+6 rúnicos: `Runa de Furia`, `Runa de Fortaleza`, `Runa de Celeridad`, `Runa del Ultimo Aliento`, `Runa Vampirica`, `Runa de Cristal`.
+
+### 2.12. Datos de Torre
+
+Devueltos por `scr_datos_torre`:
+
+```gml
+// Ala
+{
+    nombre: string,
+    subtitulo: string,
+    afinidades: [string, string, string],
+    enemigos_comunes: [string, string, string],
+    jefe: string
+}
+
+// Dificultad
+{
+    pisos: real,
+    tienda_cada: real,
+    mult_vida_enemigo: real,
+    mult_oro: real,
+    incluir_elites: bool,
+    incluir_jefe: bool,
+    recompensa_completar: real
+}
+```
+
+3 alas: `Oeste`, `Este`, `Central`. 3 dificultades: `Normal`, `Difícil`, `Extremo`.
+
 ---
 
 ## 3. Ciclo de Combate (Frame a Frame)
@@ -391,7 +471,29 @@ _personaje.esencia = clamp(_personaje.esencia, 0, 100);
 
 ### 6.2. Activación de Súper
 
-Cuando `esencia >= 100`, el jugador puede activar la Súper-Habilidad (tecla dedicada). Tras usarla, ESENCIA vuelve a 0.
+Cuando `esencia >= 50` (50%), el jugador puede activar la Súper-Habilidad (tecla TAB). La potencia escala por tier:
+
+```gml
+// scr_ejecutar_super(_jugador, _enemigo)
+var _pct = _jugador.esencia / _jugador.esencia_max;
+var _tier_mult = 0.50;  // 50-74%
+if (_pct >= 0.75) _tier_mult = 0.75;  // 75-99%
+if (_pct >= 1.00) _tier_mult = 1.00;  // 100%
+
+// Selección por clase + personalidad (24 variantes)
+var _clave = _jugador.clase + "_" + _jugador.personalidad;
+switch (_clave) {
+    case "Vanguardia_Agresivo":
+        var _dano = round(_jugador.ataque_base * 3.5 * _tier_mult);
+        // penetración total (ignora defensa)
+        _enemigo.vida_actual -= _dano;
+        break;
+    // ... 23 variantes más
+}
+_jugador.esencia = 0;
+```
+
+Tras usarla, ESENCIA vuelve a 0.
 
 ---
 
@@ -502,13 +604,16 @@ enemigo.p_index = (enemigo.p_index + 1) mod array_length(enemigo.patron);
 
 ### 9.2. Teclas de Habilidades
 
-| Tecla   | Slot                                |
-| ------- | ----------------------------------- |
-| ESPACIO | Habilidad de arma 0                 |
-| Q       | Habilidad de arma 1 (R2+)           |
-| W       | Habilidad de arma 2 (R3)            |
-| E       | Habilidad fija de clase             |
-| R       | Súper-Habilidad (si ESENCIA = 100%) |
+| Tecla   | Slot                               |
+| ------- | ---------------------------------- |
+| ESPACIO | Habilidad de arma 0                |
+| Q       | Habilidad de arma 1 (R2+)          |
+| W       | Habilidad de arma 2 (R3)           |
+| E       | Habilidad fija de clase            |
+| R       | Súper-Habilidad (si ESENCIA ≥ 50%) |
+| 1       | Objeto consumible slot 1           |
+| 2       | Objeto consumible slot 2           |
+| 3       | Objeto consumible slot 3           |
 
 ---
 
@@ -544,17 +649,21 @@ scr_datos_clases ──────────────┐
 scr_datos_afinidades ──────────┤
 scr_datos_armas ───────────────┼──→ scr_crear_personaje_combate ──→ obj_control_combate
 scr_datos_enemigos ────────────┤ │
-scr_datos_estados ─────────────┘ │
-↓
-scr_ejecutar_habilidad
+scr_datos_estados ─────────────┤ │
+scr_datos_personalidades ──────┤ ↓
+scr_datos_objetos ─────────────┘ scr_ejecutar_habilidad
 │ │
-scr_calcular_dano scr_aplicar_estado
-│ │
-scr_multiplicador_afinidad scr_actualizar_estados
+scr_config_juego (macros) scr_calcular_dano scr_aplicar_estado
+│ │ │
+↓ scr_multiplicador_af. scr_actualizar_estados
+scr_formula_dano ──→ scr_calcular_dano │
+scr_formula_beneficio scr_activar_pasiva_afinidad
 │
-scr_activar_pasiva_afinidad
-│
-scr_actualizar_pasivas
+scr_mecanicas_combate ──→ obj_control_combate scr_actualizar_pasivas
+scr_ejecutar_super ─────→ obj_control_combate
+scr_usar_objeto_combate ─→ obj_control_combate
+scr_datos_torre ────────→ obj_control_torre
+scr_datos_tienda ───────→ obj_ui_tienda
 
 ---
 
@@ -615,3 +724,72 @@ case "Mandoble Carmesi":
 | `ataque_fuego_basico`   | Fuego Básico   | Daño físico + elemental fuego    | 1.2s     |
 | `ataque_fuego_mejorado` | Fuego Mejorado | Daño físico + elemental mejorado | 1.0s     |
 | `explosion_carmesi`     | Explosión      | Daño + aplica quemadura (DoT)    | 2.0s     |
+
+---
+
+## 13. Macros Globales (`scr_config_juego`)
+
+```gml
+// General
+#macro GAME_FPS            60
+#macro ESTADO_DUR_MAX_SEG  5
+
+// Esencia
+#macro ESENCIA_PCT_DANO       0.05
+#macro ESENCIA_MULT_VEL       0.3
+#macro ESENCIA_MULT_PODER_MAG 0.2
+#macro ESENCIA_CRIT_BONUS     1.5
+
+// Críticos
+#macro CRIT_BASE_CHANCE    3
+#macro CRIT_ATK_DIVISOR    3
+#macro CRIT_POS_CHANCE     5
+#macro CRIT_POS_MULT       1.50
+#macro CRIT_NEG_CHANCE     3
+#macro CRIT_NEG_MULT       0.60
+
+// IA
+#macro IA_ACCION_BASE_FRAMES 180
+#macro IA_VEL_FACTOR         0.12
+#macro IA_PREP_FRAMES        30
+#macro IA_VARIACION          0.15
+
+// Fórmula de daño
+#macro FACTOR_DEF_GLOBAL   0.50
+#macro VAR_RANGO           0.15
+#macro VAR_MIN_ABS         2
+#macro CDR_POR_VEL         0.02
+```
+
+---
+
+## 14. Sistema de Mecánicas Especiales (Técnico)
+
+Las mecánicas especiales se definen en el array `mecanicas` de cada enemigo élite/jefe y se procesan por `scr_mecanicas_combate` durante el Step del combate.
+
+```gml
+// scr_mecanicas_combate(_enemigo, _jugador, _contexto)
+for (var i = 0; i < array_length(_enemigo.mecanicas); i++) {
+    var _mec = _enemigo.mecanicas[i];
+    switch (_mec) {
+        case "mec_ventana_invertida":
+            // Mult. daño varía: esperando ×0.50, preparando ×1.00, atacando ×0.30
+            break;
+        case "mec_penalizacion_repeticion":
+            // Si jugador repite afinidad 3 veces → −25% daño por stack
+            break;
+        case "mec_reflejo_diferido":
+            // Acumula 40% del daño recibido, max 200, lo devuelve al atacar
+            break;
+        case "mec_escalado_vida_jugador":
+            // Daño enemigo: si jugador HP lleno ×1.50, si bajo ×0.60
+            break;
+        case "mec_afinidad_reactiva":
+            // −60% al elemento más usado por el jugador
+            break;
+        case "mec_absorcion_esencia":
+            // Súper al 100% → enemigo roba 30% HP; <100% → enemigo vulnerable 5s
+            break;
+    }
+}
+```

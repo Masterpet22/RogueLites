@@ -204,14 +204,16 @@ Barra de poder universal que se llena según la **clase** del personaje. Al lleg
 
 ## 8. Personajes Base
 
-| #   | Nombre     | Clase        | Afinidad  | Personalidad |
-| --- | ---------- | ------------ | --------- | ------------ |
-| 1   | **Kael**   | Vanguardia   | Fuego     | Resuelto     |
-| 2   | **Lys**    | Filotormenta | Rayo      | Agresivo     |
-| 3   | **Torvan** | Quebrador    | Tierra    | Metódico     |
-| 4   | **Maelis** | Centinela    | Luz       | Metódico     |
-| 5   | **Saren**  | Duelista     | Oscuridad | Resuelto     |
-| 6   | **Nerya**  | Canalizador  | Arcano    | Metódico     |
+| #   | Nombre     | Clase        | Afinidad | Personalidad |
+| --- | ---------- | ------------ | -------- | ------------ |
+| 1   | **Kael**   | Vanguardia   | Fuego    | Resuelto     |
+| 2   | **Lys**    | Filotormenta | Rayo     | Agresivo     |
+| 3   | **Torvan** | Quebrador    | Tierra   | Metódico     |
+| 4   | **Maelis** | Centinela    | Luz      | Metódico     |
+| 5   | **Saren**  | Duelista     | Sombra   | Resuelto     |
+| 6   | **Nerya**  | Canalizador  | Arcano   | Metódico     |
+| 7   | **Thalys** | Centinela    | Agua     | Temerario    |
+| 8   | **Brenn**  | Quebrador    | Planta   | Agresivo     |
 
 Cada uno tiene habilidad fija de clase, afinidad pasiva y Súper-Habilidad personalizada.
 
@@ -354,7 +356,297 @@ Clases ← Afinidades ← Personalidades ← ESENCIA ←
 
 ---
 
-## 14. Plan de Escalado
+## 14. Sistema de Objetos Consumibles
+
+### 14.1. Concepto
+
+Los objetos consumibles se compran en la tienda, se equipan antes de un combate (máx. 3 por combate) y se usan con las teclas 1, 2, 3 durante la pelea. Al usarse, se gastan del inventario.
+
+### 14.2. Lista de Consumibles
+
+| Objeto            | Efecto                               | Precio | Venta |
+| ----------------- | ------------------------------------ | ------ | ----- |
+| Poción Básica     | Restaura 30 HP                       | 50     | 15    |
+| Poción Media      | Restaura 80 HP                       | 150    | 45    |
+| Elixir de Esencia | Restaura 50% de la barra de esencia  | 120    | 35    |
+| Tónico de Ataque  | +5 ataque durante el combate actual  | 100    | 30    |
+| Tónico de Defensa | +5 defensa durante el combate actual | 100    | 30    |
+
+---
+
+## 15. Sistema de Rúnicos
+
+### 15.1. Concepto
+
+Los rúnicos son objetos especiales que se equipan antes del combate (máx. 1). Se aplican automáticamente al inicio del combate y **se consumen al terminar** (gane o pierda). Cada uno ofrece una **ventaja significativa** junto con una **desventaja**.
+
+### 15.2. Lista de Rúnicos
+
+| Rúnico                  | Ventaja                             | Desventaja                 | Precio | Venta |
+| ----------------------- | ----------------------------------- | -------------------------- | ------ | ----- |
+| Runa de Furia           | +30% daño infligido                 | −20% vida máxima           | 200    | 60    |
+| Runa de Fortaleza       | +40% vida máxima                    | −25% daño infligido        | 200    | 60    |
+| Runa de Celeridad       | +50% velocidad                      | −30% defensa               | 180    | 55    |
+| Runa del Último Aliento | Sobrevive golpe letal (1 vez, 1 HP) | Primer ataque hace 0 daño  | 300    | 90    |
+| Runa Vampírica          | 15% lifesteal                       | −40% generación de esencia | 250    | 75    |
+| Runa de Cristal         | +50% daño infligido                 | +50% daño recibido         | 250    | 75    |
+
+---
+
+## 16. Estados Alterados
+
+### 16.1. Concepto
+
+Los estados alterados se aplican durante el combate por habilidades, duran un tiempo limitado y modifican stats o causan daño periódico. Máximo 5 segundos por estado (`ESTADO_DUR_MAX_SEG`).
+
+### 16.2. Lista de Estados
+
+| Estado             | Tipo             | Efecto                      | Aplicado por      |
+| ------------------ | ---------------- | --------------------------- | ----------------- |
+| Quemadura (fuego)  | DoT              | 3 daño/s por tick           | Armas de fuego    |
+| Veneno             | DoT              | 2 daño/s por tick           | Armas de planta   |
+| Regeneración       | HoT              | 3 curación/s por tick       | Armas de agua/luz |
+| Muro de Tierra     | Buff Defensa     | +4 defensa temporal         | Armas de tierra   |
+| Aceleración (rayo) | Buff Velocidad   | +3 velocidad temporal       | Armas de rayo     |
+| Ralentización      | Debuff Velocidad | −3 velocidad temporal       | Armas de agua     |
+| Vulnerabilidad     | Debuff Defensa   | −4 defensa temporal         | Armas de sombra   |
+| Supresión Arcana   | Debuff Poder     | −3 poder elemental temporal | Armas arcanas     |
+
+---
+
+## 17. Tabla de Multiplicadores Elementales
+
+### 17.1. Ventajas de Afinidad
+
+| Atacante → Defensor | Multiplicador |
+| ------------------- | ------------- |
+| Fuego → Planta      | ×1.50         |
+| Agua → Fuego        | ×1.40         |
+| Planta → Agua       | ×1.30         |
+| Rayo → Agua         | ×1.40         |
+| Tierra → Rayo       | ×1.50         |
+| Sombra → Luz        | ×1.40         |
+| Luz → Sombra        | ×1.40         |
+| Arcano → Todos      | ×1.10         |
+
+### 17.2. Desventajas de Afinidad
+
+| Atacante → Defensor | Multiplicador |
+| ------------------- | ------------- |
+| Fuego → Agua        | ×0.75         |
+| Agua → Rayo         | ×0.80         |
+| Planta → Fuego      | ×0.70         |
+| Rayo → Tierra       | ×0.75         |
+
+Neutro siempre ×1.00. Si no hay relación especial, ×1.00.
+
+---
+
+## 18. Súper-Habilidades (24 Variantes)
+
+### 18.1. Mecánica de Activación
+
+- Se activa con **TAB** cuando la esencia ≥ 50%.
+- La potencia escala según el tier de esencia al usarla:
+
+| Tier de Esencia | Multiplicador de Potencia |
+| --------------- | ------------------------- |
+| 50–74%          | ×0.50                     |
+| 75–99%          | ×0.75                     |
+| 100%            | ×1.00                     |
+
+- Tras usarla, la esencia vuelve a 0.
+
+### 18.2. Tabla de 24 Súper-Habilidades
+
+| Clase        | Personalidad | Tipo                 | Descripción breve                                         |
+| ------------ | ------------ | -------------------- | --------------------------------------------------------- |
+| Vanguardia   | Agresivo     | Daño físico          | Golpe masivo (3.5× ATQ, penetración total)                |
+| Vanguardia   | Metódico     | Curación + buff      | Cura 35% vida máx + 50% defensa extra                     |
+| Vanguardia   | Temerario    | Daño extremo         | 5.0× ATQ pero pierde 15% de su propia HP                  |
+| Vanguardia   | Resuelto     | Daño + lifesteal     | 3.0× ATQ con 30% del daño como curación                   |
+| Filotormenta | Agresivo     | Multi-golpe          | 5 golpes de 0.6× ATQ cada uno                             |
+| Filotormenta | Metódico     | Multi-golpe + debuff | 3 golpes de 0.9× ATQ + reduce 20% defensa enemiga         |
+| Filotormenta | Temerario    | Multi-golpe extremo  | 7 golpes de 0.5× ATQ, pierde 10% HP propia                |
+| Filotormenta | Resuelto     | Multi-golpe estable  | 4 golpes de 0.7× ATQ                                      |
+| Quebrador    | Agresivo     | Golpe devastador     | 1.0× ATQ + 1.0× Poder con ×4.0 multiplicador              |
+| Quebrador    | Metódico     | Golpe + DoT          | 3.0× ATQ + aplica quemadura de fuego (5s)                 |
+| Quebrador    | Temerario    | Golpe asesino        | 6.0× ATQ, pierde 25% HP propia                            |
+| Quebrador    | Resuelto     | Golpe + defensa      | 3.0× ATQ + gana 30% defensa extra                         |
+| Centinela    | Agresivo     | Contra-daño          | Convierte defensa en daño (3.5× DEF)                      |
+| Centinela    | Metódico     | Mega-curación        | Cura 40% vida máx + 60% defensa extra                     |
+| Centinela    | Temerario    | Defensa explosiva    | Convierte toda defensa temporal acumulada en daño (×4.0)  |
+| Centinela    | Resuelto     | Híbrido              | 1.5× DEF daño + 20% vida máx curación + 30% defensa extra |
+| Duelista     | Agresivo     | Golpe preciso        | (1.0× ATQ + 1.0× VEL) con ×3.5 multiplicador              |
+| Duelista     | Metódico     | Ráfaga precisa       | 6 golpes de 0.5× ATQ con penetración total                |
+| Duelista     | Temerario    | Golpe desesperado    | 2.5× ATQ + 1.5× vida perdida como daño extra              |
+| Duelista     | Resuelto     | Estocada equilibrada | (1.0× ATQ + 1.0× VEL) ×2.5 + cura 25% del daño            |
+| Canalizador  | Agresivo     | Devastación mágica   | 5.0× Poder Elemental, penetración total                   |
+| Canalizador  | Metódico     | Daño + curación      | 3.0× Poder como daño + 1.5× Poder como curación           |
+| Canalizador  | Temerario    | Apocalipsis mágico   | 7.0× Poder Elemental, pierde 20% HP propia                |
+| Canalizador  | Resuelto     | Daño + reset CD      | 3.0× Poder como daño + resetea todos los cooldowns a 0    |
+
+---
+
+## 19. Mecánicas Especiales de Combate (Élite/Jefes)
+
+### 19.1. Concepto
+
+Los enemigos élite y jefes pueden tener mecánicas especiales que modifican el flujo del combate. Cada mecánica se define en el array `mecanicas` de los datos del enemigo.
+
+### 19.2. Lista de Mecánicas
+
+| Mecánica                        | Descripción                                                                                                                                 | Usado por                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| **Ventana Invertida**           | El daño que recibe varía según su estado IA:                                                                                                | Titán de las Forjas Rotas                                |
+|                                 | Esperando ×0.50, Preparando ×1.00, Atacando ×0.30                                                                                           |                                                          |
+| **Penalización por Repetición** | Si el jugador repite la misma afinidad 3 veces, el enemigo gana resistencia (−25% por stack)                                                | Bestia Tronadora Elite, Guardián Terracota Elite         |
+| **Reflejo Diferido**            | Mientras el enemigo "espera", acumula 40% del daño recibido (máx 200). Lo devuelve al acabar su ataque                                      | Náufrago de la Oscuridad Elite, Sentinela del Cielo Roto |
+| **Escalado por Vida Jugador**   | El daño del enemigo escala según % HP del jugador: si está lleno ×1.50, si está bajo ×0.60                                                  | Paladín Marchito Elite, Coloso del Fango Viviente        |
+| **Afinidad Reactiva**           | Reduce 60% el daño del elemento más usado por el jugador en los últimos golpes                                                              | Sentinela del Cielo Roto                                 |
+| **Absorción de Esencia**        | Si el jugador usa la súper al 100%, el enemigo roba 30% del daño como HP. Si la usa a <100%, el enemigo queda vulnerable (+20% daño por 5s) | Oráculo Quebrado del Abismo                              |
+
+---
+
+## 20. Sistema de Tienda
+
+### 20.1. Concepto
+
+La tienda permite al jugador gastar oro para desbloquear personajes, enemigos, objetos consumibles y rúnicos. El catálogo está dividido en 4 categorías.
+
+### 20.2. Categorías
+
+| Categoría  | Contenido                                        | Precio                     |
+| ---------- | ------------------------------------------------ | -------------------------- |
+| Personajes | 8 personajes (Kael: gratis, resto: 500–1000 oro) | Según `scr_datos_clases`   |
+| Enemigos   | 20 enemigos (para selección libre de combate)    | Según `scr_datos_enemigos` |
+| Objetos    | 5 consumibles                                    | 50–150 oro                 |
+| Rúnicos    | 6 runas                                          | 180–300 oro                |
+
+---
+
+## 21. Modo Torre
+
+### 21.1. Concepto
+
+El Modo Torre es una modalidad roguelite estilo "run" donde el jugador sube pisos enfrentando enemigos consecutivos, con HP persistente entre combates, tiendas intermedias y un jefe final en la dificultad máxima.
+
+### 21.2. Alas (3)
+
+| Ala         | Subtítulo         | Afinidades            | Enemigos (comunes)                                       | Jefe Final                  |
+| ----------- | ----------------- | --------------------- | -------------------------------------------------------- | --------------------------- |
+| Ala Oeste   | Naturaleza Bruta  | Fuego, Tierra, Planta | Soldado Ígneo, Guardián Terracota, Hálito Verde          | Titán de las Forjas Rotas   |
+| Ala Este    | Elementos Etéreos | Rayo, Agua, Sombra    | Bestia Tronadora, Vigía Boreal, Náufrago de la Oscuridad | Sentinela del Cielo Roto    |
+| Ala Central | Convergencia      | Luz, Arcano           | Paladín Marchito, Errante Rúnico                         | Oráculo Quebrado del Abismo |
+
+### 21.3. Dificultades (3)
+
+| Dificultad | Pisos | Tienda cada | HP Bonus | Oro Bonus | Élites | Jefe Final |
+| ---------- | ----- | ----------- | -------- | --------- | ------ | ---------- |
+| Normal     | 10    | 3 pisos     | +0%      | +0%       | No     | No         |
+| Difícil    | 14    | 4 pisos     | +25%     | +25%      | Sí     | No         |
+| Extremo    | 18    | 5 pisos     | +50%     | +50%      | Sí     | Sí         |
+
+### 21.4. Flujo del Modo Torre
+
+1. **Selección de Ala** → 2. **Selección de Dificultad** → 3. **Selección de Personaje/Arma** →
+2. **Pre-combate** (equipar objetos/runa) → 5. **Combate** → 6. **Post-combate** (resumen) →
+3. **Tienda de piso** (si toca) → 8. Repetir hasta victoria/derrota.
+
+### 21.5. Características Especiales
+
+- **HP persistente:** La vida del jugador se mantiene entre pisos (no se restaura automáticamente).
+- **Racha HP alta:** Si el jugador termina pisos con ≥80% HP, acumula bonus de racha.
+- **Tienda de piso:** Catálogo progresivo — al avanzar más pisos, aparecen mejores items y runas.
+- **Multiplicadores de HP enemigo:** Según la dificultad, los enemigos tienen más vida.
+- **Recompensa de completar ala:** Normal = 150 oro, Difícil = 350 oro, Extremo = 600 oro.
+
+### 21.6. Tienda de Piso (Catálogo Progresivo)
+
+| Progreso (% del total) | Items disponibles                                          |
+| ---------------------- | ---------------------------------------------------------- |
+| 0% (inicio)            | Poción Básica, Tónico de Defensa                           |
+| ≥30%                   | + Poción Media, Tónico de Ataque                           |
+| ≥40%                   | + Runa de Furia, Runa de Fortaleza, Runa de Celeridad      |
+| ≥50%                   | + Elixir de Esencia                                        |
+| ≥60%                   | + Runa Vampírica, Runa del Último Aliento, Runa de Cristal |
+
+---
+
+## 22. Configuración Global (Macros del Motor)
+
+### 22.1. General
+
+| Macro                | Valor | Descripción                    |
+| -------------------- | ----- | ------------------------------ |
+| `GAME_FPS`           | 60    | FPS del juego                  |
+| `ESTADO_DUR_MAX_SEG` | 5     | Duración máxima de estados (s) |
+
+### 22.2. Esencia
+
+| Macro                    | Valor | Descripción                                   |
+| ------------------------ | ----- | --------------------------------------------- |
+| `ESENCIA_PCT_DANO`       | 0.05  | % del daño final convertido en esencia        |
+| `ESENCIA_MULT_VEL`       | 0.3   | Multiplicador de velocidad para gen. esencia  |
+| `ESENCIA_MULT_PODER_MAG` | 0.2   | Multiplicador de poder para gen. esencia mag. |
+| `ESENCIA_CRIT_BONUS`     | 1.5   | Bonus de esencia en golpe crítico             |
+
+### 22.3. Críticos
+
+| Macro              | Valor | Descripción                          |
+| ------------------ | ----- | ------------------------------------ |
+| `CRIT_BASE_CHANCE` | 3     | Probabilidad base de crítico (%)     |
+| `CRIT_ATK_DIVISOR` | 3     | Divisor de ATQ para chance extra     |
+| `CRIT_POS_CHANCE`  | 5     | Chance de golpe crítico positivo (%) |
+| `CRIT_POS_MULT`    | 1.50  | Multiplicador de golpe crítico       |
+| `CRIT_NEG_CHANCE`  | 3     | Chance de golpe débil (%)            |
+| `CRIT_NEG_MULT`    | 0.60  | Multiplicador de golpe débil         |
+
+### 22.4. IA del Enemigo
+
+| Macro                   | Valor | Descripción                             |
+| ----------------------- | ----- | --------------------------------------- |
+| `IA_ACCION_BASE_FRAMES` | 180   | Frames base entre acciones              |
+| `IA_VEL_FACTOR`         | 0.12  | Factor de velocidad para reducir espera |
+| `IA_PREP_FRAMES`        | 30    | Frames de preparación antes de atacar   |
+| `IA_VARIACION`          | 0.15  | Variación aleatoria (±15%) en espera IA |
+
+### 22.5. Fórmula de Daño
+
+| Macro               | Valor | Descripción                         |
+| ------------------- | ----- | ----------------------------------- |
+| `FACTOR_DEF_GLOBAL` | 0.50  | Reducción de defensa en fórmula     |
+| `VAR_RANGO`         | 0.15  | Rango de variación de daño (±15%)   |
+| `VAR_MIN_ABS`       | 2     | Variación mínima absoluta           |
+| `CDR_POR_VEL`       | 0.02  | Reducción de cooldown por velocidad |
+
+---
+
+## 23. Interacción de Sistemas (Actualizado)
+
+Enemigos → Materiales → Forja → Armas → Habilidades → Combate
+↑ ↓
+Clases ← Afinidades ← Personalidades ← ESENCIA ←
+
+| Sistema        | Relación                                                 |
+| -------------- | -------------------------------------------------------- |
+| Enemigos       | Dropean materiales al ser derrotados                     |
+| Materiales     | Permiten forjar armas en la forja                        |
+| Armas          | Otorgan habilidades ofensivas al personaje               |
+| Habilidades    | Se usan en combate con cooldowns                         |
+| Afinidades     | Activan pasivas y modifican cálculos de daño             |
+| Clases         | Definen carga de Esencia y rol táctico                   |
+| Personalidades | Alteran stats y determinan variante de súper             |
+| ESENCIA        | Libera Súper-Habilidades como clímax del combate         |
+| Objetos        | Consumibles que aportan ventaja táctica en combate       |
+| Rúnicos        | Modificadores de alto riesgo/recompensa por combate      |
+| Tienda         | Desbloquea contenido nuevo con oro ganado                |
+| Modo Torre     | Modalidad roguelite con HP persistente y progresión      |
+| Mecánicas      | Reglas especiales de élites/jefes que alteran el combate |
+
+---
+
+## 24. Plan de Escalado
 
 | Fase | Contenido                                     |
 | ---- | --------------------------------------------- |
