@@ -26,6 +26,7 @@ function scr_camino_get_capitulos() {
             combates_elite: 1,
             hp_mult: 1.0,
             oro_mult: 1.0,
+            decisiones: 4,
             narrativa_intro: [
                 "Fragmentos de recuerdos parpadean en tu mente...",
                 "Una forja antigua. Martillos que golpean incansablemente.",
@@ -55,6 +56,7 @@ function scr_camino_get_capitulos() {
             combates_elite: 1,
             hp_mult: 1.15,
             oro_mult: 1.15,
+            decisiones: 4,
             narrativa_intro: [
                 "El aire se vuelve húmedo, pesado, tóxico.",
                 "Raíces retorcidas atraviesan los restos de una ciudad sumergida.",
@@ -84,6 +86,7 @@ function scr_camino_get_capitulos() {
             combates_elite: 1,
             hp_mult: 1.30,
             oro_mult: 1.25,
+            decisiones: 5,
             narrativa_intro: [
                 "El cielo se quiebra con cada relámpago.",
                 "Templos que alguna vez brillaron ahora son cáscaras vacías.",
@@ -113,6 +116,7 @@ function scr_camino_get_capitulos() {
             combates_elite: 2,
             hp_mult: 1.45,
             oro_mult: 1.35,
+            decisiones: 5,
             narrativa_intro: [
                 "La oscuridad aquí es tangible. Puedes sentirla arrastrándose.",
                 "Símbolos arcanos brillan tenuemente en las ruinas fracturadas.",
@@ -142,6 +146,7 @@ function scr_camino_get_capitulos() {
             combates_elite: 0,
             hp_mult: 1.60,
             oro_mult: 2.0,
+            decisiones: 2,
             narrativa_intro: [
                 "Las ocho Corrientes convergen. El mundo tiembla.",
                 "El Devorador emerge: una entidad sin forma, sin afinidad, sin piedad.",
@@ -161,93 +166,211 @@ function scr_camino_get_capitulos() {
 
 
 // ═══════════════════════════════════════════════════════════════
-//  GENERACIÓN DE ENCUENTROS POR CAPÍTULO
+//  GENERACIÓN DE MAPA RAMIFICADO POR CAPÍTULO
 // ═══════════════════════════════════════════════════════════════
 
-/// @function scr_camino_generar_encuentros(_capitulo)
-/// @description Genera la lista de encuentros (combates) para un capítulo
-/// @param {struct} _capitulo  Struct del capítulo (de scr_camino_get_capitulos)
-/// @returns {array}  Array de structs { nombre_enemigo, hp_mult, oro_mult, es_jefe, es_elite, tipo }
-function scr_camino_generar_encuentros(_capitulo) {
-    var _encuentros = [];
+/// @function scr_camino_generar_mapa(_capitulo)
+/// @description Genera un mapa de caminos ramificados para un capítulo
+/// @param {struct} _capitulo  Struct del capítulo
+/// @returns {array}  Array de tiers; cada tier = array de nodos (structs)
+function scr_camino_generar_mapa(_capitulo) {
+    var _mapa = [];
+    var _num_decisiones = _capitulo.decisiones;
 
-    // ── Combates comunes ──
-    var _n_comunes   = _capitulo.combates_comunes;
-    var _pool_comun  = _capitulo.enemigos_comunes;
+    // ── Generar tiers de decisión (0 a num_decisiones-1) ──
+    for (var t = 0; t < _num_decisiones; t++) {
+        var _tier = [];
+        var _num_nodos = (t == 0) ? 3 : 3 + irandom(1); // 3 o 4 nodos
 
-    for (var i = 0; i < _n_comunes; i++) {
-        if (array_length(_pool_comun) == 0) break;
-        var _idx = irandom(array_length(_pool_comun) - 1);
-        array_push(_encuentros, {
-            nombre_enemigo: _pool_comun[_idx],
-            hp_mult:        _capitulo.hp_mult,
-            oro_mult:       _capitulo.oro_mult,
-            es_jefe:        false,
-            es_elite:       false,
-            tipo:           "comun",
-        });
+        for (var n = 0; n < _num_nodos; n++) {
+            var _tipo = scr_camino_tipo_nodo_random(_capitulo, t, _num_decisiones);
+            array_push(_tier, scr_camino_crear_nodo(_tipo, _capitulo));
+        }
+        array_push(_mapa, _tier);
     }
 
-    // ── Combates élite ──
-    var _n_elite   = _capitulo.combates_elite;
-    var _pool_elite = _capitulo.enemigos_elite;
-
-    for (var i = 0; i < _n_elite; i++) {
-        if (array_length(_pool_elite) == 0) break;
-        var _idx = irandom(array_length(_pool_elite) - 1);
-
-        // Insertar en posición aleatoria DESPUÉS de los primeros 2 comunes
-        var _pos = min(2 + irandom(array_length(_encuentros) - 1), array_length(_encuentros));
-        array_insert(_encuentros, _pos, {
-            nombre_enemigo: _pool_elite[_idx],
-            hp_mult:        _capitulo.hp_mult * 1.1,
-            oro_mult:       _capitulo.oro_mult * 1.2,
-            es_jefe:        false,
-            es_elite:       true,
-            tipo:           "elite",
-        });
-    }
-
-    // ── Boss del capítulo ──
+    // ── Tier final: jefe del capítulo ──
     if (_capitulo.jefe != "") {
-        array_push(_encuentros, {
-            nombre_enemigo: _capitulo.jefe,
-            hp_mult:        _capitulo.hp_mult,
-            oro_mult:       _capitulo.oro_mult * 1.5,
-            es_jefe:        true,
-            es_elite:       false,
-            tipo:           "jefe",
-        });
+        array_push(_mapa, [scr_camino_crear_nodo("jefe", _capitulo)]);
     }
 
-    return _encuentros;
+    // ── Generar conexiones entre tiers ──
+    for (var t = 0; t < array_length(_mapa) - 1; t++) {
+        var _curr = _mapa[t];
+        var _next = _mapa[t + 1];
+
+        for (var n = 0; n < array_length(_curr); n++) {
+            _curr[n].conexiones = [];
+        }
+
+        // Si el siguiente tier es el jefe (1 nodo), todos conectan al jefe
+        if (array_length(_next) == 1) {
+            for (var n = 0; n < array_length(_curr); n++) {
+                _curr[n].conexiones = [0];
+            }
+            continue;
+        }
+
+        // Asegurar que cada nodo del siguiente tier tenga al menos 1 conexión entrante
+        for (var n = 0; n < array_length(_next); n++) {
+            var _from = irandom(array_length(_curr) - 1);
+            var _ya_existe = false;
+            for (var c = 0; c < array_length(_curr[_from].conexiones); c++) {
+                if (_curr[_from].conexiones[c] == n) { _ya_existe = true; break; }
+            }
+            if (!_ya_existe) array_push(_curr[_from].conexiones, n);
+        }
+
+        // Asegurar que cada nodo actual tenga al menos 1 conexión saliente
+        for (var n = 0; n < array_length(_curr); n++) {
+            if (array_length(_curr[n].conexiones) == 0) {
+                array_push(_curr[n].conexiones, irandom(array_length(_next) - 1));
+            }
+        }
+
+        // Agregar conexiones extra para más ramificación
+        for (var n = 0; n < array_length(_curr); n++) {
+            var _extras = irandom(1);
+            for (var e = 0; e < _extras; e++) {
+                if (array_length(_curr[n].conexiones) >= 3) break;
+                var _target = irandom(array_length(_next) - 1);
+                var _dup = false;
+                for (var c = 0; c < array_length(_curr[n].conexiones); c++) {
+                    if (_curr[n].conexiones[c] == _target) { _dup = true; break; }
+                }
+                if (!_dup) array_push(_curr[n].conexiones, _target);
+            }
+        }
+
+        // Ordenar conexiones por índice
+        for (var n = 0; n < array_length(_curr); n++) {
+            array_sort(_curr[n].conexiones, true);
+        }
+    }
+
+    return _mapa;
+}
+
+
+/// @function scr_camino_tipo_nodo_random(_capitulo, _tier, _total_tiers)
+/// @description Elige un tipo de nodo aleatorio con pesos según posición en el mapa
+function scr_camino_tipo_nodo_random(_capitulo, _tier, _total_tiers) {
+    var _tiene_enemigos = (array_length(_capitulo.enemigos_comunes) > 0);
+    var _tiene_elite    = (array_length(_capitulo.enemigos_elite) > 0);
+    var _roll = irandom(99);
+
+    // Sin enemigos (capítulo final): solo nodos no-combate
+    if (!_tiene_enemigos) {
+        if (_roll < 35) return "descanso";
+        if (_roll < 65) return "cofre";
+        if (_roll < 82) return "tienda";
+        return "forja";
+    }
+
+    // Primer tier: más combate para empezar con acción
+    if (_tier == 0) {
+        if (_roll < 55) return "combate";
+        if (_tiene_elite && _roll < 70) return "elite";
+        if (_roll < 80) return "cofre";
+        if (_roll < 90) return "descanso";
+        return "combate";
+    }
+
+    // Último tier antes del jefe: oportunidad de prepararse
+    if (_tier >= _total_tiers - 1) {
+        if (_roll < 30) return "combate";
+        if (_tiene_elite && _roll < 45) return "elite";
+        if (_roll < 60) return "descanso";
+        if (_roll < 75) return "tienda";
+        if (_roll < 90) return "forja";
+        return "cofre";
+    }
+
+    // Tiers intermedios: distribución general
+    if (_roll < 40) return "combate";
+    if (_tiene_elite && _roll < 55) return "elite";
+    if (_roll < 67) return "tienda";
+    if (_roll < 79) return "forja";
+    if (_roll < 90) return "descanso";
+    return "cofre";
+}
+
+
+/// @function scr_camino_crear_nodo(_tipo, _capitulo)
+/// @description Crea un struct de nodo para el mapa ramificado
+function scr_camino_crear_nodo(_tipo, _capitulo) {
+    var _nodo = {
+        tipo: _tipo,
+        nombre: "",
+        descripcion: "",
+        hp_mult: _capitulo.hp_mult,
+        oro_mult: _capitulo.oro_mult,
+        recompensa_oro: 0,
+        conexiones: [],
+        visitado: false,
+    };
+
+    switch (_tipo) {
+        case "combate":
+            var _pool = _capitulo.enemigos_comunes;
+            if (array_length(_pool) > 0) _nodo.nombre = _pool[irandom(array_length(_pool) - 1)];
+            _nodo.descripcion = "Combate contra un enemigo";
+            break;
+        case "elite":
+            var _pool = _capitulo.enemigos_elite;
+            if (array_length(_pool) > 0) _nodo.nombre = _pool[irandom(array_length(_pool) - 1)];
+            _nodo.hp_mult *= 1.1;
+            _nodo.oro_mult *= 1.2;
+            _nodo.descripcion = "Enemigo elite — mayor riesgo y recompensa";
+            break;
+        case "tienda":
+            _nodo.nombre = "Mercader";
+            _nodo.descripcion = "Compra objetos y consumibles";
+            break;
+        case "forja":
+            _nodo.nombre = "Forja";
+            _nodo.descripcion = "Fabrica y mejora armas";
+            break;
+        case "descanso":
+            _nodo.nombre = "Descanso";
+            _nodo.descripcion = "Un momento de respiro y narrativa";
+            break;
+        case "cofre":
+            var _oro_base = 20 + _capitulo.numero * 15;
+            _nodo.recompensa_oro = _oro_base + irandom(round(_oro_base * 0.5));
+            _nodo.nombre = "Cofre";
+            _nodo.descripcion = "Contiene " + string(_nodo.recompensa_oro) + " oro";
+            break;
+        case "jefe":
+            _nodo.nombre = _capitulo.jefe;
+            _nodo.oro_mult *= 1.5;
+            _nodo.descripcion = "Jefe del capitulo";
+            break;
+    }
+
+    return _nodo;
 }
 
 
 // ═══════════════════════════════════════════════════════════════
-//  FRAGMENTOS NARRATIVOS ENTRE ENCUENTROS
+//  FRAGMENTOS NARRATIVOS
 // ═══════════════════════════════════════════════════════════════
 
-/// @function scr_camino_fragmento_combate(_capitulo, _encuentro_idx)
-/// @description Retorna un fragmento narrativo breve para mostrar entre combates
-/// @param {struct} _capitulo        Capítulo actual
-/// @param {real}   _encuentro_idx   Índice del combate completado (0-based)
-/// @returns {string}  Texto narrativo
-function scr_camino_fragmento_combate(_capitulo, _encuentro_idx) {
-
-    // Fragmentos genéricos que aplican a todo capítulo
+/// @function scr_camino_fragmento_combate(_capitulo, _idx)
+/// @description Retorna un fragmento narrativo breve
+function scr_camino_fragmento_combate(_capitulo, _idx) {
     var _fragmentos = [
         "Los ecos de la batalla resuenan en las ruinas...",
         "El camino se despeja momentáneamente. Pero la amenaza persiste.",
         "Cada victoria trae más claridad a tus recuerdos fragmentados.",
         "Las Corrientes elementales pulsan con más fuerza a tu alrededor.",
-        "Tu Esencia se fortalece. Puedes sentir las corrientes de " + _capitulo.afinidades[0 mod max(1, array_length(_capitulo.afinidades))] + ".",
         "Otro enemigo cae. El Devorador sabe que te acercas.",
         "Los fragmentos de memoria se vuelven más nítidos con cada combate.",
         "El poder de los Conductores antiguos fluye a través de ti.",
+        "El silencio aquí es pesado, cargado de memorias.",
     ];
 
-    return _fragmentos[_encuentro_idx mod array_length(_fragmentos)];
+    return _fragmentos[_idx mod array_length(_fragmentos)];
 }
 
 

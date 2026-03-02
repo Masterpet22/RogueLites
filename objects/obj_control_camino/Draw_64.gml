@@ -168,6 +168,253 @@ else if (camino_fase == "narrativa_linea") {
 
 
 // ═══════════════════════════════════════════
+//  FASE: MAPA DE RAMIFICACIONES
+// ═══════════════════════════════════════════
+else if (camino_fase == "mapa") {
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_top);
+    draw_set_color(make_color_rgb(220, 170, 50));
+    draw_text(cx, 45, "── MAPA DEL CAPÍTULO ──");
+
+    var _total_tiers = array_length(camino_mapa);
+    if (_total_tiers > 0) {
+
+        // ── Layout del mapa ──
+        var _map_x1 = 80;
+        var _map_x2 = w_gui - 300;
+        var _map_y1 = 100;
+        var _map_y2 = h_gui - 80;
+        var _map_w_span = _map_x2 - _map_x1;
+        var _map_h_span = _map_y2 - _map_y1;
+        var _node_r = 16;
+
+        // Calcular posiciones de cada nodo
+        for (var t = 0; t < _total_tiers; t++) {
+            var _tier = camino_mapa[t];
+            var _tc = array_length(_tier);
+            var _tx = _map_x1 + (_map_w_span / max(_total_tiers - 1, 1)) * t;
+
+            for (var n = 0; n < _tc; n++) {
+                var _nodo = _tier[n];
+                _nodo.__draw_x = _tx;
+                _nodo.__draw_y = _map_y1 + (_map_h_span / (_tc + 1)) * (n + 1);
+            }
+        }
+
+        // ── Dibujar conexiones ──
+        for (var t = 0; t < _total_tiers - 1; t++) {
+            var _tier = camino_mapa[t];
+            for (var n = 0; n < array_length(_tier); n++) {
+                var _nodo = _tier[n];
+                for (var ci = 0; ci < array_length(_nodo.conexiones); ci++) {
+                    var _di = _nodo.conexiones[ci];
+                    var _dest = camino_mapa[t + 1][_di];
+
+                    if (_nodo.visitado && t < camino_tier_actual) {
+                        draw_set_color(make_color_rgb(80, 80, 120));
+                        draw_line_width(_nodo.__draw_x, _nodo.__draw_y, _dest.__draw_x, _dest.__draw_y, 2);
+                    } else if (t == camino_tier_actual && n == camino_nodo_actual) {
+                        draw_set_color(make_color_rgb(200, 200, 255));
+                        draw_line_width(_nodo.__draw_x, _nodo.__draw_y, _dest.__draw_x, _dest.__draw_y, 3);
+                    } else {
+                        draw_set_color(make_color_rgb(40, 40, 50));
+                        draw_line_width(_nodo.__draw_x, _nodo.__draw_y, _dest.__draw_x, _dest.__draw_y, 1);
+                    }
+                }
+            }
+        }
+
+        // ── Dibujar nodos ──
+        for (var t = 0; t < _total_tiers; t++) {
+            var _tier = camino_mapa[t];
+            for (var n = 0; n < array_length(_tier); n++) {
+                var _nodo = _tier[n];
+                var _nx = _nodo.__draw_x;
+                var _ny = _nodo.__draw_y;
+
+                // Color por tipo
+                var _ncol = c_ltgray;
+                switch (_nodo.tipo) {
+                    case "combate":  _ncol = c_white; break;
+                    case "elite":    _ncol = c_orange; break;
+                    case "jefe":     _ncol = c_red; break;
+                    case "tienda":   _ncol = make_color_rgb(100, 180, 220); break;
+                    case "forja":    _ncol = make_color_rgb(200, 140, 60); break;
+                    case "descanso": _ncol = c_lime; break;
+                    case "cofre":    _ncol = make_color_rgb(255, 215, 0); break;
+                }
+
+                // Estado visual del nodo
+                var _es_seleccionado = false;
+                var _es_alcanzable = false;
+                if (t == camino_tier_actual + 1) {
+                    for (var ci = 0; ci < array_length(camino_mapa_conexiones); ci++) {
+                        if (camino_mapa_conexiones[ci] == n) {
+                            _es_alcanzable = true;
+                            if (ci == camino_mapa_sel) _es_seleccionado = true;
+                        }
+                    }
+                }
+
+                if (_nodo.visitado) {
+                    draw_set_color(make_color_rgb(60, 60, 70));
+                    draw_circle(_nx, _ny, _node_r, false);
+                    draw_set_color(_ncol);
+                    draw_circle(_nx, _ny, _node_r, true);
+                } else if (_es_seleccionado) {
+                    draw_set_color(_ncol);
+                    draw_set_alpha(0.3);
+                    draw_circle(_nx, _ny, _node_r + 6, false);
+                    draw_set_alpha(1);
+                    draw_set_color(_ncol);
+                    draw_circle(_nx, _ny, _node_r, false);
+                } else if (_es_alcanzable) {
+                    draw_set_color(_ncol);
+                    draw_set_alpha(0.6);
+                    draw_circle(_nx, _ny, _node_r, false);
+                    draw_set_alpha(1);
+                } else {
+                    draw_set_color(make_color_rgb(35, 35, 45));
+                    draw_circle(_nx, _ny, _node_r, false);
+                    draw_set_color(make_color_rgb(60, 60, 70));
+                    draw_circle(_nx, _ny, _node_r, true);
+                }
+
+                // Letra indicadora del tipo
+                draw_set_halign(fa_center);
+                draw_set_valign(fa_middle);
+                draw_set_color(_nodo.visitado ? c_dkgray : c_black);
+                var _icon = "?";
+                switch (_nodo.tipo) {
+                    case "combate":  _icon = "!"; break;
+                    case "elite":    _icon = "*"; break;
+                    case "jefe":     _icon = "X"; break;
+                    case "tienda":   _icon = "$"; break;
+                    case "forja":    _icon = "F"; break;
+                    case "descanso": _icon = "+"; break;
+                    case "cofre":    _icon = "C"; break;
+                }
+                draw_text(_nx, _ny, _icon);
+            }
+        }
+
+        // ── Icono del jugador ──
+        var _pj_x, _pj_y;
+        if (camino_tier_actual < 0) {
+            _pj_x = _map_x1 - 40;
+            _pj_y = (_map_y1 + _map_y2) / 2;
+        } else {
+            var _nodo_pj = camino_mapa[camino_tier_actual][camino_nodo_actual];
+            _pj_x = _nodo_pj.__draw_x;
+            _pj_y = _nodo_pj.__draw_y - _node_r - 22;
+        }
+
+        var _spr = scr_sprite_personaje(camino_perfil_nombre, false);
+        if (sprite_exists(_spr)) {
+            var _sw = sprite_get_width(_spr);
+            var _sh = sprite_get_height(_spr);
+            var _esc = 28 / max(_sw, _sh);
+            draw_sprite_ext(_spr, 0, _pj_x, _pj_y, _esc, _esc, 0, c_white, 1);
+        } else {
+            draw_set_color(c_yellow);
+            draw_circle(_pj_x, _pj_y, 8, false);
+        }
+
+        // ── Panel de info del nodo seleccionado ──
+        var _panel_x = w_gui - 280;
+        var _panel_y = 100;
+        var _panel_w = 260;
+        var _panel_h = 300;
+
+        draw_set_color(make_color_rgb(20, 18, 28));
+        draw_set_alpha(0.9);
+        draw_rectangle(_panel_x, _panel_y, _panel_x + _panel_w, _panel_y + _panel_h, false);
+        draw_set_alpha(1);
+        draw_set_color(make_color_rgb(80, 75, 100));
+        draw_rectangle(_panel_x, _panel_y, _panel_x + _panel_w, _panel_y + _panel_h, true);
+
+        if (array_length(camino_mapa_conexiones) > 0 && camino_mapa_sel < array_length(camino_mapa_conexiones)) {
+            var _sel_idx = camino_mapa_conexiones[camino_mapa_sel];
+            var _sel_tier = camino_tier_actual + 1;
+            if (_sel_tier < _total_tiers) {
+                var _sel_nodo = camino_mapa[_sel_tier][_sel_idx];
+
+                draw_set_halign(fa_center);
+                draw_set_valign(fa_top);
+
+                var _tipo_col = c_ltgray;
+                var _tipo_txt = _sel_nodo.tipo;
+                switch (_sel_nodo.tipo) {
+                    case "combate":  _tipo_col = c_white;  _tipo_txt = "COMBATE"; break;
+                    case "elite":    _tipo_col = c_orange;  _tipo_txt = "ELITE"; break;
+                    case "jefe":     _tipo_col = c_red;     _tipo_txt = "JEFE"; break;
+                    case "tienda":   _tipo_col = make_color_rgb(100, 180, 220); _tipo_txt = "TIENDA"; break;
+                    case "forja":    _tipo_col = make_color_rgb(200, 140, 60);  _tipo_txt = "FORJA"; break;
+                    case "descanso": _tipo_col = c_lime;    _tipo_txt = "DESCANSO"; break;
+                    case "cofre":    _tipo_col = make_color_rgb(255, 215, 0);   _tipo_txt = "COFRE"; break;
+                }
+
+                draw_set_color(_tipo_col);
+                draw_text(_panel_x + _panel_w / 2, _panel_y + 15, "[ " + _tipo_txt + " ]");
+
+                draw_set_color(c_white);
+                draw_text_ext(_panel_x + _panel_w / 2, _panel_y + 45, _sel_nodo.nombre, 20, _panel_w - 30);
+
+                draw_set_color(c_ltgray);
+                draw_text_ext(_panel_x + _panel_w / 2, _panel_y + 90, _sel_nodo.descripcion, 18, _panel_w - 30);
+
+                var _iy = _panel_y + 170;
+                if (_sel_nodo.tipo == "combate" || _sel_nodo.tipo == "elite" || _sel_nodo.tipo == "jefe") {
+                    if (_sel_nodo.hp_mult > 1) {
+                        draw_set_color(c_orange);
+                        draw_text(_panel_x + _panel_w / 2, _iy, "HP: +" + string(round((_sel_nodo.hp_mult - 1) * 100)) + "%");
+                        _iy += 22;
+                    }
+                    if (_sel_nodo.oro_mult > 1) {
+                        draw_set_color(make_color_rgb(255, 215, 0));
+                        draw_text(_panel_x + _panel_w / 2, _iy, "Oro: x" + string(_sel_nodo.oro_mult));
+                    }
+                } else if (_sel_nodo.tipo == "cofre") {
+                    draw_set_color(make_color_rgb(255, 215, 0));
+                    draw_text(_panel_x + _panel_w / 2, _iy, "+" + string(_sel_nodo.recompensa_oro) + " oro");
+                }
+            }
+        } else {
+            draw_set_halign(fa_center);
+            draw_set_valign(fa_middle);
+            draw_set_color(c_gray);
+            draw_text(_panel_x + _panel_w / 2, _panel_y + _panel_h / 2, "Elige un camino");
+        }
+
+        // Leyenda de tipos
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+        var _ly = _panel_y + _panel_h + 15;
+        var _leyenda = [["!", "Combate", c_white], ["*", "Elite", c_orange], ["$", "Tienda", make_color_rgb(100, 180, 220)],
+                        ["F", "Forja", make_color_rgb(200, 140, 60)], ["+", "Descanso", c_lime], ["C", "Cofre", make_color_rgb(255, 215, 0)]];
+        for (var li = 0; li < array_length(_leyenda); li++) {
+            draw_set_color(_leyenda[li][2]);
+            draw_text(_panel_x + (li % 3) * 90, _ly + floor(li / 3) * 20, _leyenda[li][0] + " " + _leyenda[li][1]);
+        }
+    }
+
+    // Progreso global
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_bottom);
+    draw_set_color(c_aqua);
+    draw_text(20, h_gui - 40, "Victorias: " + string(camino_combates_ganados));
+    draw_set_color(make_color_rgb(255, 215, 0));
+    draw_text(20, h_gui - 20, "Oro: " + string(camino_oro_ganado) + " G");
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_bottom);
+    draw_set_color(c_dkgray);
+    draw_text(cx, h_gui - 5, "◄► Elegir camino  |  ENTER: Avanzar  |  ESC: Abandonar");
+}
+
+
+// ═══════════════════════════════════════════
 //  FASE: PRE-COMBATE
 // ═══════════════════════════════════════════
 else if (camino_fase == "pre_combate") {
@@ -184,16 +431,12 @@ else if (camino_fase == "pre_combate") {
     draw_set_color(_cap_col);
     draw_text(cx, 40, "Capítulo " + string(camino_capitulo.numero) + ": " + camino_capitulo.nombre);
 
-    // Progreso del capítulo
+    // Tier actual
     draw_set_color(c_yellow);
-    var _total_enc = array_length(camino_encuentros);
-    draw_text(cx, 70, "Encuentro " + string(camino_encuentro_idx + 1) + " / " + string(_total_enc));
+    draw_text(cx, 70, "Tier " + string(camino_tier_actual + 1) + " / " + string(array_length(camino_mapa)));
 
     // Info del enemigo
-    var _enc = undefined;
-    if (camino_encuentro_idx < array_length(camino_encuentros)) {
-        _enc = camino_encuentros[camino_encuentro_idx];
-    }
+    var _enc = camino_encuentro;
 
     var _y = 120;
 
@@ -226,50 +469,6 @@ else if (camino_fase == "pre_combate") {
     _y += 22;
     draw_set_color(make_color_rgb(255, 215, 0));
     draw_text(cx, _y, "Oro acumulado: " + string(camino_oro_ganado) + " G");
-
-    // Mapa de progreso visual (capítulos)
-    _y = h_gui - 130;
-    draw_set_color(c_gray);
-    draw_text(cx, _y - 20, "── Progreso del Camino ──");
-
-    var _caps = scr_camino_get_capitulos();
-    var _total_caps = array_length(_caps);
-    var _map_w = 500;
-    var _map_x = cx - _map_w / 2;
-    var _node_r = 12;
-
-    for (var i = 0; i < _total_caps; i++) {
-        var _nx = _map_x + (_map_w / (_total_caps - 1)) * i;
-        var _ny = _y + 10;
-
-        // Línea conectora
-        if (i < _total_caps - 1) {
-            var _nx2 = _map_x + (_map_w / (_total_caps - 1)) * (i + 1);
-            draw_set_color(i < camino_capitulo_idx ? _caps[i].color : make_color_rgb(50, 50, 50));
-            draw_line_width(_nx, _ny, _nx2, _ny, 2);
-        }
-
-        // Nodo
-        if (i < camino_capitulo_idx) {
-            draw_set_color(_caps[i].color);  // Completado
-        } else if (i == camino_capitulo_idx) {
-            draw_set_color(c_yellow);        // Actual
-        } else {
-            draw_set_color(make_color_rgb(50, 50, 50));  // Futuro
-        }
-        draw_circle(_nx, _ny, _node_r, false);
-
-        // Número del capítulo
-        draw_set_color(c_black);
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
-        draw_text(_nx, _ny, string(i + 1));
-
-        // Nombre debajo
-        draw_set_valign(fa_top);
-        draw_set_color(i == camino_capitulo_idx ? c_white : c_dkgray);
-        draw_text(_nx, _ny + _node_r + 5, _caps[i].nombre);
-    }
 
     draw_set_halign(fa_center);
     draw_set_valign(fa_top);
@@ -378,7 +577,7 @@ else if (camino_fase == "post_combate") {
 
     // Info del encuentro superado
     draw_set_color(c_white);
-    draw_text(cx, _y, "Encuentro " + string(camino_encuentro_idx + 1) + " de " + string(array_length(camino_encuentros)) + " completado");
+    draw_text(cx, _y, "Combate completado");
     _y += 30;
 
     draw_set_color(make_color_rgb(255, 215, 0));
@@ -394,7 +593,7 @@ else if (camino_fase == "post_combate") {
     _y += 50;
 
     // Opciones
-    var _opciones_txt = ["Continuar", "Abandonar Camino"];
+    var _opciones_txt = ["Volver al mapa", "Abandonar Camino"];
     for (var i = 0; i < 2; i++) {
         if (i == camino_post_opcion) {
             draw_set_color(c_yellow);

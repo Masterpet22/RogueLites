@@ -5,7 +5,11 @@ if (keyboard_check_pressed(vk_escape)) {
     if (estado == TiendaState.LISTA) {
         estado = TiendaState.CATEGORIA;
     } else {
-        room_goto(rm_menu);
+        if (instance_exists(obj_control_juego) && variable_struct_exists(obj_control_juego, "modo_camino") && obj_control_juego.modo_camino) {
+            room_goto(rm_camino);
+        } else {
+            room_goto(rm_menu);
+        }
     }
 }
 

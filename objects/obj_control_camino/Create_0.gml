@@ -29,9 +29,13 @@ camino_capitulos     = [];       // array de structs (se llena al iniciar)
 camino_capitulo_idx  = 0;        // índice del capítulo actual (0-based)
 camino_capitulo      = undefined; // struct del capítulo actual
 
-camino_encuentros    = [];       // array de encuentros del capítulo actual
-camino_encuentro_idx = 0;        // índice del encuentro actual (0-based)
-camino_encuentro     = undefined; // struct del encuentro actual
+// ── MAPA RAMIFICADO ──
+camino_mapa              = [];       // array de tiers, cada tier = array de nodos
+camino_tier_actual       = -1;       // -1 = inicio, 0+ = tier actual
+camino_nodo_actual       = 0;        // índice del nodo dentro del tier
+camino_mapa_sel          = 0;        // cursor de selección del nodo siguiente
+camino_mapa_conexiones   = [];       // conexiones disponibles del nodo actual
+camino_encuentro         = undefined; // struct del encuentro (para combate)
 
 // ═══════════════════════════════════════════
 //  SELECCIÓN UI

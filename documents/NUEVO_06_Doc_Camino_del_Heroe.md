@@ -1,7 +1,7 @@
 # Camino del Héroe — Documentación Técnica Completa
 
-> **Versión:** 1.0  
-> **Fecha de implementación:** Marzo 2026  
+> **Versión:** 2.0 (Mapa Ramificado)  
+> **Fecha de implementación:** Marzo 2026 (v2: Junio 2026)  
 > **Modo:** Principal (Roguelite narrativo)  
 > **Referencia base:** Patrón de `obj_control_torre` / `rm_torre`
 
@@ -13,15 +13,15 @@
 
 ### Diferencias clave con Torre
 
-| Aspecto               | Torre                          | Camino del Héroe                                       |
-| --------------------- | ------------------------------ | ------------------------------------------------------ |
-| Estructura            | Pisos infinitos aleatorios     | 5 capítulos fijos con narrativa                        |
-| HP entre combates     | Persistente (no se recupera)   | Se resetea cada combate                                |
-| Derrota               | Fin de la run (permadeath)     | Permite reintentar el mismo combate                    |
-| Narrativa             | Ninguna                        | Intro, fragmentos inter-combate, victoria por capítulo |
-| Acceso a forja/tienda | No disponible durante la run   | Disponible entre capítulos                             |
-| Jefe secreto          | No tiene                       | "El Primer Conductor" (run perfecta)                   |
-| Dificultad progresiva | HP x1.0 → x1.5 lineal por piso | HP x1.0 → x1.60 por capítulo                           |
+| Aspecto               | Torre                          | Camino del Héroe                                        |
+| --------------------- | ------------------------------ | ------------------------------------------------------- |
+| Estructura            | Pisos infinitos aleatorios     | 5 capítulos con mapa ramificado (estilo Slay the Spire) |
+| HP entre combates     | Persistente (no se recupera)   | Se resetea cada combate                                 |
+| Derrota               | Fin de la run (permadeath)     | Permite reintentar el mismo combate                     |
+| Narrativa             | Ninguna                        | Intro, fragmentos inter-combate, victoria por capítulo  |
+| Acceso a forja/tienda | No disponible durante la run   | Disponible entre capítulos                              |
+| Jefe secreto          | No tiene                       | "El Primer Conductor" (run perfecta)                    |
+| Dificultad progresiva | HP x1.0 → x1.5 lineal por piso | HP x1.0 → x1.60 por capítulo                            |
 
 ---
 
@@ -34,13 +34,15 @@
 
 Contiene todas las funciones de definición de datos del modo:
 
-| Función                                         | Descripción                                                             |
-| ----------------------------------------------- | ----------------------------------------------------------------------- |
-| `scr_camino_get_capitulos()`                    | Retorna array con los 5 capítulos (structs completos)                   |
-| `scr_camino_generar_encuentros(_capitulo)`      | Genera la secuencia de combates de un capítulo (comunes → élite → jefe) |
-| `scr_camino_fragmento_combate(_capitulo, _idx)` | Retorna texto narrativo entre combates                                  |
-| `scr_camino_recompensa_capitulo(_capitulo)`     | Calcula oro bonus por completar un capítulo                             |
-| `scr_camino_check_secreto(_camino_ctrl)`        | Verifica si se desbloquea el jefe secreto (0 derrotas)                  |
+| Función                                                       | Descripción                                                                             |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `scr_camino_get_capitulos()`                                  | Retorna array con los 5 capítulos (structs completos, incluye campo `decisiones`)       |
+| `scr_camino_generar_mapa(_capitulo)`                          | Genera mapa ramificado: array de tiers, cada tier con 3-4 nodos + tier jefe, conexiones |
+| `scr_camino_tipo_nodo_random(_capitulo, _tier, _total_tiers)` | Devuelve tipo de nodo aleatorio ponderado según posición en el capítulo                 |
+| `scr_camino_crear_nodo(_tipo, _capitulo)`                     | Crea struct de nodo con nombre, descripción, multiplicadores y conexiones               |
+| `scr_camino_fragmento_combate(_capitulo, _idx)`               | Retorna texto narrativo entre combates                                                  |
+| `scr_camino_recompensa_capitulo(_capitulo)`                   | Calcula oro bonus por completar un capítulo                                             |
+| `scr_camino_check_secreto(_camino_ctrl)`                      | Verifica si se desbloquea el jefe secreto (0 derrotas)                                  |
 
 #### Estructura de un capítulo (struct)
 
@@ -56,6 +58,7 @@ Contiene todas las funciones de definición de datos del modo:
     enemigos_comunes:   ["Soldado Igneo", "Guardian Terracota"],
     enemigos_elite:     ["Soldado Igneo Elite", "Guardian Terracota Elite"],
     jefe:               "Titan de las Forjas Rotas",
+    decisiones:         4,       // número de tiers de decisión antes del jefe
     combates_comunes:   3,
     combates_elite:     1,
     hp_mult:            1.0,
@@ -65,7 +68,35 @@ Contiene todas las funciones de definición de datos del modo:
 }
 ```
 
-#### Estructura de un encuentro (struct generado)
+#### Estructura de un nodo del mapa (struct generado)
+
+```gml
+{
+    tipo:           "combate",   // "combate" | "elite" | "jefe" | "tienda" | "forja" | "descanso" | "cofre"
+    nombre:         "Soldado Igneo",
+    descripcion:    "Un guerrero envuelto en llamas.",
+    hp_mult:        1.0,
+    oro_mult:       1.0,
+    recompensa_oro: 0,    // solo para cofres
+    conexiones:     [0, 1],  // índices de nodos en el tier siguiente
+    visitado:       false,
+}
+```
+
+#### Estructura del mapa (generada por `scr_camino_generar_mapa`)
+
+```
+camino_mapa = [
+    [nodo, nodo, nodo],     // Tier 0: 3-4 nodos
+    [nodo, nodo, nodo, nodo], // Tier 1: 3-4 nodos
+    ...,                     // Tiers según cap.decisiones
+    [nodo_jefe],             // Último tier: solo el jefe
+]
+```
+
+Cada nodo tiene campo `conexiones[]` con índices que apuntan a nodos del tier siguiente, creando caminos ramificados.
+
+#### Estructura de un encuentro de combate (struct temporal)
 
 ```gml
 {
@@ -74,7 +105,7 @@ Contiene todas las funciones de definición de datos del modo:
     oro_mult:       1.0,
     es_jefe:        false,
     es_elite:       false,
-    tipo:           "comun",   // "comun" | "elite" | "jefe" | "secreto"
+    tipo:           "combate",  // "combate" | "elite" | "jefe" | "secreto"
 }
 ```
 
@@ -100,7 +131,8 @@ Eventos:
 ├─────────────────────────────────────────┤
 │  Estado general         │  camino_activo, camino_fase                              │
 │  Capítulos/progreso     │  camino_capitulos[], camino_capitulo_idx, camino_capitulo │
-│  Encuentros             │  camino_encuentros[], camino_encuentro_idx, camino_encuentro │
+│  Mapa ramificado        │  camino_mapa[], camino_tier_actual, camino_nodo_actual, camino_mapa_sel, camino_mapa_conexiones[] │
+│  Encuentro actual       │  camino_encuentro (struct temporal de combate activo)     │
 │  Selección UI           │  sel_pj_indice, sel_arma_indice, camino_armas_disponibles │
 │  Personaje seleccionado │  camino_perfil_nombre, camino_arma, camino_pj_clase, etc. │
 │  Tracking de run        │  camino_oro_ganado, camino_combates_ganados, camino_derrotas, camino_combates_totales │
@@ -122,7 +154,7 @@ Eventos:
 - Si `camino_fase == "combate"` y NO estamos en `rm_camino`: `exit` (el combate controla)
 - Si `room != rm_camino`: `exit` (dejar que forja/tienda funcionen)
 
-**Fases implementadas (15 estados):**
+**Fases implementadas (16 estados):**
 
 ```
 seleccion_personaje ─► seleccion_arma ─► [scr_camino_iniciar_run()]
@@ -131,42 +163,45 @@ seleccion_personaje ─► seleccion_arma ─► [scr_camino_iniciar_run()]
                                    narrativa_linea (intro capítulo)
                                               │
                                               ▼
-                                        pre_combate ──► equipar ──► combate
-                                              ▲                        │
-                                              │                        ▼
-                                        post_combate ◄── [scr_camino_post_combate()]
+                                     ┌─── MAPA RAMIFICADO ───┐
+                                     │  (elegir nodo: ◄►)  │
+                                     └─────────┬─────────┘
                                               │
-                                    ┌─────────┴─────────┐
-                              (más encuentros)    (fin capítulo)
-                                    │                    │
-                              fragmento +           victoria_capitulo
-                              narrativa_linea            │
-                                    │               narrativa_linea (victoria cap.)
-                                    │                    │
-                                    └──► pre_combate     └──► entre_capitulos
-                                                              │
-                                                    ┌─────────┼─────────┐
-                                               Siguiente   Forja    Tienda
-                                               capítulo   rm_forja  rm_tienda
-                                                    │
-                                              (último cap?) ─► victoria_final
-                                                                    │
-                                                              (0 derrotas?)
-                                                              ┌──── │ ────┐
-                                                             Sí          No
-                                                              │           │
-                                                     secreto_pre     finalizar
-                                                        combate     (victoria)
-                                                              │
-                                                     secreto_victoria
-                                                              │
-                                                        finalizar
-                                                     (victoria_total)
+                            ┌──────┼──────┼──────┼─────┐
+                          combate  tienda  forja  descanso  cofre
+                            │     rm_tienda rm_forja  narrativa  +oro
+                            ▼        │       │      │          │
+                       pre_combate   └───────┼───────┼──────────┘
+                            │               │       │
+                       equipar ─► combate   │       │
+                                    │       │       │
+                      [scr_camino_post_combate()]    │
+                            │                        │
+                       post_combate ─► mapa ◄───────┘
+                            │
+                     (último tier = jefe?)
+                       ┌────┴────┐
+                      Sí          No
+                       │        (vuelve al mapa)
+                victoria_capitulo
+                       │
+                entre_capitulos ─┬─ Siguiente capítulo ─► mapa
+                                ├─ Forja (rm_forja)
+                                ├─ Tienda (rm_tienda)
+                                └─ Abandonar ─► finalizar
 
-                         [DERROTA en cualquier combate]
-                                    │
-                                 derrota ──┬── Reintentar → pre_combate
-                                           └── Abandonar  → finalizar("derrota")
+                (último cap?) ─► victoria_final
+                                      │
+                                (0 derrotas?) ─► secreto_pre_combate
+                                      │             │
+                                 finalizar    secreto_victoria
+                                (victoria)     │
+                                          finalizar(victoria_total)
+
+                [DERROTA en cualquier combate]
+                         │
+                      derrota ─┬─ Reintentar → pre_combate
+                              └─ Abandonar  → finalizar("derrota")
 ```
 
 **Funciones auxiliares definidas en Step_0.gml:**
@@ -174,12 +209,12 @@ seleccion_personaje ─► seleccion_arma ─► [scr_camino_iniciar_run()]
 | Función                                        | Descripción                                                                                                     |
 | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | `scr_camino_iniciar_run()`                     | Inicializa datos de run, carga capítulos, inicia capítulo 0                                                     |
-| `scr_camino_iniciar_capitulo(_idx)`            | Genera encuentros del capítulo, muestra narrativa intro                                                         |
+| `scr_camino_iniciar_capitulo(_idx)`            | Genera mapa ramificado del capítulo, muestra narrativa intro                                                    |
 | `scr_camino_siguiente_capitulo()`              | Avanza al siguiente capítulo                                                                                    |
+| `scr_camino_ejecutar_nodo()`                   | Ejecuta el evento del nodo seleccionado: combate, tienda, forja, descanso, cofre                                |
 | `scr_camino_lanzar_combate()`                  | Configura `obj_control_juego` (modo_camino, multiplicadores, enemigo, perfil) y ejecuta `room_goto(rm_combate)` |
 | `scr_camino_post_combate(_ganador, _pj, _oro)` | Callback desde `obj_control_combate`. Enruta a victoria/derrota/secreto según resultado                         |
-| `scr_camino_avanzar()`                         | Avanza al siguiente encuentro, muestra fragmento narrativo                                                      |
-| `scr_camino_finalizar(_resultado)`             | Resetea todas las variables del modo, limpia `obj_control_juego`, vuelve a `rm_menu`                            |
+| `scr_camino_finalizar(_resultado)`             | Resetea todas las variables del modo (mapa, tier, nodo, etc.), vuelve a `rm_menu`                               |
 
 #### 2.2.3 Draw_64.gml — Interfaz de Usuario
 
@@ -192,22 +227,31 @@ seleccion_personaje ─► seleccion_arma ─► [scr_camino_iniciar_run()]
 - Oro del jugador (esquina superior derecha)
 - Info de run activa: capítulo actual + personaje/arma (esquina superior izquierda)
 
-| Fase                  | UI                                                                                                                                                 |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `seleccion_personaje` | Título "CAMINO DEL HÉROE" + listado de 8 personajes con paneles estilizados (nombre, clase, afinidad, personalidad, arma). Cursor con borde dorado |
-| `seleccion_arma`      | Lista de armas obtenidas por el personaje seleccionado                                                                                             |
-| `narrativa_linea`     | Fondo oscuro cinemático, barras decorativas del color del capítulo, texto centrado con progreso (X/N)                                              |
-| `pre_combate`         | Info del enemigo (nombre, tipo, HP%), progreso de run, mapa visual de 5 nodos de capítulo                                                          |
-| `equipar`             | Selección de hasta 3 objetos consumibles (TAB toggle) + selección de runa                                                                          |
-| `post_combate`        | "¡VICTORIA!" + oro obtenido + stats acumulados + opciones Continuar/Abandonar                                                                      |
-| `victoria_capitulo`   | Pantalla de recompensa de capítulo con oro bonus                                                                                                   |
-| `entre_capitulos`     | Hub con 4 botones estilizados: Siguiente Capítulo / Forja / Tienda / Abandonar                                                                     |
-| `victoria_final`      | "¡EL DEVORADOR HA CAÍDO!" + resumen completo de la aventura                                                                                        |
-| `secreto_pre_combate` | Presentación épica del Primer Conductor con advertencia                                                                                            |
-| `secreto_victoria`    | "VICTORIA TOTAL" + confirmación de 100%                                                                                                            |
-| `derrota`             | "DERROTA" + opciones Reintentar/Abandonar                                                                                                          |
+| Fase                  | UI                                                                                                                                                    |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `seleccion_personaje` | Título "CAMINO DEL HÉROE" + listado de 8 personajes con paneles estilizados (nombre, clase, afinidad, personalidad, arma). Cursor con borde dorado    |
+| `seleccion_arma`      | Lista de armas obtenidas por el personaje seleccionado                                                                                                |
+| `narrativa_linea`     | Fondo oscuro cinemático, barras decorativas del color del capítulo, texto centrado con progreso (X/N)                                                 |
+| `mapa`                | **Mapa ramificado** del capítulo: nodos coloreados por tipo, conexiones entre tiers, icono del PJ, panel info del nodo seleccionado, leyenda de tipos |
+| `pre_combate`         | Info del enemigo (nombre, tipo, HP%), tier actual, progreso de run                                                                                    |
+| `equipar`             | Selección de hasta 3 objetos consumibles (TAB toggle) + selección de runa                                                                             |
+| `post_combate`        | "¡VICTORIA!" + oro obtenido + stats acumulados + opciones Volver al mapa/Abandonar                                                                    |
+| `victoria_capitulo`   | Pantalla de recompensa de capítulo con oro bonus                                                                                                      |
+| `entre_capitulos`     | Hub con 4 botones estilizados: Siguiente Capítulo / Forja / Tienda / Abandonar                                                                        |
+| `victoria_final`      | "¡EL DEVORADOR HA CAÍDO!" + resumen completo de la aventura                                                                                           |
+| `secreto_pre_combate` | Presentación épica del Primer Conductor con advertencia                                                                                               |
+| `secreto_victoria`    | "VICTORIA TOTAL" + confirmación de 100%                                                                                                               |
+| `derrota`             | "DERROTA" + opciones Reintentar/Abandonar                                                                                                             |
 
-**Mapa visual de progreso:** Barra horizontal con 5 nodos circulares conectados por líneas. Cada nodo muestra el número del capítulo y su nombre. Colores: completado = color del capítulo, actual = amarillo, futuro = gris oscuro.
+**Mapa ramificado del capítulo (fase `mapa`):**
+
+- Tiers horizontales (izquierda → derecha), cada uno con 3-4 nodos verticales
+- Conexiones dibujadas como líneas entre tiers (brillantes = disponibles, tenues = futuras)
+- Nodos coloreados según tipo: ! Combate (blanco), \* Elite (naranja), X Jefe (rojo), $ Tienda (cian), F Forja (ámbar), + Descanso (verde), C Cofre (dorado)
+- Nodo seleccionado con halo luminoso
+- **Icono del jugador:** sprite del personaje (`scr_sprite_personaje`) escalado a ~28px, posicionado sobre el nodo actual
+- **Panel info:** a la derecha (260px), muestra tipo, nombre, descripción y multiplicadores del nodo seleccionado
+- **Leyenda:** abajo del panel, muestra iconos y nombres de tipos de nodo
 
 ---
 
@@ -339,7 +383,8 @@ if (_es_torre || _es_camino) {
 | 4   | El Abismo Quebrado | Sombra + Arcano | 4       | 2      | Oráculo Quebrado del Abismo | ×1.45   | ×1.35    |
 | 5   | La Convergencia    | — (todas)       | 0       | 0      | El Devorador                | ×1.60   | ×2.00    |
 
-**Total de combates por run completa:** 5 + 5 + 6 + 7 + 1 = **24 combates** (aprox.)
+**Decisiones por capítulo:** Cap 1: 4, Cap 2: 4, Cap 3: 5, Cap 4: 5, Cap 5: 2 (+ jefe).
+**Total de nodos visitados por run:** ~22 nodos (variable según caminos elegidos). No todos son combates — algunos son tienda, forja, descanso o cofre.
 
 ### Recompensas por capítulo completado
 
@@ -383,20 +428,25 @@ if (_es_torre || _es_camino) {
 
   POR CADA CAPÍTULO:
     4. Narrativa intro (línea por línea, Enter avanza, Escape salta)
-    5. POR CADA ENCUENTRO:
-       a. Pre-combate (info enemigo + mapa de progreso)
+    5. MAPA RAMIFICADO (fase "mapa"):
+       - Se muestra mapa con tiers de nodos (3-4 por tier)
+       - El jugador elige camino: ◄► para seleccionar, Enter para avanzar
+       - scr_camino_ejecutar_nodo() enruta según tipo de nodo:
+         * combate/elite/jefe → pre_combate → equipar → combate
+         * tienda → room_goto(rm_tienda) → vuelve al mapa
+         * forja → room_goto(rm_forja) → vuelve al mapa
+         * descanso → narrativa → vuelve al mapa
+         * cofre → +oro + narrativa → vuelve al mapa
+    6. POR CADA COMBATE:
+       a. Pre-combate (info enemigo + tier actual)
        b. Equipar objetos (hasta 3) + runa
        c. scr_camino_lanzar_combate() → room_goto(rm_combate)
-          - obj_control_juego: modo_camino = true, hp/oro mult configurados
-          - obj_control_combate: aplica HP mult y oro mult
        d. [COMBATE en rm_combate]
        e. obj_control_combate detecta fin → llama scr_camino_post_combate()
-          → room_goto(rm_camino)
-       f. VICTORIA: post_combate (Continuar/Abandonar)
+       f. VICTORIA: post_combate (Volver al mapa/Abandonar)
           DERROTA: derrota (Reintentar/Abandonar)
-       g. Si continúa: fragmento narrativo → pre_combate del siguiente
-    6. victoria_capitulo → recompensa oro bonus
-    7. Narrativa victoria del capítulo
+       g. Si continúa: vuelve al mapa para siguiente elección
+    7. Al llegar al último tier (jefe) y vencer: victoria_capitulo
     8. entre_capitulos: Siguiente / Forja / Tienda / Abandonar
        - Forja: room_goto(rm_forja) (obj_control_camino persiste)
        - Tienda: room_goto(rm_tienda) (obj_control_camino persiste)
@@ -413,13 +463,14 @@ if (_es_torre || _es_camino) {
 
 ## 7. Controles
 
-| Tecla   | Acción                                          |
-| ------- | ----------------------------------------------- |
-| ▲ / ▼   | Navegar entre opciones                          |
-| Enter   | Confirmar selección / Avanzar narrativa         |
-| Escape  | Volver / Saltar narrativa / Abandonar           |
-| Tab     | Alternar selección de objetos (en fase equipar) |
-| Espacio | Avanzar narrativa (alternativa a Enter)         |
+| Tecla   | Acción                                                  |
+| ------- | ------------------------------------------------------- |
+| ▲ / ▼   | Navegar entre opciones (selección, equipar, derrota...) |
+| ◄ / ►   | Elegir nodo en el mapa ramificado                       |
+| Enter   | Confirmar selección / Avanzar narrativa / Avanzar nodo  |
+| Escape  | Volver / Saltar narrativa / Abandonar camino            |
+| Tab     | Alternar selección de objetos (en fase equipar)         |
+| Espacio | Avanzar narrativa (alternativa a Enter)                 |
 
 ---
 
@@ -442,7 +493,7 @@ if (_es_torre || _es_camino) {
 
 - Accesibles entre capítulos via `room_goto(rm_forja)` / `room_goto(rm_tienda)`
 - `obj_control_camino` persiste durante la visita
-- Al presionar Escape en forja/tienda, el jugador vuelve a `rm_camino` donde sigue en fase `entre_capitulos`
+- Al presionar Escape en forja/tienda, se comprueba `modo_camino`: si es true, vuelve a `rm_camino` (fase `mapa` o `entre_capitulos` según contexto)
 
 ---
 

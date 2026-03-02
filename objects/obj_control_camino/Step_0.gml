@@ -107,6 +107,61 @@ else if (camino_fase == "narrativa_linea") {
 
 
 // ═══════════════════════════════════════════
+//  FASE: MAPA DE RAMIFICACIONES
+// ═══════════════════════════════════════════
+else if (camino_fase == "mapa") {
+
+    // Calcular conexiones disponibles desde la posición actual
+    var _total_tiers = array_length(camino_mapa);
+    var _next_tier = camino_tier_actual + 1;
+
+    if (_next_tier >= _total_tiers) {
+        // Ya pasó todos los tiers → victoria de capítulo
+        camino_fase = "victoria_capitulo";
+    } else {
+        // Determinar nodos alcanzables
+        if (camino_tier_actual < 0) {
+            // Inicio: todos los nodos del tier 0 son alcanzables
+            camino_mapa_conexiones = [];
+            for (var i = 0; i < array_length(camino_mapa[0]); i++) {
+                array_push(camino_mapa_conexiones, i);
+            }
+        } else {
+            var _nodo_actual = camino_mapa[camino_tier_actual][camino_nodo_actual];
+            camino_mapa_conexiones = _nodo_actual.conexiones;
+        }
+
+        // Clamp la selección al rango válido
+        if (camino_mapa_sel >= array_length(camino_mapa_conexiones)) {
+            camino_mapa_sel = 0;
+        }
+
+        // Navegación ← →
+        var _n_conex = array_length(camino_mapa_conexiones);
+        if (_n_conex > 0) {
+            if (keyboard_check_pressed(vk_left))  camino_mapa_sel = (camino_mapa_sel - 1 + _n_conex) mod _n_conex;
+            if (keyboard_check_pressed(vk_right)) camino_mapa_sel = (camino_mapa_sel + 1) mod _n_conex;
+            if (keyboard_check_pressed(vk_up))    camino_mapa_sel = (camino_mapa_sel - 1 + _n_conex) mod _n_conex;
+            if (keyboard_check_pressed(vk_down))  camino_mapa_sel = (camino_mapa_sel + 1) mod _n_conex;
+
+            if (keyboard_check_pressed(vk_enter)) {
+                camino_tier_actual = _next_tier;
+                camino_nodo_actual = camino_mapa_conexiones[camino_mapa_sel];
+                camino_mapa_sel = 0;
+                scr_camino_ejecutar_nodo();
+                io_clear();
+            }
+        }
+
+        if (keyboard_check_pressed(vk_escape)) {
+            scr_camino_finalizar("abandono");
+            io_clear();
+        }
+    }
+}
+
+
+// ═══════════════════════════════════════════
 //  FASE: PRE-COMBATE
 // ═══════════════════════════════════════════
 else if (camino_fase == "pre_combate") {
@@ -267,8 +322,9 @@ else if (camino_fase == "post_combate") {
 
     if (keyboard_check_pressed(vk_enter)) {
         if (camino_post_opcion == 0) {
-            // Continuar
-            scr_camino_avanzar();
+            // Continuar → volver al mapa para elegir siguiente camino
+            camino_fase = "mapa";
+            camino_mapa_sel = 0;
         } else {
             // Abandonar
             scr_camino_finalizar("abandono");
@@ -408,6 +464,16 @@ else if (camino_fase == "derrota") {
         if (camino_post_opcion == 0) {
             // Reintentar mismo encuentro
             camino_derrotas++;
+            // Recrear el encuentro desde el nodo actual del mapa
+            var _nodo_retry = camino_mapa[camino_tier_actual][camino_nodo_actual];
+            camino_encuentro = {
+                nombre_enemigo: _nodo_retry.nombre,
+                hp_mult: _nodo_retry.hp_mult,
+                oro_mult: _nodo_retry.oro_mult,
+                es_jefe: (_nodo_retry.tipo == "jefe"),
+                es_elite: (_nodo_retry.tipo == "elite"),
+                tipo: _nodo_retry.tipo,
+            };
             camino_fase = "pre_combate";
         } else {
             // Abandonar
@@ -437,39 +503,114 @@ function scr_camino_iniciar_run() {
 
     show_debug_message("⚔ Camino del Héroe iniciado | PJ: " + camino_perfil_nombre + " | Arma: " + camino_arma);
 
-    // Iniciar primer capítulo con su narrativa intro
     scr_camino_iniciar_capitulo(0);
 }
 
 
 /// @function scr_camino_iniciar_capitulo(_idx)
-/// Inicia un capítulo específico con su narrativa de introducción
+/// Inicia un capítulo: genera mapa ramificado y muestra narrativa intro
 function scr_camino_iniciar_capitulo(_idx) {
     camino_capitulo_idx = _idx;
     camino_capitulo = camino_capitulos[_idx];
-    camino_encuentros = scr_camino_generar_encuentros(camino_capitulo);
-    camino_encuentro_idx = 0;
+
+    // Generar mapa ramificado del capítulo
+    camino_mapa = scr_camino_generar_mapa(camino_capitulo);
+    camino_tier_actual = -1;
+    camino_nodo_actual = 0;
+    camino_mapa_sel = 0;
+    camino_mapa_conexiones = [];
 
     show_debug_message("📖 Capítulo " + string(camino_capitulo.numero) + ": " + camino_capitulo.nombre
-        + " | Encuentros: " + string(array_length(camino_encuentros)));
+        + " | Tiers: " + string(array_length(camino_mapa)));
 
-    // Mostrar narrativa de intro
+    // Narrativa de intro → luego al mapa
     camino_narrativa_lineas = camino_capitulo.narrativa_intro;
     camino_narrativa_idx = 0;
-    camino_narrativa_destino = "pre_combate";
+    camino_narrativa_destino = "mapa";
     camino_fase = "narrativa_linea";
 }
 
 
 /// @function scr_camino_siguiente_capitulo()
-/// Avanza al siguiente capítulo
 function scr_camino_siguiente_capitulo() {
     var _next = camino_capitulo_idx + 1;
     if (_next < array_length(camino_capitulos)) {
         scr_camino_iniciar_capitulo(_next);
     } else {
-        // No debería llegar aquí, pero por seguridad
         scr_camino_finalizar("victoria");
+    }
+}
+
+
+/// @function scr_camino_ejecutar_nodo()
+/// Ejecuta el evento del nodo actual del mapa
+function scr_camino_ejecutar_nodo() {
+    var _nodo = camino_mapa[camino_tier_actual][camino_nodo_actual];
+    _nodo.visitado = true;
+
+    show_debug_message("🗺 Nodo: Tier " + string(camino_tier_actual)
+        + " | Nodo " + string(camino_nodo_actual)
+        + " | Tipo: " + _nodo.tipo + " | " + _nodo.nombre);
+
+    switch (_nodo.tipo) {
+        case "combate":
+        case "elite":
+            camino_encuentro = {
+                nombre_enemigo: _nodo.nombre,
+                hp_mult: _nodo.hp_mult,
+                oro_mult: _nodo.oro_mult,
+                es_jefe: false,
+                es_elite: (_nodo.tipo == "elite"),
+                tipo: _nodo.tipo,
+            };
+            camino_fase = "pre_combate";
+            break;
+
+        case "jefe":
+            camino_encuentro = {
+                nombre_enemigo: _nodo.nombre,
+                hp_mult: _nodo.hp_mult,
+                oro_mult: _nodo.oro_mult,
+                es_jefe: true,
+                es_elite: false,
+                tipo: "jefe",
+            };
+            camino_fase = "pre_combate";
+            break;
+
+        case "tienda":
+            room_goto(rm_tienda);
+            break;
+
+        case "forja":
+            room_goto(rm_forja);
+            break;
+
+        case "descanso":
+            camino_narrativa_lineas = [
+                scr_camino_fragmento_combate(camino_capitulo, camino_tier_actual),
+                "Un momento de descanso entre las ruinas...",
+                "Recuperas fuerzas para el camino que queda.",
+            ];
+            camino_narrativa_idx = 0;
+            camino_narrativa_destino = "mapa";
+            camino_fase = "narrativa_linea";
+            break;
+
+        case "cofre":
+            var _cj = instance_find(obj_control_juego, 0);
+            if (instance_exists(_cj)) {
+                _cj.oro += _nodo.recompensa_oro;
+                camino_oro_ganado += _nodo.recompensa_oro;
+            }
+            camino_narrativa_lineas = [
+                "¡Has encontrado un cofre entre las ruinas!",
+                "Obtienes " + string(_nodo.recompensa_oro) + " oro.",
+            ];
+            camino_narrativa_idx = 0;
+            camino_narrativa_destino = "mapa";
+            camino_fase = "narrativa_linea";
+            break;
     }
 }
 
@@ -479,12 +620,10 @@ function scr_camino_siguiente_capitulo() {
 function scr_camino_lanzar_combate() {
     var _cj = instance_find(obj_control_juego, 0);
 
-    // Setear personaje seleccionado como activo
     _cj.personaje_seleccionado = camino_perfil_nombre;
     var _perfil = _cj.perfiles_personaje[? camino_perfil_nombre];
     _perfil.arma_equipada = camino_arma;
 
-    // Equipamiento: asegurar arrays
     if (!variable_instance_exists(_cj, "objetos_para_combate") || !is_array(_cj.objetos_para_combate)) {
         _cj.objetos_para_combate = [];
     }
@@ -492,13 +631,8 @@ function scr_camino_lanzar_combate() {
         _cj.runa_equipada = "";
     }
 
-    // Setear enemigo actual
-    if (camino_encuentro == undefined) {
-        camino_encuentro = camino_encuentros[camino_encuentro_idx];
-    }
     _cj.enemigo_seleccionado = camino_encuentro.nombre_enemigo;
 
-    // Marcar modo camino
     _cj.modo_camino = true;
     _cj.modo_torre = false;
     _cj.camino_hp_mult = camino_encuentro.hp_mult;
@@ -510,9 +644,8 @@ function scr_camino_lanzar_combate() {
 
 
 /// @function scr_camino_post_combate(_ganador, _pj, _oro_ganado)
-/// Llamada desde obj_control_combate cuando termina un combate en modo camino
+/// Callback desde obj_control_combate al terminar un combate en modo camino
 function scr_camino_post_combate(_ganador, _pj, _oro_ganado) {
-
     camino_ultimo_ganador = _ganador;
     camino_ultimo_oro = _oro_ganado;
     camino_combates_totales++;
@@ -522,7 +655,7 @@ function scr_camino_post_combate(_ganador, _pj, _oro_ganado) {
         camino_oro_ganado += _oro_ganado;
 
         // ¿Fue el combate secreto?
-        if (camino_encuentro.tipo == "secreto") {
+        if (camino_encuentro != undefined && camino_encuentro.tipo == "secreto") {
             camino_narrativa_lineas = [
                 "El Primer Conductor cae de rodillas.",
                 "\"Eres digno... más digno de lo que yo fui.\"",
@@ -532,15 +665,14 @@ function scr_camino_post_combate(_ganador, _pj, _oro_ganado) {
             camino_narrativa_idx = 0;
             camino_narrativa_destino = "secreto_victoria";
             camino_fase = "narrativa_linea";
+            camino_encuentro = undefined;
             room_goto(rm_camino);
             return;
         }
 
-        // ¿Era el último encuentro del capítulo?
-        if (camino_encuentro_idx >= array_length(camino_encuentros) - 1) {
-            // ¿Era el último capítulo?
+        // ¿Era el jefe del capítulo?
+        if (camino_encuentro != undefined && camino_encuentro.tipo == "jefe") {
             if (camino_capitulo_idx >= array_length(camino_capitulos) - 1) {
-                // ¡Victoria final!
                 camino_narrativa_lineas = camino_capitulo.narrativa_victoria;
                 camino_narrativa_idx = 0;
                 camino_narrativa_destino = "victoria_final";
@@ -549,6 +681,7 @@ function scr_camino_post_combate(_ganador, _pj, _oro_ganado) {
                 camino_fase = "victoria_capitulo";
             }
         } else {
+            // Victoria normal → volver al mapa
             camino_fase = "post_combate";
         }
     } else {
@@ -556,37 +689,13 @@ function scr_camino_post_combate(_ganador, _pj, _oro_ganado) {
         camino_fase = "derrota";
     }
 
-    // Resetear el encuentro temporal
     camino_encuentro = undefined;
-
-    // Volver a rm_camino
     room_goto(rm_camino);
 }
 
 
-/// @function scr_camino_avanzar()
-/// Avanza al siguiente encuentro dentro del capítulo actual
-function scr_camino_avanzar() {
-    camino_encuentro_idx++;
-
-    if (camino_encuentro_idx < array_length(camino_encuentros)) {
-        camino_encuentro = camino_encuentros[camino_encuentro_idx];
-
-        // Mostrar fragmento narrativo entre combates
-        var _frag = scr_camino_fragmento_combate(camino_capitulo, camino_encuentro_idx - 1);
-        camino_narrativa_lineas = [_frag];
-        camino_narrativa_idx = 0;
-        camino_narrativa_destino = "pre_combate";
-        camino_fase = "narrativa_linea";
-    } else {
-        // Fin del capítulo (no debería llegar aquí por la lógica de post_combate)
-        camino_fase = "victoria_capitulo";
-    }
-}
-
-
 /// @function scr_camino_finalizar(_resultado)
-/// Limpia el estado del camino y vuelve al menú
+/// Limpia estado del camino y vuelve al menú
 function scr_camino_finalizar(_resultado) {
     var _cj = instance_find(obj_control_juego, 0);
     if (instance_exists(_cj)) {
@@ -595,20 +704,22 @@ function scr_camino_finalizar(_resultado) {
         _cj.camino_oro_mult = 1;
     }
 
-    show_debug_message("⚔ Camino del Héroe finalizado: " + _resultado
-        + " | Oro total: " + string(camino_oro_ganado)
+    show_debug_message("⚔ Camino finalizado: " + _resultado
+        + " | Oro: " + string(camino_oro_ganado)
         + " | Combates: " + string(camino_combates_ganados) + "/" + string(camino_combates_totales)
         + " | Capítulo: " + string(camino_capitulo_idx + 1));
 
-    // ── Reset completo ──
-    camino_activo         = false;
-    camino_capitulos      = [];
-    camino_capitulo_idx   = 0;
-    camino_capitulo       = undefined;
-    camino_encuentros     = [];
-    camino_encuentro_idx  = 0;
-    camino_encuentro      = undefined;
-    camino_fase           = "seleccion_personaje";
+    camino_activo          = false;
+    camino_capitulos       = [];
+    camino_capitulo_idx    = 0;
+    camino_capitulo        = undefined;
+    camino_mapa            = [];
+    camino_tier_actual     = -1;
+    camino_nodo_actual     = 0;
+    camino_mapa_sel        = 0;
+    camino_mapa_conexiones = [];
+    camino_encuentro       = undefined;
+    camino_fase            = "seleccion_personaje";
 
     sel_pj_indice   = 0;
     sel_arma_indice = 0;
