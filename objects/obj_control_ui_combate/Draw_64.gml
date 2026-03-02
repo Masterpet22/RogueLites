@@ -3,6 +3,10 @@
 if (!instance_exists(control_combate)) {
     exit;
 }
+
+// Fondo de combate
+draw_sprite_stretched(spr_bg_combate, 0, 0, 0, display_get_gui_width(), display_get_gui_height());
+
 draw_set_font(fnt_1);
 
 var pj = control_combate.personaje_jugador;
@@ -41,21 +45,20 @@ draw_set_alpha(1);
     draw_set_color(c_white);
     draw_text(_info_x, _info_y, pj.nombre + "  —  " + pj.clase);
 
-    // Barra de vida
+    // Barra de vida (con sprites)
     var _barra_x = _info_x;
     var _barra_y = _info_y + 22;
     var _barra_w = 280;
     var _barra_h = 16;
     var _pj_ratio = clamp(pj.vida_actual / pj.vida_max, 0, 1);
 
-    // Fondo barra
-    draw_set_color(make_color_rgb(40, 10, 10));
-    draw_rectangle(_barra_x, _barra_y, _barra_x + _barra_w, _barra_y + _barra_h, false);
+    // Fondo barra (sprite)
+    draw_sprite_stretched(spr_barra_vida_bg, 0, _barra_x, _barra_y, _barra_w, _barra_h);
 
-    // Relleno vida
-    var _vida_col = (_pj_ratio > 0.5) ? c_lime : ((_pj_ratio > 0.25) ? c_yellow : c_red);
-    draw_set_color(_vida_col);
-    draw_rectangle(_barra_x, _barra_y, _barra_x + _barra_w * _pj_ratio, _barra_y + _barra_h, false);
+    // Relleno vida (sprite recortado)
+    if (_pj_ratio > 0) {
+        draw_sprite_stretched(spr_barra_vida, 0, _barra_x, _barra_y, _barra_w * _pj_ratio, _barra_h);
+    }
 
     // Marco barra
     draw_set_color(c_white);
@@ -67,11 +70,19 @@ draw_set_alpha(1);
     draw_set_color(c_white);
     draw_text(_barra_x + _barra_w / 2, _barra_y + _barra_h / 2, string(pj.vida_actual) + " / " + string(pj.vida_max));
 
-    // Línea 3: Afinidad + Personalidad + Arma
+    // Línea 3: Afinidad (con icono) + Personalidad + Arma
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
-    draw_set_color(c_ltgray);
-    draw_text(_info_x, _barra_y + _barra_h + 4, pj.afinidad + "  |  " + pj.personalidad + "  |  " + pj.arma);
+    var _afin_ico = scr_sprite_icono_afinidad(pj.afinidad);
+    var _afin_y3 = _barra_y + _barra_h + 4;
+    if (_afin_ico != -1) {
+        draw_sprite_stretched(_afin_ico, 0, _info_x, _afin_y3, 16, 16);
+        draw_set_color(c_ltgray);
+        draw_text(_info_x + 20, _afin_y3, pj.afinidad + "  |  " + pj.personalidad + "  |  " + pj.arma);
+    } else {
+        draw_set_color(c_ltgray);
+        draw_text(_info_x, _afin_y3, pj.afinidad + "  |  " + pj.personalidad + "  |  " + pj.arma);
+    }
 
     // ── ESTADOS ALTERADOS DEL JUGADOR (iconos debajo del retrato) ──
     if (is_array(pj.estados)) {
@@ -95,22 +106,24 @@ draw_set_alpha(1);
             var _sx = _st_x + _st_count * (_st_size + _st_gap);
             var _sy = _st_y;
 
-            // Fondo del icono
-            draw_set_color(make_color_rgb(20, 20, 20));
-            draw_rectangle(_sx, _sy, _sx + _st_size, _sy + _st_size, false);
+            // Icono del estado (sprite o fallback)
+            var _ico_spr = scr_sprite_icono_estado(_est.id);
+            if (_ico_spr != -1) {
+                draw_sprite_stretched(_ico_spr, 0, _sx, _sy, _st_size, _st_size);
+            } else {
+                draw_set_color(make_color_rgb(20, 20, 20));
+                draw_rectangle(_sx, _sy, _sx + _st_size, _sy + _st_size, false);
+                draw_set_halign(fa_center); draw_set_valign(fa_middle);
+                draw_set_color(_st_col);
+                draw_text(_sx + _st_size / 2, _sy + _st_size / 2 - 2, string_upper(string_copy(_est.id, 1, 3)));
+            }
 
             // Marco del icono
             draw_set_color(_st_col);
             draw_rectangle(_sx, _sy, _sx + _st_size, _sy + _st_size, true);
 
-            // Abreviación del estado
-            draw_set_halign(fa_center);
-            draw_set_valign(fa_middle);
-            draw_set_color(_st_col);
-            var _abrev = string_upper(string_copy(_est.id, 1, 3));
-            draw_text(_sx + _st_size / 2, _sy + _st_size / 2 - 2, _abrev);
-
             // Timer restante
+            draw_set_halign(fa_center);
             draw_set_valign(fa_top);
             draw_set_color(c_ltgray);
             var _seg_rest = max(0, _est.tiempo_rest / GAME_FPS);
@@ -145,20 +158,19 @@ draw_set_alpha(1);
     draw_set_color(c_white);
     draw_text(_en_info_x, _en_info_y, en.nombre);
 
-    // Barra de vida
+    // Barra de vida enemigo (con sprites)
     var _en_barra_x = _en_info_x - _en_barra_w;
     var _en_barra_y = _en_info_y + 22;
     var _en_barra_h = 16;
     var _en_ratio = clamp(en.vida_actual / en.vida_max, 0, 1);
 
-    // Fondo
-    draw_set_color(make_color_rgb(40, 10, 10));
-    draw_rectangle(_en_barra_x, _en_barra_y, _en_barra_x + _en_barra_w, _en_barra_y + _en_barra_h, false);
+    // Fondo barra (sprite)
+    draw_sprite_stretched(spr_barra_vida_bg, 0, _en_barra_x, _en_barra_y, _en_barra_w, _en_barra_h);
 
     // Relleno (de derecha a izquierda)
-    var _en_vida_col = (_en_ratio > 0.5) ? c_red : ((_en_ratio > 0.25) ? c_orange : make_color_rgb(180, 30, 30));
-    draw_set_color(_en_vida_col);
-    draw_rectangle(_en_barra_x + _en_barra_w * (1 - _en_ratio), _en_barra_y, _en_barra_x + _en_barra_w, _en_barra_y + _en_barra_h, false);
+    if (_en_ratio > 0) {
+        draw_sprite_stretched(spr_barra_vida, 0, _en_barra_x + _en_barra_w * (1 - _en_ratio), _en_barra_y, _en_barra_w * _en_ratio, _en_barra_h);
+    }
 
     // Marco
     draw_set_color(c_white);
@@ -170,12 +182,18 @@ draw_set_alpha(1);
     draw_set_color(c_white);
     draw_text(_en_barra_x + _en_barra_w / 2, _en_barra_y + _en_barra_h / 2, string(en.vida_actual) + " / " + string(en.vida_max));
 
-    // Afinidad + Rango del enemigo
+    // Afinidad + Rango del enemigo (con icono)
     draw_set_halign(fa_right);
     draw_set_valign(fa_top);
-    draw_set_color(c_ltgray);
     var _rango_txt = variable_struct_exists(en, "rango") ? en.rango : "Enemigo";
-    draw_text(_en_info_x, _en_barra_y + _en_barra_h + 4, en.afinidad + "  |  " + _rango_txt);
+    var _en_afin_ico = scr_sprite_icono_afinidad(en.afinidad);
+    var _en_afin_y = _en_barra_y + _en_barra_h + 4;
+    draw_set_color(c_ltgray);
+    draw_text(_en_info_x, _en_afin_y, en.afinidad + "  |  " + _rango_txt);
+    if (_en_afin_ico != -1) {
+        var _en_afin_txt_w = string_width(en.afinidad + "  |  " + _rango_txt);
+        draw_sprite_stretched(_en_afin_ico, 0, _en_info_x - _en_afin_txt_w - 20, _en_afin_y, 16, 16);
+    }
 
     // ── Estado IA enemiga (debajo del retrato) ──
     var _ia_y = _en_frame_y + _en_portrait_size + 4;
@@ -253,16 +271,21 @@ draw_set_alpha(1);
             var _ex = _est_x + _en_portrait_size - (_est_count + 1) * (_est_size + _est_gap);
             var _ey = _est_y;
 
-            draw_set_color(make_color_rgb(20, 20, 20));
-            draw_rectangle(_ex, _ey, _ex + _est_size, _ey + _est_size, false);
+            // Icono del estado enemigo (sprite o fallback)
+            var _eico = scr_sprite_icono_estado(_ee.id);
+            if (_eico != -1) {
+                draw_sprite_stretched(_eico, 0, _ex, _ey, _est_size, _est_size);
+            } else {
+                draw_set_color(make_color_rgb(20, 20, 20));
+                draw_rectangle(_ex, _ey, _ex + _est_size, _ey + _est_size, false);
+                draw_set_halign(fa_center); draw_set_valign(fa_middle);
+                draw_set_color(_ec);
+                draw_text(_ex + _est_size / 2, _ey + _est_size / 2 - 2, string_upper(string_copy(_ee.id, 1, 3)));
+            }
             draw_set_color(_ec);
             draw_rectangle(_ex, _ey, _ex + _est_size, _ey + _est_size, true);
 
             draw_set_halign(fa_center);
-            draw_set_valign(fa_middle);
-            draw_set_color(_ec);
-            draw_text(_ex + _est_size / 2, _ey + _est_size / 2 - 2, string_upper(string_copy(_ee.id, 1, 3)));
-
             draw_set_valign(fa_top);
             draw_set_color(c_ltgray);
             var _eseg = max(0, _ee.tiempo_rest / GAME_FPS);
@@ -363,13 +386,23 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
         var cd_actual = cds[i];
         var es_clase = (i == 0);
 
+        // Icono de habilidad
+        var _hab_ico = -1;
+        if (es_clase) _hab_ico = spr_ico_hab_clase;
+        else if (i == 1) _hab_ico = spr_ico_hab_arma_1;
+        else if (i == 2) _hab_ico = spr_ico_hab_arma_2;
+        else if (i == 3) _hab_ico = spr_ico_hab_arma_3;
+
+        if (_hab_ico != -1) {
+            draw_sprite_stretched(_hab_ico, 0, sx1 + 1, sy1 + 1, _hab_w - 2, _hab_h - 2);
+        } else {
+            draw_set_color(es_clase ? make_color_rgb(50, 35, 10) : make_color_rgb(30, 30, 30));
+            draw_rectangle(sx1 + 1, sy1 + 1, sx2 - 1, sy2 - 1, false);
+        }
+
         // Marco
         draw_set_color(es_clase ? c_orange : c_white);
-        draw_rectangle(sx1, sy1, sx2, sy2, false);
-
-        // Fondo
-        draw_set_color(es_clase ? make_color_rgb(50, 35, 10) : make_color_rgb(30, 30, 30));
-        draw_rectangle(sx1 + 1, sy1 + 1, sx2 - 1, sy2 - 1, false);
+        draw_rectangle(sx1, sy1, sx2, sy2, true);
 
         // Nombre habilidad
         var nombre = scr_nombre_habilidad(id_hab);
@@ -419,10 +452,11 @@ if (!control_combate.combate_terminado) {
     else if (pj.esencia >= pj.esencia_llena * 0.75) { _t2 = 2; _t2_col = c_orange; }
     else if (pj.esencia >= pj.esencia_llena * 0.5) { _t2 = 1; _t2_col = make_color_rgb(100, 180, 255); }
 
-    draw_set_color(make_color_rgb(30, 30, 50));
-    draw_rectangle(_es_bar_x, _es_bar_y, _es_bar_x + _es_bar_w, _es_bar_y + _es_bar_h, false);
-    draw_set_color((_t2 >= 1) ? _t2_col : make_color_rgb(80, 60, 200));
-    draw_rectangle(_es_bar_x, _es_bar_y, _es_bar_x + _es_bar_w * _es_ratio2, _es_bar_y + _es_bar_h, false);
+    // Barra esencia (con sprites)
+    draw_sprite_stretched(spr_barra_esencia_bg, 0, _es_bar_x, _es_bar_y, _es_bar_w, _es_bar_h);
+    if (_es_ratio2 > 0) {
+        draw_sprite_stretched(spr_barra_esencia, 0, _es_bar_x, _es_bar_y, _es_bar_w * _es_ratio2, _es_bar_h);
+    }
 
     // Marcadores tier
     draw_set_color(make_color_rgb(180, 180, 180));
@@ -434,15 +468,19 @@ if (!control_combate.combate_terminado) {
     draw_set_color((_t2 >= 1) ? _t2_col : c_white);
     draw_rectangle(_es_bar_x, _es_bar_y, _es_bar_x + _es_bar_w, _es_bar_y + _es_bar_h, true);
 
-    // Texto esencia + indicador súper
+    // Texto esencia + indicador súper (con icono)
     draw_set_halign(fa_left);
     draw_set_valign(fa_middle);
     draw_set_color((_t2 >= 1) ? _t2_col : c_white);
     var _es_label2 = "ESENCIA " + string(round(pj.esencia)) + "/" + string(pj.esencia_llena);
-    if (_t2 == 3) _es_label2 += "  [TAB] SÚPER 100%";
-    else if (_t2 == 2) _es_label2 += "  [TAB] SÚPER 75%";
-    else if (_t2 == 1) _es_label2 += "  [TAB] SÚPER 50%";
-    draw_text(_es_bar_x + _es_bar_w + 10, _es_bar_y + _es_bar_h / 2, _es_label2);
+    if (_t2 >= 1) {
+        // Icono de súper
+        draw_sprite_ext(spr_ico_super, 0, _es_bar_x + _es_bar_w + 10, _es_bar_y - 6, 0.6, 0.6, 0, _t2_col, 1);
+        if (_t2 == 3) _es_label2 += "  [TAB] SÚPER 100%";
+        else if (_t2 == 2) _es_label2 += "  [TAB] SÚPER 75%";
+        else if (_t2 == 1) _es_label2 += "  [TAB] SÚPER 50%";
+    }
+    draw_text(_es_bar_x + _es_bar_w + 42, _es_bar_y + _es_bar_h / 2, _es_label2);
     draw_set_valign(fa_top);
 }
 
@@ -473,16 +511,18 @@ if (!control_combate.combate_terminado) {
         var _usado = (_tiene_obj && is_array(_used_arr)) ? _used_arr[i] : false;
         var _vacio = (!_tiene_obj || _obj_nombre == "" || _obj_nombre == undefined);
 
-        // Marco
-        if (_vacio) draw_set_color(c_dkgray);
-        else draw_set_color(_usado ? c_dkgray : c_lime);
-        draw_rectangle(_ox1, _oy1, _ox2, _oy2, false);
+        // Fondo del slot (sprite)
+        draw_sprite_stretched(spr_slot_objeto, 0, _ox1, _oy1, _ow, _oh);
 
-        // Fondo
-        draw_set_color(_vacio ? make_color_rgb(25, 25, 25) : (_usado ? make_color_rgb(20, 20, 20) : make_color_rgb(15, 40, 15)));
-        draw_rectangle(_ox1 + 1, _oy1 + 1, _ox2 - 1, _oy2 - 1, false);
+        // Overlay si usado
+        if (_usado) {
+            draw_set_color(c_black);
+            draw_set_alpha(0.6);
+            draw_rectangle(_ox1 + 1, _oy1 + 1, _ox2 - 1, _oy2 - 1, false);
+            draw_set_alpha(1);
+        }
 
-        // Texto
+        // Icono del objeto
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
 
@@ -493,10 +533,16 @@ if (!control_combate.combate_terminado) {
             draw_set_color(c_dkgray);
             draw_text((_ox1 + _ox2) / 2, _oy1 + 16, "USADO");
         } else {
-            draw_set_color(c_white);
-            var _txt = _obj_nombre;
-            if (string_length(_txt) > 10) _txt = string_copy(_txt, 1, 10) + ".";
-            draw_text((_ox1 + _ox2) / 2, _oy1 + 16, _txt);
+            // Dibujar icono del consumible
+            var _obj_ico = scr_sprite_icono_objeto(_obj_nombre);
+            if (_obj_ico != -1) {
+                draw_sprite_stretched(_obj_ico, 0, _ox1 + (_ow - 32) / 2, _oy1 + 2, 32, 32);
+            } else {
+                draw_set_color(c_white);
+                var _txt = _obj_nombre;
+                if (string_length(_txt) > 10) _txt = string_copy(_txt, 1, 10) + ".";
+                draw_text((_ox1 + _ox2) / 2, _oy1 + 16, _txt);
+            }
         }
 
         // Tecla
@@ -514,11 +560,8 @@ if (!control_combate.combate_terminado) {
         var _rx2 = _rx1 + _ow;
         var _ry2 = _ry1 + _oh;
 
-        draw_set_color(_runa_vacia ? c_dkgray : make_color_rgb(180, 120, 255));
-        draw_rectangle(_rx1, _ry1, _rx2, _ry2, false);
-
-        draw_set_color(_runa_vacia ? make_color_rgb(25, 25, 25) : make_color_rgb(35, 20, 50));
-        draw_rectangle(_rx1 + 1, _ry1 + 1, _rx2 - 1, _ry2 - 1, false);
+        // Fondo del slot runa (sprite)
+        draw_sprite_stretched(spr_slot_runa, 0, _rx1, _ry1, _ow, _oh);
 
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
@@ -527,10 +570,16 @@ if (!control_combate.combate_terminado) {
             draw_set_color(c_dkgray);
             draw_text((_rx1 + _rx2) / 2, _ry1 + 16, "Sin Runa");
         } else {
-            draw_set_color(make_color_rgb(220, 180, 255));
-            var _rtxt = _runa_nom;
-            if (string_length(_rtxt) > 10) _rtxt = string_copy(_rtxt, 1, 10) + ".";
-            draw_text((_rx1 + _rx2) / 2, _ry1 + 16, _rtxt);
+            // Dibujar icono de la runa
+            var _runa_ico = scr_sprite_icono_runa(_runa_nom);
+            if (_runa_ico != -1) {
+                draw_sprite_stretched(_runa_ico, 0, _rx1 + (_ow - 32) / 2, _ry1 + 2, 32, 32);
+            } else {
+                draw_set_color(make_color_rgb(220, 180, 255));
+                var _rtxt = _runa_nom;
+                if (string_length(_rtxt) > 10) _rtxt = string_copy(_rtxt, 1, 10) + ".";
+                draw_text((_rx1 + _rx2) / 2, _ry1 + 16, _rtxt);
+            }
         }
 
         draw_set_color(_runa_vacia ? c_dkgray : make_color_rgb(180, 120, 255));
@@ -597,6 +646,8 @@ if (!control_combate.combate_terminado) {
     scr_notif_dibujar();
     // Números flotantes de feedback (daño, curación, buffs)
     scr_feedback_dibujar();
+    // Efectos FX (impacto, crítico, curación, etc.)
+    scr_feedback_dibujar_fx();
 } else {
     // Limpiar notificaciones y feedbacks para que no se acumulen al volver
     control_combate.notificaciones = [];
@@ -619,9 +670,8 @@ if (pausado && !control_combate.combate_terminado) {
     var _px = (w_gui - _pw) / 2;
     var _py = (h_gui - _ph) / 2;
 
-    // Fondo panel
-    draw_set_color(make_color_rgb(20, 20, 30));
-    draw_rectangle(_px, _py, _px + _pw, _py + _ph, false);
+    // Fondo panel (sprite)
+    draw_sprite_stretched(spr_panel_info, 0, _px, _py, _pw, _ph);
 
     // Marco panel
     draw_set_color(c_white);

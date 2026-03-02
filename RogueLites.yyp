@@ -1,121 +1,1310 @@
 {
-  "$GMProject":"v1",
-  "%Name":"RogueLites",
-  "AudioGroups":[
-    {"$GMAudioGroup":"v1","%Name":"audiogroup_default","exportDir":"","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
+  "$GMProject": "v1",
+  "%Name": "RogueLites",
+  "AudioGroups": [
+    {
+      "$GMAudioGroup": "v1",
+      "%Name": "audiogroup_default",
+      "exportDir": "",
+      "name": "audiogroup_default",
+      "resourceType": "GMAudioGroup",
+      "resourceVersion": "2.0",
+      "targets": -1
+    }
   ],
-  "configs":{
-    "children":[],
-    "name":"Default",
+  "configs": {
+    "children": [],
+    "name": "Default"
   },
-  "defaultScriptType":1,
-  "Folders":[
-    {"$GMFolder":"","%Name":"fuentes","folderPath":"folders/fuentes.yy","name":"fuentes","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"objetos","folderPath":"folders/objetos.yy","name":"objetos","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"salas","folderPath":"folders/salas.yy","name":"salas","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"scripts","folderPath":"folders/scripts.yy","name":"scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"combat","folderPath":"folders/scripts/combat.yy","name":"combat","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"datos","folderPath":"folders/scripts/datos.yy","name":"datos","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"forja","folderPath":"folders/scripts/forja.yy","name":"forja","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"helpers","folderPath":"folders/scripts/helpers.yy","name":"helpers","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"utils","folderPath":"folders/scripts/utils.yy","name":"utils","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"sprites","folderPath":"folders/sprites.yy","name":"sprites","resourceType":"GMFolder","resourceVersion":"2.0",},
+  "defaultScriptType": 1,
+  "Folders": [
+    {
+      "$GMFolder": "",
+      "%Name": "fuentes",
+      "folderPath": "folders/fuentes.yy",
+      "name": "fuentes",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "objetos",
+      "folderPath": "folders/objetos.yy",
+      "name": "objetos",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "salas",
+      "folderPath": "folders/salas.yy",
+      "name": "salas",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "scripts",
+      "folderPath": "folders/scripts.yy",
+      "name": "scripts",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "combat",
+      "folderPath": "folders/scripts/combat.yy",
+      "name": "combat",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "datos",
+      "folderPath": "folders/scripts/datos.yy",
+      "name": "datos",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "forja",
+      "folderPath": "folders/scripts/forja.yy",
+      "name": "forja",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "helpers",
+      "folderPath": "folders/scripts/helpers.yy",
+      "name": "helpers",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "utils",
+      "folderPath": "folders/scripts/utils.yy",
+      "name": "utils",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "sprites",
+      "folderPath": "folders/sprites.yy",
+      "name": "sprites",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "elites",
+      "folderPath": "folders/sprites/elites.yy",
+      "name": "elites",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "enemigos",
+      "folderPath": "folders/sprites/enemigos.yy",
+      "name": "enemigos",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "fondos",
+      "folderPath": "folders/sprites/fondos.yy",
+      "name": "fondos",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "fx",
+      "folderPath": "folders/sprites/fx.yy",
+      "name": "fx",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "iconos",
+      "folderPath": "folders/sprites/iconos.yy",
+      "name": "iconos",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "jefes",
+      "folderPath": "folders/sprites/jefes.yy",
+      "name": "jefes",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "personajes",
+      "folderPath": "folders/sprites/personajes.yy",
+      "name": "personajes",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "ui",
+      "folderPath": "folders/sprites/ui.yy",
+      "name": "ui",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
+    }
   ],
-  "ForcedPrefabProjectReferences":[],
-  "IncludedFiles":[],
-  "isEcma":false,
-  "LibraryEmitters":[],
-  "MetaData":{
-    "IDEVersion":"2024.14.3.217",
+  "ForcedPrefabProjectReferences": [],
+  "IncludedFiles": [],
+  "isEcma": false,
+  "LibraryEmitters": [],
+  "MetaData": {
+    "IDEVersion": "2024.14.3.217"
   },
-  "name":"RogueLites",
-  "resources":[
-    {"id":{"name":"fnt_1","path":"fonts/fnt_1/fnt_1.yy",},},
-    {"id":{"name":"obj_actor_enemigo","path":"objects/obj_actor_enemigo/obj_actor_enemigo.yy",},},
-    {"id":{"name":"obj_actor_jugador","path":"objects/obj_actor_jugador/obj_actor_jugador.yy",},},
-    {"id":{"name":"obj_control_combate","path":"objects/obj_control_combate/obj_control_combate.yy",},},
-    {"id":{"name":"obj_control_juego","path":"objects/obj_control_juego/obj_control_juego.yy",},},
-    {"id":{"name":"obj_control_torre","path":"objects/obj_control_torre/obj_control_torre.yy",},},
-    {"id":{"name":"obj_control_ui_combate","path":"objects/obj_control_ui_combate/obj_control_ui_combate.yy",},},
-    {"id":{"name":"obj_enemy_select","path":"objects/obj_enemy_select/obj_enemy_select.yy",},},
-    {"id":{"name":"obj_menu","path":"objects/obj_menu/obj_menu.yy",},},
-    {"id":{"name":"obj_select","path":"objects/obj_select/obj_select.yy",},},
-    {"id":{"name":"obj_ui_forja","path":"objects/obj_ui_forja/obj_ui_forja.yy",},},
-    {"id":{"name":"obj_ui_tienda","path":"objects/obj_ui_tienda/obj_ui_tienda.yy",},},
-    {"id":{"name":"rm_boot","path":"rooms/rm_boot/rm_boot.yy",},},
-    {"id":{"name":"rm_combate","path":"rooms/rm_combate/rm_combate.yy",},},
-    {"id":{"name":"rm_enemy_select","path":"rooms/rm_enemy_select/rm_enemy_select.yy",},},
-    {"id":{"name":"rm_forja","path":"rooms/rm_forja/rm_forja.yy",},},
-    {"id":{"name":"rm_menu","path":"rooms/rm_menu/rm_menu.yy",},},
-    {"id":{"name":"rm_select","path":"rooms/rm_select/rm_select.yy",},},
-    {"id":{"name":"rm_tienda","path":"rooms/rm_tienda/rm_tienda.yy",},},
-    {"id":{"name":"rm_torre","path":"rooms/rm_torre/rm_torre.yy",},},
-    {"id":{"name":"scr_activar_pasiva_afinidad","path":"scripts/scr_activar_pasiva_afinidad/scr_activar_pasiva_afinidad.yy",},},
-    {"id":{"name":"scr_actualizar_estados","path":"scripts/scr_actualizar_estados/scr_actualizar_estados.yy",},},
-    {"id":{"name":"scr_actualizar_pasivas","path":"scripts/scr_actualizar_pasivas/scr_actualizar_pasivas.yy",},},
-    {"id":{"name":"scr_actualizar_personaje","path":"scripts/scr_actualizar_personaje/scr_actualizar_personaje.yy",},},
-    {"id":{"name":"scr_aplicar_estado","path":"scripts/scr_aplicar_estado/scr_aplicar_estado.yy",},},
-    {"id":{"name":"scr_calcular_dano","path":"scripts/scr_calcular_dano/scr_calcular_dano.yy",},},
-    {"id":{"name":"scr_config_juego","path":"scripts/scr_config_juego/scr_config_juego.yy",},},
-    {"id":{"name":"scr_cooldown_habilidad","path":"scripts/scr_cooldown_habilidad/scr_cooldown_habilidad.yy",},},
-    {"id":{"name":"scr_crear_enemigo_combate","path":"scripts/scr_crear_enemigo_combate/scr_crear_enemigo_combate.yy",},},
-    {"id":{"name":"scr_crear_perfil_personaje","path":"scripts/scr_crear_perfil_personaje/scr_crear_perfil_personaje.yy",},},
-    {"id":{"name":"scr_crear_personaje_combate","path":"scripts/scr_crear_personaje_combate/scr_crear_personaje_combate.yy",},},
-    {"id":{"name":"scr_datos_afinidades","path":"scripts/scr_datos_afinidades/scr_datos_afinidades.yy",},},
-    {"id":{"name":"scr_datos_armas","path":"scripts/scr_datos_armas/scr_datos_armas.yy",},},
-    {"id":{"name":"scr_datos_clases","path":"scripts/scr_datos_clases/scr_datos_clases.yy",},},
-    {"id":{"name":"scr_datos_enemigos","path":"scripts/scr_datos_enemigos/scr_datos_enemigos.yy",},},
-    {"id":{"name":"scr_datos_estados","path":"scripts/scr_datos_estados/scr_datos_estados.yy",},},
-    {"id":{"name":"scr_datos_materiales","path":"scripts/scr_datos_materiales/scr_datos_materiales.yy",},},
-    {"id":{"name":"scr_datos_objetos","path":"scripts/scr_datos_objetos/scr_datos_objetos.yy",},},
-    {"id":{"name":"scr_datos_personalidades","path":"scripts/scr_datos_personalidades/scr_datos_personalidades.yy",},},
-    {"id":{"name":"scr_datos_recetas_forja","path":"scripts/scr_datos_recetas_forja/scr_datos_recetas_forja.yy",},},
-    {"id":{"name":"scr_datos_tienda","path":"scripts/scr_datos_tienda/scr_datos_tienda.yy",},},
-    {"id":{"name":"scr_datos_torre","path":"scripts/scr_datos_torre/scr_datos_torre.yy",},},
-    {"id":{"name":"scr_ds_map_keys_array","path":"scripts/scr_ds_map_keys_array/scr_ds_map_keys_array.yy",},},
-    {"id":{"name":"scr_ejecutar_habilidad","path":"scripts/scr_ejecutar_habilidad/scr_ejecutar_habilidad.yy",},},
-    {"id":{"name":"scr_ejecutar_super","path":"scripts/scr_ejecutar_super/scr_ejecutar_super.yy",},},
-    {"id":{"name":"scr_fabricar_arma","path":"scripts/scr_fabricar_arma/scr_fabricar_arma.yy",},},
-    {"id":{"name":"scr_feedback_combate","path":"scripts/scr_feedback_combate/scr_feedback_combate.yy",},},
-    {"id":{"name":"scr_formula_beneficio","path":"scripts/scr_formula_beneficio/scr_formula_beneficio.yy",},},
-    {"id":{"name":"scr_formula_dano","path":"scripts/scr_formula_dano/scr_formula_dano.yy",},},
-    {"id":{"name":"scr_get_perfil_activo","path":"scripts/scr_get_perfil_activo/scr_get_perfil_activo.yy",},},
-    {"id":{"name":"scr_get_stat","path":"scripts/scr_get_stat/scr_get_stat.yy",},},
-    {"id":{"name":"scr_ia_enemigo","path":"scripts/scr_ia_enemigo/scr_ia_enemigo.yy",},},
-    {"id":{"name":"scr_inventario_agregar_material","path":"scripts/scr_inventario_agregar_material/scr_inventario_agregar_material.yy",},},
-    {"id":{"name":"scr_inventario_get_material","path":"scripts/scr_inventario_get_material/scr_inventario_get_material.yy",},},
-    {"id":{"name":"scr_inventario_marcar_arma_obtenida","path":"scripts/scr_inventario_marcar_arma_obtenida/scr_inventario_marcar_arma_obtenida.yy",},},
-    {"id":{"name":"scr_inventario_objetos","path":"scripts/scr_inventario_objetos/scr_inventario_objetos.yy",},},
-    {"id":{"name":"scr_inventario_puede_fabricar_arma","path":"scripts/scr_inventario_puede_fabricar_arma/scr_inventario_puede_fabricar_arma.yy",},},
-    {"id":{"name":"scr_inventario_tiene_arma","path":"scripts/scr_inventario_tiene_arma/scr_inventario_tiene_arma.yy",},},
-    {"id":{"name":"scr_lista_armas_disponibles","path":"scripts/scr_lista_armas_disponibles/scr_lista_armas_disponibles.yy",},},
-    {"id":{"name":"scr_mecanicas_combate","path":"scripts/scr_mecanicas_combate/scr_mecanicas_combate.yy",},},
-    {"id":{"name":"scr_multiplicador_afinidad","path":"scripts/scr_multiplicador_afinidad/scr_multiplicador_afinidad.yy",},},
-    {"id":{"name":"scr_nombre_habilidad","path":"scripts/scr_nombre_habilidad/scr_nombre_habilidad.yy",},},
-    {"id":{"name":"scr_notificacion_combate","path":"scripts/scr_notificacion_combate/scr_notificacion_combate.yy",},},
-    {"id":{"name":"scr_usar_habilidad_indice","path":"scripts/scr_usar_habilidad_indice/scr_usar_habilidad_indice.yy",},},
-    {"id":{"name":"scr_usar_objeto_combate","path":"scripts/scr_usar_objeto_combate/scr_usar_objeto_combate.yy",},},
-    {"id":{"name":"spr_contador","path":"sprites/spr_contador/spr_contador.yy",},},
-    {"id":{"name":"spr_enemigo_rostro","path":"sprites/spr_enemigo_rostro/spr_enemigo_rostro.yy",},},
-    {"id":{"name":"spr_enemigo","path":"sprites/spr_enemigo/spr_enemigo.yy",},},
-    {"id":{"name":"spr_jugador_rostro","path":"sprites/spr_jugador_rostro/spr_jugador_rostro.yy",},},
-    {"id":{"name":"spr_jugador","path":"sprites/spr_jugador/spr_jugador.yy",},},
-    {"id":{"name":"spr_personajes","path":"sprites/spr_personajes/spr_personajes.yy",},},
+  "name": "RogueLites",
+  "resources": [
+    { "id": { "name": "fnt_1", "path": "fonts/fnt_1/fnt_1.yy" } },
+    {
+      "id": {
+        "name": "obj_actor_enemigo",
+        "path": "objects/obj_actor_enemigo/obj_actor_enemigo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "obj_actor_jugador",
+        "path": "objects/obj_actor_jugador/obj_actor_jugador.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "obj_control_combate",
+        "path": "objects/obj_control_combate/obj_control_combate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "obj_control_juego",
+        "path": "objects/obj_control_juego/obj_control_juego.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "obj_control_torre",
+        "path": "objects/obj_control_torre/obj_control_torre.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "obj_control_ui_combate",
+        "path": "objects/obj_control_ui_combate/obj_control_ui_combate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "obj_enemy_select",
+        "path": "objects/obj_enemy_select/obj_enemy_select.yy"
+      }
+    },
+    { "id": { "name": "obj_menu", "path": "objects/obj_menu/obj_menu.yy" } },
+    {
+      "id": { "name": "obj_select", "path": "objects/obj_select/obj_select.yy" }
+    },
+    {
+      "id": {
+        "name": "obj_ui_forja",
+        "path": "objects/obj_ui_forja/obj_ui_forja.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "obj_ui_tienda",
+        "path": "objects/obj_ui_tienda/obj_ui_tienda.yy"
+      }
+    },
+    { "id": { "name": "rm_boot", "path": "rooms/rm_boot/rm_boot.yy" } },
+    {
+      "id": { "name": "rm_combate", "path": "rooms/rm_combate/rm_combate.yy" }
+    },
+    {
+      "id": {
+        "name": "rm_enemy_select",
+        "path": "rooms/rm_enemy_select/rm_enemy_select.yy"
+      }
+    },
+    { "id": { "name": "rm_forja", "path": "rooms/rm_forja/rm_forja.yy" } },
+    { "id": { "name": "rm_menu", "path": "rooms/rm_menu/rm_menu.yy" } },
+    { "id": { "name": "rm_select", "path": "rooms/rm_select/rm_select.yy" } },
+    { "id": { "name": "rm_tienda", "path": "rooms/rm_tienda/rm_tienda.yy" } },
+    { "id": { "name": "rm_torre", "path": "rooms/rm_torre/rm_torre.yy" } },
+    {
+      "id": {
+        "name": "scr_activar_pasiva_afinidad",
+        "path": "scripts/scr_activar_pasiva_afinidad/scr_activar_pasiva_afinidad.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_actualizar_estados",
+        "path": "scripts/scr_actualizar_estados/scr_actualizar_estados.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_actualizar_pasivas",
+        "path": "scripts/scr_actualizar_pasivas/scr_actualizar_pasivas.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_actualizar_personaje",
+        "path": "scripts/scr_actualizar_personaje/scr_actualizar_personaje.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_aplicar_estado",
+        "path": "scripts/scr_aplicar_estado/scr_aplicar_estado.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_calcular_dano",
+        "path": "scripts/scr_calcular_dano/scr_calcular_dano.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_config_juego",
+        "path": "scripts/scr_config_juego/scr_config_juego.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_cooldown_habilidad",
+        "path": "scripts/scr_cooldown_habilidad/scr_cooldown_habilidad.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_crear_enemigo_combate",
+        "path": "scripts/scr_crear_enemigo_combate/scr_crear_enemigo_combate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_crear_perfil_personaje",
+        "path": "scripts/scr_crear_perfil_personaje/scr_crear_perfil_personaje.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_crear_personaje_combate",
+        "path": "scripts/scr_crear_personaje_combate/scr_crear_personaje_combate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_datos_afinidades",
+        "path": "scripts/scr_datos_afinidades/scr_datos_afinidades.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_datos_armas",
+        "path": "scripts/scr_datos_armas/scr_datos_armas.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_datos_clases",
+        "path": "scripts/scr_datos_clases/scr_datos_clases.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_datos_enemigos",
+        "path": "scripts/scr_datos_enemigos/scr_datos_enemigos.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_datos_estados",
+        "path": "scripts/scr_datos_estados/scr_datos_estados.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_datos_materiales",
+        "path": "scripts/scr_datos_materiales/scr_datos_materiales.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_datos_objetos",
+        "path": "scripts/scr_datos_objetos/scr_datos_objetos.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_datos_personalidades",
+        "path": "scripts/scr_datos_personalidades/scr_datos_personalidades.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_datos_recetas_forja",
+        "path": "scripts/scr_datos_recetas_forja/scr_datos_recetas_forja.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_datos_tienda",
+        "path": "scripts/scr_datos_tienda/scr_datos_tienda.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_datos_torre",
+        "path": "scripts/scr_datos_torre/scr_datos_torre.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_ds_map_keys_array",
+        "path": "scripts/scr_ds_map_keys_array/scr_ds_map_keys_array.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_ejecutar_habilidad",
+        "path": "scripts/scr_ejecutar_habilidad/scr_ejecutar_habilidad.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_ejecutar_super",
+        "path": "scripts/scr_ejecutar_super/scr_ejecutar_super.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_fabricar_arma",
+        "path": "scripts/scr_fabricar_arma/scr_fabricar_arma.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_feedback_combate",
+        "path": "scripts/scr_feedback_combate/scr_feedback_combate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_formula_beneficio",
+        "path": "scripts/scr_formula_beneficio/scr_formula_beneficio.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_formula_dano",
+        "path": "scripts/scr_formula_dano/scr_formula_dano.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_get_perfil_activo",
+        "path": "scripts/scr_get_perfil_activo/scr_get_perfil_activo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_get_stat",
+        "path": "scripts/scr_get_stat/scr_get_stat.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_ia_enemigo",
+        "path": "scripts/scr_ia_enemigo/scr_ia_enemigo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_inventario_agregar_material",
+        "path": "scripts/scr_inventario_agregar_material/scr_inventario_agregar_material.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_inventario_get_material",
+        "path": "scripts/scr_inventario_get_material/scr_inventario_get_material.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_inventario_marcar_arma_obtenida",
+        "path": "scripts/scr_inventario_marcar_arma_obtenida/scr_inventario_marcar_arma_obtenida.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_inventario_objetos",
+        "path": "scripts/scr_inventario_objetos/scr_inventario_objetos.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_inventario_puede_fabricar_arma",
+        "path": "scripts/scr_inventario_puede_fabricar_arma/scr_inventario_puede_fabricar_arma.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_inventario_tiene_arma",
+        "path": "scripts/scr_inventario_tiene_arma/scr_inventario_tiene_arma.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_lista_armas_disponibles",
+        "path": "scripts/scr_lista_armas_disponibles/scr_lista_armas_disponibles.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_mecanicas_combate",
+        "path": "scripts/scr_mecanicas_combate/scr_mecanicas_combate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_multiplicador_afinidad",
+        "path": "scripts/scr_multiplicador_afinidad/scr_multiplicador_afinidad.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_nombre_habilidad",
+        "path": "scripts/scr_nombre_habilidad/scr_nombre_habilidad.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_notificacion_combate",
+        "path": "scripts/scr_notificacion_combate/scr_notificacion_combate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_sprite_enemigo",
+        "path": "scripts/scr_sprite_enemigo/scr_sprite_enemigo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_sprite_icono",
+        "path": "scripts/scr_sprite_icono/scr_sprite_icono.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_sprite_personaje",
+        "path": "scripts/scr_sprite_personaje/scr_sprite_personaje.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_usar_habilidad_indice",
+        "path": "scripts/scr_usar_habilidad_indice/scr_usar_habilidad_indice.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_usar_objeto_combate",
+        "path": "scripts/scr_usar_objeto_combate/scr_usar_objeto_combate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_barra_cooldown",
+        "path": "sprites/spr_barra_cooldown/spr_barra_cooldown.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_barra_esencia_bg",
+        "path": "sprites/spr_barra_esencia_bg/spr_barra_esencia_bg.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_barra_esencia",
+        "path": "sprites/spr_barra_esencia/spr_barra_esencia.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_barra_vida_bg",
+        "path": "sprites/spr_barra_vida_bg/spr_barra_vida_bg.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_barra_vida",
+        "path": "sprites/spr_barra_vida/spr_barra_vida.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_bg_combate",
+        "path": "sprites/spr_bg_combate/spr_bg_combate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_bg_enemy_select",
+        "path": "sprites/spr_bg_enemy_select/spr_bg_enemy_select.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_bg_forja",
+        "path": "sprites/spr_bg_forja/spr_bg_forja.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_bg_menu",
+        "path": "sprites/spr_bg_menu/spr_bg_menu.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_bg_select",
+        "path": "sprites/spr_bg_select/spr_bg_select.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_bg_tienda",
+        "path": "sprites/spr_bg_tienda/spr_bg_tienda.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_bg_torre",
+        "path": "sprites/spr_bg_torre/spr_bg_torre.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_boton_menu",
+        "path": "sprites/spr_boton_menu/spr_boton_menu.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_cursor_select",
+        "path": "sprites/spr_cursor_select/spr_cursor_select.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_elite_bestia_tronadora",
+        "path": "sprites/spr_elite_bestia_tronadora/spr_elite_bestia_tronadora.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_elite_errante_runico",
+        "path": "sprites/spr_elite_errante_runico/spr_elite_errante_runico.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_elite_guardian_terracota",
+        "path": "sprites/spr_elite_guardian_terracota/spr_elite_guardian_terracota.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_elite_halito_verde",
+        "path": "sprites/spr_elite_halito_verde/spr_elite_halito_verde.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_elite_naufrago",
+        "path": "sprites/spr_elite_naufrago/spr_elite_naufrago.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_elite_paladin_marchito",
+        "path": "sprites/spr_elite_paladin_marchito/spr_elite_paladin_marchito.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_elite_soldado_igneo",
+        "path": "sprites/spr_elite_soldado_igneo/spr_elite_soldado_igneo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_elite_vigia_boreal",
+        "path": "sprites/spr_elite_vigia_boreal/spr_elite_vigia_boreal.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_enemigo_bestia_tronadora",
+        "path": "sprites/spr_enemigo_bestia_tronadora/spr_enemigo_bestia_tronadora.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_enemigo_errante_runico",
+        "path": "sprites/spr_enemigo_errante_runico/spr_enemigo_errante_runico.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_enemigo_guardian_terracota",
+        "path": "sprites/spr_enemigo_guardian_terracota/spr_enemigo_guardian_terracota.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_enemigo_halito_verde",
+        "path": "sprites/spr_enemigo_halito_verde/spr_enemigo_halito_verde.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_enemigo_naufrago",
+        "path": "sprites/spr_enemigo_naufrago/spr_enemigo_naufrago.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_enemigo_paladin_marchito",
+        "path": "sprites/spr_enemigo_paladin_marchito/spr_enemigo_paladin_marchito.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_enemigo_rostro",
+        "path": "sprites/spr_enemigo_rostro/spr_enemigo_rostro.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_enemigo_soldado_igneo",
+        "path": "sprites/spr_enemigo_soldado_igneo/spr_enemigo_soldado_igneo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_enemigo_vigia_boreal",
+        "path": "sprites/spr_enemigo_vigia_boreal/spr_enemigo_vigia_boreal.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_enemigo",
+        "path": "sprites/spr_enemigo/spr_enemigo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_fx_critico",
+        "path": "sprites/spr_fx_critico/spr_fx_critico.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_fx_curacion",
+        "path": "sprites/spr_fx_curacion/spr_fx_curacion.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_fx_esencia",
+        "path": "sprites/spr_fx_esencia/spr_fx_esencia.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_fx_esquiva",
+        "path": "sprites/spr_fx_esquiva/spr_fx_esquiva.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_fx_impacto",
+        "path": "sprites/spr_fx_impacto/spr_fx_impacto.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_fx_super",
+        "path": "sprites/spr_fx_super/spr_fx_super.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_aceleracion",
+        "path": "sprites/spr_ico_aceleracion/spr_ico_aceleracion.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_afinidad_agua",
+        "path": "sprites/spr_ico_afinidad_agua/spr_ico_afinidad_agua.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_afinidad_arcano",
+        "path": "sprites/spr_ico_afinidad_arcano/spr_ico_afinidad_arcano.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_afinidad_fuego",
+        "path": "sprites/spr_ico_afinidad_fuego/spr_ico_afinidad_fuego.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_afinidad_luz",
+        "path": "sprites/spr_ico_afinidad_luz/spr_ico_afinidad_luz.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_afinidad_planta",
+        "path": "sprites/spr_ico_afinidad_planta/spr_ico_afinidad_planta.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_afinidad_rayo",
+        "path": "sprites/spr_ico_afinidad_rayo/spr_ico_afinidad_rayo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_afinidad_sombra",
+        "path": "sprites/spr_ico_afinidad_sombra/spr_ico_afinidad_sombra.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_afinidad_tierra",
+        "path": "sprites/spr_ico_afinidad_tierra/spr_ico_afinidad_tierra.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_elixir_esencia",
+        "path": "sprites/spr_ico_elixir_esencia/spr_ico_elixir_esencia.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_hab_arma_1",
+        "path": "sprites/spr_ico_hab_arma_1/spr_ico_hab_arma_1.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_hab_arma_2",
+        "path": "sprites/spr_ico_hab_arma_2/spr_ico_hab_arma_2.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_hab_arma_3",
+        "path": "sprites/spr_ico_hab_arma_3/spr_ico_hab_arma_3.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_hab_clase",
+        "path": "sprites/spr_ico_hab_clase/spr_ico_hab_clase.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_muro_tierra",
+        "path": "sprites/spr_ico_muro_tierra/spr_ico_muro_tierra.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_pocion_basica",
+        "path": "sprites/spr_ico_pocion_basica/spr_ico_pocion_basica.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_pocion_media",
+        "path": "sprites/spr_ico_pocion_media/spr_ico_pocion_media.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_quemadura",
+        "path": "sprites/spr_ico_quemadura/spr_ico_quemadura.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_ralentizacion",
+        "path": "sprites/spr_ico_ralentizacion/spr_ico_ralentizacion.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_regeneracion",
+        "path": "sprites/spr_ico_regeneracion/spr_ico_regeneracion.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_runa_celeridad",
+        "path": "sprites/spr_ico_runa_celeridad/spr_ico_runa_celeridad.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_runa_cristal",
+        "path": "sprites/spr_ico_runa_cristal/spr_ico_runa_cristal.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_runa_fortaleza",
+        "path": "sprites/spr_ico_runa_fortaleza/spr_ico_runa_fortaleza.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_runa_furia",
+        "path": "sprites/spr_ico_runa_furia/spr_ico_runa_furia.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_runa_ultimo_aliento",
+        "path": "sprites/spr_ico_runa_ultimo_aliento/spr_ico_runa_ultimo_aliento.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_runa_vampirica",
+        "path": "sprites/spr_ico_runa_vampirica/spr_ico_runa_vampirica.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_super",
+        "path": "sprites/spr_ico_super/spr_ico_super.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_supresion",
+        "path": "sprites/spr_ico_supresion/spr_ico_supresion.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_tonico_ataque",
+        "path": "sprites/spr_ico_tonico_ataque/spr_ico_tonico_ataque.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_tonico_defensa",
+        "path": "sprites/spr_ico_tonico_defensa/spr_ico_tonico_defensa.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_veneno",
+        "path": "sprites/spr_ico_veneno/spr_ico_veneno.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_ico_vulnerabilidad",
+        "path": "sprites/spr_ico_vulnerabilidad/spr_ico_vulnerabilidad.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jefe_coloso_fango",
+        "path": "sprites/spr_jefe_coloso_fango/spr_jefe_coloso_fango.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jefe_devorador",
+        "path": "sprites/spr_jefe_devorador/spr_jefe_devorador.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jefe_oraculo_abismo",
+        "path": "sprites/spr_jefe_oraculo_abismo/spr_jefe_oraculo_abismo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jefe_primer_conductor",
+        "path": "sprites/spr_jefe_primer_conductor/spr_jefe_primer_conductor.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jefe_sentinela_cielo",
+        "path": "sprites/spr_jefe_sentinela_cielo/spr_jefe_sentinela_cielo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jefe_titan_forjas",
+        "path": "sprites/spr_jefe_titan_forjas/spr_jefe_titan_forjas.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jugador_brenn",
+        "path": "sprites/spr_jugador_brenn/spr_jugador_brenn.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jugador_kael",
+        "path": "sprites/spr_jugador_kael/spr_jugador_kael.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jugador_lys",
+        "path": "sprites/spr_jugador_lys/spr_jugador_lys.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jugador_maelis",
+        "path": "sprites/spr_jugador_maelis/spr_jugador_maelis.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jugador_nerya",
+        "path": "sprites/spr_jugador_nerya/spr_jugador_nerya.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jugador_rostro",
+        "path": "sprites/spr_jugador_rostro/spr_jugador_rostro.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jugador_saren",
+        "path": "sprites/spr_jugador_saren/spr_jugador_saren.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jugador_thalys",
+        "path": "sprites/spr_jugador_thalys/spr_jugador_thalys.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jugador_torvan",
+        "path": "sprites/spr_jugador_torvan/spr_jugador_torvan.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_jugador",
+        "path": "sprites/spr_jugador/spr_jugador.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_logo_arcadium",
+        "path": "sprites/spr_logo_arcadium/spr_logo_arcadium.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_marco_retrato",
+        "path": "sprites/spr_marco_retrato/spr_marco_retrato.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_panel_info",
+        "path": "sprites/spr_panel_info/spr_panel_info.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_bestia_tronadora",
+        "path": "sprites/spr_rostro_bestia_tronadora/spr_rostro_bestia_tronadora.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_brenn",
+        "path": "sprites/spr_rostro_brenn/spr_rostro_brenn.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_coloso_fango",
+        "path": "sprites/spr_rostro_coloso_fango/spr_rostro_coloso_fango.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_devorador",
+        "path": "sprites/spr_rostro_devorador/spr_rostro_devorador.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_elite_bestia_tronadora",
+        "path": "sprites/spr_rostro_elite_bestia_tronadora/spr_rostro_elite_bestia_tronadora.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_elite_errante_runico",
+        "path": "sprites/spr_rostro_elite_errante_runico/spr_rostro_elite_errante_runico.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_elite_guardian_terracota",
+        "path": "sprites/spr_rostro_elite_guardian_terracota/spr_rostro_elite_guardian_terracota.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_elite_halito_verde",
+        "path": "sprites/spr_rostro_elite_halito_verde/spr_rostro_elite_halito_verde.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_elite_naufrago",
+        "path": "sprites/spr_rostro_elite_naufrago/spr_rostro_elite_naufrago.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_elite_paladin_marchito",
+        "path": "sprites/spr_rostro_elite_paladin_marchito/spr_rostro_elite_paladin_marchito.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_elite_soldado_igneo",
+        "path": "sprites/spr_rostro_elite_soldado_igneo/spr_rostro_elite_soldado_igneo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_elite_vigia_boreal",
+        "path": "sprites/spr_rostro_elite_vigia_boreal/spr_rostro_elite_vigia_boreal.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_errante_runico",
+        "path": "sprites/spr_rostro_errante_runico/spr_rostro_errante_runico.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_guardian_terracota",
+        "path": "sprites/spr_rostro_guardian_terracota/spr_rostro_guardian_terracota.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_halito_verde",
+        "path": "sprites/spr_rostro_halito_verde/spr_rostro_halito_verde.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_kael",
+        "path": "sprites/spr_rostro_kael/spr_rostro_kael.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_lys",
+        "path": "sprites/spr_rostro_lys/spr_rostro_lys.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_maelis",
+        "path": "sprites/spr_rostro_maelis/spr_rostro_maelis.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_naufrago",
+        "path": "sprites/spr_rostro_naufrago/spr_rostro_naufrago.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_nerya",
+        "path": "sprites/spr_rostro_nerya/spr_rostro_nerya.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_oraculo_abismo",
+        "path": "sprites/spr_rostro_oraculo_abismo/spr_rostro_oraculo_abismo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_paladin_marchito",
+        "path": "sprites/spr_rostro_paladin_marchito/spr_rostro_paladin_marchito.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_primer_conductor",
+        "path": "sprites/spr_rostro_primer_conductor/spr_rostro_primer_conductor.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_saren",
+        "path": "sprites/spr_rostro_saren/spr_rostro_saren.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_sentinela_cielo",
+        "path": "sprites/spr_rostro_sentinela_cielo/spr_rostro_sentinela_cielo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_soldado_igneo",
+        "path": "sprites/spr_rostro_soldado_igneo/spr_rostro_soldado_igneo.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_thalys",
+        "path": "sprites/spr_rostro_thalys/spr_rostro_thalys.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_titan_forjas",
+        "path": "sprites/spr_rostro_titan_forjas/spr_rostro_titan_forjas.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_torvan",
+        "path": "sprites/spr_rostro_torvan/spr_rostro_torvan.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_rostro_vigia_boreal",
+        "path": "sprites/spr_rostro_vigia_boreal/spr_rostro_vigia_boreal.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_slot_objeto",
+        "path": "sprites/spr_slot_objeto/spr_slot_objeto.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "spr_slot_runa",
+        "path": "sprites/spr_slot_runa/spr_slot_runa.yy"
+      }
+    }
   ],
-  "resourceType":"GMProject",
-  "resourceVersion":"2.0",
-  "RoomOrderNodes":[
-    {"roomId":{"name":"rm_boot","path":"rooms/rm_boot/rm_boot.yy",},},
-    {"roomId":{"name":"rm_combate","path":"rooms/rm_combate/rm_combate.yy",},},
-    {"roomId":{"name":"rm_menu","path":"rooms/rm_menu/rm_menu.yy",},},
-    {"roomId":{"name":"rm_forja","path":"rooms/rm_forja/rm_forja.yy",},},
-    {"roomId":{"name":"rm_select","path":"rooms/rm_select/rm_select.yy",},},
-    {"roomId":{"name":"rm_enemy_select","path":"rooms/rm_enemy_select/rm_enemy_select.yy",},},
-    {"roomId":{"name":"rm_tienda","path":"rooms/rm_tienda/rm_tienda.yy",},},
-    {"roomId":{"name":"rm_torre","path":"rooms/rm_torre/rm_torre.yy",},},
+  "resourceType": "GMProject",
+  "resourceVersion": "2.0",
+  "RoomOrderNodes": [
+    { "roomId": { "name": "rm_boot", "path": "rooms/rm_boot/rm_boot.yy" } },
+    {
+      "roomId": {
+        "name": "rm_combate",
+        "path": "rooms/rm_combate/rm_combate.yy"
+      }
+    },
+    { "roomId": { "name": "rm_menu", "path": "rooms/rm_menu/rm_menu.yy" } },
+    { "roomId": { "name": "rm_forja", "path": "rooms/rm_forja/rm_forja.yy" } },
+    {
+      "roomId": { "name": "rm_select", "path": "rooms/rm_select/rm_select.yy" }
+    },
+    {
+      "roomId": {
+        "name": "rm_enemy_select",
+        "path": "rooms/rm_enemy_select/rm_enemy_select.yy"
+      }
+    },
+    {
+      "roomId": { "name": "rm_tienda", "path": "rooms/rm_tienda/rm_tienda.yy" }
+    },
+    { "roomId": { "name": "rm_torre", "path": "rooms/rm_torre/rm_torre.yy" } }
   ],
-  "templateType":"game",
-  "TextureGroups":[
-    {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
-  ],
+  "templateType": "game",
+  "TextureGroups": [
+    {
+      "$GMTextureGroup": "",
+      "%Name": "Default",
+      "autocrop": true,
+      "border": 2,
+      "compressFormat": "bz2",
+      "customOptions": "",
+      "directory": "",
+      "groupParent": null,
+      "isScaled": true,
+      "loadType": "default",
+      "mipsToGenerate": 0,
+      "name": "Default",
+      "resourceType": "GMTextureGroup",
+      "resourceVersion": "2.0",
+      "targets": -1
+    }
+  ]
 }

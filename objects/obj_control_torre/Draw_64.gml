@@ -3,6 +3,9 @@
 // Solo dibujar en rm_torre
 if (room != rm_torre) exit;
 
+// Fondo
+draw_sprite_stretched(spr_bg_torre, 0, 0, 0, display_get_gui_width(), display_get_gui_height());
+
 draw_set_font(fnt_1);
 var w_gui = display_get_gui_width();
 var h_gui = display_get_gui_height();

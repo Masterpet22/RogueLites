@@ -1,5 +1,8 @@
 /// DRAW GUI — obj_enemy_select
 
+// Fondo
+draw_sprite_stretched(spr_bg_enemy_select, 0, 0, 0, display_get_gui_width(), display_get_gui_height());
+
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 
@@ -21,7 +24,10 @@ if (estado == EnemySelState.CATEGORIA) {
 
     for (var i = 0; i < array_length(categorias); i++) {
 
-        if (i == indice_categoria) draw_set_color(c_yellow);
+        if (i == indice_categoria) {
+            draw_sprite_ext(spr_cursor_select, 0, x + 2, y + 4, 0.5, 0.5, 0, c_yellow, 1);
+            draw_set_color(c_yellow);
+        }
         else                       draw_set_color(c_gray);
 
         draw_text(x + 20, y, categorias[i]);

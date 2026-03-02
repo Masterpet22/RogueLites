@@ -91,6 +91,10 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
 
         estado:         "normal",
 
+        // ── Sprites individuales ──
+        sprite_cuerpo:  scr_sprite_enemigo(_nombre_enemigo, _rango, false),
+        sprite_rostro:  scr_sprite_enemigo(_nombre_enemigo, _rango, true),
+
         // ── Máquina de estados IA ──
         ia_estado:        "ia_esperando",       // ia_esperando | ia_preparando | ia_atacando
         ia_timer:         scr_ia_calcular_espera(_vel),  // frames hasta próxima acción

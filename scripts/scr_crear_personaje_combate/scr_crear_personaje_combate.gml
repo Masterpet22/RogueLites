@@ -96,6 +96,10 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
         pasiva_cooldown: 0,
 
         estado:         "normal",
+
+        // ── Sprites individuales ──
+        sprite_cuerpo:  scr_sprite_personaje(_nombre, false),
+        sprite_rostro:  scr_sprite_personaje(_nombre, true),
     };
 
     return personaje;

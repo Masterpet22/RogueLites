@@ -1,4 +1,4 @@
-{
+﻿{
   "$GMSprite":"v2",
   "%Name":"spr_enemigo",
   "bboxMode":0,
@@ -24,9 +24,9 @@
   "name":"spr_enemigo",
   "nineSlice":null,
   "origin":4,
-  "parent":{
-    "name":"sprites",
-    "path":"folders/sprites.yy",
+    "parent": {
+    "name": "enemigos",
+    "path": "folders/sprites/enemigos.yy"
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

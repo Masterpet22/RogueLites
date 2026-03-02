@@ -1,4 +1,8 @@
 /// DRAW GUI — obj_select
+
+// Fondo
+draw_sprite_stretched(spr_bg_select, 0, 0, 0, display_get_gui_width(), display_get_gui_height());
+
 draw_set_font(fnt_1)
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
@@ -13,8 +17,10 @@ y = 120;
 for (var i = 0; i < array_length(personajes); i++) {
 
     if (i == indice_personaje) {
+        // Cursor de selección (sprite)
+        draw_sprite_ext(spr_cursor_select, 0, 42, y + 4, 0.6, 0.6, 0, c_yellow, 1);
         draw_set_color(c_yellow);
-        draw_text(60, y, "> " + personajes[i]);
+        draw_text(60, y, personajes[i]);
     } else {
         draw_set_color(c_gray);
         draw_text(60, y, personajes[i]);
@@ -26,9 +32,22 @@ for (var i = 0; i < array_length(personajes); i++) {
 // Info del personaje actual
 var perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
 
+// Retrato del personaje seleccionado
+var _sel_rostro = scr_sprite_personaje(personajes[indice_personaje], true);
+draw_sprite_ext(_sel_rostro, 0, display_get_gui_width() - 200, 120, 1.2, 1.2, 0, c_white, 1);
+draw_sprite_stretched(spr_marco_retrato, 0, display_get_gui_width() - 204, 116, 128 * 1.2 + 8, 128 * 1.2 + 8);
+
 draw_set_color(c_white);
 draw_text(60, y + 20, "Clase: " + perfil.clase);
-draw_text(60, y + 45, "Afinidad: " + perfil.afinidad);
+
+// Afinidad con icono
+var _sel_afin_ico = scr_sprite_icono_afinidad(perfil.afinidad);
+if (_sel_afin_ico != -1) {
+    draw_sprite_stretched(_sel_afin_ico, 0, 60, y + 47, 16, 16);
+    draw_text(80, y + 45, "Afinidad: " + perfil.afinidad);
+} else {
+    draw_text(60, y + 45, "Afinidad: " + perfil.afinidad);
+}
 draw_text(60, y + 70, "Personalidad: " + perfil.personalidad);
 
 if (estado == SelState.PERSONAJE) {

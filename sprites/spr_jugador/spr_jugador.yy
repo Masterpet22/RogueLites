@@ -1,4 +1,4 @@
-{
+﻿{
   "$GMSprite":"v2",
   "%Name":"spr_jugador",
   "bboxMode":0,
@@ -24,9 +24,9 @@
   "name":"spr_jugador",
   "nineSlice":null,
   "origin":4,
-  "parent":{
-    "name":"sprites",
-    "path":"folders/sprites.yy",
+    "parent": {
+    "name": "personajes",
+    "path": "folders/sprites/personajes.yy"
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

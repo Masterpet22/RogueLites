@@ -7,8 +7,9 @@ var _gw = display_get_gui_width();
 var _gh = display_get_gui_height();
 
 // Fondo
+draw_sprite_stretched(spr_bg_tienda, 0, 0, 0, _gw, _gh);
 draw_set_color(c_black);
-draw_set_alpha(0.75);
+draw_set_alpha(0.5);
 draw_rectangle(0, 0, _gw, _gh, false);
 draw_set_alpha(1);
 
@@ -106,8 +107,22 @@ else if (estado == TiendaState.LISTA) {
     var _det_x = _gw * 0.55;
     var _det_y = 100;
 
+    // Fondo del panel de detalle (sprite)
+    draw_sprite_stretched(spr_panel_info, 0, _det_x - 15, _det_y - 15, _gw * 0.42, _gh - 130);
+
     if (_total > 0) {
         var _sel = items_lista[indice_item];
+
+        // Icono del item según tipo
+        if (_sel.tipo == "objeto") {
+            var _obj_ico_t = scr_sprite_icono_objeto(_sel.datos_extra);
+            if (_obj_ico_t != -1) draw_sprite_ext(_obj_ico_t, 0, _det_x, _det_y, 1, 1, 0, c_white, 1);
+            _det_x += 38;
+        } else if (_sel.tipo == "runico") {
+            var _run_ico_t = scr_sprite_icono_runa(_sel.datos_extra);
+            if (_run_ico_t != -1) draw_sprite_ext(_run_ico_t, 0, _det_x, _det_y, 1, 1, 0, c_white, 1);
+            _det_x += 38;
+        }
 
         draw_set_color(c_white);
         draw_text(_det_x, _det_y, _sel.nombre);

@@ -15,6 +15,7 @@
 #macro FB_SHAKE_FUERZA    6       // píxeles máximos de desplazamiento
 #macro FB_FLASH_FRAMES    10      // duración del flash de color
 #macro FB_CRIT_ESCALA     1.5     // escala del texto en crítico
+#macro FB_FX_DURACION     20      // frames que dura un efecto FX
 
 
 // ══════════════════════════════════════════════════════════════
@@ -40,6 +41,9 @@ function scr_feedback_init() {
     // Flash por personaje
     _c.fb_flash_timer = [0, 0];
     _c.fb_flash_color = [c_white, c_white];
+
+    // Efectos visuales FX
+    _c.fb_fx_list = [];
 }
 
 
@@ -217,10 +221,12 @@ function scr_feedback_actualizar() {
         scr_feedback_agregar(true, _pj_diff, "dano");
         scr_feedback_sacudir(true);
         scr_feedback_flash(true, c_red);
+        scr_feedback_fx(true, "impacto");
     } else if (_pj_diff < 0) {
         // Jugador se curó
         scr_feedback_agregar(true, abs(_pj_diff), "cura");
         scr_feedback_flash(true, c_lime);
+        scr_feedback_fx(true, "curacion");
     }
     _c.fb_pj_vida_prev = _pj.vida_actual;
 
@@ -231,10 +237,12 @@ function scr_feedback_actualizar() {
         scr_feedback_agregar(false, _en_diff, "dano");
         scr_feedback_sacudir(false);
         scr_feedback_flash(false, c_red);
+        scr_feedback_fx(false, "impacto");
     } else if (_en_diff < 0) {
         // Enemigo se curó
         scr_feedback_agregar(false, abs(_en_diff), "cura");
         scr_feedback_flash(false, c_lime);
+        scr_feedback_fx(false, "curacion");
     }
     _c.fb_en_vida_prev = _en.vida_actual;
 }
@@ -324,7 +332,10 @@ function scr_feedback_dibujar_sprites() {
             }
         }
 
-        draw_sprite_ext(spr_jugador, 0, _sx, _sy, _escala, _escala, 0, _blend, _alpha);
+        // Usar sprite individual del personaje si existe
+        var _spr_j = (variable_struct_exists(_c, "personaje_jugador") && variable_struct_exists(_c.personaje_jugador, "sprite_cuerpo"))
+                     ? _c.personaje_jugador.sprite_cuerpo : spr_jugador;
+        draw_sprite_ext(_spr_j, 0, _sx, _sy, _escala, _escala, 0, _blend, _alpha);
     }
 
     // ── ENEMIGO BODY SPRITE ──
@@ -343,7 +354,10 @@ function scr_feedback_dibujar_sprites() {
             }
         }
 
-        draw_sprite_ext(spr_enemigo, 0, _sx, _sy, _escala, _escala, 0, _blend, _alpha);
+        // Usar sprite individual del enemigo si existe
+        var _spr_e = (variable_struct_exists(_c, "personaje_enemigo") && variable_struct_exists(_c.personaje_enemigo, "sprite_cuerpo"))
+                     ? _c.personaje_enemigo.sprite_cuerpo : spr_enemigo;
+        draw_sprite_ext(_spr_e, 0, _sx, _sy, _escala, _escala, 0, _blend, _alpha);
     }
 }
 
@@ -357,7 +371,15 @@ function scr_feedback_dibujar_retrato(_es_jugador, _rx, _ry, _tam) {
     if (!instance_exists(obj_control_combate)) return;
     var _c = instance_find(obj_control_combate, 0);
     var _idx = _es_jugador ? 0 : 1;
-    var _spr = _es_jugador ? spr_jugador_rostro : spr_enemigo_rostro;
+    // Usar sprite de retrato individual si existe
+    var _spr = spr_jugador_rostro; // fallback
+    if (_es_jugador) {
+        _spr = (variable_struct_exists(_c, "personaje_jugador") && variable_struct_exists(_c.personaje_jugador, "sprite_rostro"))
+               ? _c.personaje_jugador.sprite_rostro : spr_jugador_rostro;
+    } else {
+        _spr = (variable_struct_exists(_c, "personaje_enemigo") && variable_struct_exists(_c.personaje_enemigo, "sprite_rostro"))
+               ? _c.personaje_enemigo.sprite_rostro : spr_enemigo_rostro;
+    }
 
     // Escala del sprite (128x128 → _tam x _tam)
     var _escala = _tam / 128;
@@ -374,10 +396,8 @@ function scr_feedback_dibujar_retrato(_es_jugador, _rx, _ry, _tam) {
         _blend = merge_color(c_white, _c.fb_flash_color[_idx], _flash_ratio * 0.6);
     }
 
-    // Marco del retrato (borde de color según jugador/enemigo)
-    var _marco_col = _es_jugador ? make_color_rgb(60, 120, 200) : make_color_rgb(200, 60, 60);
-    draw_set_color(_marco_col);
-    draw_rectangle(_rx - 2, _ry - 2, _rx + _tam + 2, _ry + _tam + 2, false);
+    // Marco del retrato (sprite spr_marco_retrato)
+    draw_sprite_stretched(spr_marco_retrato, 0, _rx - 4, _ry - 4, _tam + 8, _tam + 8);
 
     // Dibujar sprite del rostro
     draw_sprite_ext(_spr, 0,
@@ -385,7 +405,75 @@ function scr_feedback_dibujar_retrato(_es_jugador, _rx, _ry, _tam) {
         _escala, _escala,
         0, _blend, _alpha_spr);
 
-    // Borde fino exterior
+    // Borde tint según jugador/enemigo
+    var _marco_col = _es_jugador ? make_color_rgb(60, 120, 200) : make_color_rgb(200, 60, 60);
     draw_set_color(_marco_col);
-    draw_rectangle(_rx - 2, _ry - 2, _rx + _tam + 2, _ry + _tam + 2, true);
+    draw_rectangle(_rx - 4, _ry - 4, _rx + _tam + 4, _ry + _tam + 4, true);
+}
+
+
+// ══════════════════════════════════════════════════════════════
+//  scr_feedback_fx(es_jugador, tipo_fx)
+//  Genera un efecto visual (sprite animado) sobre un personaje.
+//  @param {bool}   _es_jugador
+//  @param {string} _tipo  "impacto"|"critico"|"curacion"|"esquiva"|"esencia"|"super"
+// ══════════════════════════════════════════════════════════════
+function scr_feedback_fx(_es_jugador, _tipo) {
+    if (!instance_exists(obj_control_combate)) return;
+    var _c = instance_find(obj_control_combate, 0);
+
+    var _gui_w = display_get_gui_width();
+    var _gui_h = display_get_gui_height();
+    var _fx_x = _es_jugador ? _gui_w * 0.22 : _gui_w * 0.78;
+    var _fx_y = _gui_h * 0.50;
+
+    var _spr = -1;
+    switch (_tipo) {
+        case "impacto":  _spr = spr_fx_impacto;  break;
+        case "critico":  _spr = spr_fx_critico;  break;
+        case "curacion": _spr = spr_fx_curacion;  break;
+        case "esquiva":  _spr = spr_fx_esquiva;  break;
+        case "esencia":  _spr = spr_fx_esencia;  break;
+        case "super":    _spr = spr_fx_super;    break;
+    }
+    if (_spr == -1) return;
+
+    var _fx = {
+        sprite:  _spr,
+        x:       _fx_x + random_range(-10, 10),
+        y:       _fx_y + random_range(-10, 10),
+        timer:   FB_FX_DURACION,
+        escala:  1.0,
+        alpha:   1.0,
+    };
+
+    array_push(_c.fb_fx_list, _fx);
+}
+
+
+// ══════════════════════════════════════════════════════════════
+//  scr_feedback_dibujar_fx()
+//  Dibuja los efectos FX activos. Llamar en Draw GUI.
+// ══════════════════════════════════════════════════════════════
+function scr_feedback_dibujar_fx() {
+    if (!instance_exists(obj_control_combate)) return;
+    var _c = instance_find(obj_control_combate, 0);
+
+    if (!variable_struct_exists(_c, "fb_fx_list")) return;
+
+    for (var i = array_length(_c.fb_fx_list) - 1; i >= 0; i--) {
+        var _fx = _c.fb_fx_list[i];
+        _fx.timer -= 1;
+
+        // Escala crece y luego decrece
+        var _progreso = 1 - (_fx.timer / FB_FX_DURACION);
+        _fx.escala = (_progreso < 0.3) ? lerp(0.5, 1.5, _progreso / 0.3) : lerp(1.5, 0.8, (_progreso - 0.3) / 0.7);
+        _fx.alpha = (_fx.timer < FB_FX_DURACION * 0.3) ? clamp(_fx.timer / (FB_FX_DURACION * 0.3), 0, 1) : 1.0;
+
+        draw_sprite_ext(_fx.sprite, 0, _fx.x, _fx.y, _fx.escala, _fx.escala, 0, c_white, _fx.alpha);
+
+        if (_fx.timer <= 0) {
+            array_delete(_c.fb_fx_list, i, 1);
+        }
+    }
 }

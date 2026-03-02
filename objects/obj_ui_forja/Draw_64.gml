@@ -7,8 +7,9 @@ var _gw = display_get_gui_width();
 var _gh = display_get_gui_height();
 
 // Fondo
+draw_sprite_stretched(spr_bg_forja, 0, 0, 0, _gw, _gh);
 draw_set_color(c_black);
-draw_set_alpha(0.7);
+draw_set_alpha(0.5);
 draw_rectangle(0, 0, _gw, _gh, false);
 draw_set_alpha(1);
 
@@ -32,7 +33,10 @@ if (estado == ForjaState.PERSONAJE) {
         var _perfil_i = control_juego.perfiles_personaje[? _pname];
         var _aff_txt = (_perfil_i != undefined) ? (" [" + _perfil_i.afinidad + "]") : "";
 
-        if (i == indice_personaje) draw_set_color(c_yellow);
+        if (i == indice_personaje) {
+            draw_sprite_ext(spr_cursor_select, 0, _x + 2, _y + 4, 0.5, 0.5, 0, c_yellow, 1);
+            draw_set_color(c_yellow);
+        }
         else                       draw_set_color(c_white);
 
         draw_text(_x + 20, _y, _pname + _aff_txt);
