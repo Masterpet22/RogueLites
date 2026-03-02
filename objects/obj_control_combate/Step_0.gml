@@ -120,6 +120,9 @@ personaje_enemigo.combate_timer += 1;
 // 3d. Actualizar notificaciones
 scr_notif_actualizar();
 
+// 3e. Actualizar feedback visual (números flotantes, shake, flash, tracking de vida)
+scr_feedback_actualizar();
+
 
 // 4. Comprobar fin de combate
 

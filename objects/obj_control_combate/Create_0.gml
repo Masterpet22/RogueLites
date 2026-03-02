@@ -140,3 +140,6 @@ if (instance_exists(control_juego)
 
     show_debug_message("Runa activa: " + runa_activa);
 }
+
+// 7. Sistema de feedback visual (números flotantes, shake, flash)
+scr_feedback_init();

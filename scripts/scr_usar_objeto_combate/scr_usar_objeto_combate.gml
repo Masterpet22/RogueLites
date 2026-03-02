@@ -35,16 +35,22 @@ function scr_usar_objeto_combate(_slot) {
             var _cantidad = round(_pj.esencia_llena * _datos.valor_efecto / 100);
             _pj.esencia = min(_pj.esencia + _cantidad, _pj.esencia_llena);
             scr_notif_agregar(_pj.nombre, "usa " + _nombre + " (+" + string(_cantidad) + " Esencia)", c_aqua);
+            scr_feedback_agregar(true, _cantidad, "esencia");
+            scr_feedback_flash(true, make_color_rgb(140, 100, 255));
             break;
 
         case "buff_ataque":
             _pj.ataque_base += _datos.valor_efecto;
             scr_notif_agregar(_pj.nombre, "usa " + _nombre + " (ATQ +" + string(_datos.valor_efecto) + ")", c_orange);
+            scr_feedback_agregar(true, _datos.valor_efecto, "buff");
+            scr_feedback_flash(true, c_aqua);
             break;
 
         case "buff_defensa":
             _pj.defensa_bonus_temp += _datos.valor_efecto;
             scr_notif_agregar(_pj.nombre, "usa " + _nombre + " (DEF +" + string(_datos.valor_efecto) + ")", c_orange);
+            scr_feedback_agregar(true, _datos.valor_efecto, "buff");
+            scr_feedback_flash(true, c_aqua);
             break;
 
         default:

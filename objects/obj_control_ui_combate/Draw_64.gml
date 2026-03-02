@@ -28,17 +28,8 @@ draw_set_alpha(1);
     var _pj_frame_y = 8;
     var _portrait_size = 84;
 
-    // Marco del retrato (placeholder 128x128 escalado a 84)
-    draw_set_color(make_color_rgb(60, 120, 200));
-    draw_rectangle(_pj_frame_x, _pj_frame_y, _pj_frame_x + _portrait_size, _pj_frame_y + _portrait_size, false);
-    draw_set_color(make_color_rgb(20, 30, 50));
-    draw_rectangle(_pj_frame_x + 2, _pj_frame_y + 2, _pj_frame_x + _portrait_size - 2, _pj_frame_y + _portrait_size - 2, false);
-
-    // Iniciales del personaje dentro del marco (placeholder hasta que haya sprites)
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    draw_set_color(c_white);
-    draw_text(_pj_frame_x + _portrait_size / 2, _pj_frame_y + _portrait_size / 2, string_copy(pj.nombre, 1, 2));
+    // Retrato del jugador (sprite spr_jugador_rostro con efectos de feedback)
+    scr_feedback_dibujar_retrato(true, _pj_frame_x, _pj_frame_y, _portrait_size);
 
     // ── Info texto a la derecha del retrato ──
     var _info_x = _pj_frame_x + _portrait_size + 12;
@@ -140,17 +131,8 @@ draw_set_alpha(1);
     var _en_frame_x = w_gui - 10 - _en_portrait_size;
     var _en_frame_y = 8;
 
-    // Marco del retrato
-    draw_set_color(make_color_rgb(200, 60, 60));
-    draw_rectangle(_en_frame_x, _en_frame_y, _en_frame_x + _en_portrait_size, _en_frame_y + _en_portrait_size, false);
-    draw_set_color(make_color_rgb(50, 20, 20));
-    draw_rectangle(_en_frame_x + 2, _en_frame_y + 2, _en_frame_x + _en_portrait_size - 2, _en_frame_y + _en_portrait_size - 2, false);
-
-    // Iniciales del enemigo
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    draw_set_color(c_white);
-    draw_text(_en_frame_x + _en_portrait_size / 2, _en_frame_y + _en_portrait_size / 2, string_copy(en.nombre, 1, 2));
+    // Retrato del enemigo (sprite spr_enemigo_rostro con efectos de feedback)
+    scr_feedback_dibujar_retrato(false, _en_frame_x, _en_frame_y, _en_portrait_size);
 
     // ── Info texto a la izquierda del retrato ──
     var _en_info_x = _en_frame_x - 12;
@@ -307,6 +289,13 @@ if (variable_struct_exists(en, "mecanicas") && is_array(en.mecanicas) && array_l
         draw_set_color(_ind.color);
         draw_text(_mec_x, _mec_y + _mi * 16, _ind.texto);
     }
+}
+
+// ╔═══════════════════════════════════════════════════════════════╗
+// ║  SPRITES DE CUERPO COMPLETO (centro de pantalla)
+// ╚═══════════════════════════════════════════════════════════════╝
+if (!control_combate.combate_terminado) {
+    scr_feedback_dibujar_sprites();
 }
 
 // ╔═══════════════════════════════════════════════════════════════╗
@@ -606,9 +595,12 @@ if (control_combate.combate_terminado) {
 // ===========================
 if (!control_combate.combate_terminado) {
     scr_notif_dibujar();
+    // Números flotantes de feedback (daño, curación, buffs)
+    scr_feedback_dibujar();
 } else {
-    // Limpiar notificaciones para que no se acumulen al volver
+    // Limpiar notificaciones y feedbacks para que no se acumulen al volver
     control_combate.notificaciones = [];
+    control_combate.feedbacks = [];
 }
 
 // ╔═══════════════════════════════════════════════════════════════╗
