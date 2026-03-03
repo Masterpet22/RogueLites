@@ -380,6 +380,11 @@ function scr_ejecutar_super(_atk, _def) {
     _atk.esencia = 0;
     show_debug_message(_atk.nombre + " usó SÚPER (" + _tier_nombre + "): " + _key);
 
+    // ═══ FX VISUAL DE SÚPER ═══
+    // Hitstop (0.2s) + screenshake + flash elemental de pantalla
+    var _afi_super = variable_struct_exists(_atk, "afinidad") ? _atk.afinidad : "Neutra";
+    scr_fx_activar_super(_afi_super);
+
     // Hook: Mecánica de Absorción de Esencia del defensor
     if (_atk.es_jugador && variable_struct_exists(_def, "mecanicas")) {
         var _dano_super = max(0, _vida_def_pre - _def.vida_actual);

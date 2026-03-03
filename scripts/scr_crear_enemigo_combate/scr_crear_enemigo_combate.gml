@@ -95,6 +95,12 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
         sprite_cuerpo:  scr_sprite_enemigo(_nombre_enemigo, _rango, false),
         sprite_rostro:  scr_sprite_enemigo(_nombre_enemigo, _rango, true),
 
+        // ── Datos de recolor élite (undefined si no es élite o no necesita recolor) ──
+        recolor_elite:  (_rango == "Elite") ? scr_recolor_elite_datos(_nombre_enemigo) : undefined,
+
+        // ── Datos de FX visual de jefe (undefined si no es jefe) ──
+        fx_jefe:        (_rango == "Jefe") ? scr_fx_jefe_datos(_nombre_enemigo) : undefined,
+
         // ── Máquina de estados IA ──
         ia_estado:        "ia_esperando",       // ia_esperando | ia_preparando | ia_atacando
         ia_timer:         scr_ia_calcular_espera(_vel),  // frames hasta próxima acción

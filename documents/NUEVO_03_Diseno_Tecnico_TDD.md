@@ -602,7 +602,41 @@ enemigo.p_index = (enemigo.p_index + 1) mod array_length(enemigo.patron);
 | Overlay de cooldown   | Sobre slots            | Contador visual cuando en CD |
 | Barra de ESENCIA      | Debajo de vida jugador | Se llena progresivamente     |
 
-### 9.2. Teclas de Habilidades
+### 9.2. Sistema Visual de Esencia (FX)
+
+La Esencia es la estrella visual del combate. Su sistema de FX (`scr_fx_esencia_visual`) comunica progresión de carga:
+
+| Tier     | Rango  | Efecto Visual                                                      |
+| -------- | ------ | ------------------------------------------------------------------ |
+| Inactivo | 0–49%  | Sin efecto especial                                                |
+| Pulso    | 50–74% | Barra pulsa sutilmente, leve glow elemental sobre personaje        |
+| Intenso  | 75–99% | Pulso más rápido, glow con color secundario→energía, cambio sonoro |
+| Máximo   | 100%   | Aura elemental completa (additive blending), barra brillando       |
+
+Al activar Súper:
+
+- **Hitstop:** 0.2s de congelamiento total (12 frames a 60fps)
+- **Screenshake:** Sacudida fuerte durante 0.33s
+- **Flash elemental:** Pantalla completa con color de energía de la afinidad
+
+### 9.3. Sistema de Paleta por Afinidad
+
+Cada afinidad tiene 3 colores fijos (`scr_paleta_afinidad`):
+
+| Propiedad  | Uso                                     |
+| ---------- | --------------------------------------- |
+| Dominante  | Flash de daño, tint base                |
+| Secundario | Glow medio (50-75% esencia)             |
+| Energía    | Glow máximo, flash de súper, partículas |
+
+Los colores se usan automáticamente en:
+
+- Flash de sprite al recibir daño (color del atacante)
+- Glow de esencia sobre el sprite del jugador (additive blending)
+- Flash de pantalla al activar súper
+- Hitstop automático en golpes fuertes (>15% vida max)
+
+### 9.4. Teclas de Habilidades
 
 | Tecla   | Slot                               |
 | ------- | ---------------------------------- |

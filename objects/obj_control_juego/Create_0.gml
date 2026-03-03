@@ -63,13 +63,31 @@ inventario_materiales = ds_map_create();   // <- IMPORTANTE
 // INVENTARIO GLOBAL DE OBJETOS / CONSUMIBLES
 inventario_objetos = ds_map_create();
 
-// ENEMIGOS DESBLOQUEADOS PARA COMBATIR
+// ENEMIGOS DESBLOQUEADOS PARA COMBATIR (TODOS — modo prueba)
 enemigos_desbloqueados = ds_map_create();
+// Comunes
 ds_map_add(enemigos_desbloqueados, "Soldado Igneo", true);
 ds_map_add(enemigos_desbloqueados, "Vigia Boreal", true);
 ds_map_add(enemigos_desbloqueados, "Halito Verde", true);
+ds_map_add(enemigos_desbloqueados, "Bestia Tronadora", true);
+ds_map_add(enemigos_desbloqueados, "Guardian Terracota", true);
+ds_map_add(enemigos_desbloqueados, "Naufrago de la Oscuridad", true);
+ds_map_add(enemigos_desbloqueados, "Paladin Marchito", true);
+ds_map_add(enemigos_desbloqueados, "Errante Runico", true);
+// Elites
 ds_map_add(enemigos_desbloqueados, "Soldado Igneo Elite", true);
+ds_map_add(enemigos_desbloqueados, "Vigia Boreal Elite", true);
+ds_map_add(enemigos_desbloqueados, "Halito Verde Elite", true);
+ds_map_add(enemigos_desbloqueados, "Bestia Tronadora Elite", true);
+ds_map_add(enemigos_desbloqueados, "Guardian Terracota Elite", true);
+ds_map_add(enemigos_desbloqueados, "Naufrago de la Oscuridad Elite", true);
+ds_map_add(enemigos_desbloqueados, "Paladin Marchito Elite", true);
+ds_map_add(enemigos_desbloqueados, "Errante Runico Elite", true);
+// Jefes
 ds_map_add(enemigos_desbloqueados, "Titan de las Forjas Rotas", true);
+ds_map_add(enemigos_desbloqueados, "Coloso del Fango Viviente", true);
+ds_map_add(enemigos_desbloqueados, "Sentinela del Cielo Roto", true);
+ds_map_add(enemigos_desbloqueados, "Oraculo Quebrado del Abismo", true);
 
 // ORO DEL JUGADOR
 oro = 100;

@@ -2,8 +2,12 @@
 /// @description  Sistema de feedback visual para combate:
 ///   - Números flotantes de daño/curación/buffs
 ///   - Sacudida (shake) de sprites al recibir daño
-///   - Flash de color en sprites al recibir efectos
+///   - Flash de color en sprites al recibir efectos (con color elemental por afinidad)
 ///   - Tracking automático de cambios de vida para generar feedback
+///   - Glow elemental (additive blending) sobre personajes
+///   - Hitstop para impactos fuertes y súper
+///   - Flash de pantalla elemental
+///   - Integración con scr_fx_esencia_visual y scr_paleta_afinidad
 
 // ══════════════════════════════════════════════════════════════
 //  MACROS DE FEEDBACK
@@ -44,6 +48,9 @@ function scr_feedback_init() {
 
     // Efectos visuales FX
     _c.fb_fx_list = [];
+
+    // Inicializar sistema de esencia visual (glow, hitstop, flash pantalla)
+    scr_fx_esencia_init();
 }
 
 
@@ -169,6 +176,10 @@ function scr_feedback_actualizar() {
     if (!instance_exists(obj_control_combate)) return;
     var _c = instance_find(obj_control_combate, 0);
 
+    // ── Actualizar FX de esencia (glow, hitstop, flash pantalla) ──
+    var _hitstop = scr_fx_esencia_actualizar();
+    if (_hitstop) return; // todo congelado durante hitstop
+
     // ── Actualizar números flotantes ──
     var _arr = _c.feedbacks;
     for (var i = array_length(_arr) - 1; i >= 0; i--) {
@@ -214,14 +225,24 @@ function scr_feedback_actualizar() {
     var _pj = _c.personaje_jugador;
     var _en = _c.personaje_enemigo;
 
+    // ── Determinar colores elementales para flash ──
+    var _afi_jugador = variable_struct_exists(_pj, "afinidad") ? _pj.afinidad : "Neutra";
+    var _afi_enemigo = variable_struct_exists(_en, "afinidad") ? _en.afinidad : "Neutra";
+    var _col_flash_jugador = scr_color_energia_afinidad(_afi_enemigo); // flash del color del atacante
+    var _col_flash_enemigo = scr_color_energia_afinidad(_afi_jugador);
+
     // Jugador
     var _pj_diff = _c.fb_pj_vida_prev - _pj.vida_actual;
     if (_pj_diff > 0) {
-        // Jugador recibió daño
+        // Jugador recibió daño — flash con color elemental del enemigo
         scr_feedback_agregar(true, _pj_diff, "dano");
         scr_feedback_sacudir(true);
-        scr_feedback_flash(true, c_red);
+        scr_feedback_flash(true, _col_flash_jugador);
         scr_feedback_fx(true, "impacto");
+        // Hitstop corto en golpes grandes (>15% vida max)
+        if (_pj_diff > _pj.vida_max * 0.15) {
+            scr_fx_hitstop(4); // ~0.07s
+        }
     } else if (_pj_diff < 0) {
         // Jugador se curó
         scr_feedback_agregar(true, abs(_pj_diff), "cura");
@@ -233,11 +254,15 @@ function scr_feedback_actualizar() {
     // Enemigo
     var _en_diff = _c.fb_en_vida_prev - _en.vida_actual;
     if (_en_diff > 0) {
-        // Enemigo recibió daño
+        // Enemigo recibió daño — flash con color elemental del jugador
         scr_feedback_agregar(false, _en_diff, "dano");
         scr_feedback_sacudir(false);
-        scr_feedback_flash(false, c_red);
+        scr_feedback_flash(false, _col_flash_enemigo);
         scr_feedback_fx(false, "impacto");
+        // Hitstop corto en golpes grandes (>15% vida max)
+        if (_en_diff > _en.vida_max * 0.15) {
+            scr_fx_hitstop(4);
+        }
     } else if (_en_diff < 0) {
         // Enemigo se curó
         scr_feedback_agregar(false, abs(_en_diff), "cura");
@@ -359,8 +384,27 @@ function scr_feedback_dibujar_sprites() {
         var _spr_e = (variable_struct_exists(_c, "personaje_enemigo") && variable_struct_exists(_c.personaje_enemigo, "sprite_cuerpo"))
                      ? _c.personaje_enemigo.sprite_cuerpo : spr_enemigo;
         var _escala_e = _display_h / sprite_get_height(_spr_e);
-        draw_sprite_ext(_spr_e, 0, _sx, _sy, _escala_e, _escala_e, 0, _blend, _alpha);
+
+        // ── FX especiales según rango ──
+        var _rc = (variable_struct_exists(_c.personaje_enemigo, "recolor_elite"))
+                  ? _c.personaje_enemigo.recolor_elite : undefined;
+        var _jf = (variable_struct_exists(_c.personaje_enemigo, "fx_jefe"))
+                  ? _c.personaje_enemigo.fx_jefe : undefined;
+
+        if (_jf != undefined) {
+            // Dibujar con FX de jefe (doble aura, sombra, partículas, escala 1.5x)
+            scr_fx_jefe_dibujar(_spr_e, _sx, _sy, _escala_e, _jf, true, _blend, _alpha);
+        } else if (_rc != undefined) {
+            // Dibujar con efecto élite (aura glow, escala 1.3x)
+            scr_recolor_elite_dibujar(_spr_e, _sx, _sy, _escala_e, _rc, true, _blend, _alpha);
+        } else {
+            // Dibujar normal (flip horizontal para enemigos)
+            draw_sprite_ext(_spr_e, 0, _sx, _sy, -_escala_e, _escala_e, 0, _blend, _alpha);
+        }
     }
+
+    // ── GLOW ELEMENTAL de esencia sobre el jugador (additive blending) ──
+    scr_fx_esencia_dibujar_glow();
 }
 
 
@@ -402,15 +446,44 @@ function scr_feedback_dibujar_retrato(_es_jugador, _rx, _ry, _tam) {
     draw_sprite_stretched(spr_marco_retrato, 0, _rx - 4, _ry - 4, _tam + 8, _tam + 8);
 
     // Dibujar sprite del rostro
+    // Flip horizontal para enemigos (sprites generados mirando a la izquierda)
+    var _escala_x = _es_jugador ? _escala : -_escala;
+    var _draw_x = _es_jugador ? (_rx + _offset_x) : (_rx + _tam + _offset_x);
+
+    // Dibujar retrato (sin tint para élites, usan sprite propio)
     draw_sprite_ext(_spr, 0,
-        _rx + _offset_x, _ry + _offset_y,
-        _escala, _escala,
+        _draw_x, _ry + _offset_y,
+        _escala_x, _escala,
         0, _blend, _alpha_spr);
 
-    // Borde tint según jugador/enemigo
-    var _marco_col = _es_jugador ? make_color_rgb(60, 120, 200) : make_color_rgb(200, 60, 60);
+    // Borde tint según jugador/enemigo (élites/jefes usan colores especiales)
+    var _marco_col;
+    if (_es_jugador) {
+        _marco_col = make_color_rgb(60, 120, 200);
+    } else {
+        var _jf2 = (variable_struct_exists(_c.personaje_enemigo, "fx_jefe"))
+                   ? _c.personaje_enemigo.fx_jefe : undefined;
+        var _rc2 = (variable_struct_exists(_c.personaje_enemigo, "recolor_elite"))
+                   ? _c.personaje_enemigo.recolor_elite : undefined;
+        if (_jf2 != undefined) {
+            // Jefes: borde con color primario de afinidad
+            _marco_col = _jf2.aura_color_1;
+        } else {
+            _marco_col = (_rc2 != undefined) ? _rc2.aura_color : make_color_rgb(200, 60, 60);
+        }
+    }
     draw_set_color(_marco_col);
     draw_rectangle(_rx - 4, _ry - 4, _rx + _tam + 4, _ry + _tam + 4, true);
+
+    // Jefes: segundo borde exterior con color secundario (doble marco)
+    if (!_es_jugador) {
+        var _jf3 = (variable_struct_exists(_c.personaje_enemigo, "fx_jefe"))
+                   ? _c.personaje_enemigo.fx_jefe : undefined;
+        if (_jf3 != undefined) {
+            draw_set_color(_jf3.aura_color_2);
+            draw_rectangle(_rx - 6, _ry - 6, _rx + _tam + 6, _ry + _tam + 6, true);
+        }
+    }
 }
 
 
@@ -440,10 +513,23 @@ function scr_feedback_fx(_es_jugador, _tipo) {
     }
     if (_spr == -1) return;
 
+    // Offset aleatorio más amplio para que cada golpe se vea diferente
+    // Impactos y críticos varían más; curación y esencia varían menos
+    var _offset_rango_x = 30;
+    var _offset_rango_y = 40;
+    if (_tipo == "curacion" || _tipo == "esencia") {
+        _offset_rango_x = 15;
+        _offset_rango_y = 20;
+    } else if (_tipo == "critico" || _tipo == "super") {
+        _offset_rango_x = 40;
+        _offset_rango_y = 50;
+    }
+
     var _fx = {
         sprite:  _spr,
-        x:       _fx_x + random_range(-10, 10),
-        y:       _fx_y + random_range(-10, 10),
+        x:       _fx_x + random_range(-_offset_rango_x, _offset_rango_x),
+        y:       _fx_y + random_range(-_offset_rango_y, _offset_rango_y),
+        angulo:  random_range(-25, 25),   // rotación aleatoria para más variedad
         timer:   FB_FX_DURACION,
         escala:  1.0,
         alpha:   1.0,
@@ -474,10 +560,14 @@ function scr_feedback_dibujar_fx() {
         _fx.escala = _fx_base * _fx_anim;
         _fx.alpha = (_fx.timer < FB_FX_DURACION * 0.3) ? clamp(_fx.timer / (FB_FX_DURACION * 0.3), 0, 1) : 1.0;
 
-        draw_sprite_ext(_fx.sprite, 0, _fx.x, _fx.y, _fx.escala, _fx.escala, 0, c_white, _fx.alpha);
+        var _ang = variable_struct_exists(_fx, "angulo") ? _fx.angulo : 0;
+        draw_sprite_ext(_fx.sprite, 0, _fx.x, _fx.y, _fx.escala, _fx.escala, _ang, c_white, _fx.alpha);
 
         if (_fx.timer <= 0) {
             array_delete(_c.fb_fx_list, i, 1);
         }
     }
+
+    // ── Flash de pantalla completa (elemental / súper) ── última capa
+    scr_fx_dibujar_flash_pantalla();
 }

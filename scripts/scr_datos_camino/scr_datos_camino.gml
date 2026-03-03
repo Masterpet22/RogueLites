@@ -325,14 +325,15 @@ function scr_camino_crear_nodo(_tipo, _capitulo) {
         visitado: false,
     };
 
+    var _pool;
     switch (_tipo) {
         case "combate":
-            var _pool = _capitulo.enemigos_comunes;
+            _pool = _capitulo.enemigos_comunes;
             if (array_length(_pool) > 0) _nodo.nombre = _pool[irandom(array_length(_pool) - 1)];
             _nodo.descripcion = "Combate contra un enemigo";
             break;
         case "elite":
-            var _pool = _capitulo.enemigos_elite;
+            _pool = _capitulo.enemigos_elite;
             if (array_length(_pool) > 0) _nodo.nombre = _pool[irandom(array_length(_pool) - 1)];
             _nodo.hp_mult *= 1.1;
             _nodo.oro_mult *= 1.2;
@@ -359,7 +360,7 @@ function scr_camino_crear_nodo(_tipo, _capitulo) {
         case "jefe":
             // Caps 1-2: el jefe es un élite con multiplicadores extra
             if (variable_struct_exists(_capitulo, "jefe_es_elite") && _capitulo.jefe_es_elite) {
-                var _pool = _capitulo.enemigos_elite;
+                _pool = _capitulo.enemigos_elite;
                 _nodo.nombre = _pool[irandom(array_length(_pool) - 1)];
                 _nodo.hp_mult *= 1.25;
                 _nodo.oro_mult *= 1.5;

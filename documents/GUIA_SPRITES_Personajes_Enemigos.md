@@ -5,13 +5,172 @@
 
 ---
 
+## Dirección Artística: "Stylized Clean Fantasy con Energía Dominante"
+
+ARCADIUM usa un estilo visual limpio y estilizado donde la **claridad elemental** y los **efectos de energía** hacen el trabajo pesado. No necesitamos arte hiperrealista ni animaciones complejas frame a frame. La identidad visual viene de:
+
+1. **Silueta reconocible** — Si el personaje funciona como silueta negra sólida, el diseño funciona
+2. **Paleta elemental fuerte** — Cada afinidad tiene colores inmediatamente reconocibles
+3. **FX potentes** — Los efectos de partículas, glow y screenshake hacen el 70% del trabajo de impacto
+4. **Fondos apagados** — El personaje SIEMPRE destaca sobre el fondo
+
+### Regla de Silueta por Clase
+
+| Clase        | Silueta Clave                                   | Lectura Instantánea |
+| ------------ | ----------------------------------------------- | ------------------- |
+| Vanguardia   | Voluminoso, hombros anchos, postura firme       | "Tanque/guerrero"   |
+| Filotormenta | Delgado, inclinado, dinámico, líneas de acción  | "Rápido/asesino"    |
+| Quebrador    | Pesado, arma grande, puños/hombros enormes      | "Golpe devastador"  |
+| Centinela    | Rectangular/escudo dominante, armadura completa | "Muro defensivo"    |
+| Duelista     | Vertical, elegante, una mano extendida          | "Precisión letal"   |
+| Canalizador  | Más vertical, capa/energía flotando, bastón     | "Poder mágico"      |
+
+> **Test rápido:** Rellena la silueta de negro puro. Si puedes identificar la clase sin color ni detalle, el diseño funciona.
+
+---
+
+## Sistema de Paleta por Afinidad (3 colores por elemento)
+
+Cada afinidad tiene exactamente **3 colores** que deben respetarse en TODOS los assets de esa afinidad:
+
+| Afinidad | Color Dominante            | Color Secundario         | Color de Energía (Glow)          |
+| -------- | -------------------------- | ------------------------ | -------------------------------- |
+| Fuego    | Rojo oscuro `#8B1A1A`      | Naranja `#CC5500`        | Amarillo incandescente `#FFD700` |
+| Agua     | Azul profundo `#003366`    | Azul hielo `#B0E0E6`     | Blanco escarcha `#F0F8FF`        |
+| Planta   | Verde bosque `#228B22`     | Verde lima `#32CD32`     | Amarillo esporas `#ADFF2F`       |
+| Rayo     | Azul eléctrico `#0080FF`   | Violeta `#7B2D8E`        | Blanco brillante `#FFFFFF`       |
+| Tierra   | Marrón tierra `#8B7355`    | Verde jade `#00A86B`     | Arena dorada `#C2B280`           |
+| Sombra   | Negro puro `#0D0D0D`       | Violeta oscuro `#301934` | Púrpura pálido `#CC99FF`         |
+| Luz      | Blanco marfil `#FFFFF0`    | Dorado `#FFD700`         | Ámbar cálido `#FFBF00`           |
+| Arcano   | Púrpura profundo `#4B0082` | Cian `#00FFFF`           | Magenta brillante `#FF00FF`      |
+
+> **Regla clave:** El fondo siempre 20-30% más apagado que el personaje. Esto hace que el combate se lea profesional.
+
+---
+
+## Fondos de Combate (Menos es Más)
+
+No sobrecargar los fondos. Cada dominio necesita solo:
+
+- **1 gran elemento icónico** en segundo plano (ej: observatorio fracturado para Arcano)
+- **Niebla ligera** para separar capas
+- **Partículas suaves** coherentes con la afinidad
+- **Oscurecer 20–30%** respecto al primer plano
+
+| Dominio | Elemento Icónico               | Partículas                 | Tono General      |
+| ------- | ------------------------------ | -------------------------- | ----------------- |
+| Fuego   | Forja volcánica en ruinas      | Brasas flotantes           | Rojo oscuro/negro |
+| Agua    | Canal congelado roto           | Cristales de hielo cayendo | Azul profundo     |
+| Planta  | Selva corrompida               | Esporas, hojas             | Verde oscuro      |
+| Rayo    | Ruinas suspendidas en tormenta | Chispas eléctricas         | Azul/violeta      |
+| Tierra  | Templo derrumbado              | Polvo, arena               | Marrón/gris       |
+| Sombra  | Ciudad subterránea devorada    | Humo oscuro ascendente     | Negro/violeta     |
+| Luz     | Catedral fracturada            | Motas de luz dorada        | Blanco/dorado     |
+| Arcano  | Observatorio fracturado        | Runas flotantes, fractales | Púrpura/cian      |
+
+> Si sobrecargas el fondo, rompes la claridad del combate.
+
+---
+
 ## Notas Generales de Estilo
 
 - **Perspectiva:** Vista lateral estática (jugador a la izquierda, enemigo a la derecha).
-- **Estilo artístico:** Pixel art o estilizado 2D. Mundo en ruinas, tonos oscuros con acentos elementales vibrantes.
+- **Estilo artístico:** Stylized Clean Fantasy 2D. Siluetas definidas, colores elementales vibrantes sobre fondo apagado. Contraste > detalle.
 - **Poses necesarias por personaje:** Idle, ataque, recibir daño, habilidad especial, súper-habilidad, muerte/derrota.
 - **Poses necesarias por enemigo:** Idle, ataque, recibir daño, habilidad especial, muerte.
 - **Escala sugerida:** Personajes jugables ~64–80px de alto. Enemigos comunes similares. Élites ligeramente mayores. Jefes ~120–160px.
+
+---
+
+## Pipeline de Generación con IA (Trabajo Solo)
+
+### Filosofía: Eficiencia sobre perfección
+
+Estás solo con IA. No reinventes todo cada vez. Reutiliza estructura base de cuerpo entre clases y diferencia con silueta + color + un elemento visual icónico por personaje.
+
+### Paso 1: Generar el personaje base con IA
+
+**Prompt base para consistencia** (adaptar por personaje):
+
+```
+[Nombre] from ARCADIUM, a stylized clean fantasy 2D game character.
+Side view, static combat pose, [CLASE description].
+[COMPLEXIÓN]: [descripción del cuerpo].
+Key silhouette element: [elemento icónico].
+Color palette: [dominante], [secundario], [energía glow].
+Style: clean lines, high contrast, dark background,
+fantasy character art, game sprite reference sheet.
+Transparent or solid dark background.
+No text, no watermark.
+```
+
+**Ejemplo para Kael:**
+
+```
+Kael from ARCADIUM, a stylized clean fantasy 2D game character.
+Side view, static combat pose, balanced warrior Vanguard class.
+Athletic build, heroic proportions, firm posture, wide shoulders.
+Key silhouette element: asymmetric shoulder plate, short one-shoulder cape.
+Color palette: dark red (#8B1A1A), burnt orange (#CC5500), golden ember glow (#FFD700).
+Rusty plate armor with flame engravings, charred edges.
+Short sword with chipped blade (Hoja Rota).
+Small ember particles floating around.
+Style: clean lines, high contrast, dark background,
+fantasy character art, game sprite reference sheet.
+Transparent or solid dark background.
+No text, no watermark.
+```
+
+### Paso 2: Simplificar para sprite
+
+- Reducir detalle fino, aumentar contraste de silueta
+- Asegurar que los colores elementales sean los dominantes
+- El personaje debe leerse bien a 64-80px de alto
+- Si hay demasiado detalle: simplificar texturas, mantener forma
+
+### Paso 3: Poses con consistencia
+
+Para cada pose adicional, usar el mismo prompt base + pose específica:
+
+- **Idle:** `natural standing combat stance, slight breathing motion anticipation`
+- **Ataque:** `mid-swing attack pose, weapon forward, anticipation + impact frame`
+- **Recibir daño:** `recoiling backward, pain expression, slight lean back`
+- **Súper:** `epic power pose, [element] energy surrounding character, intense glow`
+- **Derrota:** `falling/kneeling, fading, weapon dropping`
+
+### Paso 4: Efectos (el engine hace el 70%)
+
+NO necesitas dibujar los efectos en el sprite. El engine de GameMaker agrega:
+
+- **Glow elemental** (additive blending con color de afinidad)
+- **Screenshake** en impactos
+- **Hitstop** (pausa de 0.1-0.2s en golpes fuertes)
+- **Flash elemental** al activar súper (color de afinidad)
+- **Partículas** flotantes según afinidad
+- **Aura de esencia** que pulsa y crece con la barra
+
+> Los efectos de partículas y glow hacen el 70% del trabajo visual.
+> Enfócate en que el sprite base tenga buena silueta y paleta correcta.
+
+### Reglas para Consistencia entre Personajes (IA)
+
+1. **Mismo estilo de prompt** para todos → misma estética
+2. **Misma vista** (side view, combat stance) → coherencia espacial
+3. **Misma iluminación** (light from upper left) → coherencia visual
+4. **Misma proporción** de cabeza/cuerpo → coherencia de escala
+5. **Fondo transparente o negro sólido** → fácil de recortar
+6. **Referenciar personajes previos** → "same art style as [personaje anterior]"
+
+### Animación Inteligente (Porque Estás Solo)
+
+No hagas animaciones largas. Haz:
+
+- **Idle:** Leve movimiento (respiración + energía flotando) — 2-4 frames
+- **Ataque:** Corta (anticipación + impacto) — 3-4 frames
+- **Efectos de partículas** que vendan el golpe — el engine los agrega
+- **Reutiliza la pose base** con variaciones mínimas entre frames
+
+> Los efectos de glow, shake, hitstop y partículas compensan la simplicidad de animación.
 
 ---
 
@@ -955,18 +1114,20 @@ Devorador           ██████████████████ ~150p
 
 ---
 
-# REFERENCIA RÁPIDA — Paletas por Afinidad
+# REFERENCIA RÁPIDA — Paletas por Afinidad (Sistema 3 Colores)
 
-| Afinidad | Color Primario   | Color Secundario   | Acento          |
-| -------- | ---------------- | ------------------ | --------------- |
-| Fuego    | Rojo oscuro      | Naranja            | Amarillo brasa  |
-| Agua     | Azul profundo    | Azul hielo         | Blanco escarcha |
-| Planta   | Verde bosque     | Verde lima         | Marrón corteza  |
-| Rayo     | Azul oscuro      | Amarillo eléctrico | Cian/blanco     |
-| Tierra   | Marrón tierra    | Verde jade         | Gris piedra     |
-| Sombra   | Negro puro       | Violeta oscuro     | Púrpura pálido  |
-| Luz      | Blanco marfil    | Dorado             | Ámbar           |
-| Arcano   | Violeta profundo | Cian               | Magenta         |
+| Afinidad | Dominante        | Secundario     | Energía (Glow)         | Hex Dominante | Hex Secundario | Hex Energía |
+| -------- | ---------------- | -------------- | ---------------------- | ------------- | -------------- | ----------- |
+| Fuego    | Rojo oscuro      | Naranja        | Amarillo incandescente | `#8B1A1A`     | `#CC5500`      | `#FFD700`   |
+| Agua     | Azul profundo    | Azul hielo     | Blanco escarcha        | `#003366`     | `#B0E0E6`      | `#F0F8FF`   |
+| Planta   | Verde bosque     | Verde lima     | Amarillo esporas       | `#228B22`     | `#32CD32`      | `#ADFF2F`   |
+| Rayo     | Azul eléctrico   | Violeta        | Blanco brillante       | `#0080FF`     | `#7B2D8E`      | `#FFFFFF`   |
+| Tierra   | Marrón tierra    | Verde jade     | Arena dorada           | `#8B7355`     | `#00A86B`      | `#C2B280`   |
+| Sombra   | Negro puro       | Violeta oscuro | Púrpura pálido         | `#0D0D0D`     | `#301934`      | `#CC99FF`   |
+| Luz      | Blanco marfil    | Dorado         | Ámbar cálido           | `#FFFFF0`     | `#FFD700`      | `#FFBF00`   |
+| Arcano   | Púrpura profundo | Cian           | Magenta brillante      | `#4B0082`     | `#00FFFF`      | `#FF00FF`   |
+
+> **Uso:** Dominante = cuerpo/armadura. Secundario = detalles/acentos. Energía = glow/partículas/FX del engine.
 
 ---
 
@@ -974,15 +1135,18 @@ Devorador           ██████████████████ ~150p
 
 ### Para cada Personaje Jugable (8):
 
-1. **Idle** — Pose neutral en guardia
-2. **Ataque básico** — Golpe con arma
-3. **Habilidad de clase** — Efecto único según clase
-4. **Habilidad de arma** — Ataque elemental
-5. **Súper-habilidad** — Pose épica + efecto masivo
-6. **Recibir daño** — Retroceso/impacto
+1. **Idle** — Pose neutral en guardia (2–4 frames con respiración sutil)
+2. **Ataque básico** — Golpe con arma (3–4 frames: anticipación + impacto)
+3. **Habilidad de clase** — Efecto único según clase (el engine agrega partículas/glow)
+4. **Habilidad de arma** — Ataque elemental (el engine agrega flash elemental)
+5. **Súper-habilidad** — Pose épica + efecto masivo (el engine agrega freeze + shake + flash)
+6. **Recibir daño** — Retroceso/impacto (el engine agrega sacudida + flash rojo)
 7. **Victoria** — Celebración contenida
 8. **Derrota** — Caer/desvanecerse
 9. **Retrato/Rostro** — Para UI (selección, HUD)
+
+> **Prioridad de generación IA:** Idle → Retrato → Ataque → Recibir daño → Súper → resto.
+> El Idle y el Retrato son los que más se ven. Inversión mayor ahí.
 
 ### Para cada Enemigo Común (8):
 
@@ -990,6 +1154,8 @@ Devorador           ██████████████████ ~150p
 2. **Ataque principal** — Habilidad fija
 3. **Recibir daño** — Retroceso
 4. **Derrota** — Desintegración elemental
+
+> **Con IA:** Genera solo Idle + Ataque. Recibir daño puede ser el Idle con flash rojo del engine. Derrota puede ser fade-out.
 
 ### Para cada Enemigo Élite (8):
 
@@ -1006,3 +1172,51 @@ Devorador           ██████████████████ ~150p
 4. **Fase de furia** — Cambio visual cuando baja de vida
 5. **Derrota** — Desintegración épica/cinemática
 6. **Entrada** — Aparición con presentación dramática
+
+---
+
+# PROMPTS DE IA — Plantillas por Tipo
+
+### Plantilla: Personaje Jugable
+
+```
+[NOMBRE] from ARCADIUM, stylized clean fantasy 2D game character.
+Side view, [POSE], [CLASE] class [ROL].
+Build: [COMPLEXIÓN]. Silhouette: [SILUETA CLAVE].
+Armor/outfit: [VESTIMENTA resumida].
+Key visual element: [ELEMENTO ICÓNICO].
+Weapon: [ARMA].
+Color palette: [HEX dominante], [HEX secundario], [HEX energía glow].
+Elemental particles: [PARTÍCULAS de afinidad].
+Style: clean lines, high contrast, game sprite reference,
+2D fantasy character art, consistent proportions.
+Dark or transparent background. No text, no watermark.
+Same art style as previous ARCADIUM characters.
+```
+
+### Plantilla: Enemigo Común
+
+```
+[NOMBRE ENEMIGO] from ARCADIUM, stylized clean fantasy 2D enemy.
+Side view, facing left, [idle/attack] pose.
+[DESCRIPCIÓN de apariencia resumida en 2-3 líneas].
+Color palette: [COLORES de la afinidad del enemigo].
+Style: menacing, corrupted, ruined fantasy aesthetic.
+Same art style as ARCADIUM player characters.
+Dark or transparent background. No text, no watermark.
+```
+
+### Plantilla: Jefe
+
+```
+[NOMBRE JEFE] from ARCADIUM, stylized clean fantasy 2D boss character.
+Side view, imposing [idle/attack] pose, 1.5-2x player character size.
+[DESCRIPCIÓN de apariencia resumida en 3-4 líneas].
+Dual affinity: [AFINIDAD 1] + [AFINIDAD 2].
+Color palette: [COLORES combinados de ambas afinidades].
+Boss presence: intimidating scale, epic detail, glowing weak point.
+Style: same art style as ARCADIUM, high contrast, clean fantasy.
+Dark or transparent background. No text, no watermark.
+```
+
+> **Tip:** Después de generar el primer personaje exitosamente, agrega "same art style as [personaje anterior]" en todos los prompts siguientes para mantener consistencia.

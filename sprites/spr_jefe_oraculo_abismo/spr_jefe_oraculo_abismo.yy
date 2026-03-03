@@ -3,23 +3,23 @@
   "%Name":"spr_jefe_oraculo_abismo",
   "bboxMode":0,
   "bbox_bottom":767,
-  "bbox_left":0,
+  "bbox_left":90,
   "bbox_right":767,
-  "bbox_top":0,
+  "bbox_top":30,
   "collisionKind":1,
   "collisionTolerance":0,
   "DynamicTexturePage":false,
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"7406c2c8-b5f9-4ca9-b826-82656cb56de5","name":"7406c2c8-b5f9-4ca9-b826-82656cb56de5","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"2e365148-3fcd-48cd-883f-0db751cbba0e","name":"2e365148-3fcd-48cd-883f-0db751cbba0e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":768,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"fef56b0e-923a-48bd-9f53-33117f2fbd60","blendMode":0,"displayName":"default","isLocked":false,"name":"fef56b0e-923a-48bd-9f53-33117f2fbd60","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"6f5dd37d-808c-4174-87ef-b01e49820028","blendMode":0,"displayName":"default","isLocked":false,"name":"6f5dd37d-808c-4174-87ef-b01e49820028","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_jefe_oraculo_abismo",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"7406c2c8-b5f9-4ca9-b826-82656cb56de5","path":"sprites/spr_jefe_oraculo_abismo/spr_jefe_oraculo_abismo.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"ea2158be-5d8a-4747-b2d5-3bbd368e58ef","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"2e365148-3fcd-48cd-883f-0db751cbba0e","path":"sprites/spr_jefe_oraculo_abismo/spr_jefe_oraculo_abismo.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"8e0ac296-1b13-4f51-b7a7-04cdbc7364e3","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

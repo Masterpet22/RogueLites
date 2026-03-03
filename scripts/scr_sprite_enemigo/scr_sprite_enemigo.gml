@@ -30,31 +30,41 @@ function scr_sprite_enemigo(_nombre, _rango, _es_rostro) {
     }
     
     // ── ÉLITES ──
+    // Los élites intentan usar sprite propio; si no existe, usan el del común
+    // (para que el sistema de recolor por código funcione como fallback)
     if (_rango == "Elite") {
+        // Extraer nombre base (sin " Elite")
+        var _nombre_base = string_replace(_nombre, " Elite", "");
+        
         if (_es_rostro) {
+            var _spr_elite = -1;
             switch (_nombre) {
-                case "Soldado Igneo Elite":                return spr_rostro_elite_soldado_igneo;
-                case "Vigia Boreal Elite":                 return spr_rostro_elite_vigia_boreal;
-                case "Halito Verde Elite":                 return spr_rostro_elite_halito_verde;
-                case "Bestia Tronadora Elite":             return spr_rostro_elite_bestia_tronadora;
-                case "Guardian Terracota Elite":            return spr_rostro_elite_guardian_terracota;
-                case "Naufrago de la Oscuridad Elite":     return spr_rostro_elite_naufrago;
-                case "Paladin Marchito Elite":             return spr_rostro_elite_paladin_marchito;
-                case "Errante Runico Elite":               return spr_rostro_elite_errante_runico;
-                default:                                   return spr_enemigo_rostro;
+                case "Soldado Igneo Elite":                _spr_elite = spr_rostro_elite_soldado_igneo; break;
+                case "Vigia Boreal Elite":                 _spr_elite = spr_rostro_elite_vigia_boreal; break;
+                case "Halito Verde Elite":                 _spr_elite = spr_rostro_elite_halito_verde; break;
+                case "Bestia Tronadora Elite":             _spr_elite = spr_rostro_elite_bestia_tronadora; break;
+                case "Guardian Terracota Elite":            _spr_elite = spr_rostro_elite_guardian_terracota; break;
+                case "Naufrago de la Oscuridad Elite":     _spr_elite = spr_rostro_elite_naufrago; break;
+                case "Paladin Marchito Elite":             _spr_elite = spr_rostro_elite_paladin_marchito; break;
+                case "Errante Runico Elite":               _spr_elite = spr_rostro_elite_errante_runico; break;
             }
+            // Si el sprite élite existe realmente, usarlo; si no, fallback al común
+            if (_spr_elite != -1 && sprite_exists(_spr_elite)) return _spr_elite;
+            return scr_sprite_enemigo(_nombre_base, "Común", true);
         } else {
+            var _spr_elite = -1;
             switch (_nombre) {
-                case "Soldado Igneo Elite":                return spr_elite_soldado_igneo;
-                case "Vigia Boreal Elite":                 return spr_elite_vigia_boreal;
-                case "Halito Verde Elite":                 return spr_elite_halito_verde;
-                case "Bestia Tronadora Elite":             return spr_elite_bestia_tronadora;
-                case "Guardian Terracota Elite":            return spr_elite_guardian_terracota;
-                case "Naufrago de la Oscuridad Elite":     return spr_elite_naufrago;
-                case "Paladin Marchito Elite":             return spr_elite_paladin_marchito;
-                case "Errante Runico Elite":               return spr_elite_errante_runico;
-                default:                                   return spr_enemigo;
+                case "Soldado Igneo Elite":                _spr_elite = spr_elite_soldado_igneo; break;
+                case "Vigia Boreal Elite":                 _spr_elite = spr_elite_vigia_boreal; break;
+                case "Halito Verde Elite":                 _spr_elite = spr_elite_halito_verde; break;
+                case "Bestia Tronadora Elite":             _spr_elite = spr_elite_bestia_tronadora; break;
+                case "Guardian Terracota Elite":            _spr_elite = spr_elite_guardian_terracota; break;
+                case "Naufrago de la Oscuridad Elite":     _spr_elite = spr_elite_naufrago; break;
+                case "Paladin Marchito Elite":             _spr_elite = spr_elite_paladin_marchito; break;
+                case "Errante Runico Elite":               _spr_elite = spr_elite_errante_runico; break;
             }
+            if (_spr_elite != -1 && sprite_exists(_spr_elite)) return _spr_elite;
+            return scr_sprite_enemigo(_nombre_base, "Común", false);
         }
     }
     

@@ -265,11 +265,22 @@ function scr_actualizar_esencia(_p, _evento, _valor) {
 // En input del jugador:
 if (keyboard_check_pressed(ord("R")) && jugador.esencia >= 100) {
     scr_ejecutar_super(jugador, enemigo);
-    jugador.esencia = 0;
+    // La esencia se consume dentro de scr_ejecutar_super
+    // Los FX visuales (hitstop, screenshake, flash) se activan automáticamente
 }
 ```
 
-### 6.3. Implementar una Súper-Habilidad
+### 6.3. FX Visual de la Súper (Automático)
+
+Al ejecutar una súper, `scr_ejecutar_super` llama a `scr_fx_activar_super()` que activa:
+
+- **Hitstop:** 12 frames (~0.2s) de congelamiento total del combate
+- **Screenshake:** 20 frames de sacudida fuerte (12px)
+- **Flash elemental:** Pantalla completa con el color de energía de la afinidad del atacante
+
+Estos efectos se gestionan automáticamente por `scr_fx_esencia_visual` y `scr_feedback_combate`.
+
+### 6.4. Implementar una Súper-Habilidad
 
 Las súpers varían por **Clase × Personalidad** (24 combinaciones).
 
@@ -614,6 +625,14 @@ fx.duracion = room_speed * 0.5;
 | `scr_cooldown_habilidad`      | Devuelve CD en frames para cada ID           |
 | `scr_nombre_habilidad`        | Devuelve nombre visual para UI               |
 
+### FX Visual y Feedback
+
+| Script                  | Descripción                                           |
+| ----------------------- | ----------------------------------------------------- |
+| `scr_feedback_combate`  | Números flotantes, shake, flash, tracking de vida     |
+| `scr_fx_esencia_visual` | Glow elemental, hitstop, flash pantalla, aura esencia |
+| `scr_paleta_afinidad`   | Colores dominante/secundario/energía por afinidad     |
+
 ### Datos
 
 | Script                 | Devuelve                                            |
@@ -624,6 +643,7 @@ fx.duracion = room_speed * 0.5;
 | `scr_datos_enemigos`   | Struct de enemigo (stats, hab, drop)                |
 | `scr_datos_estados`    | Struct de estado (tipo, tick, potencia)             |
 | `scr_datos_materiales` | Struct de material (afinidad, rareza)               |
+| `scr_paleta_afinidad`  | Struct de colores (dominante, secundario, energía)  |
 
 ---
 
@@ -648,6 +668,12 @@ fx.duracion = room_speed * 0.5;
 
 □ ¿Necesita nueva pasiva de afinidad?
 → scr_activar_pasiva_afinidad
+
+□ ¿Necesita efecto visual especial?
+→ scr_feedback_fx (tipo de FX)
+→ scr_fx_flash_elemental (flash por afinidad)
+→ scr_fx_hitstop (congelamiento en impacto)
+→ scr_paleta_afinidad (colores por afinidad)
 → scr_actualizar_pasivas
 
 □ ¿Necesita feedback visual?
