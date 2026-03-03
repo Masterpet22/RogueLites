@@ -169,42 +169,50 @@ else if (camino_fase == "pre_combate") {
     camino_post_opcion = 0;
 
     if (keyboard_check_pressed(vk_enter)) {
-        // Preparar equipamiento de objetos
-        camino_equip_objetos = [];
-        camino_equip_runa = "";
-        camino_equip_indice = 0;
-        camino_equip_runa_indice = 0;
-
-        var _cj = instance_find(obj_control_juego, 0);
-        camino_equip_obj_disponibles = [];
-        var _todos = scr_lista_objetos_disponibles();
-        for (var i = 0; i < array_length(_todos); i++) {
-            var _cant = scr_inventario_get_objeto(_cj, _todos[i]);
-            if (_cant > 0) array_push(camino_equip_obj_disponibles, _todos[i]);
-        }
-
-        if (array_length(camino_equip_obj_disponibles) > 0) {
-            camino_equip_fase = "objetos";
-            camino_fase = "equipar";
+        // Si tiene más de 1 arma en la run, dejar elegir
+        if (array_length(camino_armas_run) > 1) {
+            camino_arma_sel_indice = 0;
+            // Preseleccionar el arma actual
+            for (var i = 0; i < array_length(camino_armas_run); i++) {
+                if (camino_armas_run[i] == camino_arma) { camino_arma_sel_indice = i; break; }
+            }
+            camino_fase = "seleccion_arma_combate";
         } else {
-            camino_equip_runas_disponibles = [];
-            var _todas_runas = scr_lista_runicos_disponibles();
-            for (var i = 0; i < array_length(_todas_runas); i++) {
-                var _cant = scr_inventario_get_objeto(_cj, _todas_runas[i]);
-                if (_cant > 0) array_push(camino_equip_runas_disponibles, _todas_runas[i]);
-            }
-            if (array_length(camino_equip_runas_disponibles) > 0) {
-                camino_equip_fase = "runa";
-                camino_fase = "equipar";
-            } else {
-                scr_camino_lanzar_combate();
-            }
+            // Solo tiene 1 arma, ir directo a equipar
+            camino_arma = camino_armas_run[0];
+            scr_camino_ir_a_equipar();
         }
         io_clear();
     }
 
     if (keyboard_check_pressed(vk_escape)) {
-        scr_camino_finalizar("abandono");
+        // Volver al mapa en vez de abandonar
+        camino_fase = "mapa";
+        camino_mapa_sel = 0;
+        io_clear();
+    }
+}
+
+
+// ═══════════════════════════════════════════
+//  FASE: SELECCIÓN DE ARMA PARA EL COMBATE
+// ═══════════════════════════════════════════
+else if (camino_fase == "seleccion_arma_combate") {
+
+    var _n_armas = array_length(camino_armas_run);
+
+    if (keyboard_check_pressed(vk_up))   camino_arma_sel_indice = (camino_arma_sel_indice - 1 + _n_armas) mod _n_armas;
+    if (keyboard_check_pressed(vk_down)) camino_arma_sel_indice = (camino_arma_sel_indice + 1) mod _n_armas;
+
+    if (keyboard_check_pressed(vk_enter)) {
+        camino_arma = camino_armas_run[camino_arma_sel_indice];
+        scr_camino_ir_a_equipar();
+        io_clear();
+    }
+
+    if (keyboard_check_pressed(vk_escape)) {
+        camino_fase = "pre_combate";
+        io_clear();
     }
 }
 
@@ -229,7 +237,7 @@ else if (camino_fase == "equipar") {
             for (var i = 0; i < array_length(camino_equip_objetos); i++) {
                 if (camino_equip_objetos[i] == _obj_nom) _veces++;
             }
-            var _cant_inv = scr_inventario_get_objeto(_cj, _obj_nom);
+            var _cant_inv = ds_map_exists(camino_objetos_run, _obj_nom) ? camino_objetos_run[? _obj_nom] : 0;
             if (array_length(camino_equip_objetos) < 3 && _veces < _cant_inv) {
                 array_push(camino_equip_objetos, _obj_nom);
             } else if (_veces > 0) {
@@ -248,10 +256,10 @@ else if (camino_fase == "equipar") {
             array_copy(_cj.objetos_para_combate, 0, camino_equip_objetos, 0, array_length(camino_equip_objetos));
 
             camino_equip_runas_disponibles = [];
-            var _todas_runas = scr_lista_runicos_disponibles();
-            for (var i = 0; i < array_length(_todas_runas); i++) {
-                var _cant = scr_inventario_get_objeto(_cj, _todas_runas[i]);
-                if (_cant > 0) array_push(camino_equip_runas_disponibles, _todas_runas[i]);
+            var _rk = ds_map_find_first(camino_runas_run);
+            while (_rk != undefined) {
+                if (camino_runas_run[? _rk] > 0) array_push(camino_equip_runas_disponibles, _rk);
+                _rk = ds_map_find_next(camino_runas_run, _rk);
             }
 
             if (array_length(camino_equip_runas_disponibles) > 0) {
@@ -270,10 +278,10 @@ else if (camino_fase == "equipar") {
             _cj.objetos_para_combate = [];
 
             camino_equip_runas_disponibles = [];
-            var _todas_runas = scr_lista_runicos_disponibles();
-            for (var i = 0; i < array_length(_todas_runas); i++) {
-                var _cant = scr_inventario_get_objeto(_cj, _todas_runas[i]);
-                if (_cant > 0) array_push(camino_equip_runas_disponibles, _todas_runas[i]);
+            var _rk2 = ds_map_find_first(camino_runas_run);
+            while (_rk2 != undefined) {
+                if (camino_runas_run[? _rk2] > 0) array_push(camino_equip_runas_disponibles, _rk2);
+                _rk2 = ds_map_find_next(camino_runas_run, _rk2);
             }
             if (array_length(camino_equip_runas_disponibles) > 0) {
                 camino_equip_fase = "runa";
@@ -501,6 +509,13 @@ function scr_camino_iniciar_run() {
     camino_combates_totales = 0;
     camino_secreto_disponible = false;
 
+    // Inventario independiente de la run
+    camino_armas_run = [camino_arma]; // comienza con el arma elegida al inicio
+    ds_map_clear(camino_objetos_run);
+    ds_map_clear(camino_runas_run);
+    camino_arma_sel_indice = 0;
+    camino_ruta_visitada = [];
+
     show_debug_message("⚔ Camino del Héroe iniciado | PJ: " + camino_perfil_nombre + " | Arma: " + camino_arma);
 
     scr_camino_iniciar_capitulo(0);
@@ -519,6 +534,7 @@ function scr_camino_iniciar_capitulo(_idx) {
     camino_nodo_actual = 0;
     camino_mapa_sel = 0;
     camino_mapa_conexiones = [];
+    camino_ruta_visitada = [];  // Limpiar ruta del capítulo anterior
 
     show_debug_message("📖 Capítulo " + string(camino_capitulo.numero) + ": " + camino_capitulo.nombre
         + " | Tiers: " + string(array_length(camino_mapa)));
@@ -547,6 +563,9 @@ function scr_camino_siguiente_capitulo() {
 function scr_camino_ejecutar_nodo() {
     var _nodo = camino_mapa[camino_tier_actual][camino_nodo_actual];
     _nodo.visitado = true;
+
+    // Registrar ruta visitada para dibujar el mapa con visibilidad limitada
+    array_push(camino_ruta_visitada, [camino_tier_actual, camino_nodo_actual]);
 
     show_debug_message("🗺 Nodo: Tier " + string(camino_tier_actual)
         + " | Nodo " + string(camino_nodo_actual)
@@ -579,10 +598,14 @@ function scr_camino_ejecutar_nodo() {
             break;
 
         case "tienda":
+            var _cj_t = instance_find(obj_control_juego, 0);
+            if (instance_exists(_cj_t)) _cj_t.modo_camino = true;
             room_goto(rm_tienda);
             break;
 
         case "forja":
+            var _cj_f = instance_find(obj_control_juego, 0);
+            if (instance_exists(_cj_f)) _cj_f.modo_camino = true;
             room_goto(rm_forja);
             break;
 
@@ -611,6 +634,70 @@ function scr_camino_ejecutar_nodo() {
             camino_narrativa_destino = "mapa";
             camino_fase = "narrativa_linea";
             break;
+
+        case "evento":
+            // Elegir arma por rareza según capítulo
+            var _rareza = 1;
+            if (variable_struct_exists(_nodo, "recompensa_rareza")) _rareza = _nodo.recompensa_rareza;
+            var _arma_evento = scr_camino_arma_aleatoria_rareza(_rareza);
+
+            // Agregar arma al inventario de la run (NO al global)
+            var _ya_tiene_arma = false;
+            for (var _ai = 0; _ai < array_length(camino_armas_run); _ai++) {
+                if (camino_armas_run[_ai] == _arma_evento) { _ya_tiene_arma = true; break; }
+            }
+            if (!_ya_tiene_arma) {
+                array_push(camino_armas_run, _arma_evento);
+            }
+
+            // Líneas de lore + recompensa
+            var _lore = scr_camino_lore_evento(camino_capitulo);
+            array_push(_lore, "¡Has obtenido: " + _arma_evento + "!");
+            var _datos_arma_ev = scr_datos_armas(_arma_evento);
+            array_push(_lore, "Rareza " + string(_datos_arma_ev.rareza) + " | Afinidad: " + _datos_arma_ev.afinidad);
+
+            camino_narrativa_lineas = _lore;
+            camino_narrativa_idx = 0;
+            camino_narrativa_destino = "mapa";
+            camino_fase = "narrativa_linea";
+            break;
+    }
+}
+
+
+/// @function scr_camino_ir_a_equipar()
+/// Prepara equipables desde inventario de la run y pasa a fase equipar
+function scr_camino_ir_a_equipar() {
+    camino_equip_objetos = [];
+    camino_equip_runa = "";
+    camino_equip_indice = 0;
+    camino_equip_runa_indice = 0;
+
+    // Escanear objetos disponibles en el inventario de la run
+    camino_equip_obj_disponibles = [];
+    var _ok = ds_map_find_first(camino_objetos_run);
+    while (_ok != undefined) {
+        if (camino_objetos_run[? _ok] > 0) array_push(camino_equip_obj_disponibles, _ok);
+        _ok = ds_map_find_next(camino_objetos_run, _ok);
+    }
+
+    if (array_length(camino_equip_obj_disponibles) > 0) {
+        camino_equip_fase = "objetos";
+        camino_fase = "equipar";
+    } else {
+        // Sin objetos → ver runas
+        camino_equip_runas_disponibles = [];
+        var _rk = ds_map_find_first(camino_runas_run);
+        while (_rk != undefined) {
+            if (camino_runas_run[? _rk] > 0) array_push(camino_equip_runas_disponibles, _rk);
+            _rk = ds_map_find_next(camino_runas_run, _rk);
+        }
+        if (array_length(camino_equip_runas_disponibles) > 0) {
+            camino_equip_fase = "runa";
+            camino_fase = "equipar";
+        } else {
+            scr_camino_lanzar_combate();
+        }
     }
 }
 
@@ -629,6 +716,28 @@ function scr_camino_lanzar_combate() {
     }
     if (!variable_instance_exists(_cj, "runa_equipada")) {
         _cj.runa_equipada = "";
+    }
+
+    // Consumir objetos equipados del inventario de la run
+    for (var _oi = 0; _oi < array_length(_cj.objetos_para_combate); _oi++) {
+        var _obj_nom = _cj.objetos_para_combate[_oi];
+        if (ds_map_exists(camino_objetos_run, _obj_nom)) {
+            camino_objetos_run[? _obj_nom] -= 1;
+            if (camino_objetos_run[? _obj_nom] <= 0) {
+                ds_map_delete(camino_objetos_run, _obj_nom);
+            }
+        }
+    }
+
+    // Consumir runa equipada del inventario de la run
+    if (_cj.runa_equipada != "") {
+        var _runa_nom = _cj.runa_equipada;
+        if (ds_map_exists(camino_runas_run, _runa_nom)) {
+            camino_runas_run[? _runa_nom] -= 1;
+            if (camino_runas_run[? _runa_nom] <= 0) {
+                ds_map_delete(camino_runas_run, _runa_nom);
+            }
+        }
     }
 
     _cj.enemigo_seleccionado = camino_encuentro.nombre_enemigo;
@@ -755,6 +864,13 @@ function scr_camino_finalizar(_resultado) {
 
     camino_entre_opcion = 0;
     camino_secreto_disponible = false;
+
+    // Limpiar inventario de run
+    ds_map_clear(camino_objetos_run);
+    ds_map_clear(camino_runas_run);
+    camino_armas_run = [];
+    camino_arma_sel_indice = 0;
+    camino_ruta_visitada = [];
 
     room_goto(rm_menu);
 }

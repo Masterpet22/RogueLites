@@ -21,7 +21,8 @@ function scr_camino_get_capitulos() {
             afinidades: ["Fuego", "Tierra"],
             enemigos_comunes: ["Soldado Igneo", "Guardian Terracota"],
             enemigos_elite:   ["Soldado Igneo Elite", "Guardian Terracota Elite"],
-            jefe: "Titan de las Forjas Rotas",
+            jefe: "",
+            jefe_es_elite: true,
             combates_comunes: 3,
             combates_elite: 1,
             hp_mult: 1.0,
@@ -51,7 +52,8 @@ function scr_camino_get_capitulos() {
             afinidades: ["Agua", "Planta"],
             enemigos_comunes: ["Vigia Boreal", "Halito Verde"],
             enemigos_elite:   ["Vigia Boreal Elite", "Halito Verde Elite"],
-            jefe: "Coloso del Fango Viviente",
+            jefe: "",
+            jefe_es_elite: true,
             combates_comunes: 3,
             combates_elite: 1,
             hp_mult: 1.15,
@@ -82,6 +84,7 @@ function scr_camino_get_capitulos() {
             enemigos_comunes: ["Bestia Tronadora", "Paladin Marchito"],
             enemigos_elite:   ["Bestia Tronadora Elite", "Paladin Marchito Elite"],
             jefe: "Sentinela del Cielo Roto",
+            jefe_es_elite: false,
             combates_comunes: 4,
             combates_elite: 1,
             hp_mult: 1.30,
@@ -112,6 +115,7 @@ function scr_camino_get_capitulos() {
             enemigos_comunes: ["Naufrago de la Oscuridad", "Errante Runico"],
             enemigos_elite:   ["Naufrago de la Oscuridad Elite", "Errante Runico Elite"],
             jefe: "Oraculo Quebrado del Abismo",
+            jefe_es_elite: false,
             combates_comunes: 4,
             combates_elite: 2,
             hp_mult: 1.45,
@@ -142,6 +146,7 @@ function scr_camino_get_capitulos() {
             enemigos_comunes: [],
             enemigos_elite: [],
             jefe: "El Devorador",
+            jefe_es_elite: false,
             combates_comunes: 0,
             combates_elite: 0,
             hp_mult: 1.60,
@@ -180,7 +185,8 @@ function scr_camino_generar_mapa(_capitulo) {
     // ── Generar tiers de decisión (0 a num_decisiones-1) ──
     for (var t = 0; t < _num_decisiones; t++) {
         var _tier = [];
-        var _num_nodos = (t == 0) ? 3 : 3 + irandom(1); // 3 o 4 nodos
+        // Mínimo 3 nodos para poder ofrecer al menos 2 opciones por nodo padre
+        var _num_nodos = 3 + irandom(1); // 3 o 4 nodos
 
         for (var n = 0; n < _num_nodos; n++) {
             var _tipo = scr_camino_tipo_nodo_random(_capitulo, t, _num_decisiones);
@@ -190,7 +196,8 @@ function scr_camino_generar_mapa(_capitulo) {
     }
 
     // ── Tier final: jefe del capítulo ──
-    if (_capitulo.jefe != "") {
+    // Caps con jefe dedicado O caps con jefe_es_elite (cap 1-2)
+    if (_capitulo.jefe != "" || (variable_struct_exists(_capitulo, "jefe_es_elite") && _capitulo.jefe_es_elite)) {
         array_push(_mapa, [scr_camino_crear_nodo("jefe", _capitulo)]);
     }
 
@@ -221,10 +228,15 @@ function scr_camino_generar_mapa(_capitulo) {
             if (!_ya_existe) array_push(_curr[_from].conexiones, n);
         }
 
-        // Asegurar que cada nodo actual tenga al menos 1 conexión saliente
+        // Asegurar que cada nodo actual tenga al menos 2 conexiones salientes
         for (var n = 0; n < array_length(_curr); n++) {
-            if (array_length(_curr[n].conexiones) == 0) {
-                array_push(_curr[n].conexiones, irandom(array_length(_next) - 1));
+            while (array_length(_curr[n].conexiones) < 2) {
+                var _rnd = irandom(array_length(_next) - 1);
+                var _dup2 = false;
+                for (var c = 0; c < array_length(_curr[n].conexiones); c++) {
+                    if (_curr[n].conexiones[c] == _rnd) { _dup2 = true; break; }
+                }
+                if (!_dup2) array_push(_curr[n].conexiones, _rnd);
             }
         }
 
@@ -269,28 +281,31 @@ function scr_camino_tipo_nodo_random(_capitulo, _tier, _total_tiers) {
 
     // Primer tier: más combate para empezar con acción
     if (_tier == 0) {
-        if (_roll < 55) return "combate";
-        if (_tiene_elite && _roll < 70) return "elite";
-        if (_roll < 80) return "cofre";
-        if (_roll < 90) return "descanso";
+        if (_roll < 50) return "combate";
+        if (_tiene_elite && _roll < 65) return "elite";
+        if (_roll < 75) return "cofre";
+        if (_roll < 85) return "evento";
+        if (_roll < 93) return "descanso";
         return "combate";
     }
 
     // Último tier antes del jefe: oportunidad de prepararse
     if (_tier >= _total_tiers - 1) {
-        if (_roll < 30) return "combate";
-        if (_tiene_elite && _roll < 45) return "elite";
-        if (_roll < 60) return "descanso";
-        if (_roll < 75) return "tienda";
-        if (_roll < 90) return "forja";
+        if (_roll < 25) return "combate";
+        if (_tiene_elite && _roll < 38) return "elite";
+        if (_roll < 50) return "descanso";
+        if (_roll < 65) return "tienda";
+        if (_roll < 78) return "forja";
+        if (_roll < 88) return "evento";
         return "cofre";
     }
 
     // Tiers intermedios: distribución general
-    if (_roll < 40) return "combate";
-    if (_tiene_elite && _roll < 55) return "elite";
-    if (_roll < 67) return "tienda";
-    if (_roll < 79) return "forja";
+    if (_roll < 35) return "combate";
+    if (_tiene_elite && _roll < 48) return "elite";
+    if (_roll < 58) return "tienda";
+    if (_roll < 68) return "forja";
+    if (_roll < 78) return "evento";
     if (_roll < 90) return "descanso";
     return "cofre";
 }
@@ -342,9 +357,26 @@ function scr_camino_crear_nodo(_tipo, _capitulo) {
             _nodo.descripcion = "Contiene " + string(_nodo.recompensa_oro) + " oro";
             break;
         case "jefe":
-            _nodo.nombre = _capitulo.jefe;
-            _nodo.oro_mult *= 1.5;
-            _nodo.descripcion = "Jefe del capitulo";
+            // Caps 1-2: el jefe es un élite con multiplicadores extra
+            if (variable_struct_exists(_capitulo, "jefe_es_elite") && _capitulo.jefe_es_elite) {
+                var _pool = _capitulo.enemigos_elite;
+                _nodo.nombre = _pool[irandom(array_length(_pool) - 1)];
+                _nodo.hp_mult *= 1.25;
+                _nodo.oro_mult *= 1.5;
+                _nodo.descripcion = "Elite reforzado — jefe del capítulo";
+            } else {
+                _nodo.nombre = _capitulo.jefe;
+                _nodo.oro_mult *= 1.5;
+                _nodo.descripcion = "Jefe del capítulo";
+            }
+            break;
+        case "evento":
+            _nodo.nombre = "Evento";
+            _nodo.descripcion = "Descubre un fragmento de lore y obtén un arma";
+            // Rareza según capítulo: cap 1-2 → R1, cap 3-4 → R2, cap 5 → R3
+            if (_capitulo.numero <= 2) _nodo.recompensa_rareza = 1;
+            else if (_capitulo.numero <= 4) _nodo.recompensa_rareza = 2;
+            else _nodo.recompensa_rareza = 3;
             break;
     }
 
@@ -411,4 +443,83 @@ function scr_camino_recompensa_capitulo(_capitulo) {
 function scr_camino_check_secreto(_camino_ctrl) {
     // Condición: completar el juego sin perder ningún combate (run perfecta)
     return (_camino_ctrl.camino_derrotas == 0 && _camino_ctrl.camino_capitulo_idx >= 4);
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  ARMAS POR RAREZA (para nodos de evento)
+// ═══════════════════════════════════════════════════════════════
+
+/// @function scr_camino_armas_por_rareza(_rareza)
+/// @description Retorna un array de nombres de armas de la rareza dada
+/// @param {real} _rareza  1, 2 o 3
+/// @returns {array}
+function scr_camino_armas_por_rareza(_rareza) {
+    var _todas = scr_lista_armas_disponibles();
+    var _resultado = [];
+
+    for (var i = 0; i < array_length(_todas); i++) {
+        var _datos = scr_datos_armas(_todas[i]);
+        if (_datos.rareza == _rareza) {
+            array_push(_resultado, _todas[i]);
+        }
+    }
+
+    return _resultado;
+}
+
+
+/// @function scr_camino_arma_aleatoria_rareza(_rareza)
+/// @description Retorna el nombre de un arma aleatoria de la rareza dada
+/// @param {real} _rareza  1, 2 o 3
+/// @returns {string}
+function scr_camino_arma_aleatoria_rareza(_rareza) {
+    var _pool = scr_camino_armas_por_rareza(_rareza);
+    if (array_length(_pool) == 0) return "Hoja Rota";
+    return _pool[irandom(array_length(_pool) - 1)];
+}
+
+
+/// @function scr_camino_lore_evento(_capitulo)
+/// @description Retorna líneas de lore para un nodo de evento según capítulo
+/// @param {struct} _capitulo
+/// @returns {array}
+function scr_camino_lore_evento(_capitulo) {
+    switch (_capitulo.numero) {
+        case 1:
+            return [
+                "Entre los escombros de la forja, encuentras una cámara oculta.",
+                "Grabados en la pared muestran a los Conductores originales forjando armas elementales.",
+                "Una de ellas brilla aún con poder residual. Puedes sentir el calor de las Corrientes.",
+            ];
+        case 2:
+            return [
+                "Un altar cubierto de musgo emerge del pantano.",
+                "Los antiguos dejaron ofrendas aquí: armas imbuidas con la esencia de la vida.",
+                "Una de ellas responde a tu presencia de Conductor.",
+            ];
+        case 3:
+            return [
+                "En lo alto de una torre fracturada, un relicario resiste la tormenta.",
+                "Dentro, un arma envuelta en energía crepitante aguarda a un portador digno.",
+                "Los grabados hablan de la Era de los Conductores, cuando el cielo aún estaba intacto.",
+            ];
+        case 4:
+            return [
+                "El observatorio arcano guarda secretos de la Ruptura.",
+                "Proyecciones fantasmales muestran el momento en que el mundo se fracturó.",
+                "Entre las ruinas, un arma de poder impresionante late con energía sombría.",
+            ];
+        case 5:
+            return [
+                "En el corazón de la Convergencia, las ocho Corrientes se entrelazan.",
+                "Aquí fue forjada la primera arma, la que definió a los Conductores.",
+                "Su poder trasciende los elementos. Un arma legendaria que fue creada para este momento.",
+            ];
+        default:
+            return [
+                "Un evento misterioso ocurre.",
+                "Algo antiguo despierta y te ofrece un regalo.",
+            ];
+    }
 }

@@ -313,7 +313,7 @@ function scr_feedback_dibujar_sprites() {
     var _en_y = _gui_h * 0.55;
 
     // Escala dinámica: tamaño de pantalla deseado / tamaño real del sprite
-    var _display_h = 230;
+    var _display_h = 345;  // 230 * 1.5
 
     // ── JUGADOR BODY SPRITE ──
     {

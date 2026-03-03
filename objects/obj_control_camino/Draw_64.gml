@@ -180,6 +180,20 @@ else if (camino_fase == "mapa") {
     var _total_tiers = array_length(camino_mapa);
     if (_total_tiers > 0) {
 
+        // Sanitizar conexiones: filtrar índices inválidos para el mapa actual
+        var _next_t = camino_tier_actual + 1;
+        if (_next_t >= 0 && _next_t < _total_tiers) {
+            var _max_nodos_next = array_length(camino_mapa[_next_t]);
+            var _conexiones_validas = [];
+            for (var _si = 0; _si < array_length(camino_mapa_conexiones); _si++) {
+                if (camino_mapa_conexiones[_si] < _max_nodos_next) {
+                    array_push(_conexiones_validas, camino_mapa_conexiones[_si]);
+                }
+            }
+            camino_mapa_conexiones = _conexiones_validas;
+            if (camino_mapa_sel >= array_length(camino_mapa_conexiones)) camino_mapa_sel = 0;
+        }
+
         // ── Layout del mapa ──
         var _map_x1 = 80;
         var _map_x2 = w_gui - 300;
@@ -202,14 +216,46 @@ else if (camino_fase == "mapa") {
             }
         }
 
+        // ── Determinar visibilidad (niebla de guerra) ──
+        // Solo mostrar: nodos visitados + nodo actual + nodos del siguiente tier
+        for (var t = 0; t < _total_tiers; t++) {
+            for (var n = 0; n < array_length(camino_mapa[t]); n++) {
+                camino_mapa[t][n].__visible = false;
+            }
+        }
+        // Nodos visitados (ruta tomada)
+        for (var ri = 0; ri < array_length(camino_ruta_visitada); ri++) {
+            var _vt = camino_ruta_visitada[ri][0];
+            var _vn = camino_ruta_visitada[ri][1];
+            if (_vt < _total_tiers && _vn < array_length(camino_mapa[_vt])) {
+                camino_mapa[_vt][_vn].__visible = true;
+            }
+        }
+        // Nodo actual
+        if (camino_tier_actual >= 0 && camino_tier_actual < _total_tiers) {
+            if (camino_nodo_actual < array_length(camino_mapa[camino_tier_actual])) {
+                camino_mapa[camino_tier_actual][camino_nodo_actual].__visible = true;
+            }
+        }
+        // Siguiente tier: todos visibles (las opciones)
+        var _next_vis_tier = camino_tier_actual + 1;
+        if (_next_vis_tier >= 0 && _next_vis_tier < _total_tiers) {
+            for (var ni = 0; ni < array_length(camino_mapa[_next_vis_tier]); ni++) {
+                camino_mapa[_next_vis_tier][ni].__visible = true;
+            }
+        }
+
         // ── Dibujar conexiones ──
         for (var t = 0; t < _total_tiers - 1; t++) {
             var _tier = camino_mapa[t];
             for (var n = 0; n < array_length(_tier); n++) {
                 var _nodo = _tier[n];
+                if (!_nodo.__visible) continue;  // Solo conexiones desde nodos visibles
                 for (var ci = 0; ci < array_length(_nodo.conexiones); ci++) {
                     var _di = _nodo.conexiones[ci];
+                    if (_di >= array_length(camino_mapa[t + 1])) continue;  // Índice inválido
                     var _dest = camino_mapa[t + 1][_di];
+                    if (!_dest.__visible) continue;  // Solo hacia nodos visibles
 
                     if (_nodo.visitado && t < camino_tier_actual) {
                         draw_set_color(make_color_rgb(80, 80, 120));
@@ -230,6 +276,7 @@ else if (camino_fase == "mapa") {
             var _tier = camino_mapa[t];
             for (var n = 0; n < array_length(_tier); n++) {
                 var _nodo = _tier[n];
+                if (!_nodo.__visible) continue;  // Solo nodos visibles
                 var _nx = _nodo.__draw_x;
                 var _ny = _nodo.__draw_y;
 
@@ -243,6 +290,7 @@ else if (camino_fase == "mapa") {
                     case "forja":    _ncol = make_color_rgb(200, 140, 60); break;
                     case "descanso": _ncol = c_lime; break;
                     case "cofre":    _ncol = make_color_rgb(255, 215, 0); break;
+                    case "evento":   _ncol = make_color_rgb(180, 120, 255); break;
                 }
 
                 // Estado visual del nodo
@@ -294,6 +342,7 @@ else if (camino_fase == "mapa") {
                     case "forja":    _icon = "F"; break;
                     case "descanso": _icon = "+"; break;
                     case "cofre":    _icon = "C"; break;
+                    case "evento":   _icon = "E"; break;
                 }
                 draw_text(_nx, _ny, _icon);
             }
@@ -337,7 +386,7 @@ else if (camino_fase == "mapa") {
         if (array_length(camino_mapa_conexiones) > 0 && camino_mapa_sel < array_length(camino_mapa_conexiones)) {
             var _sel_idx = camino_mapa_conexiones[camino_mapa_sel];
             var _sel_tier = camino_tier_actual + 1;
-            if (_sel_tier < _total_tiers) {
+            if (_sel_tier < _total_tiers && _sel_idx < array_length(camino_mapa[_sel_tier])) {
                 var _sel_nodo = camino_mapa[_sel_tier][_sel_idx];
 
                 draw_set_halign(fa_center);
@@ -353,6 +402,7 @@ else if (camino_fase == "mapa") {
                     case "forja":    _tipo_col = make_color_rgb(200, 140, 60);  _tipo_txt = "FORJA"; break;
                     case "descanso": _tipo_col = c_lime;    _tipo_txt = "DESCANSO"; break;
                     case "cofre":    _tipo_col = make_color_rgb(255, 215, 0);   _tipo_txt = "COFRE"; break;
+                    case "evento":   _tipo_col = make_color_rgb(180, 120, 255); _tipo_txt = "EVENTO"; break;
                 }
 
                 draw_set_color(_tipo_col);
@@ -378,6 +428,10 @@ else if (camino_fase == "mapa") {
                 } else if (_sel_nodo.tipo == "cofre") {
                     draw_set_color(make_color_rgb(255, 215, 0));
                     draw_text(_panel_x + _panel_w / 2, _iy, "+" + string(_sel_nodo.recompensa_oro) + " oro");
+                } else if (_sel_nodo.tipo == "evento") {
+                    var _rar = variable_struct_exists(_sel_nodo, "recompensa_rareza") ? _sel_nodo.recompensa_rareza : 1;
+                    draw_set_color(make_color_rgb(180, 120, 255));
+                    draw_text(_panel_x + _panel_w / 2, _iy, "Arma de Rareza " + string(_rar));
                 }
             }
         } else {
@@ -392,7 +446,8 @@ else if (camino_fase == "mapa") {
         draw_set_valign(fa_top);
         var _ly = _panel_y + _panel_h + 15;
         var _leyenda = [["!", "Combate", c_white], ["*", "Elite", c_orange], ["$", "Tienda", make_color_rgb(100, 180, 220)],
-                        ["F", "Forja", make_color_rgb(200, 140, 60)], ["+", "Descanso", c_lime], ["C", "Cofre", make_color_rgb(255, 215, 0)]];
+                        ["F", "Forja", make_color_rgb(200, 140, 60)], ["+", "Descanso", c_lime], ["C", "Cofre", make_color_rgb(255, 215, 0)],
+                        ["E", "Evento", make_color_rgb(180, 120, 255)]];
         for (var li = 0; li < array_length(_leyenda); li++) {
             draw_set_color(_leyenda[li][2]);
             draw_text(_panel_x + (li % 3) * 90, _ly + floor(li / 3) * 20, _leyenda[li][0] + " " + _leyenda[li][1]);
@@ -473,7 +528,103 @@ else if (camino_fase == "pre_combate") {
     draw_set_halign(fa_center);
     draw_set_valign(fa_top);
     draw_set_color(c_dkgray);
-    draw_text(cx, h_gui - 30, "ENTER: ¡Combatir!  |  ESC: Abandonar");
+    draw_text(cx, h_gui - 30, "ENTER: ¡Combatir!  |  ESC: Volver al mapa");
+}
+
+
+// ═══════════════════════════════════════════
+//  FASE: SELECCIÓN DE ARMA PARA EL COMBATE
+// ═══════════════════════════════════════════
+else if (camino_fase == "seleccion_arma_combate") {
+
+    draw_set_color(c_black);
+    draw_set_alpha(0.5);
+    draw_rectangle(0, 0, w_gui, h_gui, false);
+    draw_set_alpha(1);
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_top);
+    draw_set_color(make_color_rgb(220, 170, 50));
+    draw_text(cx, 40, "── ELEGIR ARMA ──");
+
+    draw_set_color(c_white);
+    draw_text(cx, 70, "Selecciona el arma para este combate");
+    draw_set_color(c_gray);
+    draw_text(cx, 93, "▲▼ Navegar  |  ENTER: Confirmar  |  ESC: Volver");
+
+    var _y_arm = 140;
+    var _n_armas = array_length(camino_armas_run);
+
+    for (var i = 0; i < _n_armas; i++) {
+        var _a_nombre = camino_armas_run[i];
+        var _a_datos = scr_datos_armas(_a_nombre);
+        var _es_actual = (_a_nombre == camino_arma);
+
+        // Cursor
+        if (i == camino_arma_sel_indice) {
+            draw_set_color(c_yellow);
+            draw_text(cx - 280, _y_arm, "►");
+        }
+
+        // Color
+        if (i == camino_arma_sel_indice)
+            draw_set_color(c_yellow);
+        else if (_es_actual)
+            draw_set_color(c_aqua);
+        else
+            draw_set_color(c_ltgray);
+
+        var _etiqueta = _a_nombre;
+        if (_es_actual) _etiqueta += "  [ACTUAL]";
+
+        draw_set_halign(fa_left);
+        draw_text(cx - 260, _y_arm, _etiqueta);
+
+        // Stats del arma
+        draw_set_halign(fa_right);
+        draw_set_color(c_gray);
+        var _stats_txt = "R" + string(_a_datos.rareza) + " | " + _a_datos.afinidad;
+        if (_a_datos.ataque_bonus != 0) _stats_txt += " | ATK+" + string(_a_datos.ataque_bonus);
+        draw_text(cx + 280, _y_arm, _stats_txt);
+
+        _y_arm += 32;
+    }
+
+    // Detalles del arma seleccionada
+    if (camino_arma_sel_indice < _n_armas) {
+        var _sel_a = camino_armas_run[camino_arma_sel_indice];
+        var _sel_d = scr_datos_armas(_sel_a);
+        var _det_y = _y_arm + 20;
+
+        draw_set_halign(fa_center);
+        draw_set_color(make_color_rgb(180, 150, 80));
+        draw_text(cx, _det_y, "── Detalles ──");
+        _det_y += 25;
+
+        draw_set_color(c_white);
+        draw_text(cx, _det_y, _sel_a);
+        _det_y += 22;
+
+        draw_set_color(c_ltgray);
+        draw_text(cx, _det_y, "Afinidad: " + _sel_d.afinidad + "  |  Rareza: " + string(_sel_d.rareza));
+        _det_y += 22;
+
+        draw_set_color(c_orange);
+        draw_text(cx, _det_y, "ATK bonus: +" + string(_sel_d.ataque_bonus) + "  |  Poder Elemental: +" + string(_sel_d.poder_elemental_bonus));
+        _det_y += 28;
+
+        // Habilidades del arma
+        if (variable_struct_exists(_sel_d, "habilidades_arma") && is_array(_sel_d.habilidades_arma)) {
+            draw_set_color(c_aqua);
+            draw_text(cx, _det_y, "Habilidades:");
+            _det_y += 22;
+            for (var hi = 0; hi < array_length(_sel_d.habilidades_arma); hi++) {
+                draw_set_color(c_white);
+                draw_text(cx, _det_y, _sel_d.habilidades_arma[hi]);
+                _det_y += 20;
+            }
+        }
+    }
 }
 
 
@@ -495,11 +646,10 @@ else if (camino_fase == "equipar") {
 
         var _y = 120;
         var _n = array_length(camino_equip_obj_disponibles);
-        var _cj = instance_find(obj_control_juego, 0);
 
         for (var i = 0; i < _n; i++) {
             var _nom = camino_equip_obj_disponibles[i];
-            var _cant_inv = scr_inventario_get_objeto(_cj, _nom);
+            var _cant_inv = ds_map_exists(camino_objetos_run, _nom) ? camino_objetos_run[? _nom] : 0;
             var _sel_count = 0;
             for (var j = 0; j < array_length(camino_equip_objetos); j++) {
                 if (camino_equip_objetos[j] == _nom) _sel_count++;

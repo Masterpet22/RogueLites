@@ -66,6 +66,19 @@ camino_derrotas         = 0;
 camino_combates_totales = 0;
 
 // ═══════════════════════════════════════════
+//  INVENTARIO DE RUN (independiente del global)
+// ═══════════════════════════════════════════
+// Las armas, pociones y runas obtenidas durante la run
+// NO se guardan en el inventario global. Se pierden al terminar.
+camino_armas_run    = [];    // array de nombres de armas disponibles en esta run
+camino_objetos_run  = ds_map_create(); // ds_map: nombre_objeto → cantidad
+camino_runas_run    = ds_map_create(); // ds_map: nombre_runa → cantidad
+
+// Selección de arma antes de cada combate
+camino_arma_sel_indice = 0;
+camino_ruta_visitada = [];  // Array de [tier, nodo_idx] visitados
+
+// ═══════════════════════════════════════════
 //  NARRATIVA
 // ═══════════════════════════════════════════
 

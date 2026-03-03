@@ -170,16 +170,40 @@ else if (estado == TiendaState.LISTA) {
 
             case "objeto":
                 var _on = _item.datos_extra;
-                scr_inventario_agregar_objeto(control_juego, _on, 1);
-                _item.cantidad = scr_inventario_get_objeto(control_juego, _on);
+                // En modo camino: agregar al inventario de la run
+                if (variable_instance_exists(control_juego, "modo_camino") && control_juego.modo_camino) {
+                    var _cc = instance_find(obj_control_camino, 0);
+                    if (instance_exists(_cc)) {
+                        if (ds_map_exists(_cc.camino_objetos_run, _on))
+                            _cc.camino_objetos_run[? _on] += 1;
+                        else
+                            ds_map_add(_cc.camino_objetos_run, _on, 1);
+                        _item.cantidad = _cc.camino_objetos_run[? _on];
+                    }
+                } else {
+                    scr_inventario_agregar_objeto(control_juego, _on, 1);
+                    _item.cantidad = scr_inventario_get_objeto(control_juego, _on);
+                }
                 mensaje = "¡Compraste " + _on + "! (x" + string(_item.cantidad) + ")";
                 mensaje_color = c_lime;
                 break;
 
             case "runico":
                 var _rn = _item.datos_extra;
-                scr_inventario_agregar_objeto(control_juego, _rn, 1);
-                _item.cantidad = scr_inventario_get_objeto(control_juego, _rn);
+                // En modo camino: agregar al inventario de la run
+                if (variable_instance_exists(control_juego, "modo_camino") && control_juego.modo_camino) {
+                    var _cc2 = instance_find(obj_control_camino, 0);
+                    if (instance_exists(_cc2)) {
+                        if (ds_map_exists(_cc2.camino_runas_run, _rn))
+                            _cc2.camino_runas_run[? _rn] += 1;
+                        else
+                            ds_map_add(_cc2.camino_runas_run, _rn, 1);
+                        _item.cantidad = _cc2.camino_runas_run[? _rn];
+                    }
+                } else {
+                    scr_inventario_agregar_objeto(control_juego, _rn, 1);
+                    _item.cantidad = scr_inventario_get_objeto(control_juego, _rn);
+                }
                 mensaje = "¡Compraste " + _rn + "! (x" + string(_item.cantidad) + ")";
                 mensaje_color = make_color_rgb(180, 120, 255);
                 break;
