@@ -86,6 +86,7 @@
     {"id":{"name":"scr_ds_map_keys_array","path":"scripts/scr_ds_map_keys_array/scr_ds_map_keys_array.yy",},},
     {"id":{"name":"scr_ejecutar_habilidad","path":"scripts/scr_ejecutar_habilidad/scr_ejecutar_habilidad.yy",},},
     {"id":{"name":"scr_ejecutar_super","path":"scripts/scr_ejecutar_super/scr_ejecutar_super.yy",},},
+    {"id":{"name":"scr_esencia_barra","path":"scripts/scr_esencia_barra/scr_esencia_barra.yy",},},
     {"id":{"name":"scr_fabricar_arma","path":"scripts/scr_fabricar_arma/scr_fabricar_arma.yy",},},
     {"id":{"name":"scr_feedback_combate","path":"scripts/scr_feedback_combate/scr_feedback_combate.yy",},},
     {"id":{"name":"scr_formula_beneficio","path":"scripts/scr_formula_beneficio/scr_formula_beneficio.yy",},},

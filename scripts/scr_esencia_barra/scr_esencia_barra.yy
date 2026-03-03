@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_esencia_barra",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_esencia_barra",
+  "parent":{
+    "name":"datos",
+    "path":"folders/scripts/datos.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -436,53 +436,10 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
 }
 
 // ===========================
-//  BARRA DE ESENCIA INFERIOR (debajo de habilidades)
+//  BARRA DE ESENCIA — Sistema visual premium
 // ===========================
 if (!control_combate.combate_terminado) {
-    var _es_bar_x = 30;
-    var _es_bar_y = h_gui - 24;
-    var _es_bar_w = 360;
-    var _es_bar_h = 10;
-
-    var _es_ratio2 = clamp(pj.esencia / pj.esencia_llena, 0, 1);
-
-    var _t2 = 0;
-    var _t2_col = make_color_rgb(80, 60, 200);
-    if (pj.esencia >= pj.esencia_llena) { _t2 = 3; _t2_col = c_yellow; }
-    else if (pj.esencia >= pj.esencia_llena * 0.75) { _t2 = 2; _t2_col = c_orange; }
-    else if (pj.esencia >= pj.esencia_llena * 0.5) { _t2 = 1; _t2_col = make_color_rgb(100, 180, 255); }
-
-    // Barra esencia (con sprites)
-    draw_sprite_stretched(spr_barra_esencia_bg, 0, _es_bar_x, _es_bar_y, _es_bar_w, _es_bar_h);
-    if (_es_ratio2 > 0) {
-        draw_sprite_stretched(spr_barra_esencia, 0, _es_bar_x, _es_bar_y, _es_bar_w * _es_ratio2, _es_bar_h);
-    }
-
-    // Marcadores tier
-    draw_set_color(make_color_rgb(180, 180, 180));
-    draw_set_alpha(0.6);
-    draw_line(_es_bar_x + _es_bar_w * 0.50, _es_bar_y, _es_bar_x + _es_bar_w * 0.50, _es_bar_y + _es_bar_h);
-    draw_line(_es_bar_x + _es_bar_w * 0.75, _es_bar_y, _es_bar_x + _es_bar_w * 0.75, _es_bar_y + _es_bar_h);
-    draw_set_alpha(1);
-
-    draw_set_color((_t2 >= 1) ? _t2_col : c_white);
-    draw_rectangle(_es_bar_x, _es_bar_y, _es_bar_x + _es_bar_w, _es_bar_y + _es_bar_h, true);
-
-    // Texto esencia + indicador súper (con icono)
-    draw_set_halign(fa_left);
-    draw_set_valign(fa_middle);
-    draw_set_color((_t2 >= 1) ? _t2_col : c_white);
-    var _es_label2 = "ESENCIA " + string(round(pj.esencia)) + "/" + string(pj.esencia_llena);
-    if (_t2 >= 1) {
-        // Icono de súper (escala dinámica)
-        var _sup_s = 29 / sprite_get_width(spr_ico_super);
-        draw_sprite_ext(spr_ico_super, 0, _es_bar_x + _es_bar_w + 10, _es_bar_y - 6, _sup_s, _sup_s, 0, _t2_col, 1);
-        if (_t2 == 3) _es_label2 += "  [TAB] SÚPER 100%";
-        else if (_t2 == 2) _es_label2 += "  [TAB] SÚPER 75%";
-        else if (_t2 == 1) _es_label2 += "  [TAB] SÚPER 50%";
-    }
-    draw_text(_es_bar_x + _es_bar_w + 42, _es_bar_y + _es_bar_h / 2, _es_label2);
-    draw_set_valign(fa_top);
+    scr_esencia_barra_dibujar(pj);
 }
 
 // ===========================
