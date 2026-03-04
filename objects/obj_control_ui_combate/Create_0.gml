@@ -12,3 +12,6 @@ super_deny_shake = 0;     // offset de shake actual
 
 // Timer para efectos de escenario (elite / jefe)
 arena_fx_timer = 0;
+
+// Opciones post-combate (modo combate normal)
+postcombate_opcion = 0;  // 0 = Repetir, 1 = Selección personaje, 2 = Menú

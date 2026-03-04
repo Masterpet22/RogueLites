@@ -13,27 +13,97 @@ var cy = display_get_gui_height() * 0.3;
 var _logo_s = 410 / sprite_get_width(spr_logo_arcadium);
 draw_sprite_ext(spr_logo_arcadium, 0, cx, cy - 90, _logo_s, _logo_s, 0, c_white, 1);
 
-draw_text(cx, cy - 40, "MENU PRINCIPAL");
+// ═══════════════════════════════════════════════════════════════
+//  ORO — ESQUINA SUPERIOR DERECHA con efecto y sprite decorativo
+// ═══════════════════════════════════════════════════════════════
+if (instance_exists(obj_control_juego)) {
+    var _oro_val = obj_control_juego.oro;
+    var _oro_txt = string(_oro_val) + " G";
+    var _oro_x = display_get_gui_width() - 20;
+    var _oro_y = 28;
 
-// Dibujar cada opción con botón sprite
+    // Icono de moneda procedural (círculo dorado con brillo)
+    var _ico_x = _oro_x - string_width(_oro_txt) - 30;
+    var _ico_r = 12;
+
+    // Glow dorado pulsante detrás del icono
+    var _pulse = 0.6 + 0.4 * sin(current_time * 0.003);
+    draw_set_color(make_color_rgb(255, 200, 0));
+    draw_set_alpha(0.2 * _pulse);
+    draw_circle(_ico_x, _oro_y, _ico_r + 5, false);
+    draw_set_alpha(1);
+
+    // Moneda (círculo dorado)
+    draw_set_color(make_color_rgb(220, 180, 20));
+    draw_circle(_ico_x, _oro_y, _ico_r, false);
+    draw_set_color(make_color_rgb(255, 230, 80));
+    draw_circle(_ico_x, _oro_y, _ico_r - 3, false);
+    // Símbolo G en el centro
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(make_color_rgb(140, 100, 10));
+    draw_text(_ico_x, _oro_y, "G");
+
+    // Texto de oro con sombra y efecto dorado
+    draw_set_halign(fa_right);
+    draw_set_valign(fa_middle);
+    // Sombra
+    draw_set_color(c_black);
+    draw_text(_oro_x + 1, _oro_y + 1, _oro_txt);
+    // Texto dorado brillante
+    draw_set_color(merge_color(make_color_rgb(255, 215, 0), make_color_rgb(255, 240, 150), _pulse * 0.3));
+    draw_text(_oro_x, _oro_y, _oro_txt);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  BOTONES DE MENÚ — posición baja, pulsación suave del sprite
+// ═══════════════════════════════════════════════════════════════
+var _menu_y_start = cy + 120;  // bien abajo para no chocar con el logo
+
 for (var i = 0; i < array_length(opciones); i++) {
 
     var texto = opciones[i];
-    var _by = cy + i * 50;
-    
-    // Botón de fondo
-    draw_sprite_stretched(spr_boton_menu, 0, cx - 96, _by - 18, 192, 36);
+    var _by = _menu_y_start + i * 56;
+    var _es_seleccionado = (i == opcion);
 
-    if (i == opcion) draw_set_color(c_aqua);
-    else             draw_set_color(c_black);
+    // Escala del botón: seleccionado es más grande + pulsación suave
+    var _btn_w_base = _es_seleccionado ? 220 : 192;
+    var _btn_h_base = _es_seleccionado ? 42 : 36;
 
-    draw_text(cx, _by, texto);
-}
+    // Pulsación suave: el sprite del botón seleccionado respira
+    var _pulse_scale = 1.0;
+    if (_es_seleccionado) {
+        _pulse_scale = 1.0 + 0.04 * sin(current_time * 0.004);
+    }
+    var _btn_w = round(_btn_w_base * _pulse_scale);
+    var _btn_h = round(_btn_h_base * _pulse_scale);
 
-// Mostrar oro del jugador
-if (instance_exists(obj_control_juego)) {
-    draw_set_color(make_color_rgb(255, 215, 0));
-    draw_text(cx, cy + array_length(opciones) * 40 + 30, "Oro: " + string(obj_control_juego.oro) + " G");
+    // Botón de fondo (sprite con pulsación)
+    draw_sprite_stretched(spr_boton_menu, 0, cx - _btn_w / 2, _by - _btn_h / 2, _btn_w, _btn_h);
+
+    // Texto con sombra y colores mejorados
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+
+    if (_es_seleccionado) {
+        // Sombra del texto seleccionado
+        draw_set_color(c_black);
+        draw_text(cx + 1, _by + 1, texto);
+        // Texto seleccionado: blanco brillante
+        draw_set_color(c_white);
+        draw_text(cx, _by, texto);
+        // Indicadores de selección
+        draw_set_color(make_color_rgb(220, 220, 230));
+        draw_text(cx - _btn_w / 2 + 14, _by, ">");
+        draw_text(cx + _btn_w / 2 - 14, _by, "<");
+    } else {
+        // Sombra
+        draw_set_color(c_black);
+        draw_text(cx + 1, _by + 1, texto);
+        // Texto no seleccionado: gris claro
+        draw_set_color(make_color_rgb(180, 180, 190));
+        draw_text(cx, _by, texto);
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════

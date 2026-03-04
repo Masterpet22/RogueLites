@@ -18,7 +18,18 @@ if (!instance_exists(control_combate)) {
         case 4:  _bg_spr = spr_bg_combate_5; break;
         default: _bg_spr = spr_bg_combate_1; break;
     }
-    draw_sprite_stretched(_bg_spr, 0, 0, 0, display_get_gui_width(), display_get_gui_height());
+
+    // Mover el fondo con el shake para reforzar el efecto de cámara
+    var _bg_shake_x = 0;
+    var _bg_shake_y = 0;
+    if (variable_struct_exists(control_combate, "fb_shake_offset_x")) {
+        // Promediar shake de ambos personajes y aplicar fracción al fondo
+        _bg_shake_x = (control_combate.fb_shake_offset_x[0] + control_combate.fb_shake_offset_x[1]) * 0.35;
+        _bg_shake_y = (control_combate.fb_shake_offset_y[0] + control_combate.fb_shake_offset_y[1]) * 0.35;
+    }
+
+    draw_sprite_stretched(_bg_spr, 0, _bg_shake_x - 4, _bg_shake_y - 4,
+        display_get_gui_width() + 8, display_get_gui_height() + 8);
 }
 
 draw_set_font(fnt_1);
@@ -647,8 +658,47 @@ if (control_combate.combate_terminado) {
     }
     draw_text(w_gui * 0.5, _fy + 90, _timp_txt);
 
-    draw_set_color(c_gray);
-    draw_text(w_gui * 0.5, _fy + 60, "Pulsa ENTER o ESC para continuar");
+    // Opciones post-combate según modo
+    var _es_modo_especial = false;
+    if (instance_exists(obj_control_juego)) {
+        _es_modo_especial = (variable_struct_exists(obj_control_juego, "modo_torre") && obj_control_juego.modo_torre)
+                         || (variable_struct_exists(obj_control_juego, "modo_camino") && obj_control_juego.modo_camino);
+    }
+
+    if (_es_modo_especial) {
+        // Torre / Camino: texto simple
+        draw_set_color(c_gray);
+        draw_text(w_gui * 0.5, _fy + 60, "Pulsa ENTER o ESC para continuar");
+    } else {
+        // Modo combate normal: menú de opciones
+        var _opciones_post = ["Repetir combate", "Selección de personaje", "Menú principal"];
+        var _opt_y_start = _fy + 130;
+
+        for (var _oi = 0; _oi < 3; _oi++) {
+            var _opt_y = _opt_y_start + _oi * 34;
+            var _opt_sel = (postcombate_opcion == _oi);
+
+            // Fondo del botón
+            var _opt_w = _opt_sel ? 230 : 200;
+            var _opt_h = 28;
+            draw_set_color(c_black);
+            draw_set_alpha(_opt_sel ? 0.6 : 0.35);
+            draw_roundrect_ext(w_gui * 0.5 - _opt_w / 2, _opt_y - _opt_h / 2,
+                               w_gui * 0.5 + _opt_w / 2, _opt_y + _opt_h / 2, 4, 4, false);
+            draw_set_alpha(1);
+
+            // Texto
+            draw_set_halign(fa_center);
+            draw_set_valign(fa_middle);
+            if (_opt_sel) {
+                draw_set_color(c_white);
+                draw_text(w_gui * 0.5, _opt_y, "> " + _opciones_post[_oi] + " <");
+            } else {
+                draw_set_color(make_color_rgb(160, 160, 170));
+                draw_text(w_gui * 0.5, _opt_y, _opciones_post[_oi]);
+            }
+        }
+    }
 
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);

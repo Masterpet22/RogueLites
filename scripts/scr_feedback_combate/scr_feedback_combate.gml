@@ -438,6 +438,11 @@ function scr_feedback_dibujar_sprites() {
             }
         }
 
+        // Tinte rojo permanente si es el perdedor (foco_quien == 1)
+        if (_c.fin_activado && _c.foco_quien == 1) {
+            _blend = c_red;
+        }
+
         draw_sprite_ext(_spr_j, 0, _sx, _sy, _escala_j, _escala_j, 0, _blend, _alpha);
     }
 
@@ -463,6 +468,11 @@ function scr_feedback_dibujar_sprites() {
             if (_c.fb_flash_timer[1] mod 3 == 0) {
                 _alpha *= 0.5;
             }
+        }
+
+        // Tinte rojo permanente si es el perdedor (foco_quien == 2)
+        if (_c.fin_activado && _c.foco_quien == 2) {
+            _blend = c_red;
         }
 
         // ── FX especiales según rango ──

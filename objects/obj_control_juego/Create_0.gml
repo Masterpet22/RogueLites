@@ -115,4 +115,5 @@ combate_arena_ultimo   = -1;   // último índice usado (para revancha)
 // ── SISTEMA DE TRANSICIONES DE ROOM (fade in/out) ──
 scr_transicion_init();
 
-scr_transicion_ir(rm_menu);
+// Ir directamente al menú sin transición (es la apertura del juego)
+room_goto(rm_menu);

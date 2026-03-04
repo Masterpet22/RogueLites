@@ -188,6 +188,9 @@ function scr_fx_esencia_dibujar_glow() {
     if (!instance_exists(obj_control_combate)) return;
     var _c = instance_find(obj_control_combate, 0);
 
+    // Ocultar efecto de esencia cuando el combate terminó
+    if (_c.combate_terminado) return;
+
     if (_c.ese_glow_alpha <= 0) return;
 
     var _gui_w = display_get_gui_width();

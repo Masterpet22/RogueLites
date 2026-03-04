@@ -409,29 +409,27 @@ function scr_fin_combate_activar(_ganador) {
     var _centro_x  = _gw * 0.5;
 
     if (_ganador == "Jugador") {
-        // Ganó el jugador → foco en el enemigo derrotado → centrarlo
+        // Ganó el jugador → perdedor (enemigo) sale por la derecha
         _c.foco_quien       = 2;
-        _c.fin_flash_color  = c_lime;   // flash verde = victoria
-        // Deslizar enemigo al centro, jugador fuera de pantalla
-        _c.foco_offset_en_x_obj = _centro_x - _en_base_x;  // mover enemigo al centro
-        _c.foco_offset_pj_x_obj = -_pj_base_x - 100;       // sacar jugador por la izquierda
+        _c.fin_flash_color  = c_red;
+        _c.foco_offset_en_x_obj = _gw + 100 - _en_base_x;   // enemigo sale por derecha
+        _c.foco_offset_pj_x_obj = 0;                         // jugador se queda (invisible)
     } else if (_ganador == "Enemigo") {
-        // Perdió el jugador → foco en el jugador derrotado → centrarlo
+        // Perdió el jugador → sale por la izquierda
         _c.foco_quien       = 1;
-        _c.fin_flash_color  = c_red;    // flash rojo = derrota
-        // Deslizar jugador al centro, enemigo fuera de pantalla
-        _c.foco_offset_pj_x_obj = _centro_x - _pj_base_x;  // mover jugador al centro
-        _c.foco_offset_en_x_obj = _gw + 100 - _en_base_x;   // sacar enemigo por la derecha
+        _c.fin_flash_color  = c_red;
+        _c.foco_offset_pj_x_obj = -_pj_base_x - 200;        // jugador sale por izquierda
+        _c.foco_offset_en_x_obj = 0;                         // enemigo se queda (invisible)
     } else {
-        // Empate → sin foco, sin offset
+        // Empate → ambos salen por sus lados
         _c.foco_quien       = 0;
         _c.fin_flash_color  = c_orange;
-        _c.foco_offset_pj_x_obj = 0;
-        _c.foco_offset_en_x_obj = 0;
+        _c.foco_offset_pj_x_obj = -_pj_base_x - 200;
+        _c.foco_offset_en_x_obj = _gw + 100 - _en_base_x;
     }
 
     _c.foco_escala_obj  = FIN_ZOOM_OBJETIVO;    // 1.25
-    _c.foco_dim_obj     = 0.3;                  // atenuar mucho al otro
+    _c.foco_dim_obj     = 0.0;                  // ganador desaparece completamente
     _c.foco_vel         = FIN_ZOOM_VELOCIDAD;   // 0.04
 
     _c.fin_flash_alpha = FIN_FLASH_ALPHA_MAX;

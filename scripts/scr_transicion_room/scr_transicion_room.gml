@@ -15,8 +15,8 @@
 //  MACROS DE TRANSICIONES
 // ══════════════════════════════════════════════════════════════
 #macro TRANS_BARRAS_NUM      10     // cantidad de barras horizontales
-#macro TRANS_DURACION        20     // frames que dura cada fase (out/in)
-#macro TRANS_PAUSA_FRAMES    4      // frames de pausa con pantalla cubierta
+#macro TRANS_DURACION        35     // frames que dura cada fase (out/in)
+#macro TRANS_PAUSA_FRAMES    8      // frames de pausa con pantalla cubierta
 
 // ══════════════════════════════════════════════════════════════
 //  ESTADO DE TRANSICIÓN (almacenado en obj_control_juego)
@@ -71,8 +71,19 @@ function scr_transicion_ir(_room_dest) {
     // Elegir tipo de transición al azar
     _g.trans_tipo = irandom(2);  // 0=barras, 1=iris, 2=diagonal
 
-    // Color aleatorio sutil (oscuro) para variedad
-    var _cols = [c_black, make_color_rgb(15, 10, 25), make_color_rgb(20, 12, 8), make_color_rgb(8, 15, 20)];
+    // Color aleatorio sutil (oscuro) para variedad — amplia paleta de tonos oscuros
+    var _cols = [
+        c_black,
+        make_color_rgb(15, 10, 25),   // púrpura oscuro
+        make_color_rgb(20, 12, 8),    // marrón oscuro
+        make_color_rgb(8, 15, 20),    // azul noche
+        make_color_rgb(18, 8, 8),     // rojo sangre oscuro
+        make_color_rgb(6, 18, 12),    // verde bosque oscuro
+        make_color_rgb(12, 10, 22),   // índigo profundo
+        make_color_rgb(20, 18, 8),    // bronce oscuro
+        make_color_rgb(10, 5, 18),    // violeta abisal
+        make_color_rgb(5, 12, 18),    // cian medianoche
+    ];
     _g.trans_color = _cols[irandom(array_length(_cols) - 1)];
 }
 
@@ -173,8 +184,8 @@ function _scr_trans_dibujar_barras(_gw, _gh, _t, _col) {
         var _y1 = i * (_gh / _n);
         var _y2 = _y1 + _bar_h;
 
-        // Cada barra entra con un ligero desfase (stagger)
-        var _stagger = i / _n * 0.35;
+        // Cada barra entra con un ligero desfase (stagger reducido)
+        var _stagger = i / _n * 0.20;
         var _local_t = clamp((_t - _stagger) / (1 - _stagger), 0, 1);
 
         // Dirección alternada
@@ -182,10 +193,11 @@ function _scr_trans_dibujar_barras(_gw, _gh, _t, _col) {
         var _x1, _x2;
 
         if (_from_left) {
-            _x1 = -_gw + _local_t * (_gw * 2);
+            // La barra cubre todo su ancho cuando local_t >= 0.5
+            _x1 = lerp(-_gw, 0, clamp(_local_t * 2, 0, 1));
             _x2 = _x1 + _gw;
         } else {
-            _x2 = _gw * 2 - _local_t * (_gw * 2);
+            _x2 = lerp(_gw * 2, _gw, clamp(_local_t * 2, 0, 1));
             _x1 = _x2 - _gw;
         }
 

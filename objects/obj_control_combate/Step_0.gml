@@ -9,28 +9,59 @@ if (combate_terminado)
     // Bloquear input durante la secuencia dramática
     if (fin_dramatico_timer > 0 || fin_hitstop_timer > 0) { exit; }
 
-    // Corregido: Ahora coincide con el comentario o usa la tecla que prefieras
-    if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_escape))
-    {
-        // MODO TORRE: delegar al controlador de torre
-        if (instance_exists(obj_control_juego)
-            && variable_struct_exists(obj_control_juego, "modo_torre")
-            && obj_control_juego.modo_torre
-            && instance_exists(obj_control_torre)) {
-            with (obj_control_torre) {
-                scr_torre_post_combate(other.ganador, other.personaje_jugador, other.oro_recompensa);
+    // Determinar si estamos en modo especial (torre o camino)
+    var _es_torre = (instance_exists(obj_control_juego)
+        && variable_struct_exists(obj_control_juego, "modo_torre")
+        && obj_control_juego.modo_torre);
+    var _es_camino = (instance_exists(obj_control_juego)
+        && variable_struct_exists(obj_control_juego, "modo_camino")
+        && obj_control_juego.modo_camino);
+
+    if (_es_torre || _es_camino) {
+        // MODO TORRE / CAMINO: confirmar con Enter/Escape (flujo original)
+        if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_escape)) {
+            if (_es_torre && instance_exists(obj_control_torre)) {
+                with (obj_control_torre) {
+                    scr_torre_post_combate(other.ganador, other.personaje_jugador, other.oro_recompensa);
+                }
+            } else if (_es_camino && instance_exists(obj_control_camino)) {
+                with (obj_control_camino) {
+                    scr_camino_post_combate(other.ganador, other.personaje_jugador, other.oro_recompensa);
+                }
             }
         }
-        // MODO CAMINO: delegar al controlador de camino
-        else if (instance_exists(obj_control_juego)
-            && variable_struct_exists(obj_control_juego, "modo_camino")
-            && obj_control_juego.modo_camino
-            && instance_exists(obj_control_camino)) {
-            with (obj_control_camino) {
-                scr_camino_post_combate(other.ganador, other.personaje_jugador, other.oro_recompensa);
+    } else {
+        // MODO COMBATE NORMAL: menú de opciones (Repetir / Selección / Menú)
+        if (instance_exists(obj_control_ui_combate)) {
+            // Navegación
+            if (keyboard_check_pressed(vk_up)) {
+                obj_control_ui_combate.postcombate_opcion = max(0, obj_control_ui_combate.postcombate_opcion - 1);
             }
-        } else {
-            scr_transicion_ir(rm_menu);
+            if (keyboard_check_pressed(vk_down)) {
+                obj_control_ui_combate.postcombate_opcion = min(2, obj_control_ui_combate.postcombate_opcion + 1);
+            }
+
+            // Confirmar
+            if (keyboard_check_pressed(vk_enter)) {
+                switch (obj_control_ui_combate.postcombate_opcion) {
+                    case 0: // Repetir combate (revancha)
+                        if (instance_exists(obj_control_juego)) {
+                            obj_control_juego.combate_arena_revancha = combate_arena_idx;
+                        }
+                        scr_transicion_ir(rm_combate);
+                        break;
+                    case 1: // Volver a selección de personaje
+                        scr_transicion_ir(rm_select);
+                        break;
+                    case 2: // Volver al menú principal
+                        scr_transicion_ir(rm_menu);
+                        break;
+                }
+            }
+            // Escape = volver al menú directamente
+            if (keyboard_check_pressed(vk_escape)) {
+                scr_transicion_ir(rm_menu);
+            }
         }
     }
     exit;

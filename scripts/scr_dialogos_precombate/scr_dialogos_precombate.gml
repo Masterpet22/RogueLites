@@ -19,6 +19,7 @@
 #macro DIAL_ZOOM_VELOCIDAD   0.06    // velocidad de interpolación del zoom
 #macro DIAL_GLOW_ALPHA       0.25    // alpha del glow sobre quien habla
 #macro DIAL_BG_OSCURIDAD     0.35    // oscurecimiento del fondo (0–1)
+#macro DIAL_DELAY_FRAMES     90      // delay antes de iniciar diálogos (~1.5s) para esperar transición
 
 
 // ══════════════════════════════════════════════════════════════
@@ -35,6 +36,7 @@ function scr_dialogos_init() {
     _c.dial_timer        = 0;        // timer de la frase actual
     _c.dial_terminado    = false;    // ya terminó la secuencia
     _c.dial_skip_pressed = false;
+    _c.dial_delay_timer  = DIAL_DELAY_FRAMES;  // esperar a que termine la transición de room
 
     // Solo activar si el flag está encendido
     if (!FX_DIALOGOS_PRE_ON) {
@@ -83,6 +85,12 @@ function scr_dialogos_actualizar() {
     var _c = instance_find(obj_control_combate, 0);
 
     if (_c.dial_terminado || !_c.dial_activo) return false;
+
+    // Delay inicial: esperar a que termine la transición de room
+    if (_c.dial_delay_timer > 0) {
+        _c.dial_delay_timer -= 1;
+        return true; // bloquear combate mientras esperamos
+    }
 
     // Skip con Enter o clic
     if (keyboard_check_pressed(vk_enter) || mouse_check_button_pressed(mb_left)) {
@@ -137,6 +145,7 @@ function scr_dialogos_dibujar() {
     var _c = instance_find(obj_control_combate, 0);
 
     if (!_c.dial_activo || _c.dial_terminado) return;
+    if (_c.dial_delay_timer > 0) return; // no dibujar durante el delay inicial
     if (_c.dial_indice >= array_length(_c.dial_frases)) return;
 
     var _frase = _c.dial_frases[_c.dial_indice];
