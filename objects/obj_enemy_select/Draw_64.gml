@@ -25,25 +25,56 @@ draw_text(40, 20, "SELECCIÓN DE ENEMIGO");
 
     for (var i = 0; i < array_length(categorias); i++) {
         var _tab_txt = categorias[i];
-        var _tw = string_width(_tab_txt) + 24;
+        var _tw = string_width(_tab_txt) + 32;
         var _tx = _tab_x_start;
         var _sel = (i == indice_categoria);
 
+        // Colores por categoría
+        var _col_bg, _col_borde, _col_txt;
+        switch (categorias[i]) {
+            case "Común":
+                _col_bg     = _sel ? make_color_rgb(50, 70, 50)   : make_color_rgb(20, 30, 20);
+                _col_borde  = _sel ? make_color_rgb(120, 200, 120): make_color_rgb(50, 80, 50);
+                _col_txt    = _sel ? make_color_rgb(160, 255, 160): make_color_rgb(100, 140, 100);
+                break;
+            case "Élite":
+                _col_bg     = _sel ? make_color_rgb(60, 40, 90)   : make_color_rgb(25, 15, 40);
+                _col_borde  = _sel ? make_color_rgb(180, 140, 255): make_color_rgb(80, 60, 120);
+                _col_txt    = _sel ? make_color_rgb(200, 170, 255): make_color_rgb(140, 110, 180);
+                break;
+            case "Jefe":
+                _col_bg     = _sel ? make_color_rgb(90, 30, 30)   : make_color_rgb(40, 12, 12);
+                _col_borde  = _sel ? make_color_rgb(255, 100, 80) : make_color_rgb(120, 50, 40);
+                _col_txt    = _sel ? make_color_rgb(255, 130, 100): make_color_rgb(180, 80, 60);
+                if (_sel) { _tw += 8; }
+                break;
+            default: // Random
+                _col_bg     = _sel ? make_color_rgb(60, 60, 100)  : c_black;
+                _col_borde  = _sel ? c_yellow : make_color_rgb(60, 60, 80);
+                _col_txt    = _sel ? c_yellow : c_ltgray;
+                break;
+        }
+
         // Fondo de tab
-        draw_set_color(_sel ? make_color_rgb(60, 60, 100) : c_black);
-        draw_set_alpha(_sel ? 0.9 : 0.5);
+        draw_set_color(_col_bg);
+        draw_set_alpha(_sel ? 0.95 : 0.6);
         draw_roundrect_ext(_tx, _tab_y, _tx + _tw, _tab_y + _tab_h, 4, 4, false);
         draw_set_alpha(1);
 
         // Borde
-        draw_set_color(_sel ? c_yellow : make_color_rgb(60, 60, 80));
+        draw_set_color(_col_borde);
         draw_roundrect_ext(_tx, _tab_y, _tx + _tw, _tab_y + _tab_h, 4, 4, true);
 
-        // Texto
+        // Icono de categoría
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
-        draw_set_color(_sel ? c_yellow : c_ltgray);
-        draw_text(_tx + _tw * 0.5, _tab_y + _tab_h * 0.5, _tab_txt);
+        var _ico_txt = "";
+        if (categorias[i] == "Jefe")       _ico_txt = "♦ ";
+        else if (categorias[i] == "Élite") _ico_txt = "★ ";
+
+        // Texto
+        draw_set_color(_col_txt);
+        draw_text(_tx + _tw * 0.5, _tab_y + _tab_h * 0.5, _ico_txt + _tab_txt);
 
         _tab_x_start += _tw + _tab_gap;
     }
@@ -202,7 +233,18 @@ else if (estado == EnemySelState.LISTA || estado == EnemySelState.CONFIRMAR) {
         if (variable_struct_exists(_datos_en, "patron")) {
             _ty += 4;
             draw_set_color(c_ltgray);
-            draw_text(_tx, _ty, "Patrón: " + _datos_en.patron);
+            var _patron_txt = "";
+            if (is_array(_datos_en.patron)) {
+                var _plen = min(array_length(_datos_en.patron), 4);
+                for (var _pi = 0; _pi < _plen; _pi++) {
+                    if (_pi > 0) _patron_txt += " → ";
+                    _patron_txt += scr_nombre_habilidad(_datos_en.patron[_pi]);
+                }
+                if (array_length(_datos_en.patron) > 4) _patron_txt += " …";
+            } else {
+                _patron_txt = string(_datos_en.patron);
+            }
+            draw_text(_tx, _ty, "Patrón: " + _patron_txt);
             _ty += _lh;
         }
 

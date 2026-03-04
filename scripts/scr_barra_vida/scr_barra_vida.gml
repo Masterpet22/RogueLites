@@ -198,7 +198,12 @@ function scr_barra_vida_draw(_x, _y, _w, _h, _pj, _invertir) {
         var _muesca_gap = _w / _num_capas;
 
         for (var _c = 0; _c < _num_capas; _c++) {
-            var _mx = _x + _c * _muesca_gap + 1;
+            var _mx;
+            if (_invertir) {
+                _mx = _x + _w - (_c + 1) * _muesca_gap + 1;
+            } else {
+                _mx = _x + _c * _muesca_gap + 1;
+            }
 
             if (_c < _capa_actual) {
                 // Capa llena

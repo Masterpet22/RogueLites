@@ -257,48 +257,202 @@ if (estado == SelState.PERSONAJE) {
 // =========================
 if (estado == SelState.ARMA_POPUP) {
 
-    var w = 360;
-    var h = 260;
-    var cx = w_gui / 2;
-    var cy = h_gui / 2;
+    var armas = scr_ds_map_keys_array(perfil.armas_obtenidas);
+    var _n_armas = array_length(armas);
 
-    var x1 = cx - w / 2;
-    var y1 = cy - h / 2;
+    // Dimensiones del popup
+    var _pw = 560;
+    var _ph = 380;
+    var _pcx = w_gui / 2;
+    var _pcy = h_gui / 2;
+    var _px1 = _pcx - _pw / 2;
+    var _py1 = _pcy - _ph / 2;
 
-    // Fondo semi-transparente
+    // Fondo oscurecido
     draw_set_color(c_black);
-    draw_set_alpha(0.85);
+    draw_set_alpha(0.8);
     draw_rectangle(0, 0, w_gui, h_gui, false);
     draw_set_alpha(1);
 
-    // Ventana
-    draw_set_color(c_black);
-    draw_rectangle(x1, y1, x1 + w, y1 + h, false);
-    draw_set_color(make_color_rgb(80, 80, 120));
-    draw_rectangle(x1, y1, x1 + w, y1 + h, true);
+    // Panel principal
+    draw_set_color(make_color_rgb(18, 18, 28));
+    draw_roundrect_ext(_px1, _py1, _px1 + _pw, _py1 + _ph, 8, 8, false);
+    draw_set_color(make_color_rgb(90, 90, 140));
+    draw_roundrect_ext(_px1, _py1, _px1 + _pw, _py1 + _ph, 8, 8, true);
 
+    // Barra de título
+    draw_set_color(make_color_rgb(30, 30, 50));
+    draw_roundrect_ext(_px1, _py1, _px1 + _pw, _py1 + 36, 8, 8, false);
+    draw_set_color(make_color_rgb(90, 90, 140));
+    draw_line(_px1, _py1 + 36, _px1 + _pw, _py1 + 36);
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
     draw_set_color(c_white);
-    draw_text(x1 + 20, y1 + 20, "ARMAS DE " + perfil.nombre);
+    draw_text(_pcx, _py1 + 18, "ARMAS DE " + perfil.nombre);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
 
-    var armas = scr_ds_map_keys_array(perfil.armas_obtenidas);
-    var ay = y1 + 60;
+    // Zona izquierda: lista de armas
+    var _list_x = _px1 + 16;
+    var _list_y = _py1 + 48;
+    var _list_w = 200;
+    var _item_h = 36;
 
-    for (var i = 0; i < array_length(armas); i++) {
+    for (var i = 0; i < _n_armas; i++) {
+        var _iy = _list_y + i * _item_h;
+        var _is_sel = (i == indice_arma);
+        var _arma_datos = scr_datos_armas(armas[i]);
 
-        if (i == indice_arma) {
-            draw_set_color(c_lime);
-            draw_text(x1 + 40, ay, "> " + armas[i]);
-        } else {
-            draw_set_color(c_gray);
-            draw_text(x1 + 40, ay, armas[i]);
+        // Color de rareza
+        var _rar_col = c_ltgray;
+        if (variable_struct_exists(_arma_datos, "rareza")) {
+            if (_arma_datos.rareza == 1) _rar_col = make_color_rgb(100, 200, 100);
+            else if (_arma_datos.rareza == 2) _rar_col = make_color_rgb(100, 160, 255);
+            else if (_arma_datos.rareza == 3) _rar_col = make_color_rgb(255, 180, 80);
         }
 
-        ay += 30;
+        // Fondo del item
+        draw_set_color(_is_sel ? make_color_rgb(50, 50, 80) : make_color_rgb(22, 22, 34));
+        draw_set_alpha(_is_sel ? 0.9 : 0.5);
+        draw_roundrect_ext(_list_x, _iy, _list_x + _list_w, _iy + _item_h - 2, 4, 4, false);
+        draw_set_alpha(1);
+
+        // Borde selección
+        if (_is_sel) {
+            draw_set_color(_rar_col);
+            draw_roundrect_ext(_list_x, _iy, _list_x + _list_w, _iy + _item_h - 2, 4, 4, true);
+        }
+
+        // Indicador de selección
+        draw_set_valign(fa_middle);
+        if (_is_sel) {
+            draw_set_color(c_white);
+            draw_text(_list_x + 8, _iy + _item_h * 0.5, "►");
+        }
+
+        // Nombre del arma
+        draw_set_color(_is_sel ? _rar_col : make_color_rgb(140, 140, 160));
+        var _arma_txt = armas[i];
+        if (string_length(_arma_txt) > 18) _arma_txt = string_copy(_arma_txt, 1, 18);
+        draw_text(_list_x + 24, _iy + _item_h * 0.5, _arma_txt);
+        draw_set_valign(fa_top);
     }
 
-    draw_set_color(c_white);
-    draw_text(x1 + 20, y1 + h - 50, "ENTER: Equipar y elegir objetos");
-    draw_text(x1 + 20, y1 + h - 25, "ESC: Volver a seleccionar personaje");
+    // Zona derecha: info del arma seleccionada
+    if (_n_armas > 0) {
+        var _info_x = _px1 + _list_w + 36;
+        var _info_y = _py1 + 48;
+        var _info_w = _pw - _list_w - 52;
+        var _lh = 21;
+
+        var _sel_arma = armas[indice_arma];
+        var _arma_d = scr_datos_armas(_sel_arma);
+
+        // Panel info fondo
+        draw_set_color(make_color_rgb(14, 14, 22));
+        draw_set_alpha(0.6);
+        draw_roundrect_ext(_info_x - 8, _info_y - 4, _info_x + _info_w + 8, _py1 + _ph - 52, 6, 6, false);
+        draw_set_alpha(1);
+
+        var _ity = _info_y + 4;
+
+        // Nombre grande
+        var _rar_col2 = c_white;
+        if (variable_struct_exists(_arma_d, "rareza")) {
+            if (_arma_d.rareza == 1) _rar_col2 = make_color_rgb(100, 200, 100);
+            else if (_arma_d.rareza == 2) _rar_col2 = make_color_rgb(100, 160, 255);
+            else if (_arma_d.rareza == 3) _rar_col2 = make_color_rgb(255, 180, 80);
+        }
+        draw_set_color(_rar_col2);
+        draw_text_transformed(_info_x, _ity, _sel_arma, 1.1, 1.1, 0);
+        _ity += 26;
+
+        // Afinidad con icono
+        if (variable_struct_exists(_arma_d, "afinidad")) {
+            draw_set_color(c_ltgray);
+            draw_text(_info_x, _ity, "Afinidad: ");
+            var _afn_ico = scr_sprite_icono_afinidad(_arma_d.afinidad);
+            var _afn_x = _info_x + string_width("Afinidad: ");
+            if (_afn_ico != -1) {
+                draw_sprite_stretched(_afn_ico, 0, _afn_x, _ity, 14, 14);
+                _afn_x += 18;
+            }
+            draw_set_color(c_white);
+            draw_text(_afn_x, _ity, _arma_d.afinidad);
+            _ity += _lh;
+        }
+
+        // Rareza
+        if (variable_struct_exists(_arma_d, "rareza")) {
+            draw_set_color(c_ltgray);
+            var _rar_txt = "";
+            for (var _ri = 0; _ri < _arma_d.rareza; _ri++) _rar_txt += "★";
+            if (_rar_txt == "") _rar_txt = "—";
+            draw_text(_info_x, _ity, "Rareza: ");
+            draw_set_color(_rar_col2);
+            draw_text(_info_x + string_width("Rareza: "), _ity, _rar_txt);
+            _ity += _lh;
+        }
+
+        _ity += 4;
+        draw_set_color(make_color_rgb(60, 60, 80));
+        draw_line(_info_x, _ity, _info_x + _info_w, _ity);
+        _ity += 8;
+
+        // Stats bonus
+        draw_set_color(c_aqua);
+        draw_text(_info_x, _ity, "Bonificaciones:");
+        _ity += _lh;
+        draw_set_color(c_ltgray);
+        if (variable_struct_exists(_arma_d, "ataque_bonus") && _arma_d.ataque_bonus != 0) {
+            draw_set_color(c_lime);
+            draw_text(_info_x, _ity, "ATK +" + string(_arma_d.ataque_bonus));
+            _ity += _lh;
+        }
+        if (variable_struct_exists(_arma_d, "poder_elemental_bonus") && _arma_d.poder_elemental_bonus != 0) {
+            draw_set_color(make_color_rgb(180, 120, 255));
+            draw_text(_info_x, _ity, "POD +" + string(_arma_d.poder_elemental_bonus));
+            _ity += _lh;
+        }
+        if (variable_struct_exists(_arma_d, "defensa_bonus") && _arma_d.defensa_bonus != 0) {
+            draw_set_color(make_color_rgb(100, 180, 255));
+            draw_text(_info_x, _ity, "DEF +" + string(_arma_d.defensa_bonus));
+            _ity += _lh;
+        }
+        if (variable_struct_exists(_arma_d, "vida_bonus") && _arma_d.vida_bonus != 0) {
+            draw_set_color(make_color_rgb(100, 255, 100));
+            draw_text(_info_x, _ity, "HP +" + string(_arma_d.vida_bonus));
+            _ity += _lh;
+        }
+
+        // Habilidades
+        if (variable_struct_exists(_arma_d, "habilidades_arma")) {
+            _ity += 4;
+            draw_set_color(make_color_rgb(60, 60, 80));
+            draw_line(_info_x, _ity, _info_x + _info_w, _ity);
+            _ity += 8;
+            draw_set_color(c_orange);
+            draw_text(_info_x, _ity, "Habilidades:");
+            _ity += _lh;
+            for (var _hi = 0; _hi < array_length(_arma_d.habilidades_arma); _hi++) {
+                draw_set_color(c_yellow);
+                var _h_nom = scr_nombre_habilidad(_arma_d.habilidades_arma[_hi]);
+                draw_text(_info_x + 8, _ity, "• " + _h_nom);
+                _ity += _lh;
+            }
+        }
+    }
+
+    // Instrucciones en la parte inferior
+    draw_set_color(make_color_rgb(60, 60, 80));
+    draw_line(_px1 + 16, _py1 + _ph - 40, _px1 + _pw - 16, _py1 + _ph - 40);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_ltgray);
+    draw_text(_pcx, _py1 + _ph - 22, "▲/▼ Elegir   ENTER Equipar   ESC Volver");
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
 }
 
 // =========================
