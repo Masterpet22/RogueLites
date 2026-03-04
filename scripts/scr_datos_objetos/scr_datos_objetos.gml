@@ -6,20 +6,20 @@ function scr_datos_objetos(_nombre) {
 
         case "Pocion Basica":
             return {
-                descripcion: "Restaura 30 puntos de vida.",
+                descripcion: "Restaura 45 puntos de vida.",
                 tipo: "consumible",
                 efecto: "curar_vida",
-                valor_efecto: 30,
+                valor_efecto: 45,
                 precio: 50,
                 precio_venta: 15,
             };
 
         case "Pocion Media":
             return {
-                descripcion: "Restaura 80 puntos de vida.",
+                descripcion: "Restaura 110 puntos de vida.",
                 tipo: "consumible",
                 efecto: "curar_vida",
-                valor_efecto: 80,
+                valor_efecto: 110,
                 precio: 150,
                 precio_venta: 45,
             };

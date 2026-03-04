@@ -25,7 +25,7 @@
 // ══════════════════════════════════════════════════════════════
 //  PALANCAS GLOBALES  — modifica estos macros para balancear
 // ══════════════════════════════════════════════════════════════
-#macro FACTOR_DEF_GLOBAL  0.5     // Peso de la defensa en todo el juego
+#macro FACTOR_DEF_GLOBAL  0.55    // Peso de la defensa en todo el juego (antes 0.50)
 #macro VAR_RANGO          0.15    // Varianza aleatoria ±15 %  (0.85 – 1.15)
 #macro VAR_MIN_ABS        2       // Spread mínimo absoluto (±2 pts) — evita que daños bajos se sientan fijos
 #macro CRIT_POS_CHANCE    5       // % probabilidad de crítico positivo  (antes 10)

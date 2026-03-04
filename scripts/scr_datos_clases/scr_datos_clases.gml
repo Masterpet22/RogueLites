@@ -6,10 +6,10 @@ function scr_datos_clases(_clase) {
 
         case "Vanguardia":
             return {
-                vida: 120,
+                vida: 160,
                 ataque: 10,
-                defensa: 8,
-                defensa_magica: 5,
+                defensa: 10,
+                defensa_magica: 7,
                 velocidad: 4,
                 poder_elemental: 5,
                 carga_esencia: "recibir_dano",
@@ -19,10 +19,10 @@ function scr_datos_clases(_clase) {
 
         case "Filotormenta":
             return {
-                vida: 90,
+                vida: 130,
                 ataque: 12,
-                defensa: 4,
-                defensa_magica: 3,
+                defensa: 5,
+                defensa_magica: 4,
                 velocidad: 10,
                 poder_elemental: 6,
                 carga_esencia: "combo_habilidades",
@@ -32,10 +32,10 @@ function scr_datos_clases(_clase) {
 
         case "Quebrador":
             return {
-                vida: 110,
+                vida: 150,
                 ataque: 15,
-                defensa: 6,
-                defensa_magica: 3,
+                defensa: 7,
+                defensa_magica: 5,
                 velocidad: 3,
                 poder_elemental: 4,
                 carga_esencia: "ataques_pesados",
@@ -45,10 +45,10 @@ function scr_datos_clases(_clase) {
 
         case "Centinela":
             return {
-                vida: 150,
+                vida: 200,
                 ataque: 7,
-                defensa: 12,
-                defensa_magica: 10,
+                defensa: 14,
+                defensa_magica: 12,
                 velocidad: 2,
                 poder_elemental: 5,
                 carga_esencia: "bloqueo_exitoso",
@@ -58,9 +58,9 @@ function scr_datos_clases(_clase) {
 
         case "Duelista":
             return {
-                vida: 85,
+                vida: 125,
                 ataque: 11,
-                defensa: 5,
+                defensa: 6,
                 defensa_magica: 6,
                 velocidad: 9,
                 poder_elemental: 7,
@@ -71,10 +71,10 @@ function scr_datos_clases(_clase) {
 
         case "Canalizador":
             return {
-                vida: 80,
+                vida: 125,
                 ataque: 6,
-                defensa: 4,
-                defensa_magica: 8,
+                defensa: 5,
+                defensa_magica: 10,
                 velocidad: 6,
                 poder_elemental: 15,
                 carga_esencia: "uso_elemental",

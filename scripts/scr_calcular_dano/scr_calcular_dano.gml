@@ -8,7 +8,7 @@ function scr_calcular_dano(_atacante, _defensor) {
 	    defensa_obj += _defensor.defensa_bonus_temp;
 	}
 
-	var dano_bruto = base_ataque - (defensa_obj * 0.5);
+	var dano_bruto = base_ataque - (defensa_obj * FACTOR_DEF_GLOBAL);
 
     // Afinidad — usa versión dual para soportar jefes con 2 afinidades
     var mult_afi = scr_multiplicador_afinidad_dual(_atacante, _defensor);

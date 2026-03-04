@@ -12,6 +12,8 @@ function scr_datos_armas(_arma) {
                 rareza: 0,
                 ataque_bonus: 0,
                 poder_elemental_bonus: 0,
+                defensa_bonus: 0,
+                vida_bonus: 0,
                 habilidades_arma: ["ataque_basico"],
                 receta: []
             };
@@ -23,6 +25,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Fuego", rareza: 1,
                 ataque_bonus: 4, poder_elemental_bonus: 3,
+                defensa_bonus: 1, vida_bonus: 10,
                 habilidades_arma: ["ataque_fuego_basico"],
                 receta: [
                     { material: "Fragmento Igneo", cantidad: 5 }
@@ -33,6 +36,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Fuego", rareza: 2,
                 ataque_bonus: 8, poder_elemental_bonus: 6,
+                defensa_bonus: 2, vida_bonus: 18,
                 habilidades_arma: ["ataque_fuego_mejorado", "explosion_carmesi"],
                 receta: [
                     { material: "Fragmento Igneo", cantidad: 10 },
@@ -44,6 +48,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Fuego", rareza: 3,
                 ataque_bonus: 14, poder_elemental_bonus: 10,
+                defensa_bonus: 3, vida_bonus: 28,
                 habilidades_arma: ["llamarada_solar", "explosion_carmesi", "furia_del_titan"],
                 receta: [
                     { material: "Brasa Carmesi",          cantidad: 5 },
@@ -58,6 +63,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Agua", rareza: 1,
                 ataque_bonus: 3, poder_elemental_bonus: 4,
+                defensa_bonus: 2, vida_bonus: 15,
                 habilidades_arma: ["corte_glaciar"],
                 receta: [
                     { material: "Escama Glaciar", cantidad: 5 }
@@ -68,6 +74,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Agua", rareza: 2,
                 ataque_bonus: 7, poder_elemental_bonus: 7,
+                defensa_bonus: 3, vida_bonus: 25,
                 habilidades_arma: ["lanza_marina", "corriente_abisal"],
                 receta: [
                     { material: "Escama Glaciar", cantidad: 10 },
@@ -79,6 +86,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Agua", rareza: 3,
                 ataque_bonus: 12, poder_elemental_bonus: 12,
+                defensa_bonus: 5, vida_bonus: 40,
                 habilidades_arma: ["tsunami", "corriente_abisal", "diluvio_eterno"],
                 receta: [
                     { material: "Perla Abisal",    cantidad: 5 },
@@ -92,8 +100,7 @@ function scr_datos_armas(_arma) {
         case "Vara Espinosa":                 // R1
             return {
                 afinidad: "Planta", rareza: 1,
-                ataque_bonus: 3, poder_elemental_bonus: 4,
-                habilidades_arma: ["latigazo_espina"],
+                ataque_bonus: 3, poder_elemental_bonus: 4,                defensa_bonus: 1, vida_bonus: 15,                habilidades_arma: ["latigazo_espina"],
                 receta: [
                     { material: "Savia Espinosa", cantidad: 5 }
                 ]
@@ -128,6 +135,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Rayo", rareza: 1,
                 ataque_bonus: 5, poder_elemental_bonus: 3,
+                defensa_bonus: 1, vida_bonus: 10,
                 habilidades_arma: ["descarga_rapida"],
                 receta: [
                     { material: "Chispa Voltica", cantidad: 5 }
@@ -138,6 +146,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Rayo", rareza: 2,
                 ataque_bonus: 9, poder_elemental_bonus: 6,
+                defensa_bonus: 2, vida_bonus: 15,
                 habilidades_arma: ["cadena_electrica", "tormenta_fugaz"],
                 receta: [
                     { material: "Chispa Voltica",   cantidad: 10 },
@@ -149,6 +158,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Rayo", rareza: 3,
                 ataque_bonus: 15, poder_elemental_bonus: 9,
+                defensa_bonus: 3, vida_bonus: 25,
                 habilidades_arma: ["rayo_fulminante", "tormenta_fugaz", "juicio_relampago"],
                 receta: [
                     { material: "Colmillo de Rayo",    cantidad: 5 },
@@ -163,6 +173,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Tierra", rareza: 1,
                 ataque_bonus: 5, poder_elemental_bonus: 2,
+                defensa_bonus: 3, vida_bonus: 18,
                 habilidades_arma: ["golpe_sismico"],
                 receta: [
                     { material: "Arcilla Ancestral", cantidad: 5 }
@@ -173,6 +184,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Tierra", rareza: 2,
                 ataque_bonus: 10, poder_elemental_bonus: 5,
+                defensa_bonus: 5, vida_bonus: 32,
                 habilidades_arma: ["avalancha", "escudo_petreo"],
                 receta: [
                     { material: "Arcilla Ancestral", cantidad: 10 },
@@ -184,6 +196,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Tierra", rareza: 3,
                 ataque_bonus: 16, poder_elemental_bonus: 8,
+                defensa_bonus: 7, vida_bonus: 50,
                 habilidades_arma: ["cataclismo", "escudo_petreo", "furia_continental"],
                 receta: [
                     { material: "Ladrillo de Jade",        cantidad: 5 },
@@ -198,6 +211,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Sombra", rareza: 1,
                 ataque_bonus: 4, poder_elemental_bonus: 4,
+                defensa_bonus: 1, vida_bonus: 10,
                 habilidades_arma: ["tajo_umbral"],
                 receta: [
                     { material: "Fragmento Sombrio", cantidad: 5 }
@@ -208,6 +222,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Sombra", rareza: 2,
                 ataque_bonus: 8, poder_elemental_bonus: 7,
+                defensa_bonus: 2, vida_bonus: 18,
                 habilidades_arma: ["siega_oscura", "drenar_alma"],
                 receta: [
                     { material: "Fragmento Sombrio", cantidad: 10 },
@@ -219,6 +234,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Sombra", rareza: 3,
                 ataque_bonus: 13, poder_elemental_bonus: 11,
+                defensa_bonus: 4, vida_bonus: 30,
                 habilidades_arma: ["noche_eterna", "drenar_alma", "eclipse_total"],
                 receta: [
                     { material: "Materia Oscura",   cantidad: 5 },
@@ -233,6 +249,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Luz", rareza: 1,
                 ataque_bonus: 3, poder_elemental_bonus: 4,
+                defensa_bonus: 2, vida_bonus: 18,
                 habilidades_arma: ["hoja_radiante"],
                 receta: [
                     { material: "Polvo Sagrado", cantidad: 5 }
@@ -243,6 +260,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Luz", rareza: 2,
                 ataque_bonus: 7, poder_elemental_bonus: 8,
+                defensa_bonus: 3, vida_bonus: 28,
                 habilidades_arma: ["embestida_solar", "bendicion_luz"],
                 receta: [
                     { material: "Polvo Sagrado",  cantidad: 10 },
@@ -254,6 +272,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Luz", rareza: 3,
                 ataque_bonus: 12, poder_elemental_bonus: 13,
+                defensa_bonus: 5, vida_bonus: 45,
                 habilidades_arma: ["amanecer_divino", "bendicion_luz", "juicio_celestial"],
                 receta: [
                     { material: "Reliquia de Oro",     cantidad: 5 },
@@ -268,6 +287,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Arcano", rareza: 1,
                 ataque_bonus: 2, poder_elemental_bonus: 6,
+                defensa_bonus: 1, vida_bonus: 12,
                 habilidades_arma: ["pulso_runico"],
                 receta: [
                     { material: "Runa Menor", cantidad: 5 }
@@ -278,6 +298,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Arcano", rareza: 2,
                 ataque_bonus: 6, poder_elemental_bonus: 10,
+                defensa_bonus: 2, vida_bonus: 22,
                 habilidades_arma: ["corte_arcano", "onda_arcana"],
                 receta: [
                     { material: "Runa Menor", cantidad: 10 },
@@ -289,6 +310,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Arcano", rareza: 3,
                 ataque_bonus: 10, poder_elemental_bonus: 16,
+                defensa_bonus: 4, vida_bonus: 35,
                 habilidades_arma: ["singularidad_arcana", "onda_arcana", "ruptura_dimensional"],
                 receta: [
                     { material: "Runa Mayor",       cantidad: 5 },

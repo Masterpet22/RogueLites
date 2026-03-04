@@ -9,7 +9,7 @@ function scr_datos_enemigos(_e) {
         // =============================================================
         case "Soldado Igneo":
             return {
-                vida: 80, ataque: 8, defensa: 3, defensa_magica: 4,
+                vida: 130, ataque: 8, defensa: 4, defensa_magica: 5,
                 velocidad: 4, poder_elemental: 5,
                 afinidad: "Fuego",
                 habilidad_fija: "golpe_fuego",
@@ -23,7 +23,7 @@ function scr_datos_enemigos(_e) {
 
         case "Vigia Boreal":
             return {
-                vida: 70, ataque: 6, defensa: 5, defensa_magica: 6,
+                vida: 115, ataque: 6, defensa: 6, defensa_magica: 7,
                 velocidad: 3, poder_elemental: 7,
                 afinidad: "Agua",
                 habilidad_fija: "mirada_gelida",
@@ -37,7 +37,7 @@ function scr_datos_enemigos(_e) {
 
         case "Halito Verde":
             return {
-                vida: 60, ataque: 10, defensa: 2, defensa_magica: 3,
+                vida: 100, ataque: 10, defensa: 3, defensa_magica: 4,
                 velocidad: 6, poder_elemental: 4,
                 afinidad: "Planta",
                 habilidad_fija: "rafaga_cortante",
@@ -51,7 +51,7 @@ function scr_datos_enemigos(_e) {
 
         case "Bestia Tronadora":
             return {
-                vida: 75, ataque: 12, defensa: 1, defensa_magica: 2,
+                vida: 120, ataque: 12, defensa: 2, defensa_magica: 3,
                 velocidad: 7, poder_elemental: 3,
                 afinidad: "Rayo",
                 habilidad_fija: "chispazo",
@@ -65,7 +65,7 @@ function scr_datos_enemigos(_e) {
 
         case "Guardian Terracota":
             return {
-                vida: 110, ataque: 5, defensa: 10, defensa_magica: 4,
+                vida: 170, ataque: 5, defensa: 12, defensa_magica: 5,
                 velocidad: 2, poder_elemental: 3,
                 afinidad: "Tierra",
                 habilidad_fija: "muro_piedra",
@@ -79,7 +79,7 @@ function scr_datos_enemigos(_e) {
 
         case "Naufrago de la Oscuridad":
             return {
-                vida: 90, ataque: 9, defensa: 4, defensa_magica: 5,
+                vida: 140, ataque: 9, defensa: 5, defensa_magica: 6,
                 velocidad: 4, poder_elemental: 6,
                 afinidad: "Sombra",
                 habilidad_fija: "abrazo_vacio",
@@ -93,7 +93,7 @@ function scr_datos_enemigos(_e) {
 
         case "Paladin Marchito":
             return {
-                vida: 100, ataque: 7, defensa: 8, defensa_magica: 8,
+                vida: 155, ataque: 7, defensa: 9, defensa_magica: 9,
                 velocidad: 3, poder_elemental: 5,
                 afinidad: "Luz",
                 habilidad_fija: "destello_debil",
@@ -107,7 +107,7 @@ function scr_datos_enemigos(_e) {
 
         case "Errante Runico":
             return {
-                vida: 85, ataque: 8, defensa: 6, defensa_magica: 7,
+                vida: 135, ataque: 8, defensa: 7, defensa_magica: 8,
                 velocidad: 4, poder_elemental: 8,
                 afinidad: "Arcano",
                 habilidad_fija: "pulso_arcano",
@@ -171,7 +171,7 @@ function scr_datos_enemigos(_e) {
 
         case "Bestia Tronadora Elite":
             return {
-                vida: 140, ataque: 18, defensa: 3, defensa_magica: 4,
+                vida: 140, ataque: 16, defensa: 3, defensa_magica: 4,
                 velocidad: 8, poder_elemental: 5,
                 afinidad: "Rayo",
                 habilidad_fija: "tormenta_electrica",
@@ -179,7 +179,7 @@ function scr_datos_enemigos(_e) {
                 oro_min: 45, oro_max: 85,
                 precio: 650,
                 mecanicas: ["mec_penalizacion_repeticion"],
-                timer_limite: 60,
+                timer_limite: 80,
                 drops: [
                     { material: "Colmillo de Rayo",  cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Chispa Voltica",    cant_min: 2, cant_max: 4, chance: 60  },
@@ -196,7 +196,7 @@ function scr_datos_enemigos(_e) {
                 oro_min: 50, oro_max: 90,
                 precio: 700,
                 mecanicas: ["mec_penalizacion_repeticion"],
-                timer_limite: 90,
+                timer_limite: 110,
                 drops: [
                     { material: "Ladrillo de Jade",  cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Arcilla Ancestral", cant_min: 2, cant_max: 4, chance: 60  },
@@ -205,7 +205,7 @@ function scr_datos_enemigos(_e) {
 
         case "Naufrago de la Oscuridad Elite":
             return {
-                vida: 160, ataque: 14, defensa: 7, defensa_magica: 9,
+                vida: 160, ataque: 13, defensa: 7, defensa_magica: 9,
                 velocidad: 5, poder_elemental: 8,
                 afinidad: "Sombra",
                 habilidad_fija: "agujero_negro",
@@ -213,7 +213,7 @@ function scr_datos_enemigos(_e) {
                 oro_min: 45, oro_max: 80,
                 precio: 600,
                 mecanicas: ["mec_reflejo_diferido"],
-                timer_limite: 75,
+                timer_limite: 95,
                 drops: [
                     { material: "Materia Oscura",    cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Fragmento Sombrio", cant_min: 2, cant_max: 4, chance: 60  },
@@ -230,7 +230,7 @@ function scr_datos_enemigos(_e) {
                 oro_min: 50, oro_max: 85,
                 precio: 650,
                 mecanicas: ["mec_escalado_vida_jugador"],
-                timer_limite: 90,
+                timer_limite: 110,
                 drops: [
                     { material: "Reliquia de Oro",   cant_min: 1, cant_max: 2, chance: 100 },
                     { material: "Polvo Sagrado",     cant_min: 2, cant_max: 4, chance: 60  },
@@ -259,7 +259,7 @@ function scr_datos_enemigos(_e) {
         // =============================================================
         case "Titan de las Forjas Rotas":
             return {
-                vida: 1200, ataque: 25, defensa: 20, defensa_magica: 15,
+                vida: 1050, ataque: 22, defensa: 18, defensa_magica: 14,
                 velocidad: 3, poder_elemental: 12,
                 afinidad: "Fuego-Tierra",
                 habilidad_fija: "erupcion_forjada",
@@ -271,7 +271,7 @@ function scr_datos_enemigos(_e) {
                 oro_min: 200, oro_max: 400,
                 precio: 2500,
                 mecanicas: ["mec_ventana_invertida"],
-                timer_limite: 180,
+                timer_limite: 200,
                 drops: [
                     { material: "Nucleo de Forja Antigua",  cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Brasa Carmesi",            cant_min: 2, cant_max: 3, chance: 70  },
@@ -281,7 +281,7 @@ function scr_datos_enemigos(_e) {
 
         case "Coloso del Fango Viviente":
             return {
-                vida: 1100, ataque: 20, defensa: 22, defensa_magica: 18,
+                vida: 1000, ataque: 18, defensa: 20, defensa_magica: 16,
                 velocidad: 2, poder_elemental: 10,
                 afinidad: "Agua-Planta",
                 habilidad_fija: "maremoto_vegetal",
@@ -293,7 +293,7 @@ function scr_datos_enemigos(_e) {
                 oro_min: 180, oro_max: 380,
                 precio: 2500,
                 mecanicas: ["mec_escalado_vida_jugador", "mec_penalizacion_repeticion"],
-                timer_limite: 180,
+                timer_limite: 200,
                 drops: [
                     { material: "Corazon de Fango",         cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Perla Abisal",             cant_min: 2, cant_max: 3, chance: 70  },
@@ -303,7 +303,7 @@ function scr_datos_enemigos(_e) {
 
         case "Sentinela del Cielo Roto":
             return {
-                vida: 1000, ataque: 28, defensa: 15, defensa_magica: 12,
+                vida: 900, ataque: 25, defensa: 14, defensa_magica: 11,
                 velocidad: 6, poder_elemental: 15,
                 afinidad: "Rayo-Luz",
                 habilidad_fija: "fulgor_celestial",
@@ -315,7 +315,7 @@ function scr_datos_enemigos(_e) {
                 oro_min: 220, oro_max: 450,
                 precio: 3000,
                 mecanicas: ["mec_afinidad_reactiva", "mec_reflejo_diferido"],
-                timer_limite: 150,
+                timer_limite: 180,
                 drops: [
                     { material: "Fragmento Celestial",      cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Colmillo de Rayo",         cant_min: 2, cant_max: 3, chance: 70  },
@@ -325,7 +325,7 @@ function scr_datos_enemigos(_e) {
 
         case "Oraculo Quebrado del Abismo":
             return {
-                vida: 1150, ataque: 24, defensa: 18, defensa_magica: 20,
+                vida: 1000, ataque: 21, defensa: 16, defensa_magica: 18,
                 velocidad: 4, poder_elemental: 18,
                 afinidad: "Sombra-Arcano",
                 habilidad_fija: "vacio_runico",
@@ -337,7 +337,7 @@ function scr_datos_enemigos(_e) {
                 oro_min: 250, oro_max: 500,
                 precio: 3500,
                 mecanicas: ["mec_absorcion_esencia"],
-                timer_limite: 180,
+                timer_limite: 200,
                 drops: [
                     { material: "Cristal del Vacio",        cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Materia Oscura",           cant_min: 2, cant_max: 3, chance: 70  },
@@ -351,7 +351,7 @@ function scr_datos_enemigos(_e) {
         // =============================================================
         case "El Devorador":
             return {
-                vida: 1500, ataque: 30, defensa: 22, defensa_magica: 22,
+                vida: 1350, ataque: 27, defensa: 20, defensa_magica: 20,
                 velocidad: 5, poder_elemental: 20,
                 afinidad: "Neutra",
                 habilidad_fija: "mordida_vacia",
@@ -363,7 +363,7 @@ function scr_datos_enemigos(_e) {
                 oro_min: 400, oro_max: 800,
                 precio: 5000,
                 mecanicas: ["mec_robo_esencia_golpe", "mec_supresion_pasiva"],
-                timer_limite: 210,
+                timer_limite: 240,
                 drops: [
                     { material: "Esencia del Vacio",        cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Cristal del Vacio",        cant_min: 1, cant_max: 2, chance: 80  },
@@ -377,7 +377,7 @@ function scr_datos_enemigos(_e) {
         // =============================================================
         case "El Primer Conductor":
             return {
-                vida: 1800, ataque: 35, defensa: 25, defensa_magica: 25,
+                vida: 1600, ataque: 30, defensa: 23, defensa_magica: 23,
                 velocidad: 6, poder_elemental: 25,
                 afinidad: "Neutra",
                 habilidad_fija: "golpe_primordial",
@@ -389,7 +389,7 @@ function scr_datos_enemigos(_e) {
                 oro_min: 600, oro_max: 1200,
                 precio: 8000,
                 mecanicas: ["mec_espejo_clase", "mec_escalado_vida_jugador"],
-                timer_limite: 240,
+                timer_limite: 270,
                 drops: [
                     { material: "Eco del Primer Conductor", cant_min: 1, cant_max: 1, chance: 100 },
                     { material: "Esencia del Vacio",        cant_min: 1, cant_max: 1, chance: 80  },

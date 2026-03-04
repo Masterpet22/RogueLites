@@ -43,9 +43,9 @@ function scr_datos_personalidades(_personalidad) {
             return {
                 nombre: "Temerario",
                 descripcion: "Gran poder ofensivo a cambio de mayor riesgo",
-                mult_vida:             0.80,   // -20% vida
+                mult_vida:             0.85,   // -15% vida (antes -20%)
                 mult_ataque:           1.30,   // +30% ataque
-                mult_defensa:          0.75,   // -25% defensa
+                mult_defensa:          0.80,   // -20% defensa (antes -25%)
                 mult_velocidad:        1.10,   // +10% velocidad
                 mult_poder_elemental:  1.20,   // +20% poder elemental
             };

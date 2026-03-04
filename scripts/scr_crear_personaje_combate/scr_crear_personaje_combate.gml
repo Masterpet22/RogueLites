@@ -37,14 +37,21 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
 
     // ===================================================================
     // Buff de sinergia: si afinidad del arma == afinidad del personaje
-    //   +15% ataque_bonus y poder_elemental_bonus del arma
+    //   +15% a TODOS los bonus del arma (ATK, PODER, DEF, HP)
     // ===================================================================
     var _afinidad_arma = _arma_data.afinidad;
     var _sinergia = (_afinidad_arma == _afinidad);   // true/false
     var _mult_sin = _sinergia ? 1.15 : 1.0;
 
-    var _atq_total   = _atq_base + round(_arma_data.ataque_bonus * _mult_sin);
+    // Bonus defensivos del arma (con fallback para armas sin el campo)
+    var _def_arma = variable_struct_exists(_arma_data, "defensa_bonus") ? _arma_data.defensa_bonus : 0;
+    var _hp_arma  = variable_struct_exists(_arma_data, "vida_bonus")    ? _arma_data.vida_bonus    : 0;
+
+    var _atq_total   = _atq_base  + round(_arma_data.ataque_bonus * _mult_sin);
     var _pelem_total = _pelem_base + round(_arma_data.poder_elemental_bonus * _mult_sin);
+    var _def_total   = _def_base  + round(_def_arma * _mult_sin);
+    var _defm_total  = _defm_base + round(_def_arma * 0.5 * _mult_sin);
+    var _vida_total  = _vida_max_base + round(_hp_arma * _mult_sin);
 
     var personaje = {
         nombre:         _nombre,
@@ -62,13 +69,13 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
 
         sinergia_arma:  _sinergia,
 
-        vida_max:       _vida_max_base,
-        vida_actual:    _vida_max_base,
-        vida_visual:    _vida_max_base,    // interpolación suave para barra de vida
+        vida_max:       _vida_total,
+        vida_actual:    _vida_total,
+        vida_visual:    _vida_total,       // interpolación suave para barra de vida
 
         ataque_base:    _atq_total,
-        defensa_base:   _def_base,
-        defensa_magica_base: _defm_base,
+        defensa_base:   _def_total,
+        defensa_magica_base: _defm_total,
         velocidad:      _vel_base,
         poder_elemental:_pelem_total,
 
