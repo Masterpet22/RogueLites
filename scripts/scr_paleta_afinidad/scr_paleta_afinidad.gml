@@ -48,9 +48,9 @@ function scr_paleta_afinidad(_afi) {
 
         case "Sombra":
             return {
-                dominante:  make_color_rgb(13, 13, 13),    // #0D0D0D negro puro
-                secundario: make_color_rgb(48, 25, 52),    // #301934 violeta oscuro
-                energia:    make_color_rgb(204, 153, 255), // #CC99FF púrpura pálido
+                dominante:  make_color_rgb(60, 20, 80),    // #3C1450 violeta sombra
+                secundario: make_color_rgb(100, 50, 120),  // #643278 púrpura medio
+                energia:    make_color_rgb(180, 130, 220), // #B482DC lavanda brillante
             };
 
         case "Luz":

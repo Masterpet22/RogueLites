@@ -1,11 +1,11 @@
 /// @file scr_barra_vida.gml
 /// @description  Sistema de barra de vida multicapa estilo juegos de pelea.
-///   - Cada capa representa hasta 500 HP.
+///   - Cada capa representa hasta 100 HP.
 ///   - Color basado en la afinidad del personaje/enemigo.
 ///   - Reducción suave (lerp) al recibir daño.
 ///   - Barra-sobre-barra apilada visualmente.
 
-#macro BARRA_VIDA_HP_POR_CAPA   500    // HP máximos por cada barra
+#macro BARRA_VIDA_HP_POR_CAPA   100    // HP máximos por cada barra
 #macro BARRA_VIDA_LERP_SPEED    0.04   // Velocidad de interpolación suave (0-1)
 
 
@@ -84,14 +84,10 @@ function scr_barra_vida_draw(_x, _y, _w, _h, _pj, _invertir) {
     if (_vida_visual <= 0) _capa_visual = 0;
 
     // HP dentro de la capa actual (para vida_actual)
+    // Cada capa siempre tiene un máximo de BARRA_VIDA_HP_POR_CAPA (100),
+    // para que 150/200 HP se vea como barra llena + media barra encima.
     var _hp_en_capa     = (_capa_actual > 0) ? (_vida_actual - (_capa_actual - 1) * BARRA_VIDA_HP_POR_CAPA) : 0;
     var _hp_max_en_capa = BARRA_VIDA_HP_POR_CAPA;
-
-    // Si es la última capa, el máximo puede ser menor
-    if (_capa_actual == _num_capas) {
-        _hp_max_en_capa = _vida_max - (_num_capas - 1) * BARRA_VIDA_HP_POR_CAPA;
-    }
-    _hp_max_en_capa = max(1, _hp_max_en_capa);
 
     // Ratio de llenado de la barra real
     var _ratio_actual = clamp(_hp_en_capa / _hp_max_en_capa, 0, 1);
@@ -184,7 +180,7 @@ function scr_barra_vida_draw(_x, _y, _w, _h, _pj, _invertir) {
         }
     }
 
-    // 5. MARCAS DE SEPARACIÓN (divisiones cada 500 HP si hay más de una capa)
+    // 5. MARCAS DE SEPARACIÓN (divisiones cada 100 HP si hay más de una capa)
     //    Solo se muestran sobre la barra llena para dar referencia visual
     // (omitidas en capa actual, ya que la barra actual ES la capa)
 
@@ -223,20 +219,29 @@ function scr_barra_vida_draw(_x, _y, _w, _h, _pj, _invertir) {
         draw_set_alpha(1);
     }
 
-    // 8. TEXTO DE HP
+    // 8. TEXTO DE HP (con outline para legibilidad sobre cualquier color)
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
-    draw_set_color(c_white);
     draw_set_alpha(1);
 
     var _hp_text = string(max(0, _vida_actual)) + " / " + string(_vida_max);
+    var _tx = _x + _w / 2;
+    var _ty = _y + _h / 2;
 
-    // Si hay múltiples capas, mostrar también el indicador de capa
-    if (_num_capas > 1 && _capa_actual > 0) {
-        _hp_text = _hp_text + "  [x" + string(_capa_actual) + "]";
-    }
+    // Outline negro (8 direcciones) para que el texto se vea sobre barras claras
+    draw_set_color(c_black);
+    draw_text(_tx - 1, _ty - 1, _hp_text);
+    draw_text(_tx + 1, _ty - 1, _hp_text);
+    draw_text(_tx - 1, _ty + 1, _hp_text);
+    draw_text(_tx + 1, _ty + 1, _hp_text);
+    draw_text(_tx,     _ty - 1, _hp_text);
+    draw_text(_tx,     _ty + 1, _hp_text);
+    draw_text(_tx - 1, _ty,     _hp_text);
+    draw_text(_tx + 1, _ty,     _hp_text);
 
-    draw_text(_x + _w / 2, _y + _h / 2, _hp_text);
+    // Texto principal blanco
+    draw_set_color(c_white);
+    draw_text(_tx, _ty, _hp_text);
 
     // Restaurar defaults
     draw_set_halign(fa_left);

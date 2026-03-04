@@ -2,8 +2,8 @@
   "$GMSprite":"v2",
   "%Name":"spr_enemigo_naufrago",
   "bboxMode":0,
-  "bbox_bottom":496,
-  "bbox_left":15,
+  "bbox_bottom":491,
+  "bbox_left":94,
   "bbox_right":402,
   "bbox_top":31,
   "collisionKind":1,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"7dac13c7-5093-4677-8d84-184e0c784fe1","name":"7dac13c7-5093-4677-8d84-184e0c784fe1","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"6bc1399d-ef87-4278-a814-c9c6a9d06b9b","name":"6bc1399d-ef87-4278-a814-c9c6a9d06b9b","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":512,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"90388861-db34-4558-b084-01dfae3e46a0","blendMode":0,"displayName":"default","isLocked":false,"name":"90388861-db34-4558-b084-01dfae3e46a0","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"601e5b5c-ccfe-483a-8128-d285779fbac1","blendMode":0,"displayName":"default","isLocked":false,"name":"601e5b5c-ccfe-483a-8128-d285779fbac1","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_enemigo_naufrago",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"7dac13c7-5093-4677-8d84-184e0c784fe1","path":"sprites/spr_enemigo_naufrago/spr_enemigo_naufrago.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"3e41ff8a-6f4c-47b3-be9b-8c91d1cd84e5","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6bc1399d-ef87-4278-a814-c9c6a9d06b9b","path":"sprites/spr_enemigo_naufrago/spr_enemigo_naufrago.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"2cc2e0d2-8bbc-4ec0-acf1-66bf390ae8e8","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

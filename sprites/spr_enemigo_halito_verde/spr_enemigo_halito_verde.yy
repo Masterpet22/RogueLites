@@ -2,8 +2,8 @@
   "$GMSprite":"v2",
   "%Name":"spr_enemigo_halito_verde",
   "bboxMode":0,
-  "bbox_bottom":496,
-  "bbox_left":15,
+  "bbox_bottom":467,
+  "bbox_left":31,
   "bbox_right":455,
   "bbox_top":46,
   "collisionKind":1,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"16c7ef12-5914-4f67-b148-5c73adc52b16","name":"16c7ef12-5914-4f67-b148-5c73adc52b16","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"38e96fe4-409b-4c11-9740-d1998ba83278","name":"38e96fe4-409b-4c11-9740-d1998ba83278","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":512,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"942718f8-6e40-4c27-97ae-0da8be116452","blendMode":0,"displayName":"default","isLocked":false,"name":"942718f8-6e40-4c27-97ae-0da8be116452","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"dff19b2c-7d1c-4908-9952-a4ca806a3723","blendMode":0,"displayName":"default","isLocked":false,"name":"dff19b2c-7d1c-4908-9952-a4ca806a3723","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_enemigo_halito_verde",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"16c7ef12-5914-4f67-b148-5c73adc52b16","path":"sprites/spr_enemigo_halito_verde/spr_enemigo_halito_verde.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"aeadf862-f8a3-4f73-b9c6-d65fccde3a14","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"38e96fe4-409b-4c11-9740-d1998ba83278","path":"sprites/spr_enemigo_halito_verde/spr_enemigo_halito_verde.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"408bc2e4-02c5-43e5-87d3-284e22428f94","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
