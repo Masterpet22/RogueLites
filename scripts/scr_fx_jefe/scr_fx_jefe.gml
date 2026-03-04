@@ -85,9 +85,13 @@ function scr_fx_jefe_dibujar(_spr, _x, _y, _escala_base, _jf, _flip, _blend, _al
     var _esc = _escala_base * _jf.escala_mult;
     var _xsc = _flip ? -_esc : _esc;
 
-    // ── ANCLAR AL SUELO: ajustar Y para que la base del sprite quede fija ──
-    var _dist_abajo = sprite_get_height(_spr) - sprite_get_yoffset(_spr);
-    var _y_adj = _y - _dist_abajo * (_esc - _escala_base);
+    // ── ANCLAR AL SUELO: usar la misma línea de suelo que el sprite base ──
+    // La Y recibida ya está anclada para _escala_base, recalcular para _esc.
+    var _bbox_bottom = sprite_get_bbox_bottom(_spr);
+    var _yoffset     = sprite_get_yoffset(_spr);
+    var _dist_base   = _bbox_bottom - _yoffset;
+    var _suelo_y_rec = _y + _dist_base * _escala_base;
+    var _y_adj       = _suelo_y_rec - _dist_base * _esc;
 
     // Pulsos de tiempo para animaciones
     var _t = current_time;
@@ -97,7 +101,7 @@ function scr_fx_jefe_dibujar(_spr, _x, _y, _escala_base, _jf, _flip, _blend, _al
 
     // ── 1. SOMBRA OSCURA debajo del sprite ──
     // Elipse oscura aplastada en la base del sprite para darle peso y presencia
-    var _sombra_y = _y_adj + _dist_abajo * _esc - 4;
+    var _sombra_y = _suelo_y_rec - 4;
     var _sombra_w = sprite_get_width(_spr) * _esc * 0.5;
     var _sombra_h = 12 + 4 * _pulse_lento;
     var _sombra_alpha = 0.35 + 0.1 * _pulse_lento;

@@ -319,6 +319,28 @@ function scr_feedback_dibujar() {
 
 
 // ══════════════════════════════════════════════════════════════
+//  scr_sprite_y_anclado_suelo(sprite, suelo_y, escala)
+//  Calcula la Y de dibujo para que la BASE de la máscara de
+//  colisión del sprite quede exactamente en suelo_y.
+//  Así todos los personajes comparten la misma línea de suelo
+//  sin importar el tamaño del lienzo ni el origen del sprite.
+// ══════════════════════════════════════════════════════════════
+/// @function scr_sprite_y_anclado_suelo(sprite, suelo_y, escala)
+/// @param {Asset.GMSprite} _spr     Sprite a dibujar
+/// @param {real}           _suelo_y Posición Y de la línea de suelo
+/// @param {real}           _escala  Factor de escala aplicado al sprite
+/// @returns {real}         Y corregida para draw_sprite_ext
+function scr_sprite_y_anclado_suelo(_spr, _suelo_y, _escala) {
+    // Distancia desde el origen del sprite hasta la base de la máscara (bbox_bottom)
+    var _bbox_bottom  = sprite_get_bbox_bottom(_spr);  // píxeles desde arriba del lienzo
+    var _yoffset      = sprite_get_yoffset(_spr);      // origen Y del sprite
+    var _dist_origen_a_base = _bbox_bottom - _yoffset;  // px debajo del origen hasta base máscara
+    // La Y de dibujo debe ser tal que: Ydraw + _dist_origen_a_base * escala == suelo_y
+    return _suelo_y - _dist_origen_a_base * _escala;
+}
+
+
+// ══════════════════════════════════════════════════════════════
 //  scr_feedback_dibujar_sprites()
 //  Dibuja los sprites de cuerpo completo del jugador y enemigo
 //  en el centro de la pantalla con efectos de shake y flash.
@@ -331,17 +353,26 @@ function scr_feedback_dibujar_sprites() {
     var _gui_w = display_get_gui_width();
     var _gui_h = display_get_gui_height();
 
-    // Posiciones base de los sprites de cuerpo
+    // Posiciones base X de los sprites de cuerpo
     var _pj_x = _gui_w * 0.22;
-    var _pj_y = _gui_h * 0.55;
     var _en_x = _gui_w * 0.78;
-    var _en_y = _gui_h * 0.55;
+
+    // Línea de suelo compartida — todos los personajes apoyan aquí la base de su máscara
+    var _suelo_y = _gui_h * 0.82;
 
     // Escala dinámica: tamaño de pantalla deseado / tamaño real del sprite
     var _display_h = 345;  // 230 * 1.5
 
     // ── JUGADOR BODY SPRITE ──
     {
+        // Usar sprite individual del personaje si existe
+        var _spr_j = (variable_struct_exists(_c, "personaje_jugador") && variable_struct_exists(_c.personaje_jugador, "sprite_cuerpo"))
+                     ? _c.personaje_jugador.sprite_cuerpo : spr_jugador;
+        var _escala_j = _display_h / sprite_get_height(_spr_j);
+
+        // Y anclada al suelo por máscara de colisión
+        var _pj_y = scr_sprite_y_anclado_suelo(_spr_j, _suelo_y, _escala_j);
+
         var _sx = _pj_x + _c.fb_shake_offset_x[0];
         var _sy = _pj_y + _c.fb_shake_offset_y[0];
 
@@ -357,15 +388,19 @@ function scr_feedback_dibujar_sprites() {
             }
         }
 
-        // Usar sprite individual del personaje si existe
-        var _spr_j = (variable_struct_exists(_c, "personaje_jugador") && variable_struct_exists(_c.personaje_jugador, "sprite_cuerpo"))
-                     ? _c.personaje_jugador.sprite_cuerpo : spr_jugador;
-        var _escala_j = _display_h / sprite_get_height(_spr_j);
         draw_sprite_ext(_spr_j, 0, _sx, _sy, _escala_j, _escala_j, 0, _blend, _alpha);
     }
 
     // ── ENEMIGO BODY SPRITE ──
     {
+        // Usar sprite individual del enemigo si existe
+        var _spr_e = (variable_struct_exists(_c, "personaje_enemigo") && variable_struct_exists(_c.personaje_enemigo, "sprite_cuerpo"))
+                     ? _c.personaje_enemigo.sprite_cuerpo : spr_enemigo;
+        var _escala_e = _display_h / sprite_get_height(_spr_e);
+
+        // Y anclada al suelo por máscara de colisión
+        var _en_y = scr_sprite_y_anclado_suelo(_spr_e, _suelo_y, _escala_e);
+
         var _sx = _en_x + _c.fb_shake_offset_x[1];
         var _sy = _en_y + _c.fb_shake_offset_y[1];
 
@@ -379,11 +414,6 @@ function scr_feedback_dibujar_sprites() {
                 _alpha = 0.5;
             }
         }
-
-        // Usar sprite individual del enemigo si existe
-        var _spr_e = (variable_struct_exists(_c, "personaje_enemigo") && variable_struct_exists(_c.personaje_enemigo, "sprite_cuerpo"))
-                     ? _c.personaje_enemigo.sprite_cuerpo : spr_enemigo;
-        var _escala_e = _display_h / sprite_get_height(_spr_e);
 
         // ── FX especiales según rango ──
         var _rc = (variable_struct_exists(_c.personaje_enemigo, "recolor_elite"))

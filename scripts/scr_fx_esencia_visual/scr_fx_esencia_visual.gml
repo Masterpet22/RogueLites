@@ -193,10 +193,6 @@ function scr_fx_esencia_dibujar_glow() {
     var _gui_w = display_get_gui_width();
     var _gui_h = display_get_gui_height();
 
-    // Posición del jugador (misma que en scr_feedback_dibujar_sprites)
-    var _pj_x = _gui_w * 0.22 + _c.fb_shake_offset_x[0];
-    var _pj_y = _gui_h * 0.55 + _c.fb_shake_offset_y[0];
-
     // Sprite del jugador
     var _spr_j = (variable_struct_exists(_c, "personaje_jugador") && variable_struct_exists(_c.personaje_jugador, "sprite_cuerpo"))
                  ? _c.personaje_jugador.sprite_cuerpo : spr_jugador;
@@ -204,17 +200,24 @@ function scr_fx_esencia_dibujar_glow() {
     var _display_h = 345;
     var _escala_base = _display_h / sprite_get_height(_spr_j);
 
+    // Posición del jugador anclada al suelo (misma línea que en scr_feedback_dibujar_sprites)
+    var _suelo_y = _gui_h * 0.72;
+    var _pj_x = _gui_w * 0.22 + _c.fb_shake_offset_x[0];
+    var _pj_y = scr_sprite_y_anclado_suelo(_spr_j, _suelo_y, _escala_base) + _c.fb_shake_offset_y[0];
+
     // ── Glow: dibujar sprite más grande con additive blending ──
     gpu_set_blendmode(bm_add);
     var _escala_glow = _escala_base * ESE_GLOW_ESCALA;
-    draw_sprite_ext(_spr_j, 0, _pj_x, _pj_y,
+    var _pj_y_glow = scr_sprite_y_anclado_suelo(_spr_j, _suelo_y, _escala_glow) + _c.fb_shake_offset_y[0];
+    draw_sprite_ext(_spr_j, 0, _pj_x, _pj_y_glow,
         _escala_glow, _escala_glow, 0,
         _c.ese_glow_color, _c.ese_glow_alpha);
 
     // ── Aura al 100%: segunda capa más grande ──
     if (_c.ese_aura_activa) {
         var _escala_aura = _escala_base * ESE_AURA_ESCALA;
-        draw_sprite_ext(_spr_j, 0, _pj_x, _pj_y,
+        var _pj_y_aura = scr_sprite_y_anclado_suelo(_spr_j, _suelo_y, _escala_aura) + _c.fb_shake_offset_y[0];
+        draw_sprite_ext(_spr_j, 0, _pj_x, _pj_y_aura,
             _escala_aura, _escala_aura, 0,
             _c.ese_glow_color, _c.ese_aura_alpha * 0.5);
     }

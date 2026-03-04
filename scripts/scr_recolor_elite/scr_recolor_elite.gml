@@ -104,11 +104,14 @@ function scr_recolor_elite_dibujar(_spr, _x, _y, _escala_base, _rc, _flip, _blen
     var _esc = _escala_base * _rc.escala_mult;
     var _xsc = _flip ? -_esc : _esc;
 
-    // ── ANCLAR AL SUELO: ajustar Y para que la base del sprite se mantenga fija ──
-    // Sin esto, al escalar 1.3x el sprite crece hacia abajo y se ve hundido.
-    // Calculamos cuánto crece la parte inferior y lo compensamos subiendo Y.
-    var _dist_abajo = sprite_get_height(_spr) - sprite_get_yoffset(_spr);
-    var _y_adj = _y - _dist_abajo * (_esc - _escala_base);
+    // ── ANCLAR AL SUELO: usar la misma línea de suelo que el sprite base ──
+    // La Y recibida ya está anclada para _escala_base, recalcular para _esc.
+    // Recuperar suelo_y: _y fue calculada como suelo_y - dist_base * escala_base
+    var _bbox_bottom = sprite_get_bbox_bottom(_spr);
+    var _yoffset     = sprite_get_yoffset(_spr);
+    var _dist_base   = _bbox_bottom - _yoffset;
+    var _suelo_y_rec = _y + _dist_base * _escala_base;
+    var _y_adj       = _suelo_y_rec - _dist_base * _esc;
 
     // ── 1. AURA DE GLOW (dibujada detrás, additive blending) ──
     var _aura_pulse = 0.5 + 0.5 * sin(current_time / 400);  // pulso suave
