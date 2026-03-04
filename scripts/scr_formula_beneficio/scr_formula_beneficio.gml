@@ -30,23 +30,18 @@ function scr_formula_beneficio(_usuario, _p) {
         _mult_rareza = 1.0 + (_usuario.arma_data.rareza * 0.10);
     }
 
-    // ─── Paso 3: Pasivas curativas de afinidad ───
+    // ─── Paso 3: Pasivas curativas de afinidad (lee bono de scr_datos_afinidades) ───
     var _mult_pas = 1.0;
     var _usr_afi2 = variable_struct_exists(_usuario, "afinidad_secundaria")
                     ? _usuario.afinidad_secundaria : "none";
 
     if (_usuario.pasiva_activa) {
-        // Luz: +15 % curación / escudo
-        if (_usuario.afinidad == "Luz" || _usr_afi2 == "Luz") {
-            _mult_pas *= 1.15;
-        }
-        // Planta: +15 % regeneración
-        if (_usuario.afinidad == "Planta" || _usr_afi2 == "Planta") {
-            _mult_pas *= 1.15;
-        }
-        // Agua: +10 % beneficios (flexibilidad acuática)
-        if (_usuario.afinidad == "Agua" || _usr_afi2 == "Agua") {
-            _mult_pas *= 1.10;
+        var _curativas = ["Luz", "Planta", "Agua"];
+        for (var _ci = 0; _ci < 3; _ci++) {
+            if (_usuario.afinidad == _curativas[_ci] || _usr_afi2 == _curativas[_ci]) {
+                var _bono = scr_datos_afinidades(_curativas[_ci]).bono;
+                _mult_pas *= _bono;
+            }
         }
     }
 

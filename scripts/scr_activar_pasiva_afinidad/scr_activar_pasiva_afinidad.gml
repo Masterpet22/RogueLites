@@ -33,5 +33,50 @@ function scr_activar_pasiva_afinidad(_p, _event) {
                 _p.pasiva_cooldown = GAME_FPS * 5;
             }
         break;
+
+        case "Agua":
+            // Activador → recibir daño → reduce cooldowns 20% durante la ventana
+            if (_event == "recibir_dano") {
+                _p.pasiva_activa = true;
+                _p.pasiva_timer = GAME_FPS * 4;
+                _p.pasiva_cooldown = GAME_FPS * 4;
+            }
+        break;
+
+        case "Planta":
+            // Activador → cada vez que pasa tiempo (tick pasivo) → regeneración
+            if (_event == "turno_pasado") {
+                _p.pasiva_activa = true;
+                _p.pasiva_timer = GAME_FPS * 3;
+                _p.pasiva_cooldown = GAME_FPS * 3;
+            }
+        break;
+
+        case "Sombra":
+            // Activador → golpe crítico → +25% daño temporalmente
+            if (_event == "golpe_critico") {
+                _p.pasiva_activa = true;
+                _p.pasiva_timer = GAME_FPS * 2;
+                _p.pasiva_cooldown = GAME_FPS * 4;
+            }
+        break;
+
+        case "Luz":
+            // Activador → recibir daño → +15% curación/escudo temporalmente
+            if (_event == "recibir_dano") {
+                _p.pasiva_activa = true;
+                _p.pasiva_timer = GAME_FPS * 3;
+                _p.pasiva_cooldown = GAME_FPS * 3;
+            }
+        break;
+
+        case "Arcano":
+            // Activador → usar habilidad → +20% poder elemental temporalmente
+            if (_event == "uso_habilidad") {
+                _p.pasiva_activa = true;
+                _p.pasiva_timer = GAME_FPS * 2;
+                _p.pasiva_cooldown = GAME_FPS * 4;
+            }
+        break;
     }
 }

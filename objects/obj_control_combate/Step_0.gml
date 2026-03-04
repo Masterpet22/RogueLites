@@ -101,6 +101,13 @@ if (keyboard_check_pressed(ord("R"))) {
 if (keyboard_check_pressed(vk_tab)) {
     if (personaje_jugador.esencia >= personaje_jugador.esencia_llena * 0.5) {
         scr_ejecutar_super(personaje_jugador, personaje_enemigo);
+    } else {
+        // Feedback: no hay suficiente esencia
+        if (instance_exists(obj_control_ui_combate)) {
+            obj_control_ui_combate.super_deny_timer = 25; // ~0.4 segundos de feedback
+        }
+        var _pct_actual = round((personaje_jugador.esencia / max(1, personaje_jugador.esencia_llena)) * 100);
+        scr_notif_agregar(personaje_jugador.nombre, "Esencia insuficiente (" + string(_pct_actual) + "%)", c_red);
     }
 }
 

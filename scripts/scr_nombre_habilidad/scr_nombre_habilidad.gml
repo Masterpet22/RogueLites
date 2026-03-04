@@ -135,6 +135,16 @@ function scr_nombre_habilidad(_id) {
         case "pulso_abismal":           return "Pulso Abismal";
         case "sifon_sombrio":           return "Sifón Sombrío";
         case "apocalipsis_runico":      return "Apocalipsis Rúnico";
+        // ── El Devorador ──
+        case "mordida_vacia":           return "Mordida Vacía";
+        case "pulso_devorador":         return "Pulso Devorador";
+        case "espejo_voraz":            return "Espejo Voraz";
+        case "consumo_absoluto":        return "Consumo Absoluto";
+        // ── El Primer Conductor ──
+        case "golpe_primordial":        return "Golpe Primordial";
+        case "resonancia_conductor":    return "Resonancia";
+        case "armonia_invertida":       return "Armonía Invertida";
+        case "genesis_final":           return "Génesis Final";
     }
 
     // Fallback — habilidad sin nombre registrado

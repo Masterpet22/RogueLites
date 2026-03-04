@@ -2,6 +2,19 @@
 
 if (!instance_exists(control_combate)) exit;
 
+// ── Timer FX de escenario ──
+arena_fx_timer += 1;
+
+// ── Feedback botón Súper (deny timer) ──
+if (super_deny_timer > 0) {
+    super_deny_timer -= 1;
+    // Shake que se atenúa con el tiempo
+    var _intensity = super_deny_timer / 25;  // 1.0 → 0.0
+    super_deny_shake = round(sin(super_deny_timer * 1.5) * 3 * _intensity);
+} else {
+    super_deny_shake = 0;
+}
+
 // ── PAUSA (Espacio) ──
 if (keyboard_check_pressed(vk_space)) {
     if (!control_combate.combate_terminado) {

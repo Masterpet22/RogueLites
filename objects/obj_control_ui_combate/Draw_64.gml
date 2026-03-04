@@ -4,8 +4,22 @@ if (!instance_exists(control_combate)) {
     exit;
 }
 
-// Fondo de combate
-draw_sprite_stretched(spr_bg_combate, 0, 0, 0, display_get_gui_width(), display_get_gui_height());
+// Fondo de combate (sprite aleatorio según arena)
+{
+    var _bg_spr = spr_bg_combate_1;
+    var _arena = 0;
+    if (variable_struct_exists(control_combate, "combate_arena_idx")) {
+        _arena = control_combate.combate_arena_idx;
+    }
+    switch (_arena) {
+        case 1:  _bg_spr = spr_bg_combate_2; break;
+        case 2:  _bg_spr = spr_bg_combate_3; break;
+        case 3:  _bg_spr = spr_bg_combate_4; break;
+        case 4:  _bg_spr = spr_bg_combate_5; break;
+        default: _bg_spr = spr_bg_combate_1; break;
+    }
+    draw_sprite_stretched(_bg_spr, 0, 0, 0, display_get_gui_width(), display_get_gui_height());
+}
 
 draw_set_font(fnt_1);
 
@@ -357,7 +371,7 @@ if (!control_combate.combate_terminado) {
 // ╚═══════════════════════════════════════════════════════════════╝
 
 // ===========================
-//  BARRA DE HABILIDADES — BOTÓN SÚPER + 4 slots (Q W E R)
+//  BARRA DE HABILIDADES (4 slots: Q W E R)
 // ===========================
 if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
 
@@ -370,144 +384,8 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
     var _hab_w = 80;
     var _hab_h = 50;
     var _hab_gap = 8;
-    var _hab_y_start = h_gui - 105;
-
-    // ── Calcular tier de esencia para el botón Súper ──
-    var _es_pct = pj.esencia / max(1, pj.esencia_llena);
-    var _es_tier = 0;
-    if (_es_pct >= 1.0) _es_tier = 3;
-    else if (_es_pct >= 0.75) _es_tier = 2;
-    else if (_es_pct >= 0.50) _es_tier = 1;
-
-    var _afinidad_pj = variable_struct_exists(pj, "afinidad") ? pj.afinidad : "Neutra";
-    var _paleta_es = scr_paleta_afinidad(_afinidad_pj);
-
-    // ── BOTÓN SÚPER (mismo tamaño que habilidades, palpitante) ──
-    var _super_w = _hab_w;
-    var _super_h = _hab_h;
-    var _super_x = 30;
-    var _super_y = _hab_y_start;
-
-    var _t_btn = current_time;
-    var _btn_pulse = 0.5 + 0.5 * sin(_t_btn / 300);
-
-    // Palpitación: el botón crece y se encoge cuando está activo (reducido para no pisar la barra)
-    var _palpitar_esc = 0;
-    if (_es_tier == 3) _palpitar_esc = 1.5 * _btn_pulse;
-    else if (_es_tier == 2) _palpitar_esc = 1 * _btn_pulse;
-    else if (_es_tier >= 1) _palpitar_esc = 0.5 * _btn_pulse;
-
-    // Aplicar palpitación al rectángulo del botón
-    var _sx1 = _super_x - _palpitar_esc;
-    var _sy1 = _super_y - _palpitar_esc;
-    var _sx2 = _super_x + _super_w + _palpitar_esc;
-    var _sy2 = _super_y + _super_h + _palpitar_esc;
-
-    if (_es_tier >= 1) {
-        // ── Glow detrás del botón (additive, reducido) ──
-        var _glow_expand = 2 + _es_tier;
-        var _glow_alpha_btn = 0.1 + 0.08 * _es_tier + 0.06 * _btn_pulse;
-
-        gpu_set_blendmode(bm_add);
-        draw_set_color(_paleta_es.energia);
-        draw_set_alpha(_glow_alpha_btn);
-        draw_roundrect_ext(
-            _sx1 - _glow_expand, _sy1 - _glow_expand,
-            _sx2 + _glow_expand, _sy2 + _glow_expand,
-            6, 6, false
-        );
-        draw_set_alpha(1);
-        gpu_set_blendmode(bm_normal);
-
-        // ── Fondo del botón palpitante (color elemental) ──
-        var _bg_col = _paleta_es.dominante;
-        if (_es_tier == 3) _bg_col = merge_color(_paleta_es.energia, _paleta_es.secundario, _btn_pulse * 0.5);
-        else if (_es_tier == 2) _bg_col = _paleta_es.secundario;
-
-        draw_set_color(_bg_col);
-        draw_set_alpha(0.85);
-        draw_roundrect_ext(_sx1, _sy1, _sx2, _sy2, 4, 4, false);
-        draw_set_alpha(1);
-
-        // ── Brillo superior ──
-        draw_set_color(_paleta_es.energia);
-        draw_set_alpha(0.2 + 0.15 * _btn_pulse);
-        draw_rectangle(_sx1 + 2, _sy1 + 1, _sx2 - 2, _sy1 + (_sy2 - _sy1) * 0.3, false);
-        draw_set_alpha(1);
-
-        // ── Icono de súper (centrado en botón palpitante) ──
-        var _ico_s_btn = 40 / sprite_get_width(spr_ico_super);
-        var _ico_cx = (_sx1 + _sx2) * 0.5;
-        var _ico_cy = _sy1 + (_sy2 - _sy1) * 0.38;
-        var _ico_col = _paleta_es.energia;
-
-        // Glow del icono al 100%
-        if (_es_tier == 3) {
-            gpu_set_blendmode(bm_add);
-            var _ico_glow_s = _ico_s_btn * (1.4 + 0.25 * _btn_pulse);
-            draw_sprite_ext(spr_ico_super, 0, _ico_cx, _ico_cy, _ico_glow_s, _ico_glow_s, 0, _ico_col, 0.3 * _btn_pulse);
-            gpu_set_blendmode(bm_normal);
-        }
-
-        draw_sprite_ext(spr_ico_super, 0, _ico_cx, _ico_cy, _ico_s_btn, _ico_s_btn, 0, _ico_col, 1);
-
-        // ── Borde del botón palpitante ──
-        var _borde_btn = _paleta_es.energia;
-        if (_es_tier == 3) _borde_btn = merge_color(_paleta_es.energia, c_white, _btn_pulse * 0.5);
-        draw_set_color(_borde_btn);
-        draw_roundrect_ext(_sx1, _sy1, _sx2, _sy2, 4, 4, true);
-
-        // ── Texto TAB ──
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
-        draw_set_color(_ico_col);
-        draw_text((_sx1 + _sx2) * 0.5, _sy2 - 8, "TAB");
-
-        // ── Onda periódica al 100% ──
-        if (_es_tier == 3) {
-            var _wave_t = (_t_btn mod 2000) / 2000.0;
-            if (_wave_t < 0.35) {
-                var _wp = _wave_t / 0.35;
-                var _wa = (1 - _wp) * 0.18;
-                var _we = _wp * 4;
-                gpu_set_blendmode(bm_add);
-                draw_set_color(_paleta_es.energia);
-                draw_set_alpha(_wa);
-                draw_roundrect_ext(
-                    _sx1 - _we, _sy1 - _we,
-                    _sx2 + _we, _sy2 + _we,
-                    6, 6, true
-                );
-                draw_set_alpha(1);
-                gpu_set_blendmode(bm_normal);
-            }
-        }
-    } else {
-        // ── Botón inactivo (esencia <50%) ──
-        draw_set_color(make_color_rgb(25, 20, 35));
-        draw_set_alpha(0.7);
-        draw_roundrect_ext(_super_x, _super_y, _super_x + _super_w, _super_y + _super_h, 4, 4, false);
-        draw_set_alpha(1);
-
-        // Icono apagado
-        var _ico_s_off = 34 / sprite_get_width(spr_ico_super);
-        draw_sprite_ext(spr_ico_super, 0,
-            _super_x + _super_w * 0.5, _super_y + _super_h * 0.38,
-            _ico_s_off, _ico_s_off, 0, make_color_rgb(60, 50, 80), 0.4);
-
-        // Borde tenue
-        draw_set_color(make_color_rgb(60, 50, 80));
-        draw_roundrect_ext(_super_x, _super_y, _super_x + _super_w, _super_y + _super_h, 4, 4, true);
-
-        // Texto TAB apagado
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
-        draw_set_color(make_color_rgb(60, 50, 80));
-        draw_text(_super_x + _super_w * 0.5, _super_y + _super_h - 8, "TAB");
-    }
-
-    // ── HABILIDADES (Q W E R) desplazadas a la derecha del botón Súper ──
-    var _hab_x_start = _super_x + _super_w + _hab_gap + 4;
+    var _hab_x_start = 30;
+    var _hab_y_start = h_gui - 110;
 
     var key_labels = ["Q", "W", "E", "R"];
 
@@ -579,36 +457,131 @@ if (!control_combate.combate_terminado) {
 }
 
 // ===========================
-//  SLOTS DE OBJETOS (1 2 3) + RUNA — derecha inferior
+//  BOTÓN SÚPER (a la derecha de la barra de esencia)
+// ===========================
+if (!control_combate.combate_terminado) {
+    var _ese_ratio = clamp(pj.esencia / max(1, pj.esencia_llena), 0, 1);
+    var _super_ok  = (_ese_ratio >= 0.50);  // 50% mínimo para usar
+
+    // Posición: justo después de la barra de esencia
+    var _sb_x = ESE_BAR_MARGIN + ESE_BAR_W + 12 + super_deny_shake;
+    var _sb_y = h_gui - ESE_BAR_BOTTOM - 6;
+    var _sb_w = 110;
+    var _sb_h = 30;
+
+    // Color y estilo según disponibilidad
+    var _afinidad_pj = variable_struct_exists(pj, "afinidad") ? pj.afinidad : "Neutra";
+    var _pal = scr_paleta_afinidad(_afinidad_pj);
+
+    if (_super_ok) {
+        // Disponible: glow pulsante
+        var _pulse = 0.7 + 0.3 * sin(current_time * 0.004);
+        // Glow detrás
+        draw_set_color(_pal.energia);
+        draw_set_alpha(0.15 * _pulse);
+        draw_roundrect_ext(_sb_x - 3, _sb_y - 3, _sb_x + _sb_w + 3, _sb_y + _sb_h + 3, 6, 6, false);
+        draw_set_alpha(1);
+        // Fondo botón
+        draw_set_color(make_color_rgb(20, 15, 40));
+        draw_set_alpha(0.85);
+        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 4, 4, false);
+        draw_set_alpha(1);
+        // Borde
+        draw_set_color(merge_color(_pal.energia, c_white, _pulse * 0.3));
+        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 4, 4, true);
+        // Texto
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(merge_color(_pal.energia, c_white, _pulse * 0.4));
+        draw_text(_sb_x + _sb_w / 2, _sb_y + _sb_h / 2, "[TAB] SÚPER");
+    } else {
+        // No disponible: botón apagado
+        draw_set_color(make_color_rgb(15, 12, 25));
+        draw_set_alpha(0.7);
+        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 4, 4, false);
+        draw_set_alpha(1);
+        draw_set_color(make_color_rgb(60, 55, 70));
+        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 4, 4, true);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(make_color_rgb(80, 70, 90));
+        draw_text(_sb_x + _sb_w / 2, _sb_y + _sb_h / 2, "[TAB] SÚPER");
+    }
+
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+}
+
+// ===========================
+//  COLUMNA IZQUIERDA: RUNA (arriba) + CONSUMIBLES 1-2-3 (abajo)
 // ===========================
 if (!control_combate.combate_terminado) {
 
     var _obj_arr  = control_combate.objetos_equipados;
     var _used_arr = control_combate.objetos_usados;
 
-    var _ow = 80;
-    var _oh = 50;
-    var _ogap = 8;
-    var _total_slots_w = 3 * (_ow + _ogap) + 15 + _ow + 15;
-    var _ox_start = w_gui - _total_slots_w;
-    var _oy_start = h_gui - 105;
+    // Dimensiones de cada slot
+    var _sw = 54;
+    var _sh = 50;
+    var _sgap = 6;
 
+    // Columna vertical centrada a la izquierda del personaje
+    // Personaje está en w_gui * 0.22 ≈ 282.  Columna en x = 8.
+    // 4 slots (1 runa + 3 consumibles): altura total = 4×50 + 3×6 = 218
+    // Centrada verticalmente sobre el cuerpo del PJ (y ≈ 396)
+    var _col_x = 8;
+    var _col_h = 4 * _sh + 3 * _sgap;  // 218
+    var _col_y = floor(h_gui * 0.55 - _col_h * 0.5);  // ≈ 287
+
+    // ── SLOT DE RUNA (posición 0, arriba de todo) ──
+    {
+        var _runa_nom = control_combate.runa_activa;
+        var _runa_vacia = (_runa_nom == "" || _runa_nom == undefined);
+
+        var _rx1 = _col_x;
+        var _ry1 = _col_y;
+        var _rx2 = _rx1 + _sw;
+        var _ry2 = _ry1 + _sh;
+
+        draw_sprite_stretched(spr_slot_runa, 0, _rx1, _ry1, _sw, _sh);
+
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+
+        if (_runa_vacia) {
+            draw_set_color(c_dkgray);
+            draw_text((_rx1 + _rx2) / 2, _ry1 + 18, "—");
+        } else {
+            var _runa_ico = scr_sprite_icono_runa(_runa_nom);
+            if (_runa_ico != -1) {
+                draw_sprite_stretched(_runa_ico, 0, _rx1 + (_sw - 30) / 2, _ry1 + 2, 30, 30);
+            } else {
+                draw_set_color(make_color_rgb(220, 180, 255));
+                var _rtxt = _runa_nom;
+                if (string_length(_rtxt) > 6) _rtxt = string_copy(_rtxt, 1, 6);
+                draw_text((_rx1 + _rx2) / 2, _ry1 + 14, _rtxt);
+            }
+        }
+
+        draw_set_color(_runa_vacia ? c_dkgray : make_color_rgb(180, 120, 255));
+        draw_text((_rx1 + _rx2) / 2, _ry2 - 9, "R");
+    }
+
+    // ── SLOTS DE CONSUMIBLES (posiciones 1-3, debajo de la runa) ──
     for (var i = 0; i < 3; i++) {
 
-        var _ox1 = _ox_start + i * (_ow + _ogap);
-        var _oy1 = _oy_start;
-        var _ox2 = _ox1 + _ow;
-        var _oy2 = _oy1 + _oh;
+        var _ox1 = _col_x;
+        var _oy1 = _col_y + (i + 1) * (_sh + _sgap);
+        var _ox2 = _ox1 + _sw;
+        var _oy2 = _oy1 + _sh;
 
         var _tiene_obj = (is_array(_obj_arr) && i < array_length(_obj_arr));
         var _obj_nombre = _tiene_obj ? _obj_arr[i] : "";
         var _usado = (_tiene_obj && is_array(_used_arr)) ? _used_arr[i] : false;
         var _vacio = (!_tiene_obj || _obj_nombre == "" || _obj_nombre == undefined);
 
-        // Fondo del slot (sprite)
-        draw_sprite_stretched(spr_slot_objeto, 0, _ox1, _oy1, _ow, _oh);
+        draw_sprite_stretched(spr_slot_objeto, 0, _ox1, _oy1, _sw, _sh);
 
-        // Overlay si usado
         if (_usado) {
             draw_set_color(c_black);
             draw_set_alpha(0.6);
@@ -616,68 +589,29 @@ if (!control_combate.combate_terminado) {
             draw_set_alpha(1);
         }
 
-        // Icono del objeto
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
 
         if (_vacio) {
             draw_set_color(c_dkgray);
-            draw_text((_ox1 + _ox2) / 2, _oy1 + 16, "Vacío");
+            draw_text((_ox1 + _ox2) / 2, _oy1 + 18, "—");
         } else if (_usado) {
             draw_set_color(c_dkgray);
-            draw_text((_ox1 + _ox2) / 2, _oy1 + 16, "USADO");
+            draw_text((_ox1 + _ox2) / 2, _oy1 + 18, "X");
         } else {
-            // Dibujar icono del consumible
             var _obj_ico = scr_sprite_icono_objeto(_obj_nombre);
             if (_obj_ico != -1) {
-                draw_sprite_stretched(_obj_ico, 0, _ox1 + (_ow - 32) / 2, _oy1 + 2, 32, 32);
+                draw_sprite_stretched(_obj_ico, 0, _ox1 + (_sw - 30) / 2, _oy1 + 2, 30, 30);
             } else {
                 draw_set_color(c_white);
                 var _txt = _obj_nombre;
-                if (string_length(_txt) > 10) _txt = string_copy(_txt, 1, 10) + ".";
-                draw_text((_ox1 + _ox2) / 2, _oy1 + 16, _txt);
+                if (string_length(_txt) > 6) _txt = string_copy(_txt, 1, 6);
+                draw_text((_ox1 + _ox2) / 2, _oy1 + 14, _txt);
             }
         }
 
-        // Tecla
         draw_set_color(_vacio ? c_dkgray : (_usado ? c_dkgray : c_yellow));
-        draw_text((_ox1 + _ox2) / 2, _oy2 - 10, string(i + 1));
-    }
-
-    // ── SLOT DE RUNA ──
-    {
-        var _runa_nom = control_combate.runa_activa;
-        var _runa_vacia = (_runa_nom == "" || _runa_nom == undefined);
-
-        var _rx1 = _ox_start + 3 * (_ow + _ogap) + 15;
-        var _ry1 = _oy_start;
-        var _rx2 = _rx1 + _ow;
-        var _ry2 = _ry1 + _oh;
-
-        // Fondo del slot runa (sprite)
-        draw_sprite_stretched(spr_slot_runa, 0, _rx1, _ry1, _ow, _oh);
-
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
-
-        if (_runa_vacia) {
-            draw_set_color(c_dkgray);
-            draw_text((_rx1 + _rx2) / 2, _ry1 + 16, "Sin Runa");
-        } else {
-            // Dibujar icono de la runa
-            var _runa_ico = scr_sprite_icono_runa(_runa_nom);
-            if (_runa_ico != -1) {
-                draw_sprite_stretched(_runa_ico, 0, _rx1 + (_ow - 32) / 2, _ry1 + 2, 32, 32);
-            } else {
-                draw_set_color(make_color_rgb(220, 180, 255));
-                var _rtxt = _runa_nom;
-                if (string_length(_rtxt) > 10) _rtxt = string_copy(_rtxt, 1, 10) + ".";
-                draw_text((_rx1 + _rx2) / 2, _ry1 + 16, _rtxt);
-            }
-        }
-
-        draw_set_color(_runa_vacia ? c_dkgray : make_color_rgb(180, 120, 255));
-        draw_text((_rx1 + _rx2) / 2, _ry2 - 10, "RUNA");
+        draw_text((_ox1 + _ox2) / 2, _oy2 - 9, string(i + 1));
     }
 
     draw_set_halign(fa_left);

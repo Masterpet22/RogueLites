@@ -957,6 +957,146 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         }
         break;
 
+        // ──────────────────────────────────────────────────
+        //  EL DEVORADOR  (Neutra — Jefe Final)
+        //  Roba esencia, desactiva pasivas, espejea al jugador
+        // ──────────────────────────────────────────────────
+
+        case "mordida_vacia": // Bread & butter — Físico + drena esencia
+        {
+            var _p = { stat1:"ataque", escala1:1.8, stat2:"ninguno", escala2:0, base_fija:12,
+                       mult_poder:1.2, penetracion:0.4, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            // Robar esencia
+            var _robo = min(_defensor.esencia, 12);
+            _defensor.esencia = max(0, _defensor.esencia - _robo);
+            if (_robo > 0) {
+                scr_notif_agregar(_atacante.nombre, "Devoró -" + string(_robo) + " esencia", c_purple);
+            }
+            show_debug_message("🕳 DEVORADOR — Mordida Vacía (-" + string(_robo) + " esencia)");
+        }
+        break;
+
+        case "pulso_devorador": // Nuke — Daño mágico + suprime pasiva del jugador
+        {
+            var _p = { stat1:"ataque", escala1:2.0, stat2:"ninguno", escala2:0, base_fija:15,
+                       mult_poder:1.3, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            // Desactivar pasiva del jugador por 5 segundos
+            _defensor.pasiva_activa = false;
+            _defensor.pasiva_cooldown = round(GAME_FPS * 5);
+            scr_notif_agregar(_defensor.nombre, "¡Pasiva suprimida 5s!", c_red);
+            show_debug_message("🕳 DEVORADOR — Pulso Devorador (pasiva suprimida)");
+        }
+        break;
+
+        case "espejo_voraz": // Espejo — Usa los stats del jugador en su contra
+        {
+            // El Devorador refleja: daño basado en el ataque/poder DEL DEFENSOR
+            var _atk_ref = max(_defensor.ataque, _defensor.poder_elemental);
+            var _dano_espejo = round(_atk_ref * 2.0) + 20;
+            _defensor.vida_actual = max(0, _defensor.vida_actual - _dano_espejo);
+            // Autocuración modesta
+            _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + round(_dano_espejo * 0.25));
+            scr_notif_agregar(_atacante.nombre, "¡Espejo! " + string(_dano_espejo) + " daño", make_color_rgb(200, 50, 200));
+            show_debug_message("🕳 DEVORADOR — Espejo Voraz (usó stats del jugador: " + string(_dano_espejo) + " daño)");
+        }
+        break;
+
+        case "consumo_absoluto": // Ultimate — %HP drain + robo total de esencia + autocuración
+        {
+            // 25% de la vida actual del jugador
+            var _drain = round(_defensor.vida_actual * 0.25);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - _drain);
+            // Robar TODA la esencia
+            var _esencia_robada = _defensor.esencia;
+            _defensor.esencia = 0;
+            // Autocuración: 50% del daño drenado
+            _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + round(_drain * 0.5));
+            // Suprimir pasiva
+            _defensor.pasiva_activa = false;
+            _defensor.pasiva_cooldown = round(GAME_FPS * 8);
+            scr_notif_agregar(_atacante.nombre, "¡¡CONSUMO ABSOLUTO!!", c_red);
+            if (_esencia_robada > 0) {
+                scr_notif_agregar(_defensor.nombre, "-" + string(_esencia_robada) + " esencia robada", c_purple);
+            }
+            show_debug_message("🕳 DEVORADOR — ¡¡CONSUMO ABSOLUTO!! (drain " + string(_drain) + ", esencia " + string(_esencia_robada) + ")");
+        }
+        break;
+
+        // ──────────────────────────────────────────────────
+        //  EL PRIMER CONDUCTOR  (Neutra — Jefe Secreto)
+        //  Imita clase del jugador, manipula esencia
+        // ──────────────────────────────────────────────────
+
+        case "golpe_primordial": // Adaptativo — Usa el mayor stat entre ataque y poder
+        {
+            // El Primer Conductor imita: escala con su stat más alto
+            var _stat_max = max(_atacante.ataque, _atacante.poder_elemental);
+            var _tipo = "fisico";
+            if (_atacante.poder_elemental > _atacante.ataque) { _tipo = "magico"; }
+            var _p = { stat1:"ataque", escala1:1.5, stat2:"poder", escala2:1.5, base_fija:15,
+                       mult_poder:1.2, penetracion:0.4, esencia_gen:0, es_arma:false, tipo_dano:_tipo };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            show_debug_message("👑 PRIMER CONDUCTOR — Golpe Primordial (" + _tipo + ")");
+        }
+        break;
+
+        case "resonancia_conductor": // Disruptivo — Daño + resetea cooldowns del jugador
+        {
+            var _p = { stat1:"ataque", escala1:1.2, stat2:"ninguno", escala2:0, base_fija:10,
+                       mult_poder:1.1, penetracion:0.3, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            // Resetear todos los cooldowns del jugador al máximo
+            if (variable_struct_exists(_defensor, "habilidades")) {
+                var _habs = _defensor.habilidades;
+                for (var _hi = 0; _hi < array_length(_habs); _hi++) {
+                    _habs[_hi].cd_actual = _habs[_hi].cd_max;
+                }
+            }
+            // Drenar esencia parcial
+            var _dren = min(_defensor.esencia, 10);
+            _defensor.esencia = max(0, _defensor.esencia - _dren);
+            scr_notif_agregar(_defensor.nombre, "¡Cooldowns reseteados!", c_orange);
+            show_debug_message("👑 PRIMER CONDUCTOR — Resonancia (CDs reseteados, -" + string(_dren) + " esencia)");
+        }
+        break;
+
+        case "armonia_invertida": // Defensiva — Self-heal + buff defensa + escudo
+        {
+            var _pc = { stat1:"defensa", escala1:1.5, stat2:"ninguno", escala2:0, base_fija:40,
+                        mult_poder:1.0, esencia_gen:0, es_arma:false };
+            var cura = scr_formula_beneficio(_atacante, _pc);
+            _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + cura);
+            scr_aplicar_estado(_atacante, "buff_defensa", round(GAME_FPS * 5), round(_atacante.defensa * 0.3));
+            scr_aplicar_estado(_atacante, "regeneracion", round(GAME_FPS * 4), round(_atacante.poder_elemental * 0.3));
+            show_debug_message("👑 PRIMER CONDUCTOR — Armonía Invertida (heal " + string(cura) + " + buff + regen)");
+        }
+        break;
+
+        case "genesis_final": // Ultimate — Daño masivo + drenaje total + debuffs
+        {
+            var _p = { stat1:"ataque", escala1:3.0, stat2:"poder", escala2:1.0, base_fija:25,
+                       mult_poder:1.5, penetracion:0.9, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            // Drenar toda la esencia
+            _defensor.esencia = 0;
+            // Suprimir pasiva 10s
+            _defensor.pasiva_activa = false;
+            _defensor.pasiva_cooldown = round(GAME_FPS * 10);
+            // Aplicar vulnerabilidad + ralentización
+            scr_aplicar_estado(_defensor, "vulnerabilidad", round(GAME_FPS * 4), 0);
+            scr_aplicar_estado(_defensor, "ralentizacion", round(GAME_FPS * 3), 0);
+            scr_notif_agregar(_atacante.nombre, "¡¡GÉNESIS FINAL!!", make_color_rgb(255, 215, 0));
+            show_debug_message("👑 PRIMER CONDUCTOR — ¡¡GÉNESIS FINAL!! (daño " + string(dano) + ", full drain)");
+        }
+        break;
+
         default:
             show_debug_message("Habilidad no implementada: " + string(_id));
         break;

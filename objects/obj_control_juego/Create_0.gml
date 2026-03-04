@@ -105,4 +105,8 @@ modo_camino = false;
 camino_hp_mult = 1;
 camino_oro_mult = 1;
 
+// ── ARENA DE COMBATE ──
+combate_arena_revancha = -1;   // -1 = nueva arena aleatoria, >= 0 = reusar ese índice
+combate_arena_ultimo   = -1;   // último índice usado (para revancha)
+
 room_goto(rm_menu);

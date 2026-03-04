@@ -9,6 +9,9 @@
 ///   "mec_escalado_vida_jugador"    — Daño del jefe escala según % vida del jugador
 ///   "mec_afinidad_reactiva"        — Reduce 60% daño del elemento más usado en últimos 6s
 ///   "mec_absorcion_esencia"        — Penaliza/beneficia según tier de esencia usada
+///   "mec_robo_esencia_golpe"       — Roba esencia del jugador con cada golpe (Devorador)
+///   "mec_supresion_pasiva"         — Suprime pasiva periódicamente (Devorador)
+///   "mec_espejo_clase"             — Escala daño según stats del jugador (Primer Conductor)
 
 // ══════════════════════════════════════════════════════════════
 //  MACROS DE MECÁNICAS
@@ -33,6 +36,14 @@
 #macro MEC_ABSORB_100_ROBO       0.30   // Roba 30% del daño como vida si esencia al 100%
 #macro MEC_ABSORB_DEBUFF_MULT    1.20   // +20% daño recibido si esencia 50-75%
 #macro MEC_ABSORB_DEBUFF_DUR     300    // 5 segundos a 60fps
+
+// ── El Devorador ──
+#macro MEC_ROBO_ESE_POR_GOLPE    5      // Esencia robada al jugador por cada golpe del Devorador
+#macro MEC_SUPRES_INTERVALO      480    // Cada 8 segundos suprime pasiva
+#macro MEC_SUPRES_DURACION       180    // Suprime pasiva por 3 segundos
+
+// ── El Primer Conductor ──
+#macro MEC_ESPEJO_MULT           0.15   // +15% daño por cada stat del jugador > 10
 
 // ══════════════════════════════════════════════════════════════
 //  INICIALIZAR VARIABLES DE MECÁNICAS EN UN ENEMIGO
@@ -63,6 +74,15 @@ function scr_mec_inicializar(_en, _mecs) {
 
     // --- Absorción de Esencia ---
     _en.mec_absorb_debuff_timer = 0;    // timer del debuff +20% daño
+
+    // --- Robo Esencia por Golpe (Devorador) ---
+    // No necesita variables extra (roba al infligir daño)
+
+    // --- Supresión de Pasiva (Devorador) ---
+    _en.mec_supres_timer = 0;           // contador de frames para próxima supresión
+
+    // --- Espejo de Clase (Primer Conductor) ---
+    // No necesita variables extra (calcula en tiempo real según jugador)
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -203,6 +223,28 @@ function scr_mec_modificar_dano_infligido(_en, _jug, _dano) {
             + "% → daño ×" + string_format(_mult, 1, 2));
     }
 
+    // ─── Robo de Esencia por Golpe (Devorador) ───
+    if (scr_mec_tiene(_en, "mec_robo_esencia_golpe")) {
+        var _robo_ese = min(_jug.esencia, MEC_ROBO_ESE_POR_GOLPE);
+        _jug.esencia = max(0, _jug.esencia - _robo_ese);
+        if (_robo_ese > 0) {
+            show_debug_message("🕳 Robo Esencia: -" + string(_robo_ese) + " esencia al jugador");
+        }
+    }
+
+    // ─── Espejo de Clase (Primer Conductor): escala según stats del jugador ───
+    if (scr_mec_tiene(_en, "mec_espejo_clase")) {
+        // Bonus: +15% por cada stat del jugador que supere 10
+        var _stat_bonus = 0;
+        if (_jug.ataque > 10) { _stat_bonus += 1; }
+        if (_jug.defensa > 10) { _stat_bonus += 1; }
+        if (_jug.poder_elemental > 10) { _stat_bonus += 1; }
+        if (_jug.velocidad > 5) { _stat_bonus += 1; }
+        var _espejo_mult = 1.0 + (_stat_bonus * MEC_ESPEJO_MULT);
+        _d = round(_d * _espejo_mult);
+        show_debug_message("👑 Espejo Clase: " + string(_stat_bonus) + " stats altos → daño ×" + string_format(_espejo_mult, 1, 2));
+    }
+
     return max(1, _d);
 }
 
@@ -329,6 +371,24 @@ function scr_mec_actualizar(_en) {
             _en.mec_absorb_debuff_timer -= 1;
         }
     }
+
+    // Supresión de Pasiva (Devorador): cada MEC_SUPRES_INTERVALO frames suprime pasiva del jugador
+    if (scr_mec_tiene(_en, "mec_supresion_pasiva")) {
+        _en.mec_supres_timer += 1;
+        if (_en.mec_supres_timer >= MEC_SUPRES_INTERVALO) {
+            _en.mec_supres_timer = 0;
+            // Buscar al jugador para suprimir
+            with (obj_actor_jugador) {
+                if (variable_struct_exists(mi_personaje, "pasiva_activa")) {
+                    mi_personaje.pasiva_activa = false;
+                    mi_personaje.pasiva_cooldown = MEC_SUPRES_DURACION;
+                    scr_notif_agregar(mi_personaje.nombre, "¡Pasiva suprimida!", c_red);
+                    show_debug_message("🕳 Supresión Pasiva: pasiva del jugador desactivada por "
+                        + string(MEC_SUPRES_DURACION / GAME_FPS) + "s");
+                }
+            }
+        }
+    }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -416,6 +476,31 @@ function scr_mec_obtener_indicadores(_en) {
             }
             array_push(_indicadores, { texto: _txt, color: c_orange });
         }
+    }
+
+    // Robo de Esencia por Golpe (Devorador)
+    if (scr_mec_tiene(_en, "mec_robo_esencia_golpe")) {
+        array_push(_indicadores, {
+            texto: "Roba esencia al golpear",
+            color: make_color_rgb(180, 50, 220)
+        });
+    }
+
+    // Supresión de Pasiva (Devorador)
+    if (scr_mec_tiene(_en, "mec_supresion_pasiva")) {
+        var _prox = (MEC_SUPRES_INTERVALO - _en.mec_supres_timer) / GAME_FPS;
+        array_push(_indicadores, {
+            texto: "Supresión en " + string_format(_prox, 1, 1) + "s",
+            color: make_color_rgb(255, 60, 60)
+        });
+    }
+
+    // Espejo de Clase (Primer Conductor)
+    if (scr_mec_tiene(_en, "mec_espejo_clase")) {
+        array_push(_indicadores, {
+            texto: "Imita tu fuerza",
+            color: make_color_rgb(255, 215, 0)
+        });
     }
 
     return _indicadores;

@@ -76,7 +76,7 @@ function scr_formula_dano(_atacante, _defensor, _p) {
         _mult_afi = scr_multiplicador_afinidad_dual(_atacante, _defensor);
     }
 
-    // ─── Paso 5: Pasivas de afinidad ───
+    // ─── Paso 5: Pasivas de afinidad (lee bono de scr_datos_afinidades) ───
     var _mult_pas = 1.0;
 
     var _atk_afi2 = variable_struct_exists(_atacante, "afinidad_secundaria")
@@ -84,26 +84,22 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     var _def_afi2 = variable_struct_exists(_defensor, "afinidad_secundaria")
                     ? _defensor.afinidad_secundaria : "none";
 
-    // Fuego: +20 % daño cuando pasiva activa
-    if (_atacante.pasiva_activa && (_atacante.afinidad == "Fuego" || _atk_afi2 == "Fuego")) {
-        _mult_pas *= 1.20;
-    }
-    // Rayo: +15 % daño cuando pasiva activa
-    if (_atacante.pasiva_activa && (_atacante.afinidad == "Rayo" || _atk_afi2 == "Rayo")) {
-        _mult_pas *= 1.15;
-    }
-    // Sombra: +25 % daño cuando pasiva activa (golpe crítico)
-    if (_atacante.pasiva_activa && (_atacante.afinidad == "Sombra" || _atk_afi2 == "Sombra")) {
-        _mult_pas *= 1.25;
-    }
-    // Arcano: +20 % daño cuando pasiva activa
-    if (_atacante.pasiva_activa && (_atacante.afinidad == "Arcano" || _atk_afi2 == "Arcano")) {
-        _mult_pas *= 1.20;
+    // Bonus ofensivos del atacante (Fuego, Rayo, Sombra, Arcano)
+    if (_atacante.pasiva_activa) {
+        var _afi_atk = _atacante.afinidad;
+        var _ofensivas = ["Fuego", "Rayo", "Sombra", "Arcano"];
+        for (var _oi = 0; _oi < 4; _oi++) {
+            if (_afi_atk == _ofensivas[_oi] || _atk_afi2 == _ofensivas[_oi]) {
+                var _bono = scr_datos_afinidades(_ofensivas[_oi]).bono;  // ej: 1.10, 1.15, 1.25, 1.20
+                _mult_pas *= _bono;
+            }
+        }
     }
 
-    // Tierra defensiva: defensor recibe −20 % daño
+    // Bonus defensivo del defensor (Tierra: reduce daño recibido)
     if (_defensor.pasiva_activa && (_defensor.afinidad == "Tierra" || _def_afi2 == "Tierra")) {
-        _mult_pas *= 0.80;
+        var _bono_tierra = scr_datos_afinidades("Tierra").bono;  // 1.20
+        _mult_pas *= (2.0 - _bono_tierra);  // 1.20 → 0.80 (reduce 20%)
     }
 
     // ─── Paso 6: Varianza aleatoria ───
@@ -123,6 +119,8 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     if (_roll < _crit_chance) {
         _mult_crit = CRIT_POS_MULT;
         _tipo_crit = 1;
+        // Emitir evento de golpe critico para pasiva de Sombra
+        scr_activar_pasiva_afinidad(_atacante, "golpe_critico");
     } else if (_roll >= (100 - CRIT_NEG_CHANCE)) {
         _mult_crit = CRIT_NEG_MULT;
         _tipo_crit = -1;
@@ -191,6 +189,7 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     // Generar esencia dinámica
     //   base (del param) + % del daño + bonus velocidad + bonus poder (si mágico)
     //   crit positivo multiplica el total por ESENCIA_CRIT_BONUS
+    //   multiplicador de clase según método de carga
     if (_p.esencia_gen > 0) {
         var _esen_base = _p.esencia_gen;
         var _esen_dano = round(_dano_final * ESENCIA_PCT_DANO);
@@ -199,6 +198,41 @@ function scr_formula_dano(_atacante, _defensor, _p) {
                          ? round(_atacante.poder_elemental * ESENCIA_MULT_PODER_MAG) : 0;
         var _esen_total = _esen_base + _esen_dano + _esen_vel + _esen_mag;
         if (_tipo_crit == 1) _esen_total = round(_esen_total * ESENCIA_CRIT_BONUS);
+
+        // Multiplicador de clase: cada clase genera más esencia en su evento preferido
+        if (_atacante.es_jugador && variable_struct_exists(_atacante, "clase")) {
+            var _mult_clase_es = ESENCIA_CLASE_BASE;  // por defecto, evento no-preferido
+            switch (_atacante.clase) {
+                case "Quebrador":
+                    // Genera más con golpes fuertes (>= mult_poder 1.3)
+                    if (_p.mult_poder >= 1.3) _mult_clase_es = ESENCIA_CLASE_BONUS;
+                    break;
+                case "Filotormenta":
+                    // Genera más por cada uso de habilidad (siempre, pero más si CD bajo)
+                    _mult_clase_es = ESENCIA_CLASE_BONUS;
+                    break;
+                case "Canalizador":
+                    // Genera más con habilidades mágicas/elementales
+                    if (variable_struct_exists(_p, "tipo_dano") && _p.tipo_dano == "magico")
+                        _mult_clase_es = ESENCIA_CLASE_BONUS;
+                    else
+                        _mult_clase_es = 1.0; // normal para físico
+                    break;
+                case "Duelista":
+                    // Bonus base normal en ataque, su bonus real viene de contraataques (Step)
+                    _mult_clase_es = 1.0;
+                    break;
+                case "Vanguardia":
+                    // Su bonus real viene de recibir daño (abajo en defensor)
+                    _mult_clase_es = 0.80;
+                    break;
+                case "Centinela":
+                    // Su bonus real viene de mitigar daño (abajo en defensor)
+                    _mult_clase_es = 0.80;
+                    break;
+            }
+            _esen_total = round(_esen_total * _mult_clase_es);
+        }
 
         // Runa Vampírica: -40% generación de esencia
         if (instance_exists(obj_control_combate)) {
@@ -209,6 +243,21 @@ function scr_formula_dano(_atacante, _defensor, _p) {
         }
 
         _atacante.esencia = clamp(_atacante.esencia + _esen_total, 0, _atacante.esencia_llena);
+    }
+
+    // ── Esencia para el DEFENSOR al recibir daño (Vanguardia / Centinela) ──
+    if (_defensor.es_jugador && variable_struct_exists(_defensor, "clase") && _dano_final > 0) {
+        var _esen_def = 0;
+        if (_defensor.clase == "Vanguardia") {
+            // Vanguardia: gana esencia al recibir daño (50% del daño recibido)
+            _esen_def = round(_dano_final * 0.50);
+        } else if (_defensor.clase == "Centinela") {
+            // Centinela: gana esencia al mitigar daño (basado en defensa usada)
+            _esen_def = round(_reduccion * 0.40);
+        }
+        if (_esen_def > 0) {
+            _defensor.esencia = clamp(_defensor.esencia + _esen_def, 0, _defensor.esencia_llena);
+        }
     }
 
     return _dano_final;

@@ -345,6 +345,58 @@ function scr_datos_enemigos(_e) {
                 ]
             };
 
+        // =============================================================
+        // JEFE FINAL — El Devorador (sin afinidad)
+        //   Roba esencia, desactiva pasivas, espejea al jugador
+        // =============================================================
+        case "El Devorador":
+            return {
+                vida: 1500, ataque: 30, defensa: 22, defensa_magica: 22,
+                velocidad: 5, poder_elemental: 20,
+                afinidad: "Neutra",
+                habilidad_fija: "mordida_vacia",
+                habilidad_2: "pulso_devorador",
+                habilidad_3: "espejo_voraz",
+                habilidad_4: "consumo_absoluto",
+                patron: ["mordida_vacia", "pulso_devorador", "mordida_vacia",
+                         "espejo_voraz", "pulso_devorador", "consumo_absoluto"],
+                oro_min: 400, oro_max: 800,
+                precio: 5000,
+                mecanicas: ["mec_robo_esencia_golpe", "mec_supresion_pasiva"],
+                timer_limite: 210,
+                drops: [
+                    { material: "Esencia del Vacio",        cant_min: 1, cant_max: 1, chance: 100 },
+                    { material: "Cristal del Vacio",        cant_min: 1, cant_max: 2, chance: 80  },
+                    { material: "Runa Mayor",               cant_min: 2, cant_max: 3, chance: 70  },
+                ]
+            };
+
+        // =============================================================
+        // JEFE SECRETO — El Primer Conductor (sin afinidad visible)
+        //   Imita clase del jugador, manipula esencia, HP ×1.80
+        // =============================================================
+        case "El Primer Conductor":
+            return {
+                vida: 1800, ataque: 35, defensa: 25, defensa_magica: 25,
+                velocidad: 6, poder_elemental: 25,
+                afinidad: "Neutra",
+                habilidad_fija: "golpe_primordial",
+                habilidad_2: "resonancia_conductor",
+                habilidad_3: "armonia_invertida",
+                habilidad_4: "genesis_final",
+                patron: ["golpe_primordial", "resonancia_conductor", "golpe_primordial",
+                         "armonia_invertida", "resonancia_conductor", "genesis_final"],
+                oro_min: 600, oro_max: 1200,
+                precio: 8000,
+                mecanicas: ["mec_espejo_clase", "mec_escalado_vida_jugador"],
+                timer_limite: 240,
+                drops: [
+                    { material: "Eco del Primer Conductor", cant_min: 1, cant_max: 1, chance: 100 },
+                    { material: "Esencia del Vacio",        cant_min: 1, cant_max: 1, chance: 80  },
+                    { material: "Nucleo de Forja Antigua",  cant_min: 1, cant_max: 1, chance: 50  },
+                ]
+            };
+
         default:
             show_error("Enemigo no encontrado: " + string(_e), true);
             return undefined;

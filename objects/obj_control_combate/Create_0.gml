@@ -151,3 +151,22 @@ if (instance_exists(control_juego)
 
 // 7. Sistema de feedback visual (números flotantes, shake, flash)
 scr_feedback_init();
+
+// 8. Fondo de combate aleatorio (arena visual)
+//    Si es revancha, mantener el mismo fondo anterior;
+//    si no, elegir uno aleatorio y guardarlo.
+combate_arena_idx = 0;
+if (instance_exists(control_juego)) {
+    if (variable_struct_exists(control_juego, "combate_arena_revancha")
+        && control_juego.combate_arena_revancha >= 0) {
+        // Revancha: mantener exactamente el mismo fondo
+        combate_arena_idx = control_juego.combate_arena_revancha;
+        control_juego.combate_arena_revancha = -1;  // consumir flag
+    } else {
+        // Nuevo combate: elegir arena aleatoria (0–4, para 5 fondos)
+        combate_arena_idx = irandom(4);
+    }
+    // Guardar para que un reintento pueda recuperarlo
+    control_juego.combate_arena_ultimo = combate_arena_idx;
+}
+show_debug_message("🏟 Arena de combate #" + string(combate_arena_idx));

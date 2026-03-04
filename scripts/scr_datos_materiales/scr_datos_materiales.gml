@@ -75,6 +75,12 @@ function scr_datos_materiales(_mat) {
 
         case "Cristal del Vacio":
             return { afinidad: "Sombra-Arcano",  rareza: "legendario" };
+
+        case "Esencia del Vacio":
+            return { afinidad: "Neutra",         rareza: "legendario" };
+
+        case "Eco del Primer Conductor":
+            return { afinidad: "Neutra",         rareza: "legendario" };
     }
 
     show_error("Material no encontrado: " + string(_mat), true);

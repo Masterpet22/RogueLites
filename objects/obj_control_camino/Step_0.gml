@@ -470,7 +470,11 @@ else if (camino_fase == "derrota") {
 
     if (keyboard_check_pressed(vk_enter)) {
         if (camino_post_opcion == 0) {
-            // Reintentar mismo encuentro
+            // Reintentar mismo encuentro — preservar arena
+            var _cj_retry = instance_find(obj_control_juego, 0);
+            if (instance_exists(_cj_retry)) {
+                _cj_retry.combate_arena_revancha = _cj_retry.combate_arena_ultimo;
+            }
             camino_derrotas++;
             // Recrear el encuentro desde el nodo actual del mapa
             var _nodo_retry = camino_mapa[camino_tier_actual][camino_nodo_actual];

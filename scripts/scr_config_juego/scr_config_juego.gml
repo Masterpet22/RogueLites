@@ -10,6 +10,10 @@
 #macro ESENCIA_MULT_PODER_MAG 0.2    // poder × 0.2 extra en habilidades mágicas
 #macro ESENCIA_CRIT_BONUS     1.5    // ×1.5 esencia en crítico positivo
 
+// ── Esencia por clase: bonus/pen según método de carga ──
+#macro ESENCIA_CLASE_BONUS    1.80   // ×1.80 esencia en el evento preferido de la clase
+#macro ESENCIA_CLASE_BASE     0.60   // ×0.60 esencia en eventos NO preferidos
+
 // ── Crítico dinámico por ataque ──
 #macro CRIT_BASE_CHANCE  3       // probabilidad base de crítico (%)
 #macro CRIT_ATK_DIVISOR  3       // cada X puntos de ataque → +1% crit

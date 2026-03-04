@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"spr_rostro_halito_verde",
   "bboxMode":0,
-  "bbox_bottom":255,
-  "bbox_left":0,
-  "bbox_right":255,
+  "bbox_bottom":250,
+  "bbox_left":25,
+  "bbox_right":207,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"1ab06822-39f8-4b73-bf8f-af0fb1a44841","name":"1ab06822-39f8-4b73-bf8f-af0fb1a44841","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"f013d048-7a59-427a-85b0-963f4354890c","name":"f013d048-7a59-427a-85b0-963f4354890c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":256,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"1f12dc59-7174-4e0a-8040-220dd070afa5","blendMode":0,"displayName":"default","isLocked":false,"name":"1f12dc59-7174-4e0a-8040-220dd070afa5","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"7f8ba55f-a45c-4046-aef4-cb5979d25a12","blendMode":0,"displayName":"default","isLocked":false,"name":"7f8ba55f-a45c-4046-aef4-cb5979d25a12","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_rostro_halito_verde",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"1ab06822-39f8-4b73-bf8f-af0fb1a44841","path":"sprites/spr_rostro_halito_verde/spr_rostro_halito_verde.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"91562dc1-2134-4b3c-9d99-75a83e1858f8","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"f013d048-7a59-427a-85b0-963f4354890c","path":"sprites/spr_rostro_halito_verde/spr_rostro_halito_verde.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"3b0ebfad-8646-4e34-95de-555d8038712b","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

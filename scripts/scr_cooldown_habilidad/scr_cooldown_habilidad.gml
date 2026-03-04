@@ -135,6 +135,16 @@ function scr_cooldown_habilidad(_id) {
         case "pulso_abismal":           return round(GAME_FPS * 2.5);
         case "sifon_sombrio":           return round(GAME_FPS * 3.5);
         case "apocalipsis_runico":      return round(GAME_FPS * 6.0);
+        // ── El Devorador ──
+        case "mordida_vacia":           return round(GAME_FPS * 2.0);
+        case "pulso_devorador":         return round(GAME_FPS * 3.5);
+        case "espejo_voraz":            return round(GAME_FPS * 4.0);
+        case "consumo_absoluto":        return round(GAME_FPS * 7.0);
+        // ── El Primer Conductor ──
+        case "golpe_primordial":        return round(GAME_FPS * 2.0);
+        case "resonancia_conductor":    return round(GAME_FPS * 5.0);
+        case "armonia_invertida":       return round(GAME_FPS * 5.0);
+        case "genesis_final":           return round(GAME_FPS * 8.0);
     }
 
     // Fallback — habilidad sin cooldown registrado
