@@ -299,8 +299,18 @@ if (variable_struct_exists(en, "mecanicas") && is_array(en.mecanicas) && array_l
 // ╔═══════════════════════════════════════════════════════════════╗
 // ║  SPRITES DE CUERPO COMPLETO (centro de pantalla)
 // ╚═══════════════════════════════════════════════════════════════╝
-if (!control_combate.combate_terminado) {
+if (!control_combate.combate_terminado || (variable_struct_exists(control_combate, "fin_dramatico_timer") && control_combate.fin_dramatico_timer > 0)) {
+
+    // Aplicar zoom de impacto (centrado en pantalla)
+    scr_fx_zoom_aplicar();
+
     scr_feedback_dibujar_sprites();
+
+    // Partículas de impacto (sobre los sprites)
+    scr_fx_particulas_dibujar();
+
+    // Restaurar zoom de impacto
+    scr_fx_zoom_restaurar();
 }
 
 // ╔═══════════════════════════════════════════════════════════════╗
@@ -591,6 +601,15 @@ if (!control_combate.combate_terminado) {
 // ╚═══════════════════════════════════════════════════════════════╝
 if (control_combate.combate_terminado) {
 
+    // ── Flash dramático de fin de combate ──
+    scr_fin_combate_dibujar_flash();
+
+    // ── Si el timer dramático sigue activo, NO mostrar resultados aún ──
+    if (variable_struct_exists(control_combate, "fin_dramatico_timer")
+        && control_combate.fin_dramatico_timer > 0) {
+        // Solo mostrar sprites y flash, no el overlay de resultados
+    } else {
+
     // Overlay oscuro
     draw_set_color(c_black);
     draw_set_alpha(0.6);
@@ -633,6 +652,8 @@ if (control_combate.combate_terminado) {
 
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
+
+    } // fin del else (timer dramático terminó)
 }
 
 // ===========================
@@ -644,6 +665,9 @@ if (!control_combate.combate_terminado) {
     scr_feedback_dibujar();
     // Efectos FX (impacto, crítico, curación, etc.)
     scr_feedback_dibujar_fx();
+
+    // Diálogos pre-combate (overlay sobre todo)
+    scr_dialogos_dibujar();
 } else {
     // Limpiar notificaciones y feedbacks para que no se acumulen al volver
     control_combate.notificaciones = [];

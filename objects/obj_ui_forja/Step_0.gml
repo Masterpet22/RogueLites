@@ -6,9 +6,9 @@ if (keyboard_check_pressed(vk_escape)) {
     } else {
         // Volver al mapa si estamos en modo Camino, sino al menú
         if (instance_exists(obj_control_juego) && variable_struct_exists(obj_control_juego, "modo_camino") && obj_control_juego.modo_camino) {
-            room_goto(rm_camino);
+            scr_transicion_ir(rm_camino);
         } else {
-            room_goto(rm_menu);
+            scr_transicion_ir(rm_menu);
         }
     }
 }

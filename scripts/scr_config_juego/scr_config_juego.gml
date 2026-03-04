@@ -33,3 +33,21 @@
 
 // ── Estados alterados ──
 #macro ESTADO_DUR_MAX_SEG  5   // duración máxima de cualquier estado (segundos)
+
+// ══════════════════════════════════════════════════════════════
+//  FLAGS GLOBALES — Efectos visuales (activables/desactivables)
+// ══════════════════════════════════════════════════════════════
+#macro FX_CAMERA_SHAKE_ON   true    // sacudida de cámara al impactar
+#macro FX_HITSTOP_ON        true    // micro-pausa al conectar golpe
+#macro FX_ZOOM_IMPACTO_ON   true    // zoom dinámico al impactar
+#macro FX_PARTICULAS_ON     true    // partículas de golpe/curación
+#macro FX_FLASH_DANO_ON     true    // flash rojo/blanco al recibir daño
+#macro FX_FLASH_CURA_ON     true    // efecto visual de curación
+#macro FX_TRANSICIONES_ON   true    // fade in/out entre rooms
+#macro FX_DIALOGOS_PRE_ON   true    // diálogos pre-combate
+
+// ── Intensidades de FX (escalables) ──
+#macro FX_SHAKE_MULT        1.0     // multiplicador global de shake (0.5 = suave, 2.0 = fuerte)
+#macro FX_ZOOM_INTENSIDAD   0.03    // cuánto zoom-in al impactar (3%)
+#macro FX_ZOOM_VELOCIDAD    0.12    // velocidad de retorno del zoom (ease-out)
+#macro FX_TRANSICION_VEL    0.04    // velocidad del fade (0→1 en ~25 frames)

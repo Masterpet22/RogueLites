@@ -36,7 +36,7 @@ if (torre_fase == "seleccion_ala") {
     }
 
     if (keyboard_check_pressed(vk_escape)) {
-        room_goto(rm_menu);
+        scr_transicion_ir(rm_menu);
     }
 }
 
@@ -442,7 +442,7 @@ function scr_torre_lanzar_combate() {
     _cj.torre_oro_mult = torre_piso_data.oro_mult;
 
     torre_fase = "combate";
-    room_goto(rm_combate);
+    scr_transicion_ir(rm_combate);
 }
 
 /// @function scr_torre_post_combate(_ganador, _pj, _oro_ganado)
@@ -489,7 +489,7 @@ function scr_torre_post_combate(_ganador, _pj, _oro_ganado) {
     }
 
     // Volver a rm_torre
-    room_goto(rm_torre);
+    scr_transicion_ir(rm_torre);
 }
 
 /// @function scr_torre_finalizar(_resultado)
@@ -550,5 +550,5 @@ function scr_torre_finalizar(_resultado) {
     torre_equip_obj_disponibles   = [];
     torre_equip_runas_disponibles = [];
 
-    room_goto(rm_menu);
+    scr_transicion_ir(rm_menu);
 }

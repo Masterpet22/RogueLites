@@ -52,7 +52,7 @@ if (pausado) {
                     scr_torre_finalizar("abandono_pausa");
                 }
             } else {
-                room_goto(rm_menu);
+                scr_transicion_ir(rm_menu);
             }
         }
     }

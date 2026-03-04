@@ -154,6 +154,15 @@ if (instance_exists(control_juego)
 // 7. Sistema de feedback visual (números flotantes, shake, flash)
 scr_feedback_init();
 
+// 8b. Sistema de FX de impacto (camera shake, zoom, partículas)
+scr_fx_impacto_init();
+
+// 8c. Sistema de diálogos pre-combate
+scr_dialogos_init();
+
+// 8d. Sistema dramático de fin de combate
+scr_fin_combate_init();
+
 // 8. Fondo de combate aleatorio (arena visual)
 //    Si es revancha, mantener el mismo fondo anterior;
 //    si no, elegir uno aleatorio y guardarlo.

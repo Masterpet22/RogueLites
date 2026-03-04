@@ -3,6 +3,12 @@
 // Si el combate terminó
 if (combate_terminado)
 {
+    // Actualizar secuencia dramática de fin de combate
+    scr_fin_combate_actualizar();
+
+    // Bloquear input durante la secuencia dramática
+    if (fin_dramatico_timer > 0 || fin_hitstop_timer > 0) { exit; }
+
     // Corregido: Ahora coincide con el comentario o usa la tecla que prefieras
     if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_escape))
     {
@@ -24,7 +30,7 @@ if (combate_terminado)
                 scr_camino_post_combate(other.ganador, other.personaje_jugador, other.oro_recompensa);
             }
         } else {
-            room_goto(rm_menu);
+            scr_transicion_ir(rm_menu);
         }
     }
     exit;
@@ -32,6 +38,14 @@ if (combate_terminado)
 
 // ── PAUSADO: no actualizar nada ──
 if (instance_exists(obj_control_ui_combate) && obj_control_ui_combate.pausado) {
+    exit;
+}
+
+// ── DIÁLOGOS PRE-COMBATE: bloquear combate mientras estén activos ──
+if (scr_dialogos_actualizar()) {
+    // Solo actualizar FX visuales durante diálogos
+    scr_fx_zoom_actualizar();
+    scr_fx_particulas_actualizar();
     exit;
 }
 
@@ -138,6 +152,10 @@ scr_notif_actualizar();
 
 // 3e. Actualizar feedback visual (números flotantes, shake, flash, tracking de vida)
 scr_feedback_actualizar();
+
+// 3f. Actualizar FX de impacto (zoom de cámara + partículas)
+scr_fx_zoom_actualizar();
+scr_fx_particulas_actualizar();
 
 
 // 4. Comprobar fin de combate
@@ -248,5 +266,8 @@ if (personaje_jugador.vida_actual <= 0 || personaje_enemigo.vida_actual <= 0) {
         }
 
         show_debug_message("Combate terminado. Ganador: " + ganador);
+
+        // Activar secuencia dramática (zoom, flash, hitstop)
+        scr_fin_combate_activar(ganador);
     }
 }

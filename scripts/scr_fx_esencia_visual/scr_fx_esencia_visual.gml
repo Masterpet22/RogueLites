@@ -201,7 +201,7 @@ function scr_fx_esencia_dibujar_glow() {
     var _escala_base = _display_h / sprite_get_height(_spr_j);
 
     // Posición del jugador anclada al suelo (misma línea que en scr_feedback_dibujar_sprites)
-    var _suelo_y = _gui_h * 0.72;
+    var _suelo_y = _gui_h * 0.82;
     var _pj_x = _gui_w * 0.22 + _c.fb_shake_offset_x[0];
     var _pj_y = scr_sprite_y_anclado_suelo(_spr_j, _suelo_y, _escala_base) + _c.fb_shake_offset_y[0];
 

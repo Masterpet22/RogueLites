@@ -49,6 +49,18 @@ function scr_feedback_init() {
     // Efectos visuales FX
     _c.fb_fx_list = [];
 
+    // ── Sistema de FOCO individual (énfasis en un sprite) ──
+    _c.foco_quien       = 0;     // 0=ninguno, 1=jugador, 2=enemigo
+    _c.foco_escala       = 1.0;   // escala interpolada del focalizado
+    _c.foco_escala_obj   = 1.0;   // escala objetivo
+    _c.foco_dim          = 1.0;   // alpha interpolada del NO focalizado
+    _c.foco_dim_obj      = 1.0;   // alpha objetivo del NO focalizado
+    _c.foco_vel          = 0.06;  // velocidad de interpolación
+    _c.foco_offset_pj_x  = 0;    // offset X interpolado del jugador (para centrar en fin)
+    _c.foco_offset_en_x  = 0;    // offset X interpolado del enemigo
+    _c.foco_offset_pj_x_obj = 0; // offset X objetivo del jugador
+    _c.foco_offset_en_x_obj = 0; // offset X objetivo del enemigo
+
     // Inicializar sistema de esencia visual (glow, hitstop, flash pantalla)
     scr_fx_esencia_init();
 }
@@ -243,11 +255,17 @@ function scr_feedback_actualizar() {
         if (_pj_diff > _pj.vida_max * 0.15) {
             scr_fx_hitstop(4); // ~0.07s
         }
+        // ── FX Impacto: shake de cámara + zoom + partículas ──
+        var _tipo_golpe = "normal";
+        if (_pj_diff > _pj.vida_max * 0.25) _tipo_golpe = "fuerte";
+        if (_pj_diff > _pj.vida_max * 0.40) _tipo_golpe = "critico";
+        scr_fx_impacto_golpe(true, _tipo_golpe, _afi_enemigo);
     } else if (_pj_diff < 0) {
         // Jugador se curó
         scr_feedback_agregar(true, abs(_pj_diff), "cura");
         scr_feedback_flash(true, c_lime);
         scr_feedback_fx(true, "curacion");
+        scr_fx_impacto_curacion(true);
     }
     _c.fb_pj_vida_prev = _pj.vida_actual;
 
@@ -263,11 +281,17 @@ function scr_feedback_actualizar() {
         if (_en_diff > _en.vida_max * 0.15) {
             scr_fx_hitstop(4);
         }
+        // ── FX Impacto: shake de cámara + zoom + partículas ──
+        var _tipo_golpe_en = "normal";
+        if (_en_diff > _en.vida_max * 0.25) _tipo_golpe_en = "fuerte";
+        if (_en_diff > _en.vida_max * 0.40) _tipo_golpe_en = "critico";
+        scr_fx_impacto_golpe(false, _tipo_golpe_en, _afi_jugador);
     } else if (_en_diff < 0) {
         // Enemigo se curó
         scr_feedback_agregar(false, abs(_en_diff), "cura");
         scr_feedback_flash(false, c_lime);
         scr_feedback_fx(false, "curacion");
+        scr_fx_impacto_curacion(false);
     }
     _c.fb_en_vida_prev = _en.vida_actual;
 }
@@ -363,14 +387,40 @@ function scr_feedback_dibujar_sprites() {
     // Escala dinámica: tamaño de pantalla deseado / tamaño real del sprite
     var _display_h = 345;  // 230 * 1.5
 
+    // ── Interpolar foco (énfasis individual) ──
+    _c.foco_escala = lerp(_c.foco_escala, _c.foco_escala_obj, _c.foco_vel);
+    _c.foco_dim    = lerp(_c.foco_dim,    _c.foco_dim_obj,    _c.foco_vel);
+    _c.foco_offset_pj_x = lerp(_c.foco_offset_pj_x, _c.foco_offset_pj_x_obj, _c.foco_vel);
+    _c.foco_offset_en_x = lerp(_c.foco_offset_en_x, _c.foco_offset_en_x_obj, _c.foco_vel);
+
+    // Determinar multiplicadores de escala y alpha por personaje según foco
+    var _pj_foco_escala = 1.0;
+    var _pj_foco_alpha  = 1.0;
+    var _en_foco_escala  = 1.0;
+    var _en_foco_alpha   = 1.0;
+
+    if (_c.foco_quien == 1) {
+        // Jugador focalizado → agrandar, atenuar enemigo
+        _pj_foco_escala = _c.foco_escala;
+        _en_foco_alpha  = _c.foco_dim;
+    } else if (_c.foco_quien == 2) {
+        // Enemigo focalizado → agrandar, atenuar jugador
+        _en_foco_escala = _c.foco_escala;
+        _pj_foco_alpha  = _c.foco_dim;
+    }
+
+    // Aplicar offsets de posición (para centrar perdedor en fin de combate)
+    _pj_x += _c.foco_offset_pj_x;
+    _en_x += _c.foco_offset_en_x;
+
     // ── JUGADOR BODY SPRITE ──
     {
         // Usar sprite individual del personaje si existe
         var _spr_j = (variable_struct_exists(_c, "personaje_jugador") && variable_struct_exists(_c.personaje_jugador, "sprite_cuerpo"))
                      ? _c.personaje_jugador.sprite_cuerpo : spr_jugador;
-        var _escala_j = _display_h / sprite_get_height(_spr_j);
+        var _escala_j = (_display_h / sprite_get_height(_spr_j)) * _pj_foco_escala;
 
-        // Y anclada al suelo por máscara de colisión
+        // Y anclada al suelo por máscara de colisión (usa escala con foco)
         var _pj_y = scr_sprite_y_anclado_suelo(_spr_j, _suelo_y, _escala_j);
 
         var _sx = _pj_x + _c.fb_shake_offset_x[0];
@@ -378,13 +428,13 @@ function scr_feedback_dibujar_sprites() {
 
         // Flash de color
         var _blend = c_white;
-        var _alpha = 1.0;
+        var _alpha = _pj_foco_alpha;
         if (_c.fb_flash_timer[0] > 0) {
             var _flash_ratio = _c.fb_flash_timer[0] / FB_FLASH_FRAMES;
             _blend = merge_color(c_white, _c.fb_flash_color[0], _flash_ratio * 0.7);
             // Parpadeo rápido
             if (_c.fb_flash_timer[0] mod 3 == 0) {
-                _alpha = 0.5;
+                _alpha *= 0.5;
             }
         }
 
@@ -396,9 +446,9 @@ function scr_feedback_dibujar_sprites() {
         // Usar sprite individual del enemigo si existe
         var _spr_e = (variable_struct_exists(_c, "personaje_enemigo") && variable_struct_exists(_c.personaje_enemigo, "sprite_cuerpo"))
                      ? _c.personaje_enemigo.sprite_cuerpo : spr_enemigo;
-        var _escala_e = _display_h / sprite_get_height(_spr_e);
+        var _escala_e = (_display_h / sprite_get_height(_spr_e)) * _en_foco_escala;
 
-        // Y anclada al suelo por máscara de colisión
+        // Y anclada al suelo por máscara de colisión (usa escala con foco)
         var _en_y = scr_sprite_y_anclado_suelo(_spr_e, _suelo_y, _escala_e);
 
         var _sx = _en_x + _c.fb_shake_offset_x[1];
@@ -406,12 +456,12 @@ function scr_feedback_dibujar_sprites() {
 
         // Flash de color
         var _blend = c_white;
-        var _alpha = 1.0;
+        var _alpha = _en_foco_alpha;
         if (_c.fb_flash_timer[1] > 0) {
             var _flash_ratio = _c.fb_flash_timer[1] / FB_FLASH_FRAMES;
             _blend = merge_color(c_white, _c.fb_flash_color[1], _flash_ratio * 0.7);
             if (_c.fb_flash_timer[1] mod 3 == 0) {
-                _alpha = 0.5;
+                _alpha *= 0.5;
             }
         }
 

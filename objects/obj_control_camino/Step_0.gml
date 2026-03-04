@@ -56,7 +56,7 @@ if (camino_fase == "seleccion_personaje") {
     }
 
     if (keyboard_check_pressed(vk_escape)) {
-        room_goto(rm_menu);
+        scr_transicion_ir(rm_menu);
     }
 }
 
@@ -380,10 +380,10 @@ else if (camino_fase == "entre_capitulos") {
                 scr_camino_siguiente_capitulo();
                 break;
             case 1: // Forja
-                room_goto(rm_forja);
+                scr_transicion_ir(rm_forja);
                 break;
             case 2: // Tienda
-                room_goto(rm_tienda);
+                scr_transicion_ir(rm_tienda);
                 break;
             case 3: // Abandonar
                 scr_camino_finalizar("abandono");
@@ -604,13 +604,13 @@ function scr_camino_ejecutar_nodo() {
         case "tienda":
             var _cj_t = instance_find(obj_control_juego, 0);
             if (instance_exists(_cj_t)) _cj_t.modo_camino = true;
-            room_goto(rm_tienda);
+            scr_transicion_ir(rm_tienda);
             break;
 
         case "forja":
             var _cj_f = instance_find(obj_control_juego, 0);
             if (instance_exists(_cj_f)) _cj_f.modo_camino = true;
-            room_goto(rm_forja);
+            scr_transicion_ir(rm_forja);
             break;
 
         case "descanso":
@@ -752,7 +752,7 @@ function scr_camino_lanzar_combate() {
     _cj.camino_oro_mult = camino_encuentro.oro_mult;
 
     camino_fase = "combate";
-    room_goto(rm_combate);
+    scr_transicion_ir(rm_combate);
 }
 
 
@@ -779,7 +779,7 @@ function scr_camino_post_combate(_ganador, _pj, _oro_ganado) {
             camino_narrativa_destino = "secreto_victoria";
             camino_fase = "narrativa_linea";
             camino_encuentro = undefined;
-            room_goto(rm_camino);
+            scr_transicion_ir(rm_camino);
             return;
         }
 
@@ -803,7 +803,7 @@ function scr_camino_post_combate(_ganador, _pj, _oro_ganado) {
     }
 
     camino_encuentro = undefined;
-    room_goto(rm_camino);
+    scr_transicion_ir(rm_camino);
 }
 
 
@@ -876,5 +876,5 @@ function scr_camino_finalizar(_resultado) {
     camino_arma_sel_indice = 0;
     camino_ruta_visitada = [];
 
-    room_goto(rm_menu);
+    scr_transicion_ir(rm_menu);
 }

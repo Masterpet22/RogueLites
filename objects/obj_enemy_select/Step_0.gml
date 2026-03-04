@@ -15,7 +15,7 @@ if (estado == EnemySelState.CATEGORIA) {
 
     // ESC en categoría → volver a selección de personaje
     if (keyboard_check_pressed(vk_escape)) {
-        room_goto(rm_select);
+        scr_transicion_ir(rm_select);
     }
 
     if (keyboard_check_pressed(vk_enter)) {
@@ -93,7 +93,7 @@ else if (estado == EnemySelState.LISTA) {
 else if (estado == EnemySelState.CONFIRMAR) {
 
     if (keyboard_check_pressed(vk_enter)) {
-        room_goto(rm_combate);
+        scr_transicion_ir(rm_combate);
     }
 
     if (keyboard_check_pressed(vk_escape)) {

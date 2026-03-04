@@ -30,7 +30,7 @@ if (estado == SelState.PERSONAJE) {
     }
 
     if (keyboard_check_pressed(vk_escape)) {
-        room_goto(rm_menu);
+        scr_transicion_ir(rm_menu);
     }
 }
 // AGREGAMOS "ELSE" AQUÍ PARA EVITAR LA CASCADA
@@ -91,7 +91,7 @@ else if (estado == SelState.ARMA_POPUP) {
 
             if (array_length(runas_disponibles) == 0) {
                 control_juego.runa_equipada = "";
-                room_goto(rm_enemy_select);
+                scr_transicion_ir(rm_enemy_select);
             } else {
                 estado = SelState.RUNA_POPUP;
                 io_clear();
@@ -168,7 +168,7 @@ else if (estado == SelState.OBJETOS_POPUP) {
         // Si no tiene runas, ir directo a seleccionar enemigo
         if (array_length(runas_disponibles) == 0) {
             control_juego.runa_equipada = "";
-            room_goto(rm_enemy_select);
+            scr_transicion_ir(rm_enemy_select);
         } else {
             estado = SelState.RUNA_POPUP;
             io_clear();
@@ -205,7 +205,7 @@ else if (estado == SelState.RUNA_POPUP) {
             runa_seleccionada = ""; // Opción "Sin runa"
         }
         control_juego.runa_equipada = runa_seleccionada;
-        room_goto(rm_enemy_select);
+        scr_transicion_ir(rm_enemy_select);
     }
 
     // ESC: volver a objetos

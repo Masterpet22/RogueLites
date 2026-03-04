@@ -1,5 +1,8 @@
 /// CREATE — obj_control_juego
 
+// Profundidad muy baja para que Draw GUI dibuje POR ENCIMA de todos los demás objetos
+depth = -9999;
+
 // Establecer velocidad del juego (usa la macro GAME_FPS = 60)
 game_set_speed(GAME_FPS, gamespeed_fps);
 
@@ -109,4 +112,7 @@ camino_oro_mult = 1;
 combate_arena_revancha = -1;   // -1 = nueva arena aleatoria, >= 0 = reusar ese índice
 combate_arena_ultimo   = -1;   // último índice usado (para revancha)
 
-room_goto(rm_menu);
+// ── SISTEMA DE TRANSICIONES DE ROOM (fade in/out) ──
+scr_transicion_init();
+
+scr_transicion_ir(rm_menu);

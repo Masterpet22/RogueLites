@@ -40,23 +40,23 @@ if (keyboard_check_pressed(vk_enter)) {
     switch (opcion) {
 
         case 0:
-            room_goto(rm_camino);
+            scr_transicion_ir(rm_camino);
         break;
 
         case 1:
-            room_goto(rm_select);
+            scr_transicion_ir(rm_select);
         break;
 
         case 2:
-            room_goto(rm_torre);
+            scr_transicion_ir(rm_torre);
         break;
 
         case 3:
-            room_goto(rm_forja);
+            scr_transicion_ir(rm_forja);
         break;
 
         case 4:
-            room_goto(rm_tienda);
+            scr_transicion_ir(rm_tienda);
         break;
     }
 }
