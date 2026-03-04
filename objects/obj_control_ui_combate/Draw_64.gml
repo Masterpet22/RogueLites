@@ -357,7 +357,7 @@ if (!control_combate.combate_terminado) {
 // ╚═══════════════════════════════════════════════════════════════╝
 
 // ===========================
-//  BARRA DE HABILIDADES (4 slots: Q W E R)
+//  BARRA DE HABILIDADES — BOTÓN SÚPER + 4 slots (Q W E R)
 // ===========================
 if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
 
@@ -370,8 +370,144 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
     var _hab_w = 80;
     var _hab_h = 50;
     var _hab_gap = 8;
-    var _hab_x_start = 30;
-    var _hab_y_start = h_gui - 80;
+    var _hab_y_start = h_gui - 105;
+
+    // ── Calcular tier de esencia para el botón Súper ──
+    var _es_pct = pj.esencia / max(1, pj.esencia_llena);
+    var _es_tier = 0;
+    if (_es_pct >= 1.0) _es_tier = 3;
+    else if (_es_pct >= 0.75) _es_tier = 2;
+    else if (_es_pct >= 0.50) _es_tier = 1;
+
+    var _afinidad_pj = variable_struct_exists(pj, "afinidad") ? pj.afinidad : "Neutra";
+    var _paleta_es = scr_paleta_afinidad(_afinidad_pj);
+
+    // ── BOTÓN SÚPER (mismo tamaño que habilidades, palpitante) ──
+    var _super_w = _hab_w;
+    var _super_h = _hab_h;
+    var _super_x = 30;
+    var _super_y = _hab_y_start;
+
+    var _t_btn = current_time;
+    var _btn_pulse = 0.5 + 0.5 * sin(_t_btn / 300);
+
+    // Palpitación: el botón crece y se encoge cuando está activo (reducido para no pisar la barra)
+    var _palpitar_esc = 0;
+    if (_es_tier == 3) _palpitar_esc = 1.5 * _btn_pulse;
+    else if (_es_tier == 2) _palpitar_esc = 1 * _btn_pulse;
+    else if (_es_tier >= 1) _palpitar_esc = 0.5 * _btn_pulse;
+
+    // Aplicar palpitación al rectángulo del botón
+    var _sx1 = _super_x - _palpitar_esc;
+    var _sy1 = _super_y - _palpitar_esc;
+    var _sx2 = _super_x + _super_w + _palpitar_esc;
+    var _sy2 = _super_y + _super_h + _palpitar_esc;
+
+    if (_es_tier >= 1) {
+        // ── Glow detrás del botón (additive, reducido) ──
+        var _glow_expand = 2 + _es_tier;
+        var _glow_alpha_btn = 0.1 + 0.08 * _es_tier + 0.06 * _btn_pulse;
+
+        gpu_set_blendmode(bm_add);
+        draw_set_color(_paleta_es.energia);
+        draw_set_alpha(_glow_alpha_btn);
+        draw_roundrect_ext(
+            _sx1 - _glow_expand, _sy1 - _glow_expand,
+            _sx2 + _glow_expand, _sy2 + _glow_expand,
+            6, 6, false
+        );
+        draw_set_alpha(1);
+        gpu_set_blendmode(bm_normal);
+
+        // ── Fondo del botón palpitante (color elemental) ──
+        var _bg_col = _paleta_es.dominante;
+        if (_es_tier == 3) _bg_col = merge_color(_paleta_es.energia, _paleta_es.secundario, _btn_pulse * 0.5);
+        else if (_es_tier == 2) _bg_col = _paleta_es.secundario;
+
+        draw_set_color(_bg_col);
+        draw_set_alpha(0.85);
+        draw_roundrect_ext(_sx1, _sy1, _sx2, _sy2, 4, 4, false);
+        draw_set_alpha(1);
+
+        // ── Brillo superior ──
+        draw_set_color(_paleta_es.energia);
+        draw_set_alpha(0.2 + 0.15 * _btn_pulse);
+        draw_rectangle(_sx1 + 2, _sy1 + 1, _sx2 - 2, _sy1 + (_sy2 - _sy1) * 0.3, false);
+        draw_set_alpha(1);
+
+        // ── Icono de súper (centrado en botón palpitante) ──
+        var _ico_s_btn = 40 / sprite_get_width(spr_ico_super);
+        var _ico_cx = (_sx1 + _sx2) * 0.5;
+        var _ico_cy = _sy1 + (_sy2 - _sy1) * 0.38;
+        var _ico_col = _paleta_es.energia;
+
+        // Glow del icono al 100%
+        if (_es_tier == 3) {
+            gpu_set_blendmode(bm_add);
+            var _ico_glow_s = _ico_s_btn * (1.4 + 0.25 * _btn_pulse);
+            draw_sprite_ext(spr_ico_super, 0, _ico_cx, _ico_cy, _ico_glow_s, _ico_glow_s, 0, _ico_col, 0.3 * _btn_pulse);
+            gpu_set_blendmode(bm_normal);
+        }
+
+        draw_sprite_ext(spr_ico_super, 0, _ico_cx, _ico_cy, _ico_s_btn, _ico_s_btn, 0, _ico_col, 1);
+
+        // ── Borde del botón palpitante ──
+        var _borde_btn = _paleta_es.energia;
+        if (_es_tier == 3) _borde_btn = merge_color(_paleta_es.energia, c_white, _btn_pulse * 0.5);
+        draw_set_color(_borde_btn);
+        draw_roundrect_ext(_sx1, _sy1, _sx2, _sy2, 4, 4, true);
+
+        // ── Texto TAB ──
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(_ico_col);
+        draw_text((_sx1 + _sx2) * 0.5, _sy2 - 8, "TAB");
+
+        // ── Onda periódica al 100% ──
+        if (_es_tier == 3) {
+            var _wave_t = (_t_btn mod 2000) / 2000.0;
+            if (_wave_t < 0.35) {
+                var _wp = _wave_t / 0.35;
+                var _wa = (1 - _wp) * 0.18;
+                var _we = _wp * 4;
+                gpu_set_blendmode(bm_add);
+                draw_set_color(_paleta_es.energia);
+                draw_set_alpha(_wa);
+                draw_roundrect_ext(
+                    _sx1 - _we, _sy1 - _we,
+                    _sx2 + _we, _sy2 + _we,
+                    6, 6, true
+                );
+                draw_set_alpha(1);
+                gpu_set_blendmode(bm_normal);
+            }
+        }
+    } else {
+        // ── Botón inactivo (esencia <50%) ──
+        draw_set_color(make_color_rgb(25, 20, 35));
+        draw_set_alpha(0.7);
+        draw_roundrect_ext(_super_x, _super_y, _super_x + _super_w, _super_y + _super_h, 4, 4, false);
+        draw_set_alpha(1);
+
+        // Icono apagado
+        var _ico_s_off = 34 / sprite_get_width(spr_ico_super);
+        draw_sprite_ext(spr_ico_super, 0,
+            _super_x + _super_w * 0.5, _super_y + _super_h * 0.38,
+            _ico_s_off, _ico_s_off, 0, make_color_rgb(60, 50, 80), 0.4);
+
+        // Borde tenue
+        draw_set_color(make_color_rgb(60, 50, 80));
+        draw_roundrect_ext(_super_x, _super_y, _super_x + _super_w, _super_y + _super_h, 4, 4, true);
+
+        // Texto TAB apagado
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(make_color_rgb(60, 50, 80));
+        draw_text(_super_x + _super_w * 0.5, _super_y + _super_h - 8, "TAB");
+    }
+
+    // ── HABILIDADES (Q W E R) desplazadas a la derecha del botón Súper ──
+    var _hab_x_start = _super_x + _super_w + _hab_gap + 4;
 
     var key_labels = ["Q", "W", "E", "R"];
 
@@ -455,7 +591,7 @@ if (!control_combate.combate_terminado) {
     var _ogap = 8;
     var _total_slots_w = 3 * (_ow + _ogap) + 15 + _ow + 15;
     var _ox_start = w_gui - _total_slots_w;
-    var _oy_start = h_gui - 80;
+    var _oy_start = h_gui - 105;
 
     for (var i = 0; i < 3; i++) {
 
