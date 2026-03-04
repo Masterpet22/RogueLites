@@ -5,6 +5,12 @@ if (!instance_exists(control_combate)) exit;
 // ── Timer FX de escenario ──
 arena_fx_timer += 1;
 
+// ── Interpolación suave de barras de vida ──
+var _pj = control_combate.personaje_jugador;
+var _en = control_combate.personaje_enemigo;
+scr_barra_vida_update(_pj);
+scr_barra_vida_update(_en);
+
 // ── Feedback botón Súper (deny timer) ──
 if (super_deny_timer > 0) {
     super_deny_timer -= 1;

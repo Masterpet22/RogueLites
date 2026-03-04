@@ -64,6 +64,7 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
 
         vida_max:       _vida_max_base,
         vida_actual:    _vida_max_base,
+        vida_visual:    _vida_max_base,    // interpolación suave para barra de vida
 
         ataque_base:    _atq_total,
         defensa_base:   _def_base,

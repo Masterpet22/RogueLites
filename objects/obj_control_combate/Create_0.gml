@@ -47,6 +47,7 @@ if (variable_struct_exists(control_juego, "modo_torre") && control_juego.modo_to
     var _mult = control_juego.torre_hp_mult;
     personaje_enemigo.vida_max    = round(personaje_enemigo.vida_max * _mult);
     personaje_enemigo.vida_actual = personaje_enemigo.vida_max;
+    personaje_enemigo.vida_visual = personaje_enemigo.vida_max;
     show_debug_message("🏰 Torre HP mult: x" + string(_mult) + " → HP enemigo: " + string(personaje_enemigo.vida_max));
 }
 
@@ -55,6 +56,7 @@ if (variable_struct_exists(control_juego, "modo_camino") && control_juego.modo_c
     var _mult_c = control_juego.camino_hp_mult;
     personaje_enemigo.vida_max    = round(personaje_enemigo.vida_max * _mult_c);
     personaje_enemigo.vida_actual = personaje_enemigo.vida_max;
+    personaje_enemigo.vida_visual = personaje_enemigo.vida_max;
     show_debug_message("⚔️ Camino HP mult: x" + string(_mult_c) + " → HP enemigo: " + string(personaje_enemigo.vida_max));
 }
 

@@ -59,36 +59,20 @@ draw_set_alpha(1);
     draw_set_color(c_white);
     draw_text(_info_x, _info_y, pj.nombre + "  —  " + pj.clase);
 
-    // Barra de vida (con sprites)
+    // Barra de vida (código — multicapa por afinidad)
     var _barra_x = _info_x;
     var _barra_y = _info_y + 22;
     var _barra_w = 280;
     var _barra_h = 16;
-    var _pj_ratio = clamp(pj.vida_actual / pj.vida_max, 0, 1);
 
-    // Fondo barra (sprite)
-    draw_sprite_stretched(spr_barra_vida_bg, 0, _barra_x, _barra_y, _barra_w, _barra_h);
-
-    // Relleno vida (sprite recortado)
-    if (_pj_ratio > 0) {
-        draw_sprite_stretched(spr_barra_vida, 0, _barra_x, _barra_y, _barra_w * _pj_ratio, _barra_h);
-    }
-
-    // Marco barra
-    draw_set_color(c_white);
-    draw_rectangle(_barra_x, _barra_y, _barra_x + _barra_w, _barra_y + _barra_h, true);
-
-    // Texto HP centrado en la barra
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    draw_set_color(c_white);
-    draw_text(_barra_x + _barra_w / 2, _barra_y + _barra_h / 2, string(pj.vida_actual) + " / " + string(pj.vida_max));
+    // Dibujar barra multicapa (izq → der, no invertida)
+    scr_barra_vida_draw(_barra_x, _barra_y, _barra_w, _barra_h, pj, false);
 
     // Línea 3: Afinidad (con icono) + Personalidad + Arma
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
     var _afin_ico = scr_sprite_icono_afinidad(pj.afinidad);
-    var _afin_y3 = _barra_y + _barra_h + 4;
+    var _afin_y3 = _barra_y + _barra_h + 10;  // +10 para dejar espacio a muescas de capas
     if (_afin_ico != -1) {
         draw_sprite_stretched(_afin_ico, 0, _info_x, _afin_y3, 16, 16);
         draw_set_color(c_ltgray);
@@ -172,36 +156,20 @@ draw_set_alpha(1);
     draw_set_color(c_white);
     draw_text(_en_info_x, _en_info_y, en.nombre);
 
-    // Barra de vida enemigo (con sprites)
+    // Barra de vida enemigo (código — multicapa por afinidad)
     var _en_barra_x = _en_info_x - _en_barra_w;
     var _en_barra_y = _en_info_y + 22;
     var _en_barra_h = 16;
-    var _en_ratio = clamp(en.vida_actual / en.vida_max, 0, 1);
 
-    // Fondo barra (sprite)
-    draw_sprite_stretched(spr_barra_vida_bg, 0, _en_barra_x, _en_barra_y, _en_barra_w, _en_barra_h);
-
-    // Relleno (de derecha a izquierda)
-    if (_en_ratio > 0) {
-        draw_sprite_stretched(spr_barra_vida, 0, _en_barra_x + _en_barra_w * (1 - _en_ratio), _en_barra_y, _en_barra_w * _en_ratio, _en_barra_h);
-    }
-
-    // Marco
-    draw_set_color(c_white);
-    draw_rectangle(_en_barra_x, _en_barra_y, _en_barra_x + _en_barra_w, _en_barra_y + _en_barra_h, true);
-
-    // Texto HP
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    draw_set_color(c_white);
-    draw_text(_en_barra_x + _en_barra_w / 2, _en_barra_y + _en_barra_h / 2, string(en.vida_actual) + " / " + string(en.vida_max));
+    // Dibujar barra multicapa (der → izq, invertida)
+    scr_barra_vida_draw(_en_barra_x, _en_barra_y, _en_barra_w, _en_barra_h, en, true);
 
     // Afinidad + Rango del enemigo (con icono)
     draw_set_halign(fa_right);
     draw_set_valign(fa_top);
     var _rango_txt = variable_struct_exists(en, "rango") ? en.rango : "Enemigo";
     var _en_afin_ico = scr_sprite_icono_afinidad(en.afinidad);
-    var _en_afin_y = _en_barra_y + _en_barra_h + 4;
+    var _en_afin_y = _en_barra_y + _en_barra_h + 10;  // +10 para dejar espacio a muescas de capas
     draw_set_color(c_ltgray);
     draw_text(_en_info_x, _en_afin_y, en.afinidad + "  |  " + _rango_txt);
     if (_en_afin_ico != -1) {

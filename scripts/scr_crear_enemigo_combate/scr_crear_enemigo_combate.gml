@@ -54,6 +54,7 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
 
         vida_max:       _data_enemigo.vida,
         vida_actual:    _data_enemigo.vida,
+        vida_visual:    _data_enemigo.vida,    // interpolación suave para barra de vida
         ataque_base:    _data_enemigo.ataque,
         defensa_base:   _data_enemigo.defensa,
         defensa_magica_base: _data_enemigo.defensa_magica,
