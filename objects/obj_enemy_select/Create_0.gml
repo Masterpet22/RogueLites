@@ -82,3 +82,13 @@ categorias = [
 ];
 
 enemigos_actuales = []; // se llenará dinámicamente
+
+// --- GUÍA DE AYUDA ---
+mostrar_guia = false;
+guia_anim = 0;
+guia_anim_vel = 0.06;
+guia_ico_size = 36;
+guia_ico_margin = 14;
+
+// Grid de retratos
+sel_cols = 4;

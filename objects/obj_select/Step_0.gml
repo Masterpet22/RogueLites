@@ -6,17 +6,45 @@ if (!instance_exists(control_juego)) exit;
 // Perfil actual según índice
 perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
 
+// ── Toggle guía de ayuda con H ──
+if (keyboard_check_pressed(ord("H"))) {
+    mostrar_guia = !mostrar_guia;
+}
+if (mouse_check_button_pressed(mb_left)) {
+    var _gw = display_get_gui_width();
+    var _gh = display_get_gui_height();
+    var _ix = _gw - guia_ico_margin - guia_ico_size;
+    var _iy = _gh - guia_ico_margin - guia_ico_size;
+    var _mx = device_mouse_x_to_gui(0);
+    var _my = device_mouse_y_to_gui(0);
+    if (_mx >= _ix && _mx <= _ix + guia_ico_size && _my >= _iy && _my <= _iy + guia_ico_size) {
+        mostrar_guia = !mostrar_guia;
+    }
+}
+if (mostrar_guia) {
+    guia_anim = min(1, guia_anim + guia_anim_vel);
+} else {
+    guia_anim = max(0, guia_anim - guia_anim_vel);
+}
+
 // =========================
-// ESTADO: SELECCIONAR PERSONAJE
+// ESTADO: SELECCIONAR PERSONAJE (grid de retratos)
 // =========================
 if (estado == SelState.PERSONAJE) {
 
-    if (keyboard_check_pressed(vk_up)) {
-        indice_personaje = (indice_personaje - 1 + array_length(personajes)) mod array_length(personajes);
-    }
+    var _n = array_length(personajes);
 
+    if (keyboard_check_pressed(vk_left)) {
+        indice_personaje = max(0, indice_personaje - 1);
+    }
+    if (keyboard_check_pressed(vk_right)) {
+        indice_personaje = min(_n - 1, indice_personaje + 1);
+    }
+    if (keyboard_check_pressed(vk_up)) {
+        indice_personaje = max(0, indice_personaje - sel_cols);
+    }
     if (keyboard_check_pressed(vk_down)) {
-        indice_personaje = (indice_personaje + 1) mod array_length(personajes);
+        indice_personaje = min(_n - 1, indice_personaje + sel_cols);
     }
 
     if (keyboard_check_pressed(vk_enter)) {

@@ -310,7 +310,7 @@ if (variable_struct_exists(en, "mecanicas") && is_array(en.mecanicas) && array_l
 // ╔═══════════════════════════════════════════════════════════════╗
 // ║  SPRITES DE CUERPO COMPLETO (centro de pantalla)
 // ╚═══════════════════════════════════════════════════════════════╝
-if (!control_combate.combate_terminado || (variable_struct_exists(control_combate, "fin_dramatico_timer") && control_combate.fin_dramatico_timer > 0)) {
+if (!control_combate.combate_terminado || control_combate.fin_fase < 2) {
 
     // Aplicar zoom de impacto (centrado en pantalla)
     scr_fx_zoom_aplicar();
@@ -325,7 +325,7 @@ if (!control_combate.combate_terminado || (variable_struct_exists(control_combat
 }
 
 // ╔═══════════════════════════════════════════════════════════════╗
-// ║  TIMER DE COMBATE (centro superior)
+// ║  TIMER DE COMBATE (centro superior) — tamaño grande
 // ╚═══════════════════════════════════════════════════════════════╝
 {
     var _timer_frames = en.combate_timer;
@@ -348,10 +348,37 @@ if (!control_combate.combate_terminado || (variable_struct_exists(control_combat
             + string(floor(_timer_limite) mod 60);
     }
 
+    // Nombre del mundo según fondo de combate
+    var _world_name = "";
+    var _arena_w = 0;
+    if (variable_struct_exists(control_combate, "combate_arena_idx")) {
+        _arena_w = control_combate.combate_arena_idx;
+    }
+    switch (_arena_w) {
+        case 0: _world_name = "La Forja de Obsidiana"; break;
+        case 1: _world_name = "El Canal de la Cascada Inerte"; break;
+        case 2: _world_name = "El Umbral de las Raíces Sombrías"; break;
+        case 3: _world_name = "El Bastión de la Tormenta Eterna"; break;
+        case 4: _world_name = "El Santuario de la Arena del Tiempo"; break;
+    }
+
     draw_set_halign(fa_center);
     draw_set_valign(fa_top);
+
+    // Timer grande (escala 1.8)
+    // Sombra
+    draw_set_color(c_black);
+    draw_text_transformed(w_gui * 0.5 + 1, 7, _timer_txt, 1.8, 1.8, 0);
+    // Texto principal
     draw_set_color(_timer_col);
-    draw_text(w_gui * 0.5, 5, _timer_txt);
+    draw_text_transformed(w_gui * 0.5, 6, _timer_txt, 1.8, 1.8, 0);
+
+    // Nombre del mundo debajo del timer
+    if (_world_name != "") {
+        draw_set_color(make_color_rgb(180, 170, 200));
+        draw_text(w_gui * 0.5, 34, _world_name);
+    }
+
     draw_set_halign(fa_left);
 }
 
@@ -615,10 +642,58 @@ if (control_combate.combate_terminado) {
     // ── Flash dramático de fin de combate ──
     scr_fin_combate_dibujar_flash();
 
-    // ── Si el timer dramático sigue activo, NO mostrar resultados aún ──
+    // ── Si el timer dramático sigue activo, NO mostrar nada más ──
     if (variable_struct_exists(control_combate, "fin_dramatico_timer")
         && control_combate.fin_dramatico_timer > 0) {
         // Solo mostrar sprites y flash, no el overlay de resultados
+
+    // ── FASE 1: Diálogo post-combate (esperar Enter) ──
+    } else if (control_combate.fin_fase == 1) {
+
+        // Overlay oscuro parcial
+        draw_set_color(c_black);
+        draw_set_alpha(0.4);
+        draw_rectangle(0, 0, w_gui, h_gui, false);
+        draw_set_alpha(1);
+
+        // Caja de diálogo post-combate
+        var _dbox_w = w_gui * 0.6;
+        var _dbox_h = 72;
+        var _dbox_x = (w_gui - _dbox_w) * 0.5;
+        var _dbox_y = h_gui * 0.72;
+
+        draw_set_color(c_black);
+        draw_set_alpha(0.8);
+        draw_roundrect(_dbox_x, _dbox_y, _dbox_x + _dbox_w, _dbox_y + _dbox_h, false);
+        draw_set_alpha(1);
+
+        // Borde rojo (derrota)
+        draw_set_color(c_red);
+        draw_roundrect(_dbox_x, _dbox_y, _dbox_x + _dbox_w, _dbox_y + _dbox_h, true);
+
+        // Nombre del perdedor
+        draw_set_font(fnt_1);
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+        draw_set_color(make_color_rgb(255, 120, 100));
+        draw_text(_dbox_x + 16, _dbox_y + 8, control_combate.fin_dialogo_nombre);
+
+        // Texto de derrota
+        draw_set_color(c_white);
+        draw_text(_dbox_x + 16, _dbox_y + 30, control_combate.fin_dialogo_texto);
+
+        // Indicador [ENTER]
+        draw_set_halign(fa_right);
+        draw_set_color(c_gray);
+        var _dblink = ((current_time div 500) mod 2 == 0) ? 0.7 : 0.3;
+        draw_set_alpha(_dblink);
+        draw_text(_dbox_x + _dbox_w - 16, _dbox_y + _dbox_h - 20, "[ENTER]");
+        draw_set_alpha(1);
+
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+
+    // ── FASE 2: Resultados y opciones post-combate ──
     } else {
 
     // Overlay oscuro

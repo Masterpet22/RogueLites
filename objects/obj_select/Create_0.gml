@@ -37,3 +37,13 @@ indice_objeto = 0;            // cursor en la lista de objetos disponibles
 runas_disponibles = [];       // runas que el jugador posee
 runa_seleccionada = "";       // runa elegida para el combate (solo 1)
 indice_runa = 0;              // cursor en la lista de runas
+
+// --- GUÍA DE AYUDA (igual que menú principal) ---
+mostrar_guia = false;
+guia_anim = 0;
+guia_anim_vel = 0.06;
+guia_ico_size = 36;
+guia_ico_margin = 14;
+
+// Grid layout para retratos
+sel_cols = 4; // columnas de retratos

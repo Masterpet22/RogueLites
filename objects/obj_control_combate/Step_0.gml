@@ -9,6 +9,20 @@ if (combate_terminado)
     // Bloquear input durante la secuencia dramática
     if (fin_dramatico_timer > 0 || fin_hitstop_timer > 0) { exit; }
 
+    // Fase 1: Diálogo post-combate — esperar Enter para mostrar resultados
+    if (fin_fase == 1) {
+        if (keyboard_check_pressed(vk_enter)) {
+            fin_fase = 2;
+            // Restaurar foco para mostrar resultados limpios
+            foco_quien       = 0;
+            foco_escala_obj  = 1.0;
+            foco_dim_obj     = 1.0;
+            foco_offset_pj_x_obj = 0;
+            foco_offset_en_x_obj = 0;
+        }
+        exit;
+    }
+
     // Determinar si estamos en modo especial (torre o camino)
     var _es_torre = (instance_exists(obj_control_juego)
         && variable_struct_exists(obj_control_juego, "modo_torre")

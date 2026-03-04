@@ -384,6 +384,9 @@ function scr_fin_combate_init() {
     _c.fin_flash_alpha      = 0;
     _c.fin_hitstop_timer    = 0;
     _c.fin_activado         = false;
+    _c.fin_fase             = 0;   // 0=dramatico, 1=dialogo post, 2=resultados
+    _c.fin_dialogo_texto    = "";
+    _c.fin_dialogo_nombre   = "";
 }
 
 
@@ -396,6 +399,7 @@ function scr_fin_combate_activar(_ganador) {
 
     if (_c.fin_activado) return; // una sola vez
     _c.fin_activado = true;
+    _c.fin_fase = 0;
 
     _c.fin_dramatico_timer = FIN_DRAMATICO_FRAMES;
     _c.fin_hitstop_timer   = FIN_HITSTOP_FRAMES;
@@ -403,29 +407,37 @@ function scr_fin_combate_activar(_ganador) {
     var _gw = display_get_gui_width();
     var _gh = display_get_gui_height();
 
-    // Foco individual en el PERDEDOR (agrandar, centrar, atenuar al otro)
+    // Foco individual: GANADOR sale de escena, PERDEDOR se centra con tinte rojo
     var _pj_base_x = _gw * 0.22;
     var _en_base_x = _gw * 0.78;
     var _centro_x  = _gw * 0.5;
 
     if (_ganador == "Jugador") {
-        // Ganó el jugador → perdedor (enemigo) sale por la derecha
+        // Ganador (jugador) sale por la izquierda, perdedor (enemigo) se centra
         _c.foco_quien       = 2;
         _c.fin_flash_color  = c_red;
-        _c.foco_offset_en_x_obj = _gw + 100 - _en_base_x;   // enemigo sale por derecha
-        _c.foco_offset_pj_x_obj = 0;                         // jugador se queda (invisible)
+        _c.foco_offset_pj_x_obj = -_pj_base_x - 200;        // jugador sale por izquierda
+        _c.foco_offset_en_x_obj = _centro_x - _en_base_x;   // enemigo se centra
+        _c.fin_dialogo_nombre = _c.personaje_enemigo.nombre;
+        _c.fin_dialogo_texto  = _scr_frase_derrota_enemigo(_c.personaje_enemigo.nombre,
+            variable_struct_exists(_c.personaje_enemigo, "rango") ? _c.personaje_enemigo.rango : "Común");
     } else if (_ganador == "Enemigo") {
-        // Perdió el jugador → sale por la izquierda
+        // Ganador (enemigo) sale por la derecha, perdedor (jugador) se centra
         _c.foco_quien       = 1;
         _c.fin_flash_color  = c_red;
-        _c.foco_offset_pj_x_obj = -_pj_base_x - 200;        // jugador sale por izquierda
-        _c.foco_offset_en_x_obj = 0;                         // enemigo se queda (invisible)
+        _c.foco_offset_en_x_obj = _gw + 100 - _en_base_x;   // enemigo sale por derecha
+        _c.foco_offset_pj_x_obj = _centro_x - _pj_base_x;   // jugador se centra
+        _c.fin_dialogo_nombre = _c.personaje_jugador.nombre;
+        _c.fin_dialogo_texto  = _scr_frase_derrota_jugador(_c.personaje_jugador.nombre,
+            _c.personaje_jugador.personalidad);
     } else {
         // Empate → ambos salen por sus lados
         _c.foco_quien       = 0;
         _c.fin_flash_color  = c_orange;
         _c.foco_offset_pj_x_obj = -_pj_base_x - 200;
         _c.foco_offset_en_x_obj = _gw + 100 - _en_base_x;
+        _c.fin_dialogo_nombre = "";
+        _c.fin_dialogo_texto  = "Un empate... ninguno prevaleció.";
     }
 
     _c.foco_escala_obj  = FIN_ZOOM_OBJETIVO;    // 1.25
@@ -458,14 +470,13 @@ function scr_fin_combate_actualizar() {
     // Flash se desvanece
     _c.fin_flash_alpha = lerp(_c.fin_flash_alpha, 0, 0.03);
 
-    // Al final del timer, restaurar foco y offsets
+    // Al final del timer, transición a diálogo post-combate
     if (_c.fin_dramatico_timer <= 0) {
         _c.fin_flash_alpha = 0;
-        _c.foco_quien       = 0;
-        _c.foco_escala_obj  = 1.0;
-        _c.foco_dim_obj     = 1.0;
-        _c.foco_offset_pj_x_obj = 0;
-        _c.foco_offset_en_x_obj = 0;
+        if (_c.fin_fase == 0) {
+            _c.fin_fase = 1; // Transición a diálogo post-combate
+        }
+        // NO restaurar foco — el perdedor se queda centrado y rojo durante el diálogo
     }
 
     return (_c.fin_dramatico_timer > 0);

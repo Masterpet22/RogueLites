@@ -87,3 +87,37 @@ function scr_datos_clases(_clase) {
             return undefined;
     }
 }
+
+
+/// @function scr_nombre_super(_clase, _personalidad)
+/// @description Retorna el nombre de la Súper-Habilidad según Clase × Personalidad.
+function scr_nombre_super(_clase, _personalidad) {
+    var _key = _clase + "_" + _personalidad;
+    switch (_key) {
+        case "Vanguardia_Agresivo":     return "Embestida Volcánica";
+        case "Vanguardia_Metodico":     return "Fortaleza Inquebrantable";
+        case "Vanguardia_Temerario":    return "Sacrificio del Titán";
+        case "Vanguardia_Resuelto":     return "Golpe del Guardián";
+        case "Filotormenta_Agresivo":   return "Ráfaga Imparable";
+        case "Filotormenta_Metodico":   return "Corte Preciso";
+        case "Filotormenta_Temerario":  return "Tormenta de Acero";
+        case "Filotormenta_Resuelto":   return "Danza del Filo";
+        case "Quebrador_Agresivo":      return "Cataclismo Furioso";
+        case "Quebrador_Metodico":      return "Pulverizar";
+        case "Quebrador_Temerario":     return "Impacto Suicida";
+        case "Quebrador_Resuelto":      return "Martillazo Firme";
+        case "Centinela_Agresivo":      return "Contraataque Blindado";
+        case "Centinela_Metodico":      return "Bastión Eterno";
+        case "Centinela_Temerario":     return "Explosión de Hierro";
+        case "Centinela_Resuelto":      return "Muro Inquebrantable";
+        case "Duelista_Agresivo":       return "Estocada Mortal";
+        case "Duelista_Metodico":       return "Mil Cortes";
+        case "Duelista_Temerario":      return "Apuesta Final";
+        case "Duelista_Resuelto":       return "Golpe Certero";
+        case "Canalizador_Agresivo":    return "Nova Arcana";
+        case "Canalizador_Metodico":    return "Canalización Estable";
+        case "Canalizador_Temerario":   return "Detonación Interior";
+        case "Canalizador_Resuelto":    return "Flujo Arcano";
+        default: return "???";
+    }
+}

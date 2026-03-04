@@ -394,3 +394,116 @@ function _scr_frase_enemigo(_nombre, _rango) {
         );
     }
 }
+
+
+// ══════════════════════════════════════════════════════════════
+//  FRASES DE DERROTA (post-combate)
+// ══════════════════════════════════════════════════════════════
+
+/// @function _scr_frase_derrota_jugador(nombre, personalidad)
+function _scr_frase_derrota_jugador(_nombre, _pers) {
+    switch (_pers) {
+        case "Agresivo":
+            return choose(
+                "No... ¡esto no puede acabar así!",
+                "Maldición... mi furia no bastó.",
+                "Caigo... pero no sin luchar.",
+                "La ira no fue suficiente esta vez..."
+            );
+        case "Metodico":
+            return choose(
+                "Mis cálculos... fallaron.",
+                "Un error imperdonable...",
+                "Debo reanalizar mi estrategia...",
+                "No preví este desenlace..."
+            );
+        case "Temerario":
+            return choose(
+                "Jaja... me arriesgué demasiado.",
+                "Bueno... fue divertido mientras duró.",
+                "¡Ups! Quizá debí tener un plan...",
+                "Caí... ¡pero volveré más loco!"
+            );
+        case "Resuelto":
+            return choose(
+                "Esta vez... no fue suficiente.",
+                "Debo hacerme más fuerte...",
+                "No... aún queda camino.",
+                "Caeré... pero volveré."
+            );
+        default:
+            return choose(
+                "No pude... esta vez.",
+                "Mi fuerza se desvanece...",
+                "Aún no es mi momento..."
+            );
+    }
+}
+
+
+/// @function _scr_frase_derrota_enemigo(nombre, rango)
+function _scr_frase_derrota_enemigo(_nombre, _rango) {
+    if (_rango == "Jefe") {
+        switch (_nombre) {
+            case "Titan de las Forjas Rotas":
+                return choose(
+                    "La forja... se apaga...",
+                    "Imposible... el fuego eterno... muere...",
+                    "Mi crisol... destrozado..."
+                );
+            case "Coloso del Fango Viviente":
+                return choose(
+                    "La tierra... me reclama de vuelta...",
+                    "Mis raíces... se marchitan...",
+                    "El pantano... se seca..."
+                );
+            case "Sentinela del Cielo Roto":
+                return choose(
+                    "El cielo... se oscurece...",
+                    "La tormenta... cesa...",
+                    "Mi luz divina... se extingue..."
+                );
+            case "Oraculo Quebrado del Abismo":
+                return choose(
+                    "No vi... mi propia caída...",
+                    "El vacío... me consume...",
+                    "Mi profecía... estaba equivocada..."
+                );
+            case "El Devorador":
+                return choose(
+                    "Imposible... yo soy... eterno...",
+                    "El vacío... rechaza mi derrota...",
+                    "Consumido... por mi propio poder..."
+                );
+            case "El Primer Conductor":
+                return choose(
+                    "La sinfonía... se desafina...",
+                    "Un eco... supera al maestro...",
+                    "Las reglas... ya no me obedecen..."
+                );
+            default:
+                return choose(
+                    "No... esto no debía pasar...",
+                    "Mi poder... se desvanece...",
+                    "Has probado ser digno..."
+                );
+        }
+    } else if (_rango == "Elite") {
+        return choose(
+            "Mi poder mejorado... no bastó...",
+            "Imposible... soy élite...",
+            "Fui superado... de nuevo...",
+            "No puedo... creerlo...",
+            "Esta fuerza... es real..."
+        );
+    } else {
+        return choose(
+            "No... imposible...",
+            "Mi fuerza... se desvanece...",
+            "He sido... superado...",
+            "Maldición... eres fuerte...",
+            "Derrotado... otra vez...",
+            "Grrr... no volverá a pasar..."
+        );
+    }
+}

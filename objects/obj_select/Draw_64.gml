@@ -3,59 +3,253 @@
 // Fondo
 draw_sprite_stretched(spr_bg_select, 0, 0, 0, display_get_gui_width(), display_get_gui_height());
 
-draw_set_font(fnt_1)
+draw_set_font(fnt_1);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 
+var w_gui = display_get_gui_width();
+var h_gui = display_get_gui_height();
+
 // Título
 draw_set_color(c_white);
-draw_text(40, 40, "SELECCIÓN DE PERSONAJE");
+draw_text(40, 20, "SELECCIÓN DE PERSONAJE");
 
-// Lista de personajes
-y = 120;
+// ═══════════════════════════════════════════════════════════════
+//  GRID DE RETRATOS (izquierda)
+// ═══════════════════════════════════════════════════════════════
+{
+    var _grid_x = 40;
+    var _grid_y = 70;
+    var _cell_w = 120;
+    var _cell_h = 140;
+    var _portrait_size = 96;
+    var _cols = sel_cols;
 
-for (var i = 0; i < array_length(personajes); i++) {
+    for (var i = 0; i < array_length(personajes); i++) {
+        var _col = i mod _cols;
+        var _row = i div _cols;
+        var _cx = _grid_x + _col * _cell_w;
+        var _cy = _grid_y + _row * _cell_h;
+        var _sel = (i == indice_personaje);
 
-    if (i == indice_personaje) {
-        // Cursor de selección (escala dinámica)
-        var _cur_s = 19 / sprite_get_width(spr_cursor_select);
-        draw_sprite_ext(spr_cursor_select, 0, 42, y + 4, _cur_s, _cur_s, 0, c_yellow, 1);
-        draw_set_color(c_yellow);
-        draw_text(60, y, personajes[i]);
-    } else {
-        draw_set_color(c_gray);
-        draw_text(60, y, personajes[i]);
+        // Retrato del personaje
+        var _spr_r = scr_sprite_personaje(personajes[i], true);
+        var _rs = _portrait_size / sprite_get_width(_spr_r);
+
+        // Marco
+        if (_sel) {
+            // Glow de selección
+            draw_set_color(c_yellow);
+            draw_set_alpha(0.25 + 0.1 * sin(current_time * 0.004));
+            draw_roundrect_ext(_cx - 4, _cy - 4, _cx + _portrait_size + 4, _cy + _portrait_size + 4, 4, 4, false);
+            draw_set_alpha(1);
+        }
+
+        // Retrato sprite
+        draw_sprite_ext(_spr_r, 0, _cx, _cy, _rs, _rs, 0, c_white, 1);
+
+        // Marco del retrato
+        draw_sprite_stretched(spr_marco_retrato, 0, _cx - 4, _cy - 4, _portrait_size + 8, _portrait_size + 8);
+        draw_set_color(_sel ? c_yellow : make_color_rgb(100, 100, 120));
+        draw_rectangle(_cx - 4, _cy - 4, _cx + _portrait_size + 4, _cy + _portrait_size + 4, true);
+
+        // Nombre debajo del retrato
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_top);
+        draw_set_color(_sel ? c_yellow : c_ltgray);
+        var _name_txt = personajes[i];
+        if (string_length(_name_txt) > 10) _name_txt = string_copy(_name_txt, 1, 10);
+        draw_text(_cx + _portrait_size * 0.5, _cy + _portrait_size + 6, _name_txt);
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PANEL DE INFORMACIÓN (derecha)
+// ═══════════════════════════════════════════════════════════════
+{
+    var perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
+    var _datos_clase = scr_datos_clases(perfil.clase);
+
+    var _panel_x = w_gui - 440;
+    var _panel_y = 70;
+    var _panel_w = 400;
+    var _panel_h = 310;
+
+    // Fondo del panel
+    draw_set_color(c_black);
+    draw_set_alpha(0.7);
+    draw_roundrect_ext(_panel_x, _panel_y, _panel_x + _panel_w, _panel_y + _panel_h, 6, 6, false);
+    draw_set_alpha(1);
+
+    // Borde
+    draw_set_color(make_color_rgb(80, 80, 120));
+    draw_roundrect_ext(_panel_x, _panel_y, _panel_x + _panel_w, _panel_y + _panel_h, 6, 6, true);
+
+    var _tx = _panel_x + 16;
+    var _ty = _panel_y + 14;
+    var _lh = 22;
+
+    // Nombre grande
+    draw_set_color(c_white);
+    draw_text_transformed(_tx, _ty, personajes[indice_personaje], 1.3, 1.3, 0);
+    _ty += 30;
+
+    // Clase
+    draw_set_color(c_ltgray);
+    draw_text(_tx, _ty, "Clase: ");
+    draw_set_color(c_white);
+    draw_text(_tx + string_width("Clase: "), _ty, perfil.clase);
+    _ty += _lh;
+
+    // Afinidad con icono
+    draw_set_color(c_ltgray);
+    draw_text(_tx, _ty, "Afinidad: ");
+    var _afin_ico = scr_sprite_icono_afinidad(perfil.afinidad);
+    var _afin_x = _tx + string_width("Afinidad: ");
+    if (_afin_ico != -1) {
+        draw_sprite_stretched(_afin_ico, 0, _afin_x, _ty, 16, 16);
+        _afin_x += 20;
+    }
+    draw_set_color(c_white);
+    draw_text(_afin_x, _ty, perfil.afinidad);
+    _ty += _lh;
+
+    // Personalidad
+    draw_set_color(c_ltgray);
+    draw_text(_tx, _ty, "Personalidad: ");
+    draw_set_color(c_white);
+    draw_text(_tx + string_width("Personalidad: "), _ty, perfil.personalidad);
+    _ty += _lh + 6;
+
+    // Separador
+    draw_set_color(make_color_rgb(60, 60, 80));
+    draw_line(_tx, _ty, _panel_x + _panel_w - 16, _ty);
+    _ty += 8;
+
+    // Habilidad de clase
+    var _hab_clase_nombre = scr_nombre_habilidad(_datos_clase.habilidad_fija);
+    draw_set_color(c_orange);
+    draw_text(_tx, _ty, "Habilidad [Q]: ");
+    draw_set_color(c_white);
+    draw_text(_tx + string_width("Habilidad [Q]: "), _ty, _hab_clase_nombre);
+    _ty += _lh;
+
+    // Súper-Habilidad
+    var _super_nombre = scr_nombre_super(perfil.clase, perfil.personalidad);
+    draw_set_color(make_color_rgb(180, 120, 255));
+    draw_text(_tx, _ty, "Súper [TAB]: ");
+    draw_set_color(c_white);
+    draw_text(_tx + string_width("Súper [TAB]: "), _ty, _super_nombre);
+    _ty += _lh;
+
+    // Carga de esencia
+    draw_set_color(c_ltgray);
+    draw_text(_tx, _ty, "Carga esencia: ");
+    draw_set_color(make_color_rgb(140, 100, 255));
+    draw_text(_tx + string_width("Carga esencia: "), _ty, _datos_clase.carga_esencia);
+    _ty += _lh + 6;
+
+    // Separador
+    draw_set_color(make_color_rgb(60, 60, 80));
+    draw_line(_tx, _ty, _panel_x + _panel_w - 16, _ty);
+    _ty += 8;
+
+    // Stats
+    draw_set_color(c_aqua);
+    draw_text(_tx, _ty, "Estadísticas base:");
+    _ty += _lh;
+    draw_set_color(c_ltgray);
+    draw_text(_tx, _ty, "HP: " + string(_datos_clase.vida) + "   ATK: " + string(_datos_clase.ataque) + "   DEF: " + string(_datos_clase.defensa));
+    _ty += _lh;
+    draw_text(_tx, _ty, "VEL: " + string(_datos_clase.velocidad) + "   POD: " + string(_datos_clase.poder_elemental) + "   DMAGIC: " + string(_datos_clase.defensa_magica));
+
+    // ═══════════════════════════════════════════════════════════════
+    //  4 SLOTS DE EQUIPAMIENTO (debajo del panel de info)
+    // ═══════════════════════════════════════════════════════════════
+    var _slot_y = _panel_y + _panel_h + 16;
+    var _slot_w = 90;
+    var _slot_h = 70;
+    var _slot_gap = 8;
+    var _slots_total_w = 4 * _slot_w + 3 * _slot_gap;
+    var _slot_x_start = _panel_x + (_panel_w - _slots_total_w) * 0.5;
+
+    // Verificar disponibilidad
+    var _tiene_runas = false;
+    var _tiene_objetos = false;
+    if (instance_exists(control_juego)) {
+        var _todas_runas_disp = scr_lista_runicos_disponibles();
+        for (var _ri = 0; _ri < array_length(_todas_runas_disp); _ri++) {
+            if (scr_inventario_get_objeto(control_juego, _todas_runas_disp[_ri]) > 0) {
+                _tiene_runas = true;
+                break;
+            }
+        }
+        var _todos_obj_disp = scr_lista_objetos_disponibles();
+        for (var _oi = 0; _oi < array_length(_todos_obj_disp); _oi++) {
+            if (scr_inventario_get_objeto(control_juego, _todos_obj_disp[_oi]) > 0) {
+                _tiene_objetos = true;
+                break;
+            }
+        }
     }
 
-    y += 30;
+    var _slot_labels = ["Runa", "Obj 1", "Obj 2", "Obj 3"];
+    var _slot_enabled = [_tiene_runas, _tiene_objetos, _tiene_objetos, _tiene_objetos];
+    var _slot_contents = ["", "", "", ""];
+
+    // Llenar contenido de slots según selección actual
+    if (runa_seleccionada != "") _slot_contents[0] = runa_seleccionada;
+    for (var _si = 0; _si < min(3, array_length(objetos_seleccionados)); _si++) {
+        _slot_contents[_si + 1] = objetos_seleccionados[_si];
+    }
+
+    for (var i = 0; i < 4; i++) {
+        var _sx = _slot_x_start + i * (_slot_w + _slot_gap);
+        var _sy = _slot_y;
+        var _enabled = _slot_enabled[i];
+        var _content = _slot_contents[i];
+
+        // Fondo del slot
+        draw_set_color(c_black);
+        draw_set_alpha(_enabled ? 0.6 : 0.3);
+        draw_roundrect_ext(_sx, _sy, _sx + _slot_w, _sy + _slot_h, 4, 4, false);
+        draw_set_alpha(1);
+
+        // Borde
+        draw_set_color(_enabled ? make_color_rgb(80, 80, 120) : make_color_rgb(40, 40, 50));
+        draw_roundrect_ext(_sx, _sy, _sx + _slot_w, _sy + _slot_h, 4, 4, true);
+
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+
+        if (_content != "") {
+            // Mostrar contenido equipado
+            draw_set_color(i == 0 ? make_color_rgb(200, 150, 255) : c_lime);
+            var _ctxt = _content;
+            if (string_length(_ctxt) > 10) _ctxt = string_copy(_ctxt, 1, 10);
+            draw_text(_sx + _slot_w * 0.5, _sy + _slot_h * 0.35, _ctxt);
+        } else {
+            // Vacío
+            draw_set_color(_enabled ? c_dkgray : make_color_rgb(30, 30, 40));
+            draw_text(_sx + _slot_w * 0.5, _sy + _slot_h * 0.35, "—");
+        }
+
+        // Etiqueta
+        draw_set_color(_enabled ? c_ltgray : make_color_rgb(50, 50, 60));
+        draw_set_valign(fa_bottom);
+        draw_text(_sx + _slot_w * 0.5, _sy + _slot_h - 6, _slot_labels[i]);
+
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+    }
 }
 
-// Info del personaje actual
-var perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
-
-// Retrato del personaje seleccionado
-var _sel_rostro = scr_sprite_personaje(personajes[indice_personaje], true);
-var _ret_display = 154;
-var _ret_s = _ret_display / sprite_get_width(_sel_rostro);
-draw_sprite_ext(_sel_rostro, 0, display_get_gui_width() - 200, 120, _ret_s, _ret_s, 0, c_white, 1);
-draw_sprite_stretched(spr_marco_retrato, 0, display_get_gui_width() - 204, 116, _ret_display + 8, _ret_display + 8);
-
-draw_set_color(c_white);
-draw_text(60, y + 20, "Clase: " + perfil.clase);
-
-// Afinidad con icono
-var _sel_afin_ico = scr_sprite_icono_afinidad(perfil.afinidad);
-if (_sel_afin_ico != -1) {
-    draw_sprite_stretched(_sel_afin_ico, 0, 60, y + 47, 16, 16);
-    draw_text(80, y + 45, "Afinidad: " + perfil.afinidad);
-} else {
-    draw_text(60, y + 45, "Afinidad: " + perfil.afinidad);
-}
-draw_text(60, y + 70, "Personalidad: " + perfil.personalidad);
-
+// Instrucciones
 if (estado == SelState.PERSONAJE) {
     draw_set_color(c_yellow);
-    draw_text(60, y + 100, "ENTER: Seleccionar arma  |  ESC: Volver al menú");
+    draw_text(40, h_gui - 40, "ENTER: Seleccionar arma  |  ESC: Volver al menú");
 }
 
 // =========================
@@ -65,8 +259,8 @@ if (estado == SelState.ARMA_POPUP) {
 
     var w = 360;
     var h = 260;
-    var cx = display_get_gui_width() / 2;
-    var cy = display_get_gui_height() / 2;
+    var cx = w_gui / 2;
+    var cy = h_gui / 2;
 
     var x1 = cx - w / 2;
     var y1 = cy - h / 2;
@@ -74,12 +268,14 @@ if (estado == SelState.ARMA_POPUP) {
     // Fondo semi-transparente
     draw_set_color(c_black);
     draw_set_alpha(0.85);
-    draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+    draw_rectangle(0, 0, w_gui, h_gui, false);
     draw_set_alpha(1);
 
     // Ventana
     draw_set_color(c_black);
     draw_rectangle(x1, y1, x1 + w, y1 + h, false);
+    draw_set_color(make_color_rgb(80, 80, 120));
+    draw_rectangle(x1, y1, x1 + w, y1 + h, true);
 
     draw_set_color(c_white);
     draw_text(x1 + 20, y1 + 20, "ARMAS DE " + perfil.nombre);
@@ -112,8 +308,8 @@ if (estado == SelState.OBJETOS_POPUP) {
 
     var w = 420;
     var h = 340;
-    var cx = display_get_gui_width() / 2;
-    var cy = display_get_gui_height() / 2;
+    var cx = w_gui / 2;
+    var cy = h_gui / 2;
 
     var x1 = cx - w / 2;
     var y1 = cy - h / 2;
@@ -121,12 +317,14 @@ if (estado == SelState.OBJETOS_POPUP) {
     // Fondo semi-transparente
     draw_set_color(c_black);
     draw_set_alpha(0.85);
-    draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+    draw_rectangle(0, 0, w_gui, h_gui, false);
     draw_set_alpha(1);
 
     // Ventana
     draw_set_color(c_black);
     draw_rectangle(x1, y1, x1 + w, y1 + h, false);
+    draw_set_color(make_color_rgb(80, 80, 120));
+    draw_rectangle(x1, y1, x1 + w, y1 + h, true);
 
     draw_set_color(c_white);
     draw_text(x1 + 20, y1 + 15, "EQUIPAR OBJETOS (máx. 3)");
@@ -193,8 +391,8 @@ if (estado == SelState.RUNA_POPUP) {
 
     var w = 480;
     var h = 380;
-    var cx = display_get_gui_width() / 2;
-    var cy = display_get_gui_height() / 2;
+    var cx = w_gui / 2;
+    var cy = h_gui / 2;
 
     var x1 = cx - w / 2;
     var y1 = cy - h / 2;
@@ -202,12 +400,14 @@ if (estado == SelState.RUNA_POPUP) {
     // Fondo semi-transparente
     draw_set_color(c_black);
     draw_set_alpha(0.85);
-    draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+    draw_rectangle(0, 0, w_gui, h_gui, false);
     draw_set_alpha(1);
 
     // Ventana
     draw_set_color(c_black);
     draw_rectangle(x1, y1, x1 + w, y1 + h, false);
+    draw_set_color(make_color_rgb(80, 80, 120));
+    draw_rectangle(x1, y1, x1 + w, y1 + h, true);
 
     draw_set_color(make_color_rgb(180, 120, 255));
     draw_text(x1 + 20, y1 + 15, "EQUIPAR RUNA (máx. 1)");
@@ -258,3 +458,79 @@ if (estado == SelState.RUNA_POPUP) {
     draw_set_color(c_white);
     draw_text(x1 + 20, y1 + h - 22, "ENTER: Confirmar  |  ESC: Volver a objetos");
 }
+
+// ═══════════════════════════════════════════════════════════════
+//  ICONO DE AYUDA (esquina inferior derecha) + PANEL VERTICAL
+// ═══════════════════════════════════════════════════════════════
+{
+    var _gw = w_gui;
+    var _gh = h_gui;
+
+    // ── Icono "?" ──
+    var _ix = _gw - guia_ico_margin - guia_ico_size;
+    var _iy = _gh - guia_ico_margin - guia_ico_size;
+
+    var _ico_col = mostrar_guia ? c_yellow : make_color_rgb(80, 80, 120);
+    draw_set_color(c_black);
+    draw_set_alpha(0.6);
+    draw_roundrect_ext(_ix, _iy, _ix + guia_ico_size, _iy + guia_ico_size, 10, 10, false);
+    draw_set_alpha(1);
+    draw_set_color(_ico_col);
+    draw_roundrect_ext(_ix, _iy, _ix + guia_ico_size, _iy + guia_ico_size, 10, 10, true);
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(_ico_col);
+    draw_text(_ix + guia_ico_size * 0.5, _iy + guia_ico_size * 0.5, "H");
+
+    // ── Panel vertical ──
+    if (guia_anim > 0.01) {
+        var _panel_w = 280;
+        var _panel_h_full = 220;
+        var _panel_h_vis = round(_panel_h_full * guia_anim);
+        var _panel_x = _ix + guia_ico_size - _panel_w;
+        var _panel_bottom = _iy - 6;
+        var _panel_top = _panel_bottom - _panel_h_vis;
+
+        draw_set_color(c_black);
+        draw_set_alpha(0.75 * guia_anim);
+        draw_roundrect_ext(_panel_x, _panel_top, _panel_x + _panel_w, _panel_bottom, 8, 8, false);
+        draw_set_alpha(1);
+        draw_set_color(make_color_rgb(80, 80, 120));
+        draw_set_alpha(guia_anim);
+        draw_roundrect_ext(_panel_x, _panel_top, _panel_x + _panel_w, _panel_bottom, 8, 8, true);
+        draw_set_alpha(1);
+
+        if (guia_anim > 0.5) {
+            var _txt_alpha = clamp((guia_anim - 0.5) * 2, 0, 1);
+            draw_set_alpha(_txt_alpha);
+            var _lx = _panel_x + 16;
+            var _full_top = _panel_bottom - _panel_h_full;
+            var _ly = _full_top + 12;
+            var _lh = 19;
+            draw_set_halign(fa_left);
+            draw_set_valign(fa_top);
+
+            draw_set_color(c_yellow);
+            draw_text(_lx, _ly, "── SELECCIÓN ──");
+            _ly += _lh + 4;
+            draw_set_color(c_ltgray);
+            draw_text(_lx, _ly, "◄ / ►    Elegir personaje"); _ly += _lh;
+            draw_text(_lx, _ly, "▲ / ▼    Fila anterior/sig."); _ly += _lh;
+            draw_text(_lx, _ly, "Enter    Confirmar"); _ly += _lh;
+            draw_text(_lx, _ly, "Escape   Volver"); _ly += _lh + 4;
+            draw_set_color(c_aqua);
+            draw_text(_lx, _ly, "EQUIPAMIENTO"); _ly += _lh;
+            draw_set_color(c_ltgray);
+            draw_text(_lx, _ly, "TAB      Sel/Desel objeto"); _ly += _lh;
+            draw_text(_lx, _ly, "Elige arma, objetos y runa"); _ly += _lh + 4;
+            draw_set_color(make_color_rgb(120, 120, 120));
+            draw_text(_lx, _ly, "H  Cerrar este panel");
+            draw_set_alpha(1);
+        }
+    }
+}
+
+draw_set_color(c_white);
+draw_set_halign(fa_left);
+draw_set_valign(fa_top);
