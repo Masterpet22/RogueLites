@@ -365,18 +365,41 @@ if (!control_combate.combate_terminado || control_combate.fin_fase < 2) {
     draw_set_halign(fa_center);
     draw_set_valign(fa_top);
 
-    // Timer grande (escala 1.8)
+    // Panel de fondo del timer
+    var _timer_tw = string_width(_timer_txt) * 1.8 + 40;
+    var _timer_px = w_gui * 0.5 - _timer_tw * 0.5;
+    var _timer_py = 2;
+    var _timer_ph = 50;
+
+    draw_set_color(make_color_rgb(10, 8, 18));
+    draw_set_alpha(0.75);
+    draw_roundrect_ext(_timer_px, _timer_py, _timer_px + _timer_tw, _timer_py + _timer_ph, 6, 6, false);
+    draw_set_alpha(1);
+
+    // Borde del timer con color según urgencia
+    draw_set_color(merge_color(make_color_rgb(60, 60, 90), _timer_col, 0.5));
+    draw_roundrect_ext(_timer_px, _timer_py, _timer_px + _timer_tw, _timer_py + _timer_ph, 6, 6, true);
+
+    // Línea decorativa inferior
+    draw_set_color(_timer_col);
+    draw_set_alpha(0.4);
+    draw_line(_timer_px + 8, _timer_py + _timer_ph, _timer_px + _timer_tw - 8, _timer_py + _timer_ph);
+    draw_set_alpha(1);
+
+    // Timer texto grande (escala 1.8)
     // Sombra
     draw_set_color(c_black);
-    draw_text_transformed(w_gui * 0.5 + 1, 7, _timer_txt, 1.8, 1.8, 0);
+    draw_text_transformed(w_gui * 0.5 + 1, 9, _timer_txt, 1.8, 1.8, 0);
     // Texto principal
     draw_set_color(_timer_col);
-    draw_text_transformed(w_gui * 0.5, 6, _timer_txt, 1.8, 1.8, 0);
+    draw_text_transformed(w_gui * 0.5, 8, _timer_txt, 1.8, 1.8, 0);
 
-    // Nombre del mundo debajo del timer
+    // Nombre del mundo debajo del panel
     if (_world_name != "") {
-        draw_set_color(make_color_rgb(180, 170, 200));
-        draw_text(w_gui * 0.5, 34, _world_name);
+        draw_set_color(make_color_rgb(140, 130, 170));
+        draw_set_alpha(0.85);
+        draw_text(w_gui * 0.5, _timer_py + _timer_ph + 4, _world_name);
+        draw_set_alpha(1);
     }
 
     draw_set_halign(fa_left);
@@ -723,10 +746,10 @@ if (control_combate.combate_terminado) {
     if (en.timer_limite > 0) {
         if (_final_time <= en.timer_limite) {
             draw_set_color(c_lime);
-            _timp_txt += " ✓ ¡En tiempo!";
+            _timp_txt += " - En tiempo!";
         } else {
             draw_set_color(c_orange);
-            _timp_txt += " ✗ Fuera de tiempo";
+            _timp_txt += " - Fuera de tiempo";
         }
     } else {
         draw_set_color(c_white);
@@ -806,43 +829,77 @@ if (pausado && !control_combate.combate_terminado) {
 
     // Overlay oscuro
     draw_set_color(c_black);
-    draw_set_alpha(0.7);
+    draw_set_alpha(0.75);
     draw_rectangle(0, 0, w_gui, h_gui, false);
     draw_set_alpha(1);
 
-    var _pw = 300;
-    var _ph = 180;
+    var _pw = 320;
+    var _ph = 210;
     var _px = (w_gui - _pw) / 2;
     var _py = (h_gui - _ph) / 2;
 
-    // Fondo panel (sprite)
-    draw_sprite_stretched(spr_panel_info, 0, _px, _py, _pw, _ph);
+    // Panel fondo
+    draw_set_color(make_color_rgb(14, 12, 24));
+    draw_set_alpha(0.95);
+    draw_roundrect_ext(_px, _py, _px + _pw, _py + _ph, 10, 10, false);
+    draw_set_alpha(1);
 
-    // Marco panel
-    draw_set_color(c_white);
-    draw_rectangle(_px, _py, _px + _pw, _py + _ph, true);
+    // Borde exterior
+    draw_set_color(make_color_rgb(90, 80, 140));
+    draw_roundrect_ext(_px, _py, _px + _pw, _py + _ph, 10, 10, true);
 
-    // Título
+    // Barra de titulo
+    draw_set_color(make_color_rgb(30, 25, 50));
+    draw_roundrect_ext(_px, _py, _px + _pw, _py + 42, 10, 10, false);
+    draw_set_color(make_color_rgb(60, 55, 90));
+    draw_line(_px + 1, _py + 42, _px + _pw - 1, _py + 42);
+
+    // Titulo
     draw_set_halign(fa_center);
-    draw_set_valign(fa_top);
-    draw_set_color(c_yellow);
-    draw_text(_px + _pw / 2, _py + 20, "PAUSA");
+    draw_set_valign(fa_middle);
+    draw_set_color(make_color_rgb(220, 200, 255));
+    draw_text_transformed(_px + _pw / 2, _py + 21, "PAUSA", 1.2, 1.2, 0);
 
     // Opciones
-    var _opciones = ["Reanudar", "Salir al Menú"];
+    var _opciones = ["Reanudar", "Salir al Menu"];
     for (var i = 0; i < 2; i++) {
-        var _oy = _py + 70 + i * 40;
-        if (i == pausa_opcion) {
-            draw_set_color(c_yellow);
-            draw_text(_px + _pw / 2, _oy, "> " + _opciones[i] + " <");
+        var _oy = _py + 75 + i * 50;
+        var _opt_w = 240;
+        var _opt_h = 36;
+        var _opt_x = _px + (_pw - _opt_w) / 2;
+        var _is_sel = (i == pausa_opcion);
+
+        // Fondo de opcion
+        draw_set_color(_is_sel ? make_color_rgb(50, 45, 80) : make_color_rgb(22, 20, 35));
+        draw_set_alpha(_is_sel ? 0.9 : 0.5);
+        draw_roundrect_ext(_opt_x, _oy, _opt_x + _opt_w, _oy + _opt_h, 6, 6, false);
+        draw_set_alpha(1);
+
+        // Borde
+        if (_is_sel) {
+            var _sel_col = (i == 0) ? make_color_rgb(100, 200, 100) : make_color_rgb(200, 100, 100);
+            draw_set_color(_sel_col);
         } else {
-            draw_set_color(c_gray);
-            draw_text(_px + _pw / 2, _oy, _opciones[i]);
+            draw_set_color(make_color_rgb(50, 50, 70));
+        }
+        draw_roundrect_ext(_opt_x, _oy, _opt_x + _opt_w, _oy + _opt_h, 6, 6, true);
+
+        // Texto
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        if (_is_sel) {
+            draw_set_color(c_white);
+            draw_text(_opt_x + _opt_w / 2, _oy + _opt_h / 2, _opciones[i]);
+        } else {
+            draw_set_color(make_color_rgb(120, 120, 140));
+            draw_text(_opt_x + _opt_w / 2, _oy + _opt_h / 2, _opciones[i]);
         }
     }
 
-    draw_set_color(c_dkgray);
-    draw_text(_px + _pw / 2, _py + _ph - 25, "ESPACIO: Volver");
+    // Instruccion inferior
+    draw_set_valign(fa_bottom);
+    draw_set_color(make_color_rgb(70, 65, 90));
+    draw_text(_px + _pw / 2, _py + _ph - 10, "ESPACIO: Volver");
 
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);

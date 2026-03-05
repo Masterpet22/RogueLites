@@ -177,8 +177,8 @@ for (var i = 0; i < array_length(opciones); i++) {
             draw_set_color(c_aqua);
             draw_text(_lx, _ly, "NAVEGACIÓN"); _ly += _lh;
             draw_set_color(c_ltgray);
-            draw_text(_lx, _ly, "▲ / ▼    Mover selección"); _ly += _lh;
-            draw_text(_lx, _ly, "◄ / ►    Elegir en mapa"); _ly += _lh;
+            draw_text(_lx, _ly, "Arriba / Abajo    Mover seleccion"); _ly += _lh;
+            draw_text(_lx, _ly, "Izq / Der    Elegir en mapa"); _ly += _lh;
             draw_text(_lx, _ly, "Enter    Confirmar"); _ly += _lh;
             draw_text(_lx, _ly, "Escape   Volver / Salir"); _ly += _lh + 4;
 

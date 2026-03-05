@@ -63,8 +63,7 @@ for (var i = 0; i < array_length(_all_jefe); i++) {
 
 enum EnemySelState {
     CATEGORIA,
-    LISTA,
-    CONFIRMAR
+    LISTA
 }
 
 estado = EnemySelState.CATEGORIA;

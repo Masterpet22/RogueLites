@@ -328,7 +328,7 @@ if (estado == SelState.ARMA_POPUP) {
         draw_set_valign(fa_middle);
         if (_is_sel) {
             draw_set_color(c_white);
-            draw_text(_list_x + 8, _iy + _item_h * 0.5, "►");
+            draw_text(_list_x + 8, _iy + _item_h * 0.5, ">");
         }
 
         // Nombre del arma
@@ -387,7 +387,7 @@ if (estado == SelState.ARMA_POPUP) {
         if (variable_struct_exists(_arma_d, "rareza")) {
             draw_set_color(c_ltgray);
             var _rar_txt = "";
-            for (var _ri = 0; _ri < _arma_d.rareza; _ri++) _rar_txt += "★";
+            for (var _ri = 0; _ri < _arma_d.rareza; _ri++) _rar_txt += "*";
             if (_rar_txt == "") _rar_txt = "—";
             draw_text(_info_x, _ity, "Rareza: ");
             draw_set_color(_rar_col2);
@@ -450,7 +450,7 @@ if (estado == SelState.ARMA_POPUP) {
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
     draw_set_color(c_ltgray);
-    draw_text(_pcx, _py1 + _ph - 22, "▲/▼ Elegir   ENTER Equipar   ESC Volver");
+    draw_text(_pcx, _py1 + _ph - 22, "Arriba/Abajo: Elegir   ENTER: Equipar   ESC: Volver");
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
 }
@@ -669,8 +669,8 @@ if (estado == SelState.RUNA_POPUP) {
             draw_text(_lx, _ly, "── SELECCIÓN ──");
             _ly += _lh + 4;
             draw_set_color(c_ltgray);
-            draw_text(_lx, _ly, "◄ / ►    Elegir personaje"); _ly += _lh;
-            draw_text(_lx, _ly, "▲ / ▼    Fila anterior/sig."); _ly += _lh;
+            draw_text(_lx, _ly, "Izq / Der    Elegir personaje"); _ly += _lh;
+            draw_text(_lx, _ly, "Arriba / Abajo    Fila anterior/sig."); _ly += _lh;
             draw_text(_lx, _ly, "Enter    Confirmar"); _ly += _lh;
             draw_text(_lx, _ly, "Escape   Volver"); _ly += _lh + 4;
             draw_set_color(c_aqua);

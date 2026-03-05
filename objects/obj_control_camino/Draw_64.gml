@@ -61,11 +61,13 @@ if (camino_fase == "seleccion_personaje") {
 
             // Fondo del panel
             draw_set_color(_sel ? make_color_rgb(40, 35, 55) : make_color_rgb(20, 18, 28));
-            draw_rectangle(_bx, _by, _bx + _bw, _by + _bh, false);
+            draw_set_alpha(_sel ? 0.9 : 0.6);
+            draw_roundrect_ext(_bx, _by, _bx + _bw, _by + _bh, 6, 6, false);
+            draw_set_alpha(1);
 
             // Marco
             draw_set_color(_sel ? make_color_rgb(220, 170, 50) : make_color_rgb(50, 50, 60));
-            draw_rectangle(_bx, _by, _bx + _bw, _by + _bh, true);
+            draw_roundrect_ext(_bx, _by, _bx + _bw, _by + _bh, 6, 6, true);
 
             // Nombre
             draw_set_halign(fa_left);
@@ -84,8 +86,8 @@ if (camino_fase == "seleccion_personaje") {
     }
 
     draw_set_halign(fa_center);
-    draw_set_color(c_dkgray);
-    draw_text(cx, h_gui - 30, "ENTER: Seleccionar  |  ESC: Volver al menú");
+    draw_set_color(make_color_rgb(70, 65, 90));
+    draw_text(cx, h_gui - 30, "ENTER: Seleccionar  |  ESC: Volver al menu");
 }
 
 
@@ -109,19 +111,47 @@ else if (camino_fase == "seleccion_arma") {
         var _bw = 400;
         var _bh = 36;
 
+        // Color de rareza
+        var _a_datos = scr_datos_armas(_nom_arma);
+        var _rar_col = c_ltgray;
+        if (variable_struct_exists(_a_datos, "rareza")) {
+            if (_a_datos.rareza == 1) _rar_col = make_color_rgb(100, 200, 100);
+            else if (_a_datos.rareza == 2) _rar_col = make_color_rgb(100, 160, 255);
+            else if (_a_datos.rareza == 3) _rar_col = make_color_rgb(255, 180, 80);
+        }
+
         draw_set_color(_sel ? make_color_rgb(40, 35, 55) : make_color_rgb(20, 18, 28));
-        draw_rectangle(_bx, _by, _bx + _bw, _by + _bh, false);
+        draw_set_alpha(_sel ? 0.9 : 0.6);
+        draw_roundrect_ext(_bx, _by, _bx + _bw, _by + _bh, 6, 6, false);
+        draw_set_alpha(1);
 
-        draw_set_color(_sel ? make_color_rgb(220, 170, 50) : make_color_rgb(50, 50, 60));
-        draw_rectangle(_bx, _by, _bx + _bw, _by + _bh, true);
+        draw_set_color(_sel ? _rar_col : make_color_rgb(50, 50, 60));
+        draw_roundrect_ext(_bx, _by, _bx + _bw, _by + _bh, 6, 6, true);
 
-        draw_set_halign(fa_center);
-        draw_set_color(_sel ? c_yellow : c_white);
-        draw_text(cx, _by + 10, _nom_arma);
+        // Cursor
+        if (_sel) {
+            draw_set_halign(fa_left);
+            draw_set_valign(fa_middle);
+            draw_set_color(_rar_col);
+            draw_text(_bx + 10, _by + _bh / 2, ">");
+        }
+
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_middle);
+        draw_set_color(_sel ? _rar_col : c_white);
+        draw_text(_bx + 26, _by + _bh / 2, _nom_arma);
+
+        // Stats
+        draw_set_halign(fa_right);
+        draw_set_color(_sel ? c_ltgray : make_color_rgb(80, 80, 100));
+        var _stats = _a_datos.afinidad;
+        if (_a_datos.ataque_bonus != 0) _stats += " | ATK+" + string(_a_datos.ataque_bonus);
+        draw_text(_bx + _bw - 15, _by + _bh / 2, _stats);
     }
 
     draw_set_halign(fa_center);
-    draw_set_color(c_dkgray);
+    draw_set_valign(fa_top);
+    draw_set_color(make_color_rgb(70, 65, 90));
     draw_text(cx, h_gui - 30, "ENTER: Seleccionar  |  ESC: Volver");
 }
 
@@ -465,7 +495,7 @@ else if (camino_fase == "mapa") {
     draw_set_halign(fa_center);
     draw_set_valign(fa_bottom);
     draw_set_color(c_dkgray);
-    draw_text(cx, h_gui - 5, "◄► Elegir camino  |  ENTER: Avanzar  |  ESC: Abandonar");
+    draw_text(cx, h_gui - 5, "Izq/Der: Elegir camino  |  ENTER: Avanzar  |  ESC: Abandonar");
 }
 
 
@@ -550,7 +580,7 @@ else if (camino_fase == "seleccion_arma_combate") {
     draw_set_color(c_white);
     draw_text(cx, 70, "Selecciona el arma para este combate");
     draw_set_color(c_gray);
-    draw_text(cx, 93, "▲▼ Navegar  |  ENTER: Confirmar  |  ESC: Volver");
+    draw_text(cx, 93, "Arriba/Abajo: Navegar  |  ENTER: Confirmar  |  ESC: Volver");
 
     var _y_arm = 140;
     var _n_armas = array_length(camino_armas_run);
@@ -563,7 +593,7 @@ else if (camino_fase == "seleccion_arma_combate") {
         // Cursor
         if (i == camino_arma_sel_indice) {
             draw_set_color(c_yellow);
-            draw_text(cx - 280, _y_arm, "►");
+            draw_text(cx - 280, _y_arm, ">");
         }
 
         // Color
@@ -642,7 +672,7 @@ else if (camino_fase == "equipar") {
         draw_set_color(c_white);
         draw_text(cx, 60, "Selecciona hasta 3 objetos consumibles");
         draw_set_color(c_gray);
-        draw_text(cx, 83, "▲▼ Navegar  |  TAB: Seleccionar/Quitar  |  ENTER: Confirmar  |  ESC: Omitir");
+        draw_text(cx, 83, "Arriba/Abajo: Navegar  |  TAB: Seleccionar/Quitar  |  ENTER: Confirmar  |  ESC: Omitir");
 
         var _y = 120;
         var _n = array_length(camino_equip_obj_disponibles);
@@ -657,7 +687,7 @@ else if (camino_fase == "equipar") {
 
             if (i == camino_equip_indice) {
                 draw_set_color(c_yellow);
-                draw_text(cx - 200, _y, "►");
+                draw_text(cx - 200, _y, ">");
             }
 
             if (_sel_count > 0)
@@ -686,7 +716,7 @@ else if (camino_fase == "equipar") {
         draw_set_color(c_white);
         draw_text(cx, 60, "Selecciona una runa (efecto pasivo en combate)");
         draw_set_color(c_gray);
-        draw_text(cx, 83, "▲▼ Navegar  |  ENTER: Confirmar  |  ESC: Sin runa");
+        draw_text(cx, 83, "Arriba/Abajo: Navegar  |  ENTER: Confirmar  |  ESC: Sin runa");
 
         var _y = 125;
         var _n_runas = array_length(camino_equip_runas_disponibles);
@@ -697,7 +727,7 @@ else if (camino_fase == "equipar") {
             else
                 draw_set_color(c_ltgray);
 
-            var _pref = (i == camino_equip_runa_indice) ? "► " : "  ";
+            var _pref = (i == camino_equip_runa_indice) ? "> " : "  ";
             draw_text(cx, _y, _pref + camino_equip_runas_disponibles[i]);
             _y += 28;
         }
@@ -707,7 +737,7 @@ else if (camino_fase == "equipar") {
         else
             draw_set_color(c_dkgray);
 
-        var _pref2 = (camino_equip_runa_indice == _n_runas) ? "► " : "  ";
+        var _pref2 = (camino_equip_runa_indice == _n_runas) ? "> " : "  ";
         draw_text(cx, _y, _pref2 + "[ Sin runa ]");
     }
 }

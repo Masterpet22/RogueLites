@@ -59,7 +59,7 @@ if (estado == EnemySelState.CATEGORIA) {
             if (array_length(_pool_total) == 0) exit;
 
             control_juego.enemigo_seleccionado = _pool_total[irandom(array_length(_pool_total) - 1)];
-            estado = EnemySelState.CONFIRMAR;
+            scr_transicion_ir(rm_combate);
             io_clear();
             exit;
         }
@@ -104,21 +104,6 @@ else if (estado == EnemySelState.LISTA) {
 
     if (keyboard_check_pressed(vk_enter)) {
         control_juego.enemigo_seleccionado = enemigos_actuales[indice_enemigo];
-        estado = EnemySelState.CONFIRMAR;
-    }
-}
-
-
-// ==============================
-// ESTADO 3 → CONFIRMAR
-// ==============================
-else if (estado == EnemySelState.CONFIRMAR) {
-
-    if (keyboard_check_pressed(vk_enter)) {
         scr_transicion_ir(rm_combate);
-    }
-
-    if (keyboard_check_pressed(vk_escape)) {
-        estado = EnemySelState.LISTA;
     }
 }

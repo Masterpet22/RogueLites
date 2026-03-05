@@ -69,8 +69,8 @@ draw_text(40, 20, "SELECCIÓN DE ENEMIGO");
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
         var _ico_txt = "";
-        if (categorias[i] == "Jefe")       _ico_txt = "♦ ";
-        else if (categorias[i] == "Élite") _ico_txt = "★ ";
+        if (categorias[i] == "Jefe")       _ico_txt = "";
+        else if (categorias[i] == "Élite") _ico_txt = "";
 
         // Texto
         draw_set_color(_col_txt);
@@ -90,10 +90,10 @@ draw_text(40, 20, "SELECCIÓN DE ENEMIGO");
 if (estado == EnemySelState.CATEGORIA) {
     // Solo mostrar las categorías (tabs), con instrucciones
     draw_set_color(c_ltgray);
-    draw_text(40, 110, "◄ / ►  Elegir categoría    ENTER  Confirmar    ESC  Volver");
+    draw_text(40, 110, "Izq/Der: Elegir categoria    ENTER: Confirmar    ESC: Volver");
 }
 
-else if (estado == EnemySelState.LISTA || estado == EnemySelState.CONFIRMAR) {
+else if (estado == EnemySelState.LISTA) {
 
     // ── Grid de retratos de enemigos ──
     var _grid_x = 40;
@@ -123,7 +123,7 @@ else if (estado == EnemySelState.LISTA || estado == EnemySelState.CONFIRMAR) {
 
         // Glow de selección
         if (_sel) {
-            draw_set_color(estado == EnemySelState.CONFIRMAR ? c_lime : c_yellow);
+            draw_set_color(c_yellow);
             draw_set_alpha(0.25 + 0.1 * sin(current_time * 0.004));
             draw_roundrect_ext(_cx - 4, _cy - 4, _cx + _portrait_size + 4, _cy + _portrait_size + 4, 4, 4, false);
             draw_set_alpha(1);
@@ -134,7 +134,7 @@ else if (estado == EnemySelState.LISTA || estado == EnemySelState.CONFIRMAR) {
 
         // Marco
         draw_sprite_stretched(spr_marco_retrato, 0, _cx - 4, _cy - 4, _portrait_size + 8, _portrait_size + 8);
-        var _bord_col = _sel ? (estado == EnemySelState.CONFIRMAR ? c_lime : c_yellow) : make_color_rgb(100, 100, 120);
+        var _bord_col = _sel ? c_yellow : make_color_rgb(100, 100, 120);
         draw_set_color(_bord_col);
         draw_rectangle(_cx - 4, _cy - 4, _cx + _portrait_size + 4, _cy + _portrait_size + 4, true);
 
@@ -237,10 +237,10 @@ else if (estado == EnemySelState.LISTA || estado == EnemySelState.CONFIRMAR) {
             if (is_array(_datos_en.patron)) {
                 var _plen = min(array_length(_datos_en.patron), 4);
                 for (var _pi = 0; _pi < _plen; _pi++) {
-                    if (_pi > 0) _patron_txt += " → ";
+                    if (_pi > 0) _patron_txt += " >> ";
                     _patron_txt += scr_nombre_habilidad(_datos_en.patron[_pi]);
                 }
-                if (array_length(_datos_en.patron) > 4) _patron_txt += " …";
+                if (array_length(_datos_en.patron) > 4) _patron_txt += " ...";
             } else {
                 _patron_txt = string(_datos_en.patron);
             }
@@ -265,11 +265,7 @@ else if (estado == EnemySelState.LISTA || estado == EnemySelState.CONFIRMAR) {
 
     // Instrucciones
     draw_set_color(c_yellow);
-    if (estado == EnemySelState.CONFIRMAR) {
-        draw_text(40, h_gui - 40, "ENTER: Iniciar combate  |  ESC: Cambiar enemigo");
-    } else {
-        draw_text(40, h_gui - 40, "◄ / ► / ▲ / ▼  Elegir    ENTER  Confirmar    ESC  Volver");
-    }
+    draw_text(40, h_gui - 40, "Flechas: Elegir    ENTER: Combatir    ESC: Volver");
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -328,8 +324,8 @@ else if (estado == EnemySelState.LISTA || estado == EnemySelState.CONFIRMAR) {
             draw_text(_lx, _ly, "── ENEMIGO ──");
             _ly += _lh + 4;
             draw_set_color(c_ltgray);
-            draw_text(_lx, _ly, "◄ / ►    Categoría / enemigo"); _ly += _lh;
-            draw_text(_lx, _ly, "▲ / ▼    Fila anterior/sig."); _ly += _lh;
+            draw_text(_lx, _ly, "Izq / Der    Categoria / enemigo"); _ly += _lh;
+            draw_text(_lx, _ly, "Arriba / Abajo    Fila anterior/sig."); _ly += _lh;
             draw_text(_lx, _ly, "Enter    Confirmar enemigo"); _ly += _lh;
             draw_text(_lx, _ly, "Escape   Volver"); _ly += _lh + 4;
             draw_set_color(make_color_rgb(120, 120, 120));
