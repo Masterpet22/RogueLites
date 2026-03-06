@@ -3,6 +3,12 @@
 // Fondo
 draw_sprite_stretched(spr_bg_select, 0, 0, 0, display_get_gui_width(), display_get_gui_height());
 
+// Overlay oscuro sutil para contraste
+draw_set_color(c_black);
+draw_set_alpha(0.25);
+draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+draw_set_alpha(1);
+
 draw_set_font(fnt_1);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
@@ -10,9 +16,22 @@ draw_set_valign(fa_top);
 var w_gui = display_get_gui_width();
 var h_gui = display_get_gui_height();
 
-// Título
+// Barra de título con fondo
+draw_set_color(make_color_rgb(10, 8, 20));
+draw_set_alpha(0.8);
+draw_rectangle(0, 0, w_gui, 50, false);
+draw_set_alpha(1);
+draw_set_color(make_color_rgb(60, 55, 90));
+draw_line(0, 50, w_gui, 50);
+
+// Título estilizado
+draw_set_halign(fa_left);
+draw_set_valign(fa_middle);
+draw_set_color(c_black);
+draw_text_transformed(42, 27, "SELECCIÓN DE PERSONAJE", 1.2, 1.2, 0);
 draw_set_color(c_white);
-draw_text(40, 20, "SELECCIÓN DE PERSONAJE");
+draw_text_transformed(40, 25, "SELECCIÓN DE PERSONAJE", 1.2, 1.2, 0);
+draw_set_valign(fa_top);
 
 // ═══════════════════════════════════════════════════════════════
 //  GRID DE RETRATOS (izquierda)
@@ -36,13 +55,27 @@ draw_text(40, 20, "SELECCIÓN DE PERSONAJE");
         var _spr_r = scr_sprite_personaje(personajes[i], true);
         var _rs = _portrait_size / sprite_get_width(_spr_r);
 
+        // Sombra detrás del retrato
+        draw_set_color(c_black);
+        draw_set_alpha(0.5);
+        draw_roundrect_ext(_cx - 2 + 3, _cy - 2 + 3, _cx + _portrait_size + 2 + 3, _cy + _portrait_size + 2 + 3, 4, 4, false);
+        draw_set_alpha(1);
+
+        // Fondo del slot
+        draw_set_color(make_color_rgb(12, 10, 22));
+        draw_set_alpha(0.85);
+        draw_roundrect_ext(_cx - 4, _cy - 4, _cx + _portrait_size + 4, _cy + _portrait_size + 4, 5, 5, false);
+        draw_set_alpha(1);
+
         // Marco
         if (_sel) {
-            // Glow de selección
+            // Glow de selección (aditivo)
+            gpu_set_blendmode(bm_add);
             draw_set_color(c_yellow);
-            draw_set_alpha(0.25 + 0.1 * sin(current_time * 0.004));
-            draw_roundrect_ext(_cx - 4, _cy - 4, _cx + _portrait_size + 4, _cy + _portrait_size + 4, 4, 4, false);
+            draw_set_alpha(0.2 + 0.1 * sin(current_time * 0.004));
+            draw_roundrect_ext(_cx - 6, _cy - 6, _cx + _portrait_size + 6, _cy + _portrait_size + 6, 6, 6, false);
             draw_set_alpha(1);
+            gpu_set_blendmode(bm_normal);
         }
 
         // Retrato sprite
@@ -50,15 +83,23 @@ draw_text(40, 20, "SELECCIÓN DE PERSONAJE");
 
         // Marco del retrato
         draw_sprite_stretched(spr_marco_retrato, 0, _cx - 4, _cy - 4, _portrait_size + 8, _portrait_size + 8);
-        draw_set_color(_sel ? c_yellow : make_color_rgb(100, 100, 120));
-        draw_rectangle(_cx - 4, _cy - 4, _cx + _portrait_size + 4, _cy + _portrait_size + 4, true);
+
+        // Doble borde
+        draw_set_color(make_color_rgb(20, 18, 30));
+        draw_roundrect_ext(_cx - 5, _cy - 5, _cx + _portrait_size + 5, _cy + _portrait_size + 5, 5, 5, true);
+        draw_set_color(_sel ? c_yellow : make_color_rgb(70, 65, 95));
+        draw_roundrect_ext(_cx - 4, _cy - 4, _cx + _portrait_size + 4, _cy + _portrait_size + 4, 4, 4, true);
 
         // Nombre debajo del retrato
         draw_set_halign(fa_center);
         draw_set_valign(fa_top);
-        draw_set_color(_sel ? c_yellow : c_ltgray);
+        // Sombra del nombre
+        draw_set_color(c_black);
         var _name_txt = personajes[i];
         if (string_length(_name_txt) > 10) _name_txt = string_copy(_name_txt, 1, 10);
+        draw_text(_cx + _portrait_size * 0.5 + 1, _cy + _portrait_size + 7, _name_txt);
+        // Texto
+        draw_set_color(_sel ? c_yellow : c_ltgray);
         draw_text(_cx + _portrait_size * 0.5, _cy + _portrait_size + 6, _name_txt);
         draw_set_halign(fa_left);
         draw_set_valign(fa_top);
@@ -73,28 +114,49 @@ var perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
     var _datos_clase = scr_datos_clases(perfil.clase);
 
     var _panel_x = w_gui - 440;
-    var _panel_y = 70;
+    var _panel_y = 60;
     var _panel_w = 400;
-    var _panel_h = 310;
+    var _panel_h = 320;
 
-    // Fondo del panel
+    // Sombra del panel
     draw_set_color(c_black);
-    draw_set_alpha(0.7);
-    draw_roundrect_ext(_panel_x, _panel_y, _panel_x + _panel_w, _panel_y + _panel_h, 6, 6, false);
+    draw_set_alpha(0.5);
+    draw_roundrect_ext(_panel_x + 3, _panel_y + 3, _panel_x + _panel_w + 3, _panel_y + _panel_h + 3, 8, 8, false);
     draw_set_alpha(1);
 
-    // Borde
-    draw_set_color(make_color_rgb(80, 80, 120));
-    draw_roundrect_ext(_panel_x, _panel_y, _panel_x + _panel_w, _panel_y + _panel_h, 6, 6, true);
+    // Fondo del panel
+    draw_set_color(make_color_rgb(10, 8, 20));
+    draw_set_alpha(0.85);
+    draw_roundrect_ext(_panel_x, _panel_y, _panel_x + _panel_w, _panel_y + _panel_h, 8, 8, false);
+    draw_set_alpha(1);
+
+    // Barra de título del panel
+    draw_set_color(make_color_rgb(25, 20, 45));
+    draw_set_alpha(0.9);
+    draw_roundrect_ext(_panel_x, _panel_y, _panel_x + _panel_w, _panel_y + 34, 8, 8, false);
+    draw_set_alpha(1);
+    draw_set_color(make_color_rgb(60, 55, 90));
+    draw_line(_panel_x + 8, _panel_y + 34, _panel_x + _panel_w - 8, _panel_y + 34);
+
+    // Nombre en barra de título
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_black);
+    draw_text_transformed(_panel_x + _panel_w / 2 + 1, _panel_y + 18, personajes[indice_personaje], 1.2, 1.2, 0);
+    draw_set_color(c_white);
+    draw_text_transformed(_panel_x + _panel_w / 2, _panel_y + 17, personajes[indice_personaje], 1.2, 1.2, 0);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+
+    // Doble borde
+    draw_set_color(make_color_rgb(20, 16, 35));
+    draw_roundrect_ext(_panel_x - 1, _panel_y - 1, _panel_x + _panel_w + 1, _panel_y + _panel_h + 1, 9, 9, true);
+    draw_set_color(make_color_rgb(80, 75, 120));
+    draw_roundrect_ext(_panel_x, _panel_y, _panel_x + _panel_w, _panel_y + _panel_h, 8, 8, true);
 
     var _tx = _panel_x + 16;
-    var _ty = _panel_y + 14;
+    var _ty = _panel_y + 44;
     var _lh = 22;
-
-    // Nombre grande
-    draw_set_color(c_white);
-    draw_text_transformed(_tx, _ty, personajes[indice_personaje], 1.3, 1.3, 0);
-    _ty += 30;
 
     // Clase
     draw_set_color(c_ltgray);
@@ -116,11 +178,37 @@ var perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
     draw_text(_afin_x, _ty, perfil.afinidad);
     _ty += _lh;
 
-    // Personalidad
+    // Personalidad (con indicador TAB interactivo)
     draw_set_color(c_ltgray);
     draw_text(_tx, _ty, "Personalidad: ");
-    draw_set_color(c_white);
-    draw_text(_tx + string_width("Personalidad: "), _ty, perfil.personalidad);
+    var _pers_x = _tx + string_width("Personalidad: ");
+    if (estado == SelState.PERSONAJE) {
+        // Indicador interactivo con flechas
+        draw_set_color(c_yellow);
+        draw_text(_pers_x, _ty, "< ");
+        var _pers_arrow_w = string_width("< ");
+        draw_set_color(make_color_rgb(255, 220, 100));
+        draw_text(_pers_x + _pers_arrow_w, _ty, perfil.personalidad);
+        draw_set_color(c_yellow);
+        draw_text(_pers_x + _pers_arrow_w + string_width(perfil.personalidad), _ty, " >");
+        // Mini badge TAB
+        var _tab_hint_x = _pers_x + _pers_arrow_w + string_width(perfil.personalidad + " >") + 8;
+        draw_set_color(make_color_rgb(50, 45, 70));
+        draw_set_alpha(0.8);
+        draw_roundrect_ext(_tab_hint_x, _ty - 1, _tab_hint_x + 28, _ty + 13, 3, 3, false);
+        draw_set_alpha(1);
+        draw_set_color(make_color_rgb(140, 130, 50));
+        draw_roundrect_ext(_tab_hint_x, _ty - 1, _tab_hint_x + 28, _ty + 13, 3, 3, true);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(c_yellow);
+        draw_text(_tab_hint_x + 14, _ty + 6, "TAB");
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+    } else {
+        draw_set_color(c_white);
+        draw_text(_pers_x, _ty, perfil.personalidad);
+    }
     _ty += _lh + 6;
 
     // Separador
@@ -211,33 +299,49 @@ var perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
         var _enabled = _slot_enabled[i];
         var _content = _slot_contents[i];
 
-        // Fondo del slot
+        // Sombra
         draw_set_color(c_black);
-        draw_set_alpha(_enabled ? 0.6 : 0.3);
-        draw_roundrect_ext(_sx, _sy, _sx + _slot_w, _sy + _slot_h, 4, 4, false);
+        draw_set_alpha(0.45);
+        draw_roundrect_ext(_sx + 2, _sy + 2, _sx + _slot_w + 2, _sy + _slot_h + 2, 5, 5, false);
         draw_set_alpha(1);
 
-        // Borde
-        draw_set_color(_enabled ? make_color_rgb(80, 80, 120) : make_color_rgb(40, 40, 50));
-        draw_roundrect_ext(_sx, _sy, _sx + _slot_w, _sy + _slot_h, 4, 4, true);
+        // Fondo
+        draw_set_color(make_color_rgb(12, 10, 22));
+        draw_set_alpha(_enabled ? 0.85 : 0.45);
+        draw_roundrect_ext(_sx, _sy, _sx + _slot_w, _sy + _slot_h, 5, 5, false);
+        draw_set_alpha(1);
+
+        // Reflejo superior si tiene contenido
+        if (_content != "") {
+            var _ref_col = (i == 0) ? make_color_rgb(100, 60, 180) : make_color_rgb(50, 140, 60);
+            draw_set_color(_ref_col);
+            draw_set_alpha(0.15);
+            draw_roundrect_ext(_sx + 2, _sy + 2, _sx + _slot_w - 2, _sy + _slot_h * 0.4, 4, 4, false);
+            draw_set_alpha(1);
+        }
+
+        // Doble borde
+        var _borde_col = !_enabled ? make_color_rgb(30, 28, 40) : (_content != "" ? (i == 0 ? make_color_rgb(140, 100, 220) : make_color_rgb(80, 160, 80)) : make_color_rgb(60, 55, 80));
+        draw_set_color(make_color_rgb(20, 16, 30));
+        draw_roundrect_ext(_sx - 1, _sy - 1, _sx + _slot_w + 1, _sy + _slot_h + 1, 6, 6, true);
+        draw_set_color(_borde_col);
+        draw_roundrect_ext(_sx, _sy, _sx + _slot_w, _sy + _slot_h, 5, 5, true);
 
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
 
         if (_content != "") {
-            // Mostrar contenido equipado
             draw_set_color(i == 0 ? make_color_rgb(200, 150, 255) : c_lime);
             var _ctxt = _content;
             if (string_length(_ctxt) > 10) _ctxt = string_copy(_ctxt, 1, 10);
             draw_text(_sx + _slot_w * 0.5, _sy + _slot_h * 0.35, _ctxt);
         } else {
-            // Vacío
-            draw_set_color(_enabled ? c_dkgray : make_color_rgb(30, 30, 40));
+            draw_set_color(_enabled ? make_color_rgb(55, 50, 70) : make_color_rgb(30, 28, 40));
             draw_text(_sx + _slot_w * 0.5, _sy + _slot_h * 0.35, "—");
         }
 
         // Etiqueta
-        draw_set_color(_enabled ? c_ltgray : make_color_rgb(50, 50, 60));
+        draw_set_color(_enabled ? c_ltgray : make_color_rgb(45, 40, 55));
         draw_set_valign(fa_bottom);
         draw_text(_sx + _slot_w * 0.5, _sy + _slot_h - 6, _slot_labels[i]);
 
@@ -246,10 +350,22 @@ var perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
     }
 }
 
-// Instrucciones
+// Barra de instrucciones inferior
+{
+    draw_set_color(make_color_rgb(10, 8, 20));
+    draw_set_alpha(0.8);
+    draw_rectangle(0, h_gui - 44, w_gui, h_gui, false);
+    draw_set_alpha(1);
+    draw_set_color(make_color_rgb(60, 55, 90));
+    draw_line(0, h_gui - 44, w_gui, h_gui - 44);
+}
 if (estado == SelState.PERSONAJE) {
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
     draw_set_color(c_yellow);
-    draw_text(40, h_gui - 40, "ENTER: Elegir personalidad  |  ESC: Volver al menú");
+    draw_text(w_gui / 2, h_gui - 22, "TAB: Cambiar personalidad  |  ENTER: Elegir arma  |  ESC: Menú");
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
 }
 
 // =========================
@@ -608,17 +724,31 @@ if (estado == SelState.OBJETOS_POPUP) {
     draw_rectangle(0, 0, w_gui, h_gui, false);
     draw_set_alpha(1);
 
-    // Ventana
-    draw_set_color(c_black);
-    draw_rectangle(x1, y1, x1 + w, y1 + h, false);
-    draw_set_color(make_color_rgb(80, 80, 120));
-    draw_rectangle(x1, y1, x1 + w, y1 + h, true);
+    // Panel con estilo
+    draw_set_color(make_color_rgb(14, 12, 24));
+    draw_roundrect_ext(x1, y1, x1 + w, y1 + h, 8, 8, false);
+    draw_set_color(make_color_rgb(20, 16, 30));
+    draw_roundrect_ext(x1 - 1, y1 - 1, x1 + w + 1, y1 + h + 1, 9, 9, true);
+    draw_set_color(make_color_rgb(80, 120, 80));
+    draw_roundrect_ext(x1, y1, x1 + w, y1 + h, 8, 8, true);
 
-    draw_set_color(c_white);
-    draw_text(x1 + 20, y1 + 15, "EQUIPAR OBJETOS (máx. 3)");
+    // Barra de título
+    draw_set_color(make_color_rgb(25, 35, 25));
+    draw_set_alpha(0.9);
+    draw_roundrect_ext(x1, y1, x1 + w, y1 + 36, 8, 8, false);
+    draw_set_alpha(1);
+    draw_set_color(make_color_rgb(80, 120, 80));
+    draw_line(x1 + 8, y1 + 36, x1 + w - 8, y1 + 36);
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_lime);
+    draw_text(cx, y1 + 18, "EQUIPAR OBJETOS (máx. 3)");
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
 
     draw_set_color(c_gray);
-    draw_text(x1 + 20, y1 + 35, "Seleccionados: " + string(array_length(objetos_seleccionados)) + " / 3");
+    draw_text(x1 + 20, y1 + 45, "Seleccionados: " + string(array_length(objetos_seleccionados)) + " / 3");
 
     var oy = y1 + 65;
 
@@ -668,8 +798,14 @@ if (estado == SelState.OBJETOS_POPUP) {
         draw_text(x1 + 30, sy + 22 + i * 20, _slot_txt);
     }
 
-    draw_set_color(c_white);
-    draw_text(x1 + 20, y1 + h - 22, "TAB: Sel/Desel  |  ENTER: Confirmar  |  ESC: Volver");
+    draw_set_color(make_color_rgb(60, 80, 60));
+    draw_line(x1 + 12, y1 + h - 32, x1 + w - 12, y1 + h - 32);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_ltgray);
+    draw_text(cx, y1 + h - 16, "TAB: Sel/Desel  |  ENTER: Confirmar  |  ESC: Volver");
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
 }
 
 // =========================
@@ -691,16 +827,31 @@ if (estado == SelState.RUNA_POPUP) {
     draw_rectangle(0, 0, w_gui, h_gui, false);
     draw_set_alpha(1);
 
-    // Ventana
-    draw_set_color(c_black);
-    draw_rectangle(x1, y1, x1 + w, y1 + h, false);
-    draw_set_color(make_color_rgb(80, 80, 120));
-    draw_rectangle(x1, y1, x1 + w, y1 + h, true);
+    // Panel con estilo
+    draw_set_color(make_color_rgb(16, 10, 28));
+    draw_roundrect_ext(x1, y1, x1 + w, y1 + h, 8, 8, false);
+    draw_set_color(make_color_rgb(20, 14, 35));
+    draw_roundrect_ext(x1 - 1, y1 - 1, x1 + w + 1, y1 + h + 1, 9, 9, true);
+    draw_set_color(make_color_rgb(120, 80, 180));
+    draw_roundrect_ext(x1, y1, x1 + w, y1 + h, 8, 8, true);
 
-    draw_set_color(make_color_rgb(180, 120, 255));
-    draw_text(x1 + 20, y1 + 15, "EQUIPAR RUNA (máx. 1)");
-    draw_set_color(c_gray);
-    draw_text(x1 + 20, y1 + 35, "Ventaja a cambio de desventaja. Se consume al terminar.");
+    // Barra de título
+    draw_set_color(make_color_rgb(30, 18, 50));
+    draw_set_alpha(0.9);
+    draw_roundrect_ext(x1, y1, x1 + w, y1 + 36, 8, 8, false);
+    draw_set_alpha(1);
+    draw_set_color(make_color_rgb(120, 80, 180));
+    draw_line(x1 + 8, y1 + 36, x1 + w - 8, y1 + 36);
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(make_color_rgb(200, 160, 255));
+    draw_text(cx, y1 + 18, "EQUIPAR RUNA (máx. 1)");
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+
+    draw_set_color(make_color_rgb(140, 120, 160));
+    draw_text(x1 + 20, y1 + 45, "Ventaja a cambio de desventaja. Se consume al terminar.");
 
     var ry = y1 + 65;
     var n_runas = array_length(runas_disponibles);
@@ -743,8 +894,14 @@ if (estado == SelState.RUNA_POPUP) {
         draw_text(x1 + 20, ry, "- " + _datos_r.desventaja);
     }
 
-    draw_set_color(c_white);
-    draw_text(x1 + 20, y1 + h - 22, "ENTER: Confirmar  |  ESC: Volver a objetos");
+    draw_set_color(make_color_rgb(80, 55, 120));
+    draw_line(x1 + 12, y1 + h - 32, x1 + w - 12, y1 + h - 32);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_ltgray);
+    draw_text(cx, y1 + h - 16, "ENTER: Confirmar  |  ESC: Volver a objetos");
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
 }
 
 // ═══════════════════════════════════════════════════════════════

@@ -625,28 +625,27 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
         draw_set_color(_btn_borde);
         draw_roundrect_ext(sx1, sy1, sx2, sy2, 5, 5, true);
 
-        // Nombre habilidad
-        var nombre = scr_nombre_habilidad(id_hab);
-        // Sombra del nombre
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
-        draw_set_color(c_black);
-        draw_text((sx1 + sx2) / 2 + 1, sy1 + 16 + 1, nombre);
-        // Texto principal
-        draw_set_color(es_clase ? _pj_pal.energia : c_white);
-        draw_text((sx1 + sx2) / 2, sy1 + 16, nombre);
-
-        // ── Badge de tecla (pill redondeada) ──
+        // ── Badge de tecla (pill redondeada) — ARRIBA del botón ──
         var _key_w = 22;
         var _key_h = 14;
         var _key_x = (sx1 + sx2) / 2 - _key_w / 2;
-        var _key_y = sy2 - _key_h - 4;
+        var _key_y = sy1 - _key_h - 4;
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        // Sombra
+        draw_set_color(c_black);
+        draw_set_alpha(0.5);
+        draw_roundrect_ext(_key_x + 1, _key_y + 1, _key_x + _key_w + 1, _key_y + _key_h + 1, 4, 4, false);
+        draw_set_alpha(1);
+        // Fondo
         draw_set_color(make_color_rgb(25, 22, 40));
-        draw_set_alpha(0.85);
+        draw_set_alpha(0.9);
         draw_roundrect_ext(_key_x, _key_y, _key_x + _key_w, _key_y + _key_h, 4, 4, false);
         draw_set_alpha(1);
+        // Borde
         draw_set_color(make_color_rgb(180, 160, 60));
         draw_roundrect_ext(_key_x, _key_y, _key_x + _key_w, _key_y + _key_h, 4, 4, true);
+        // Letra
         draw_set_color(c_yellow);
         draw_text(_key_x + _key_w / 2, _key_y + _key_h / 2, key_labels[i]);
 
@@ -785,32 +784,99 @@ if (!control_combate.combate_terminado) {
 // ===========================
 if (!control_combate.combate_terminado) {
     var _parry_x = 380;
-    var _parry_y = h_gui - 70;
+    var _parry_y = h_gui - 100;
 
-    // Estado de Parry
-    if (pj.parry_estado == "ventana") {
-        draw_set_color(c_aqua);
-        var _parry_secs = pj.parry_timer / GAME_FPS;
-        draw_text(_parry_x, _parry_y, "[SPACE] PARRY [" + string_format(_parry_secs, 1, 1) + "s]");
-    } else if (pj.parry_estado == "vulnerable") {
-        draw_set_color(c_red);
-        var _vuln_secs = pj.parry_timer / GAME_FPS;
-        draw_text(_parry_x, _parry_y, "VULNERABLE [" + string_format(_vuln_secs, 1, 1) + "s]");
-    } else {
-        draw_set_color(c_ltgray);
-        draw_text(_parry_x, _parry_y, "[SPACE] Parry");
+    // Estado de Parry — Botón estilizado
+    {
+        var _par_w = 140;
+        var _par_h = 28;
+        var _par_x1 = _parry_x;
+        var _par_y1 = _parry_y - 4;
+        var _par_x2 = _par_x1 + _par_w;
+        var _par_y2 = _par_y1 + _par_h;
+
+        var _parry_col, _parry_borde, _parry_txt;
+
+        if (pj.parry_estado == "ventana") {
+            _parry_col   = make_color_rgb(20, 50, 60);
+            _parry_borde = c_aqua;
+            var _parry_secs = pj.parry_timer / GAME_FPS;
+            _parry_txt = "PARRY [" + string_format(_parry_secs, 1, 1) + "s]";
+        } else if (pj.parry_estado == "vulnerable") {
+            _parry_col   = make_color_rgb(60, 15, 15);
+            _parry_borde = c_red;
+            var _vuln_secs = pj.parry_timer / GAME_FPS;
+            _parry_txt = "VULN [" + string_format(_vuln_secs, 1, 1) + "s]";
+        } else {
+            _parry_col   = make_color_rgb(14, 14, 24);
+            _parry_borde = make_color_rgb(80, 80, 110);
+            _parry_txt = "Parry";
+        }
+
+        // Sombra
+        draw_set_color(c_black);
+        draw_set_alpha(0.4);
+        draw_roundrect_ext(_par_x1 + 2, _par_y1 + 2, _par_x2 + 2, _par_y2 + 2, 5, 5, false);
+        draw_set_alpha(1);
+
+        // Fondo
+        draw_set_color(_parry_col);
+        draw_set_alpha(0.88);
+        draw_roundrect_ext(_par_x1, _par_y1, _par_x2, _par_y2, 5, 5, false);
+        draw_set_alpha(1);
+
+        // Glow pulsante durante ventana
+        if (pj.parry_estado == "ventana") {
+            var _pp = 0.15 + 0.12 * sin(current_time * 0.006);
+            gpu_set_blendmode(bm_add);
+            draw_set_color(c_aqua);
+            draw_set_alpha(_pp);
+            draw_roundrect_ext(_par_x1 - 3, _par_y1 - 3, _par_x2 + 3, _par_y2 + 3, 7, 7, false);
+            draw_set_alpha(1);
+            gpu_set_blendmode(bm_normal);
+        }
+
+        // Doble borde
+        draw_set_color(make_color_rgb(20, 18, 30));
+        draw_roundrect_ext(_par_x1 - 1, _par_y1 - 1, _par_x2 + 1, _par_y2 + 1, 6, 6, true);
+        draw_set_color(_parry_borde);
+        draw_roundrect_ext(_par_x1, _par_y1, _par_x2, _par_y2, 5, 5, true);
+
+        // Badge SPACE encima
+        var _sk_w = 40;
+        var _sk_h = 13;
+        var _sk_x = (_par_x1 + _par_x2) / 2 - _sk_w / 2;
+        var _sk_y = _par_y1 - _sk_h - 3;
+        draw_set_color(make_color_rgb(22, 20, 35));
+        draw_set_alpha(0.9);
+        draw_roundrect_ext(_sk_x, _sk_y, _sk_x + _sk_w, _sk_y + _sk_h, 3, 3, false);
+        draw_set_alpha(1);
+        draw_set_color(make_color_rgb(140, 130, 50));
+        draw_roundrect_ext(_sk_x, _sk_y, _sk_x + _sk_w, _sk_y + _sk_h, 3, 3, true);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(c_yellow);
+        draw_text(_sk_x + _sk_w / 2, _sk_y + _sk_h / 2, "SPACE");
+
+        // Texto principal
+        draw_set_color(pj.parry_estado == "ventana" ? c_aqua : (pj.parry_estado == "vulnerable" ? c_red : c_ltgray));
+        draw_text((_par_x1 + _par_x2) / 2, (_par_y1 + _par_y2) / 2, _parry_txt);
     }
 
     // Indicador GCD
     if (pj.gcd_timer > 0) {
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
         draw_set_color(c_yellow);
         var _gcd_secs = pj.gcd_timer / GAME_FPS;
-        draw_text(_parry_x + 170, _parry_y, "GCD: " + string_format(_gcd_secs, 1, 1) + "s");
+        draw_text(_parry_x + _par_w + 12, _parry_y, "GCD: " + string_format(_gcd_secs, 1, 1) + "s");
     }
 
-    // ── Indicador CARGA PROGRESIVA (encima de los botones de habilidad) ──
+    // ── Indicador CARGA PROGRESIVA (justo encima del primer botón de habilidad) ──
     if (pj.carga_activa) {
-        var _c_y = h_gui - 150;
+        var _carga_bar_x = 30;  // _hab_x_start
+        var _carga_bar_w = 200;
+        var _c_y = h_gui - 135 - 20;  // _hab_y_start - 20
         var _nivel = scr_carga_nivel(pj.carga_timer);
         var _mult  = scr_carga_multiplicador(_nivel);
         var _c_col = c_ltgray;
@@ -823,26 +889,28 @@ if (!control_combate.combate_terminado) {
 
         draw_set_color(make_color_rgb(15, 15, 30));
         draw_set_alpha(0.85);
-        draw_roundrect_ext(_parry_x, _c_y, _parry_x + 200, _c_y + 12, 3, 3, false);
+        draw_roundrect_ext(_carga_bar_x, _c_y, _carga_bar_x + _carga_bar_w, _c_y + 12, 3, 3, false);
         draw_set_alpha(1);
 
         draw_set_color(_c_col);
-        draw_roundrect_ext(_parry_x, _c_y, _parry_x + 200 * _c_ratio, _c_y + 12, 3, 3, false);
+        draw_roundrect_ext(_carga_bar_x, _c_y, _carga_bar_x + _carga_bar_w * _c_ratio, _c_y + 12, 3, 3, false);
 
         // Borde
         draw_set_color(make_color_rgb(180, 140, 40));
-        draw_roundrect_ext(_parry_x, _c_y, _parry_x + 200, _c_y + 12, 3, 3, true);
+        draw_roundrect_ext(_carga_bar_x, _c_y, _carga_bar_x + _carga_bar_w, _c_y + 12, 3, 3, true);
 
         // Texto
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_middle);
         draw_set_color(c_white);
-        draw_text(_parry_x + 205, _c_y, "N" + string(_nivel) + " x" + string(_mult));
+        draw_text(_carga_bar_x + _carga_bar_w + 6, _c_y + 6, "N" + string(_nivel) + " x" + string(_mult));
 
         // Brillo pulsante en nivel 3
         if (_nivel == 3) {
             var _pulse = 0.3 + 0.3 * abs(sin(current_time * 0.008));
             draw_set_color(c_yellow);
             draw_set_alpha(_pulse);
-            draw_roundrect_ext(_parry_x - 2, _c_y - 2, _parry_x + 202, _c_y + 14, 4, 4, false);
+            draw_roundrect_ext(_carga_bar_x - 2, _c_y - 2, _carga_bar_x + _carga_bar_w + 2, _c_y + 14, 4, 4, false);
             draw_set_alpha(1);
         }
     }
@@ -868,47 +936,110 @@ if (!control_combate.combate_terminado) {
 
     // Posición: justo después de la barra de esencia
     var _sb_x = ESE_BAR_MARGIN + ESE_BAR_W + 12 + super_deny_shake;
-    var _sb_y = h_gui - ESE_BAR_BOTTOM - 6;
-    var _sb_w = 110;
-    var _sb_h = 30;
+    var _sb_y = h_gui - ESE_BAR_BOTTOM - 8;
+    var _sb_w = 120;
+    var _sb_h = 34;
 
     // Color y estilo según disponibilidad
     var _afinidad_pj = variable_struct_exists(pj, "afinidad") ? pj.afinidad : "Neutra";
     var _pal = scr_paleta_afinidad(_afinidad_pj);
 
     if (_super_ok) {
-        // Disponible: glow pulsante
         var _pulse = 0.7 + 0.3 * sin(current_time * 0.004);
-        // Glow detrás
+
+        // Sombra profunda
+        draw_set_color(c_black);
+        draw_set_alpha(0.5);
+        draw_roundrect_ext(_sb_x + 2, _sb_y + 3, _sb_x + _sb_w + 2, _sb_y + _sb_h + 3, 6, 6, false);
+        draw_set_alpha(1);
+
+        // Glow externo pulsante (aditivo)
+        gpu_set_blendmode(bm_add);
         draw_set_color(_pal.energia);
-        draw_set_alpha(0.15 * _pulse);
-        draw_roundrect_ext(_sb_x - 3, _sb_y - 3, _sb_x + _sb_w + 3, _sb_y + _sb_h + 3, 6, 6, false);
+        draw_set_alpha(0.18 * _pulse);
+        draw_roundrect_ext(_sb_x - 4, _sb_y - 4, _sb_x + _sb_w + 4, _sb_y + _sb_h + 4, 8, 8, false);
+        draw_set_alpha(0.1 * _pulse);
+        draw_roundrect_ext(_sb_x - 8, _sb_y - 8, _sb_x + _sb_w + 8, _sb_y + _sb_h + 8, 10, 10, false);
         draw_set_alpha(1);
-        // Fondo botón
-        draw_set_color(make_color_rgb(20, 15, 40));
-        draw_set_alpha(0.85);
-        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 4, 4, false);
+        gpu_set_blendmode(bm_normal);
+
+        // Fondo gradiente oscuro
+        draw_set_color(make_color_rgb(18, 12, 40));
+        draw_set_alpha(0.92);
+        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 6, 6, false);
         draw_set_alpha(1);
-        // Borde
+
+        // Reflejo superior de color
+        draw_set_color(_pal.dominante);
+        draw_set_alpha(0.22);
+        draw_roundrect_ext(_sb_x + 2, _sb_y + 2, _sb_x + _sb_w - 2, _sb_y + _sb_h * 0.45, 5, 5, false);
+        draw_set_alpha(1);
+
+        // Doble borde
+        draw_set_color(make_color_rgb(25, 18, 45));
+        draw_roundrect_ext(_sb_x - 1, _sb_y - 1, _sb_x + _sb_w + 1, _sb_y + _sb_h + 1, 7, 7, true);
         draw_set_color(merge_color(_pal.energia, c_white, _pulse * 0.3));
-        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 4, 4, true);
-        // Texto
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
-        draw_set_color(merge_color(_pal.energia, c_white, _pulse * 0.4));
-        draw_text(_sb_x + _sb_w / 2, _sb_y + _sb_h / 2, "[TAB] SÚPER");
-    } else {
-        // No disponible: botón apagado
-        draw_set_color(make_color_rgb(15, 12, 25));
-        draw_set_alpha(0.7);
-        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 4, 4, false);
+        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 6, 6, true);
+
+        // Badge TAB encima
+        var _tab_bw = 30;
+        var _tab_bh = 13;
+        var _tab_bx = _sb_x + (_sb_w - _tab_bw) / 2;
+        var _tab_by = _sb_y - _tab_bh - 3;
+        draw_set_color(make_color_rgb(25, 22, 40));
+        draw_set_alpha(0.9);
+        draw_roundrect_ext(_tab_bx, _tab_by, _tab_bx + _tab_bw, _tab_by + _tab_bh, 4, 4, false);
         draw_set_alpha(1);
-        draw_set_color(make_color_rgb(60, 55, 70));
-        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 4, 4, true);
+        draw_set_color(make_color_rgb(180, 160, 60));
+        draw_roundrect_ext(_tab_bx, _tab_by, _tab_bx + _tab_bw, _tab_by + _tab_bh, 4, 4, true);
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
-        draw_set_color(make_color_rgb(80, 70, 90));
-        draw_text(_sb_x + _sb_w / 2, _sb_y + _sb_h / 2, "[TAB] SÚPER");
+        draw_set_color(c_yellow);
+        draw_text(_tab_bx + _tab_bw / 2, _tab_by + _tab_bh / 2, "TAB");
+
+        // Texto SÚPER
+        draw_set_color(merge_color(_pal.energia, c_white, _pulse * 0.4));
+        draw_text(_sb_x + _sb_w / 2, _sb_y + _sb_h / 2, "SÚPER");
+
+    } else {
+        // Sombra
+        draw_set_color(c_black);
+        draw_set_alpha(0.35);
+        draw_roundrect_ext(_sb_x + 2, _sb_y + 3, _sb_x + _sb_w + 2, _sb_y + _sb_h + 3, 6, 6, false);
+        draw_set_alpha(1);
+
+        // Fondo apagado
+        draw_set_color(make_color_rgb(12, 10, 22));
+        draw_set_alpha(0.75);
+        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 6, 6, false);
+        draw_set_alpha(1);
+
+        // Doble borde apagado
+        draw_set_color(make_color_rgb(20, 18, 30));
+        draw_roundrect_ext(_sb_x - 1, _sb_y - 1, _sb_x + _sb_w + 1, _sb_y + _sb_h + 1, 7, 7, true);
+        draw_set_color(make_color_rgb(55, 50, 65));
+        draw_roundrect_ext(_sb_x, _sb_y, _sb_x + _sb_w, _sb_y + _sb_h, 6, 6, true);
+
+        // Badge TAB encima (apagado)
+        var _tab_bw = 30;
+        var _tab_bh = 13;
+        var _tab_bx = _sb_x + (_sb_w - _tab_bw) / 2;
+        var _tab_by = _sb_y - _tab_bh - 3;
+        draw_set_color(make_color_rgb(18, 16, 28));
+        draw_set_alpha(0.85);
+        draw_roundrect_ext(_tab_bx, _tab_by, _tab_bx + _tab_bw, _tab_by + _tab_bh, 4, 4, false);
+        draw_set_alpha(1);
+        draw_set_color(make_color_rgb(50, 45, 60));
+        draw_roundrect_ext(_tab_bx, _tab_by, _tab_bx + _tab_bw, _tab_by + _tab_bh, 4, 4, true);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(make_color_rgb(70, 65, 80));
+        draw_text(_tab_bx + _tab_bw / 2, _tab_by + _tab_bh / 2, "TAB");
+
+        // Texto
+        draw_set_color(make_color_rgb(70, 60, 85));
+        draw_text(_sb_x + _sb_w / 2, _sb_y + _sb_h / 2, "SÚPER");
+
     }
 
     draw_set_halign(fa_left);
@@ -926,14 +1057,14 @@ if (!control_combate.combate_terminado) {
     // Dimensiones de cada slot
     var _sw = 54;
     var _sh = 50;
-    var _sgap = 6;
+    var _sgap = 14;
 
     // Columna vertical centrada a la izquierda del personaje
     // Personaje está en w_gui * 0.22 ≈ 282.  Columna en x = 8.
     // 4 slots (1 runa + 3 consumibles): altura total = 4×50 + 3×6 = 218
     // Centrada verticalmente sobre el cuerpo del PJ (y ≈ 396)
     var _col_x = 8;
-    var _col_h = 4 * _sh + 3 * _sgap;  // 218
+    var _col_h = 4 * _sh + 3 * _sgap;  // 242
     var _col_y = floor(h_gui * 0.55 - _col_h * 0.5);  // ≈ 287
 
     // ── SLOT DE RUNA (posición 0, arriba de todo) ──
@@ -946,28 +1077,71 @@ if (!control_combate.combate_terminado) {
         var _rx2 = _rx1 + _sw;
         var _ry2 = _ry1 + _sh;
 
-        draw_sprite_stretched(spr_slot_runa, 0, _rx1, _ry1, _sw, _sh);
+        // Sombra
+        draw_set_color(c_black);
+        draw_set_alpha(0.45);
+        draw_roundrect_ext(_rx1 + 2, _ry1 + 2, _rx2 + 2, _ry2 + 2, 5, 5, false);
+        draw_set_alpha(1);
+
+        // Fondo oscuro
+        draw_set_color(make_color_rgb(14, 10, 28));
+        draw_set_alpha(0.9);
+        draw_roundrect_ext(_rx1, _ry1, _rx2, _ry2, 5, 5, false);
+        draw_set_alpha(1);
+
+        // Reflejo púrpura superior
+        if (!_runa_vacia) {
+            draw_set_color(make_color_rgb(120, 60, 200));
+            draw_set_alpha(0.15);
+            draw_roundrect_ext(_rx1 + 2, _ry1 + 2, _rx2 - 2, _ry1 + _sh * 0.4, 4, 4, false);
+            draw_set_alpha(1);
+        }
+
+        // Doble borde
+        draw_set_color(make_color_rgb(20, 16, 35));
+        draw_roundrect_ext(_rx1 - 1, _ry1 - 1, _rx2 + 1, _ry2 + 1, 6, 6, true);
+        draw_set_color(_runa_vacia ? make_color_rgb(50, 40, 65) : make_color_rgb(160, 100, 240));
+        draw_roundrect_ext(_rx1, _ry1, _rx2, _ry2, 5, 5, true);
 
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
 
         if (_runa_vacia) {
-            draw_set_color(c_dkgray);
-            draw_text((_rx1 + _rx2) / 2, _ry1 + 18, "—");
+            draw_set_color(make_color_rgb(50, 40, 65));
+            draw_text((_rx1 + _rx2) / 2, (_ry1 + _ry2) / 2 - 4, "—");
         } else {
+            // Glow aditivo si hay runa
+            gpu_set_blendmode(bm_add);
+            draw_set_color(make_color_rgb(140, 80, 220));
+            draw_set_alpha(0.08 + 0.05 * sin(current_time * 0.003));
+            draw_roundrect_ext(_rx1 - 2, _ry1 - 2, _rx2 + 2, _ry2 + 2, 6, 6, false);
+            draw_set_alpha(1);
+            gpu_set_blendmode(bm_normal);
+
             var _runa_ico = scr_sprite_icono_runa(_runa_nom);
             if (_runa_ico != -1) {
-                draw_sprite_stretched(_runa_ico, 0, _rx1 + (_sw - 30) / 2, _ry1 + 2, 30, 30);
+                draw_sprite_stretched(_runa_ico, 0, _rx1 + (_sw - 30) / 2, _ry1 + 4, 30, 30);
             } else {
                 draw_set_color(make_color_rgb(220, 180, 255));
                 var _rtxt = _runa_nom;
                 if (string_length(_rtxt) > 6) _rtxt = string_copy(_rtxt, 1, 6);
-                draw_text((_rx1 + _rx2) / 2, _ry1 + 14, _rtxt);
+                draw_text((_rx1 + _rx2) / 2, (_ry1 + _ry2) / 2 - 4, _rtxt);
             }
         }
 
-        draw_set_color(_runa_vacia ? c_dkgray : make_color_rgb(180, 120, 255));
-        draw_text((_rx1 + _rx2) / 2, _ry2 - 9, "R");
+        // Etiqueta RUNA encima
+        var _rk_w = 36;
+        var _rk_h = 13;
+        var _rk_x = (_rx1 + _rx2) / 2 - _rk_w / 2;
+        var _rk_y = _ry1 - _rk_h - 3;
+        draw_set_color(make_color_rgb(22, 18, 38));
+        draw_set_alpha(0.9);
+        draw_roundrect_ext(_rk_x, _rk_y, _rk_x + _rk_w, _rk_y + _rk_h, 3, 3, false);
+        draw_set_alpha(1);
+        draw_set_color(_runa_vacia ? make_color_rgb(60, 50, 75) : make_color_rgb(140, 80, 200));
+        draw_roundrect_ext(_rk_x, _rk_y, _rk_x + _rk_w, _rk_y + _rk_h, 3, 3, true);
+        draw_set_color(_runa_vacia ? make_color_rgb(80, 70, 95) : make_color_rgb(200, 160, 255));
+        draw_text(_rk_x + _rk_w / 2, _rk_y + _rk_h / 2, "RUNA");
     }
 
     // ── SLOTS DE CONSUMIBLES (posiciones 1-3, debajo de la runa) ──
@@ -983,12 +1157,38 @@ if (!control_combate.combate_terminado) {
         var _usado = (_tiene_obj && is_array(_used_arr)) ? _used_arr[i] : false;
         var _vacio = (!_tiene_obj || _obj_nombre == "" || _obj_nombre == undefined);
 
-        draw_sprite_stretched(spr_slot_objeto, 0, _ox1, _oy1, _sw, _sh);
+        // Sombra
+        draw_set_color(c_black);
+        draw_set_alpha(0.4);
+        draw_roundrect_ext(_ox1 + 2, _oy1 + 2, _ox2 + 2, _oy2 + 2, 5, 5, false);
+        draw_set_alpha(1);
 
+        // Fondo oscuro
+        draw_set_color(make_color_rgb(12, 12, 22));
+        draw_set_alpha(0.9);
+        draw_roundrect_ext(_ox1, _oy1, _ox2, _oy2, 5, 5, false);
+        draw_set_alpha(1);
+
+        // Reflejo verde superior si tiene objeto
+        if (!_vacio && !_usado) {
+            draw_set_color(make_color_rgb(40, 120, 60));
+            draw_set_alpha(0.12);
+            draw_roundrect_ext(_ox1 + 2, _oy1 + 2, _ox2 - 2, _oy1 + _sh * 0.4, 4, 4, false);
+            draw_set_alpha(1);
+        }
+
+        // Doble borde
+        var _obj_borde_col = _vacio ? make_color_rgb(40, 40, 55) : (_usado ? make_color_rgb(50, 40, 40) : make_color_rgb(100, 180, 80));
+        draw_set_color(make_color_rgb(20, 18, 28));
+        draw_roundrect_ext(_ox1 - 1, _oy1 - 1, _ox2 + 1, _oy2 + 1, 6, 6, true);
+        draw_set_color(_obj_borde_col);
+        draw_roundrect_ext(_ox1, _oy1, _ox2, _oy2, 5, 5, true);
+
+        // Overlay usado
         if (_usado) {
             draw_set_color(c_black);
-            draw_set_alpha(0.6);
-            draw_rectangle(_ox1 + 1, _oy1 + 1, _ox2 - 1, _oy2 - 1, false);
+            draw_set_alpha(0.55);
+            draw_roundrect_ext(_ox1 + 2, _oy1 + 2, _ox2 - 2, _oy2 - 2, 4, 4, false);
             draw_set_alpha(1);
         }
 
@@ -996,25 +1196,36 @@ if (!control_combate.combate_terminado) {
         draw_set_valign(fa_middle);
 
         if (_vacio) {
-            draw_set_color(c_dkgray);
-            draw_text((_ox1 + _ox2) / 2, _oy1 + 18, "—");
+            draw_set_color(make_color_rgb(45, 40, 55));
+            draw_text((_ox1 + _ox2) / 2, (_oy1 + _oy2) / 2 - 4, "—");
         } else if (_usado) {
-            draw_set_color(c_dkgray);
-            draw_text((_ox1 + _ox2) / 2, _oy1 + 18, "X");
+            draw_set_color(make_color_rgb(120, 50, 50));
+            draw_text((_ox1 + _ox2) / 2, (_oy1 + _oy2) / 2 - 4, "X");
         } else {
             var _obj_ico = scr_sprite_icono_objeto(_obj_nombre);
             if (_obj_ico != -1) {
-                draw_sprite_stretched(_obj_ico, 0, _ox1 + (_sw - 30) / 2, _oy1 + 2, 30, 30);
+                draw_sprite_stretched(_obj_ico, 0, _ox1 + (_sw - 30) / 2, _oy1 + 4, 30, 30);
             } else {
                 draw_set_color(c_white);
                 var _txt = _obj_nombre;
                 if (string_length(_txt) > 6) _txt = string_copy(_txt, 1, 6);
-                draw_text((_ox1 + _ox2) / 2, _oy1 + 14, _txt);
+                draw_text((_ox1 + _ox2) / 2, (_oy1 + _oy2) / 2 - 4, _txt);
             }
         }
 
-        draw_set_color(_vacio ? c_dkgray : (_usado ? c_dkgray : c_yellow));
-        draw_text((_ox1 + _ox2) / 2, _oy2 - 9, string(i + 1));
+        // Badge numérico encima del slot
+        var _nk_w = 18;
+        var _nk_h = 13;
+        var _nk_x = (_ox1 + _ox2) / 2 - _nk_w / 2;
+        var _nk_y = _oy1 - _nk_h - 3;
+        draw_set_color(make_color_rgb(22, 20, 32));
+        draw_set_alpha(0.9);
+        draw_roundrect_ext(_nk_x, _nk_y, _nk_x + _nk_w, _nk_y + _nk_h, 3, 3, false);
+        draw_set_alpha(1);
+        draw_set_color(_vacio ? make_color_rgb(50, 45, 60) : (_usado ? make_color_rgb(60, 40, 40) : make_color_rgb(160, 140, 50)));
+        draw_roundrect_ext(_nk_x, _nk_y, _nk_x + _nk_w, _nk_y + _nk_h, 3, 3, true);
+        draw_set_color(_vacio ? make_color_rgb(70, 65, 80) : (_usado ? make_color_rgb(80, 50, 50) : c_yellow));
+        draw_text(_nk_x + _nk_w / 2, _nk_y + _nk_h / 2, string(i + 1));
     }
 
     draw_set_halign(fa_left);
@@ -1196,7 +1407,7 @@ if (!control_combate.combate_terminado) {
 
     // Combo del enemigo (esquina derecha)
     if (en.combo_contador >= 2) {
-        var _en_combo_x = _gui_w - 40;
+        var _en_combo_x = w_gui - 40;
         var _en_combo_y = 260;
         var _en_combo_alpha = clamp(en.combo_timer / (GAME_FPS * 0.5), 0.4, 1.0);
 
@@ -1317,7 +1528,7 @@ if (pausado && !control_combate.combate_terminado) {
     // Instruccion inferior
     draw_set_valign(fa_bottom);
     draw_set_color(make_color_rgb(70, 65, 90));
-    draw_text(_px + _pw / 2, _py + _ph - 10, "ESPACIO: Volver");
+    draw_text(_px + _pw / 2, _py + _ph - 10, "ESC: Volver");
 
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
@@ -1328,6 +1539,6 @@ if (!control_combate.combate_terminado) {
     draw_set_halign(fa_right);
     draw_set_valign(fa_top);
     draw_set_color(c_dkgray);
-    draw_text(w_gui - 10, h_gui - 15, "[ESPACIO] Pausa");
+    draw_text(w_gui - 10, h_gui - 15, "[ESC] Pausa");
     draw_set_halign(fa_left);
 }

@@ -47,18 +47,27 @@ if (estado == SelState.PERSONAJE) {
         indice_personaje = min(_n - 1, indice_personaje + sel_cols);
     }
 
-    if (keyboard_check_pressed(vk_enter)) {
-        // Entrar al popup de personalidad
-        // Encontrar índice de la personalidad actual
+    // TAB: Ciclar personalidad directamente en la pantalla de selección
+    if (keyboard_check_pressed(vk_tab)) {
+        var _n_pers = array_length(personalidades_lista);
+        // Encontrar índice actual
         indice_personalidad = 0;
-        for (var _pi = 0; _pi < array_length(personalidades_lista); _pi++) {
+        for (var _pi = 0; _pi < _n_pers; _pi++) {
             if (personalidades_lista[_pi] == perfil.personalidad) {
                 indice_personalidad = _pi;
                 break;
             }
         }
-        estado = SelState.PERSONALIDAD_POPUP;
-		io_clear();
+        indice_personalidad = (indice_personalidad + 1) mod _n_pers;
+        perfil.personalidad = personalidades_lista[indice_personalidad];
+    }
+
+    if (keyboard_check_pressed(vk_enter)) {
+        // Ir directamente a selección de arma (saltar popup de personalidad)
+        var armas = scr_ds_map_keys_array(perfil.armas_obtenidas);
+        indice_arma = 0;
+        estado = SelState.ARMA_POPUP;
+        io_clear();
     }
 
     if (keyboard_check_pressed(vk_escape)) {
@@ -111,7 +120,7 @@ else if (estado == SelState.ARMA_POPUP) {
     }
 
     if (keyboard_check_pressed(vk_escape)) {
-        estado = SelState.PERSONALIDAD_POPUP;
+        estado = SelState.PERSONAJE;
     }
 
     if (keyboard_check_pressed(vk_enter)) {
@@ -234,7 +243,7 @@ else if (estado == SelState.OBJETOS_POPUP) {
         }
     }
 
-    // ESC: volver a selección de arma sin equipar objetos
+    // ESC: volver a selección de arma
     if (keyboard_check_pressed(vk_escape)) {
         objetos_seleccionados = [];
         estado = SelState.ARMA_POPUP;
