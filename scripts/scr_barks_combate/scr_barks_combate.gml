@@ -145,15 +145,16 @@ function scr_bark_on_super(_atacante) {
 //   ahora usa scr_dial_mid_iniciar para el diálogo bloqueante)
 // ══════════════════════════════════════════════════════════════
 function scr_bark_frase_vida50(_personaje, _es_jugador) {
+    var _frases;
     if (_es_jugador) {
-        var _frases = [
+        _frases = [
             "No puedo bajar la guardia...",
             "Esto se pone difícil...",
             "Aún me queda fuerza.",
             "No caeré tan fácil."
         ];
     } else {
-        var _frases = [
+        _frases = [
             "¡Pagarás por esto!",
             "¡No me subestimes!",
             "Aún no he terminado...",

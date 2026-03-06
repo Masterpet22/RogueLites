@@ -78,7 +78,9 @@ Individuos capaces de manipular una Corriente elemental. Cada Conductor posee:
 - Absorbe Esencia, corrompe habilidades y altera las Corrientes.
 - Es el **jefe final** del modo Historia.
 
-### 2.5. Camino del Héroe (Modo Roguelite)
+### 2.5. Camino del Héroe (Modo Historia / Roguelite)
+
+> **Nota:** "Camino del Héroe" **es** el modo Historia del juego. No son modos separados.
 
 - Cada run muestra "fragmentos de memoria" del personaje.
 - Las victorias desbloquean recuerdos y contexto narrativo.
@@ -672,7 +674,7 @@ Clases ← Afinidades ← Personalidades ← ESENCIA ←
 | 6    | Armas R2                                      |
 | 7    | Jefes duales                                  |
 | 8    | Armas legendarias (R3)                        |
-| 9    | Camino del Héroe (roguelite)                  |
+| 9    | Camino del Héroe (modo Historia)              |
 | 10   | El Devorador (jefe final)                     |
 
 ---

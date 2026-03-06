@@ -157,6 +157,12 @@ scr_feedback_init();
 // 8b. Sistema de FX de impacto (camera shake, zoom, partículas)
 scr_fx_impacto_init();
 
+// 8b2. Sistema de partículas extendido (trail, esencia, muerte, ambiental)
+scr_particulas_init();
+
+// 8b3. Sistema de shaders visuales de combate
+scr_shaders_init();
+
 // 8c. Sistema de diálogos pre-combate
 scr_dialogos_init();
 

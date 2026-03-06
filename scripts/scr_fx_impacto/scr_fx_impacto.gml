@@ -106,6 +106,15 @@ function scr_fx_impacto_golpe(_es_jugador, _tipo, _afinidad) {
     if (FX_PARTICULAS_ON) {
         _scr_fx_particulas_spawn(_es_jugador, _num_particulas, _afinidad, "impacto");
     }
+
+    // ── Shockwave en golpes fuertes (súper, crítico, habilidad) ──
+    if (_tipo == "super" || _tipo == "critico" || _tipo == "habilidad") {
+        var _gw = display_get_gui_width();
+        var _gh = display_get_gui_height();
+        var _sx = _es_jugador ? _gw * 0.22 : _gw * 0.78;
+        var _sy = _gh * 0.52;
+        scr_shader_shockwave_disparar(_sx, _sy);
+    }
 }
 
 
@@ -445,6 +454,13 @@ function scr_fin_combate_activar(_ganador) {
     _c.foco_vel         = FIN_ZOOM_VELOCIDAD;   // 0.04
 
     _c.fin_flash_alpha = FIN_FLASH_ALPHA_MAX;
+
+    // Partículas de muerte sobre el perdedor
+    var _muerte_x = (_ganador == "Jugador") ? _gw * 0.78 : _gw * 0.22;
+    var _muerte_y = _gh * 0.52;
+    var _muerte_afin = (_ganador == "Jugador")
+        ? _c.personaje_enemigo.afinidad : _c.personaje_jugador.afinidad;
+    scr_part_muerte_emitir(_muerte_x, _muerte_y, _muerte_afin);
 }
 
 

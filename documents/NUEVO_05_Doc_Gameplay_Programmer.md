@@ -619,16 +619,39 @@ with (obj_actor_enemigo) {
 
 ### 10.5. Efectos Visuales (VFX)
 
+El sistema VFX tiene 3 capas:
+
+**Shaders (`scr_shaders_combate.gml`):**
+
 ```gml
-// Crear partícula al usar habilidad de fuego:
-var fx = instance_create_layer(
-    obj_actor_enemigo.x,
-    obj_actor_enemigo.y,
-    "FX",
-    obj_particle_fuego
-);
-fx.power = _atacante.poder_elemental;
-fx.duracion = room_speed * 0.5;
+// Flash blanco al recibir golpe
+scr_shader_flash_set(1.0, 1.0, 1.0, 0.8);
+draw_sprite_ext(spr, 0, x, y, 1, 1, 0, c_white, 1);
+shader_reset();
+
+// Aberración cromática automática durante súpers
+scr_shader_chromatic_disparar(30); // 30 frames
+
+// Shockwave automática en golpes fuertes
+scr_shader_shockwave_disparar(gx, gy);
+```
+
+Shaders disponibles: `shd_flash`, `shd_glow`, `shd_outline`, `shd_desaturate`, `shd_color_tint`, `shd_chromatic`, `shd_energy_aura`, `shd_shockwave`.
+
+**Partículas de impacto (`scr_fx_impacto.gml`):**
+
+```gml
+scr_fx_impacto_golpe(true, "super", "Fuego");
+scr_fx_impacto_curacion(true);
+```
+
+**Partículas extendidas (`scr_particulas_combate.gml`):**
+
+```gml
+scr_part_trail_emitir(x, y, "Fuego", 5);    // estela de ataque
+scr_part_esencia_emitir(x, y, 4);            // chispas de esencia
+scr_part_muerte_emitir(x, y, "Agua");        // explosión de muerte
+scr_part_ambient_emitir("Tierra");            // lluvia decorativa
 ```
 
 ---

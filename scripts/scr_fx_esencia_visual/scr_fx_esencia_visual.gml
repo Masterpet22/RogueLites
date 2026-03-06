@@ -164,6 +164,9 @@ function scr_fx_activar_super(_afinidad, _atacante) {
     _c.super_blur_timer = HITSTOP_SUPER_FRAMES + round(GAME_FPS * 0.6);
     _c.super_blur_alpha = 0.85;
 
+    // ── Aberración cromática durante el súper ──
+    scr_shader_chromatic_disparar(HITSTOP_SUPER_FRAMES + round(GAME_FPS * 0.5));
+
     // Efecto FX de súper
     scr_feedback_fx(_es_jugador, "super");
 }

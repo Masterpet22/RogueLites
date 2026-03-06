@@ -1040,3 +1040,73 @@ if (_c.super_blur_timer > 0) {
 | Habilidades | Zarpa Esporal, Marea de Esporas, Raíz Abisal, Diluvio Fúngico |
 
 Ambos jefes están registrados en `obj_control_juego/Create_0.gml` y `obj_enemy_select/Create_0.gml`, con cooldowns en `scr_cooldown_habilidad` e implementaciones en `scr_ejecutar_habilidad`.
+
+---
+
+## 21. Sistema de Shaders Visuales
+
+### 21.1. Arquitectura
+
+Script principal: `scr_shaders_combate.gml`.  
+Inicialización: `scr_shaders_init()` → cachea uniforms vía `shader_get_uniform`.  
+Actualización: `scr_shaders_actualizar()` → timers de shockwave y chromatic.
+
+### 21.2. Shaders Disponibles
+
+| Shader            | Propósito                           | Uniforms                          | Uso                         |
+| ----------------- | ----------------------------------- | --------------------------------- | --------------------------- |
+| `shd_flash`       | Flash blanco/color al recibir golpe | `u_flash_color`, `u_flash_mix`    | Impactos, curación          |
+| `shd_glow`        | Brillo elemental radial             | `u_glow_color/intensity/texel`    | Aura por afinidad           |
+| `shd_outline`     | Borde sólido (selección, turno)     | `u_outline_color`, `u_texel_size` | UI selección                |
+| `shd_desaturate`  | Escala de grises parcial/total      | `u_desat_amount`                  | Muerte, pausa               |
+| `shd_color_tint`  | Tinte multiplicativo elemental      | `u_tint_color`, `u_tint_mix`      | Tinte por afinidad          |
+| `shd_chromatic`   | Aberración cromática RGB            | `u_chrom_offset/angle`            | Súpers (automático)         |
+| `shd_energy_aura` | Aura pulsante de energía            | `u_aura_color/intensity/radius`   | Carga de esencia            |
+| `shd_shockwave`   | Onda de choque radial               | `u_wave_center/radius/width/str`  | Golpes fuertes (automático) |
+
+### 21.3. Integración Automática
+
+- **Shockwave**: se dispara en `scr_fx_impacto_golpe` para tipos `"super"`, `"critico"` y `"habilidad"`.
+- **Chromatic**: se dispara en `scr_fx_esencia_super_activar` al usar la súper.
+- **Flash**: disponible vía `scr_shader_aplicar_flash_golpe(idx, spr)`.
+- Cada shader se aplica con `scr_shader_NOMBRE_set(...)`, se dibuja el sprite, y luego `shader_reset()`.
+
+### 21.4. Flujo de Render (Draw GUI)
+
+```
+1. scr_shaders_dibujar_fondo_fx()  → shockwave al fondo
+2. scr_fx_zoom_aplicar()           → zoom de impacto
+3. scr_particulas_dibujar_bajo()   → ambientales
+4. scr_feedback_dibujar_sprites()  → sprites + flash + shake
+5. scr_fx_particulas_dibujar()     → partículas de impacto
+6. scr_particulas_dibujar_sobre()  → trail, esencia, muerte
+7. scr_fx_zoom_restaurar()         → restaurar zoom
+```
+
+---
+
+## 22. Sistema de Partículas Extendido
+
+### 22.1. Arquitectura
+
+Script: `scr_particulas_combate.gml`.  
+Inicialización: `scr_particulas_init()`.  
+Actualización: `scr_particulas_actualizar()`.  
+Dibujado: `scr_particulas_dibujar_bajo()` + `scr_particulas_dibujar_sobre()`.
+
+Extiende el sistema procedural de `scr_fx_impacto` (array de structs) con 4 tipos adicionales:
+
+### 22.2. Tipos de Partículas
+
+| Tipo      | Función de emisión        | Cantidad máx. | Comportamiento                       |
+| --------- | ------------------------- | ------------- | ------------------------------------ |
+| `trail`   | `scr_part_trail_emitir`   | 16            | Estela de ataque, se desvanece       |
+| `esencia` | `scr_part_esencia_emitir` | 20            | Chispas doradas flotantes            |
+| `muerte`  | `scr_part_muerte_emitir`  | 18            | Explosión de fragmentos con gravedad |
+| `ambient` | `scr_part_ambient_emitir` | 12            | Lluvia decorativa por afinidad       |
+
+### 22.3. Integración
+
+- **Muerte**: se emite automáticamente en `scr_fin_combate_activar`.
+- **Trail/Esencia/Ambient**: disponibles para llamar desde scripts de habilidad.
+- Colores por afinidad vía `scr_part_colores_afinidad(afinidad)`.

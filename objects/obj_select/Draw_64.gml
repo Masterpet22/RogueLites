@@ -68,8 +68,8 @@ draw_text(40, 20, "SELECCIÓN DE PERSONAJE");
 // ═══════════════════════════════════════════════════════════════
 //  PANEL DE INFORMACIÓN (derecha)
 // ═══════════════════════════════════════════════════════════════
+var perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
 {
-    var perfil = control_juego.perfiles_personaje[? personajes[indice_personaje]];
     var _datos_clase = scr_datos_clases(perfil.clase);
 
     var _panel_x = w_gui - 440;

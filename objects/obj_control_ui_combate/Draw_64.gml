@@ -370,13 +370,23 @@ if (variable_struct_exists(en, "mecanicas") && is_array(en.mecanicas) && array_l
 // ╚═══════════════════════════════════════════════════════════════╝
 if (!control_combate.combate_terminado || control_combate.fin_fase < 2) {
 
+    // Aplicar shockwave al fondo si hay onda activa
+    var _shockwave_on = scr_shaders_dibujar_fondo_fx();
+    if (_shockwave_on) shader_reset();
+
     // Aplicar zoom de impacto (centrado en pantalla)
     scr_fx_zoom_aplicar();
+
+    // Partículas ambientales (debajo de sprites)
+    scr_particulas_dibujar_bajo();
 
     scr_feedback_dibujar_sprites();
 
     // Partículas de impacto (sobre los sprites)
     scr_fx_particulas_dibujar();
+
+    // Partículas extendidas (trail, esencia, muerte — sobre sprites)
+    scr_particulas_dibujar_sobre();
 
     // Restaurar zoom de impacto
     scr_fx_zoom_restaurar();

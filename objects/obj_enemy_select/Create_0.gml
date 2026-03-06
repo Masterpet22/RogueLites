@@ -36,7 +36,9 @@ var _all_jefe = [
 	"Sentinela del Cielo Roto",	 // Rayo + Luz
 "Oraculo Quebrado del Abismo", // Sombra + Arcano
     "Heraldo de la Llama Negra",    // Fuego + Sombra
-    "Leviatan Esporal"               // Planta + Rayo
+    "Leviatan Esporal",              // Planta + Rayo
+    "El Devorador",                  // Jefe Final
+    "El Primer Conductor"            // Jefe Secreto
 ];
 
 // Filtrar: solo mostrar los desbloqueados

@@ -1,15 +1,15 @@
-# Camino del Héroe — Documentación Técnica Completa
+# Camino del Héroe (Modo Historia) — Documentación Técnica Completa
 
 > **Versión:** 2.0 (Mapa Ramificado)  
 > **Fecha de implementación:** Marzo 2026 (v2: Junio 2026)  
-> **Modo:** Principal (Roguelite narrativo)  
+> **Modo:** Principal — **"Camino del Héroe" ES el modo Historia del juego.**  
 > **Referencia base:** Patrón de `obj_control_torre` / `rm_torre`
 
 ---
 
 ## 1. Resumen General
 
-**Camino del Héroe** es el modo principal de juego de ARCADIUM. Es un modo roguelite narrativo estructurado en **5 capítulos** que recorre los 8 dominios elementales del mundo, culminando en el enfrentamiento contra **El Devorador** y un posible jefe secreto.
+**Camino del Héroe** es el **modo Historia** (principal) del juego ARCADIUM. Es un modo roguelite narrativo estructurado en **5 capítulos** que recorre los 8 dominios elementales del mundo, culminando en el enfrentamiento contra **El Devorador** y un posible jefe secreto.
 
 ### Diferencias clave con Torre
 

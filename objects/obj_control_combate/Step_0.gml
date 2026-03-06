@@ -287,6 +287,12 @@ scr_feedback_actualizar();
 scr_fx_zoom_actualizar();
 scr_fx_particulas_actualizar();
 
+// 3g. Actualizar partículas extendidas (trail, esencia, muerte, ambiental)
+scr_particulas_actualizar();
+
+// 3h. Actualizar shaders temporales (shockwave, chromatic)
+scr_shaders_actualizar();
+
 
 // 4. Comprobar fin de combate
 

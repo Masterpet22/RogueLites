@@ -169,6 +169,14 @@
       "name": "ui",
       "resourceType": "GMFolder",
       "resourceVersion": "2.0"
+    },
+    {
+      "$GMFolder": "",
+      "%Name": "shaders",
+      "folderPath": "folders/shaders.yy",
+      "name": "shaders",
+      "resourceType": "GMFolder",
+      "resourceVersion": "2.0"
     }
   ],
   "ForcedPrefabProjectReferences": [],
@@ -1393,6 +1401,56 @@
       "id": {
         "name": "scr_barks_combate",
         "path": "scripts/scr_barks_combate/scr_barks_combate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_shaders_combate",
+        "path": "scripts/scr_shaders_combate/scr_shaders_combate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_particulas_combate",
+        "path": "scripts/scr_particulas_combate/scr_particulas_combate.yy"
+      }
+    },
+    { "id": { "name": "shd_flash", "path": "shaders/shd_flash/shd_flash.yy" } },
+    { "id": { "name": "shd_glow", "path": "shaders/shd_glow/shd_glow.yy" } },
+    {
+      "id": {
+        "name": "shd_outline",
+        "path": "shaders/shd_outline/shd_outline.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "shd_desaturate",
+        "path": "shaders/shd_desaturate/shd_desaturate.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "shd_color_tint",
+        "path": "shaders/shd_color_tint/shd_color_tint.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "shd_chromatic",
+        "path": "shaders/shd_chromatic/shd_chromatic.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "shd_energy_aura",
+        "path": "shaders/shd_energy_aura/shd_energy_aura.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "shd_shockwave",
+        "path": "shaders/shd_shockwave/shd_shockwave.yy"
       }
     }
   ],
