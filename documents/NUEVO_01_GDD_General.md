@@ -223,7 +223,7 @@ Cada uno tiene habilidad fija de clase, afinidad pasiva y Súper-Habilidad perso
 
 ### 9.1. Enemigos Comunes (8)
 
-Un enemigo por afinidad. Cada uno con 1 habilidad fija + 1 secundaria. Dropean material común (+ chance de raro).
+Un enemigo por afinidad. Cada uno con **3 habilidades** (ataque básico + habilidad fija + habilidad secundaria). Dropean material común (+ chance de raro).
 
 | Enemigo                  | Afinidad |
 | ------------------------ | -------- |
@@ -268,6 +268,20 @@ Combinan 2 afinidades con 4 habilidades (2 por afinidad) y mecánica temática. 
 - Imita estilos de clase del jugador.
 - Manipula ESENCIA y ritmo del combate.
 - El jefe más difícil del juego.
+
+#### Jefe 7 — Heraldo de la Llama Negra
+
+- Afinidad: Fuego + Sombra.
+- 4 habilidades: Pulso de Fuego Negro, Llama Consumidora, Sombra Abrasadora, Detonación Oscura.
+- Mecánica temática: combina daño de fuego con debuffs de sombra.
+- Jefe de alto daño AoE con quemadura y supresión.
+
+#### Jefe 8 — Leviatán Esporal
+
+- Afinidad: Planta + Agua.
+- 4 habilidades: Zarpa Esporal, Marea de Esporas, Raíz Abisal, Diluvio Fúngico.
+- Mecánica temática: regeneración constante + veneno acumulativo.
+- Jefe tanque con curación y DoT persistente.
 
 ---
 
@@ -660,3 +674,52 @@ Clases ← Afinidades ← Personalidades ← ESENCIA ←
 | 8    | Armas legendarias (R3)                        |
 | 9    | Camino del Héroe (roguelite)                  |
 | 10   | El Devorador (jefe final)                     |
+
+---
+
+## 25. Mecánicas de Combate Adicionales (Implementadas)
+
+### 25.1. Sincronía Elemental
+
+Cuando el jugador y su arma comparten la misma afinidad, se activa la **Sincronía Elemental**, que otorga un bonus pasivo al daño elemental y a la carga de esencia.
+
+### 25.2. Sistema de Combos
+
+Al golpear repetidamente dentro de una ventana de tiempo (1s por defecto), se acumula un **contador de combos**. Cada golpe consecutivo dentro de la ventana incrementa el combo. El combo se reinicia si la ventana expira o si el enemigo realiza un parry exitoso. Activar la pasiva de Rayo requiere alcanzar 3+ hits en combo.
+
+### 25.3. Barks de Combate
+
+Texto flotante no bloqueante que aparece durante el combate como comentarios cortos de los personajes. Se muestran como texto animado sobre el sprite del hablante con fade-in/fade-out. Se disparan en eventos como inicio de combate, uso de habilidades especiales y cambios de fase.
+
+### 25.4. Diálogo Mid-Combat (50% HP)
+
+Una vez por combate, cuando cualquiera de los dos luchadores alcanza el 50% de vida, se activa un **diálogo bloqueante** (pausa el combate). Se elige un hablante al azar:
+
+- Si el hablante **va ganando** (tiene más % de HP), dice frases confiadas ("¡Ya eres mío!", "¿Eso es todo lo que tienes?").
+- Si el hablante **va perdiendo**, dice frases de resistencia ("No... aún no termino...", "¡No pienso rendirme!").
+
+El diálogo dura 3 segundos y puede saltarse con ENTER. Se muestra un cuadro de diálogo con el nombre del hablante, borde de color (azul=jugador, rojo=enemigo) y fade-in/fade-out.
+
+### 25.5. Parry Enemigo + Anti-Spam IA
+
+Los enemigos tienen una probabilidad de **parry** basada en su rareza:
+
+| Rareza | Probabilidad de Parry |
+| ------ | --------------------- |
+| Común  | 6%                    |
+| Élite  | 12%                   |
+| Jefe   | 20%                   |
+
+Cuando el enemigo realiza un parry exitoso, el daño se **reduce en un 70%**. Además, el sistema anti-spam detecta si el jugador repite la misma habilidad consecutivamente y otorga un pequeño bonus al chance de parry del enemigo.
+
+### 25.6. Zoom Dinámico en Súper
+
+Al activar una Súper-Habilidad, la cámara realiza un **zoom suave** centrado en el atacante. El zoom se combina con el hitstop existente (12 frames) para crear un efecto cinematográfico.
+
+### 25.7. Blur de Escenario en Súper
+
+Durante la activación de una Súper-Habilidad, se aplica un **oscurecimiento + tinte elemental** al fondo del escenario. Esto enfatiza al personaje que ejecuta la súper. El efecto dura aproximadamente 0.6 segundos adicionales tras el hitstop y se desvanece gradualmente.
+
+### 25.8. Centralización Dinámica del Súper
+
+Cuando se ejecuta un Súper, el foco de la cámara se centra en **quien lo ejecuta**, sea jugador o enemigo. Antes, el foco estaba fijo en el jugador (foco_quien=1); ahora se determina dinámicamente según el atacante.

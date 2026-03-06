@@ -84,7 +84,20 @@ Creado por `scr_crear_enemigo_combate`. Estructura análoga al personaje con adi
     ia_timer: real,
     ia_cooldown: real,
     patron: array,              // (solo jefes) secuencia de acciones
-    p_index: real               // (solo jefes) índice actual del patrón
+    p_index: real,              // (solo jefes) índice actual del patrón
+
+    // Parry Enemigo
+    parry_chance: real,         // 0.06 común, 0.12 élite, 0.20 jefe
+    parry_cd_timer: real,       // cooldown entre parries
+
+    // Anti-Spam IA
+    antispam_ultima_hab: string,
+    antispam_repeticiones: real,
+    antispam_bloqueo_bonus: real,  // bonus al parry si spamea
+
+    // Combo tracking
+    combo: real,
+    timer_combo: real
 }
 ```
 
@@ -146,12 +159,16 @@ Devuelto por `scr_datos_enemigos`:
     poder_elemental: real,
     afinidad: string,
     habilidad_fija: string,
-    habilidad_secundaria: string,  // solo élites
+    habilidad_secundaria: string,  // habilidad 2
+    habilidad_3: string,           // habilidad 3 (comunes/élites/jefes)
+    habilidad_4: string,           // habilidad 4 (solo jefes)
     drops: [                       // array con probabilidades
         { material: string, cant_min: real, cant_max: real, chance: real }
     ]
 }
 ```
+
+> **Nota:** Todos los enemigos comunes tienen mínimo 3 habilidades (básico + fija + secundaria). Los jefes tienen 4+.
 
 ### 2.8. Estado Alterado (Datos)
 
@@ -304,8 +321,14 @@ Devueltos por `scr_datos_torre`:
 │ │
 │ 5. IA DEL ENEMIGO │
 │ └─ Decrementa ia_timer │
-│ └─ Si ia_timer <= 0 → usa habilidad_fija │
+│ └─ Si ia_timer <= 0 → usa habilidad (prioridad) │
+│ └─ Evalúa parry_chance + anti-spam │
 │ └─ Resetea ia_timer = ia_cooldown │
+│ │
+│ 5b. BARKS + DIÁLOGO MID-COMBAT │
+│ └─ scr_barks_actualizar (texto flotante) │
+│ └─ scr_dial_mid_actualizar (50% HP, bloqueante) │
+│ └─ Si diálogo activo → exit (pausa combate) │
 │ │
 │ 6. VERIFICAR FIN DE COMBATE │
 │ └─ Si vida_actual <= 0 → determinar ganador │
@@ -574,9 +597,11 @@ if (personaje_enemigo.vida_actual > 0 && personaje_jugador.vida_actual > 0) {
 
 Composición de habilidades por categoría:
 
-- **Comunes:** `["ataque_basico", habilidad_fija]` — 2 habilidades
-- **Élites:** `["ataque_basico", habilidad_fija, habilidad_secundaria]` — 3 habilidades (la secundaria aplica estados)
-- **Jefes:** `["ataque_basico", habilidad_fija]` — 2 habilidades (con mecánicas temáticas)
+- **Comunes:** `["ataque_basico", habilidad_fija, habilidad_secundaria]` — 3 habilidades
+- **Élites:** `["ataque_basico", habilidad_fija, habilidad_secundaria, habilidad_3]` — 3–4 habilidades (aplican estados)
+- **Jefes:** `["ataque_basico", habilidad_fija, habilidad_secundaria, habilidad_3, habilidad_4]` — 4–5 habilidades (con mecánicas temáticas)
+
+> **Nota:** Cada enemigo tiene mínimo 3 habilidades con cooldowns independientes. Los jefes nuevos (Heraldo, Leviatán) tienen 4 habilidades propias.
 
 ### 8.2. IA de Jefes (Patrones)
 
@@ -618,6 +643,8 @@ Al activar Súper:
 - **Hitstop:** 0.2s de congelamiento total (12 frames a 60fps)
 - **Screenshake:** Sacudida fuerte durante 0.33s
 - **Flash elemental:** Pantalla completa con color de energía de la afinidad
+- **Foco dinámico:** La cámara se centra en quien ejecuta la súper (`foco_quien` = 1 jugador / 2 enemigo), determinado dinámicamente por `_atacante.es_jugador`
+- **Blur de escenario:** Overlay oscuro (25% alpha) + tinte elemental (8% alpha) sobre el fondo, dura ~0.6s tras el hitstop, fade-out gradual en los últimos 10 frames
 
 ### 9.3. Sistema de Paleta por Afinidad
 
@@ -827,3 +854,189 @@ for (var i = 0; i < array_length(_enemigo.mecanicas); i++) {
     }
 }
 ```
+
+---
+
+## 15. Sistema de Barks y Diálogo Mid-Combat
+
+### 15.1. Barks de Combate (`scr_barks_combate`)
+
+Sistema de texto flotante **no bloqueante** que muestra comentarios cortos de los personajes durante el combate.
+
+**Inicialización** (`scr_barks_init`):
+
+- `bark_activo`, `bark_quien` (1=jugador, 2=enemigo), `bark_texto`, `bark_timer`, `bark_alpha`
+- `bark_disparado_*` — flags para evitar repetir barks en el mismo combate
+
+**Actualización** (`scr_barks_actualizar`):
+
+- Se evalúan condiciones cada frame (inicio de combate, uso de súper, 50% HP, etc.)
+- Al dispararse, se asigna texto + duración y se muestra sobre el sprite correspondiente
+
+**Render** (`scr_barks_dibujar`):
+
+- Texto con `draw_text_ext` sobre el actor, con alpha progresivo y sombra
+
+### 15.2. Diálogo Mid-Combat (50% HP)
+
+Sistema **bloqueante** que pausa el combate cuando cualquiera de los dos alcanza 50% HP. Se activa **una sola vez** por combate.
+
+**Macros:**
+
+- `DIAL_MID_DURACION` = 180 frames (3 segundos)
+- `DIAL_MID_FADE` = 15 frames (fade-in/fade-out)
+
+**Variables** (en `scr_barks_init`):
+
+- `dial_mid_activo`, `dial_mid_disparado`, `dial_mid_frases`, `dial_mid_indice`, `dial_mid_timer`
+
+**Funciones:**
+
+| Función                   | Descripción                                                                                                                                                 |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scr_dial_mid_iniciar`    | Selecciona hablante aleatorio, determina si gana/pierde por % HP, elige frases                                                                              |
+| `scr_dial_mid_actualizar` | Update bloqueante: si activo retorna `true` (pausa Step), avanza timer, Enter skip                                                                          |
+| `scr_dial_mid_activo`     | Query rápido: `return _c.dial_mid_activo`                                                                                                                   |
+| `scr_dial_mid_dibujar`    | Renderiza cuadro de diálogo: overlay oscuro, rectángulo redondeado, borde color (azul=jugador, rojo=enemigo), nombre, texto, indicador [ENTER] con parpadeo |
+
+**Frases ganadoras:** "¡Ya eres mío!", "¿Eso es todo lo que tienes?", "Siento tu debilidad...", etc.
+**Frases perdedoras:** "No... aún no termino...", "Esto no puede acabar así...", "¡No pienso rendirme!", etc.
+
+**Integración:**
+
+- En `obj_control_combate/Step_0.gml`: se llama `scr_dial_mid_actualizar()` tras `scr_barks_actualizar`. Si retorna `true`, se ejecuta `exit` (pausa el combate).
+- En `obj_control_ui_combate/Draw_64.gml`: se llama `scr_dial_mid_dibujar()` al final del draw.
+
+---
+
+## 16. Sincronía Elemental
+
+Cuando el jugador y su arma comparten la misma afinidad, se activa un bonus pasivo:
+
+- **Bonus de daño elemental** escalado
+- **Bonus a la carga de ESENCIA**
+
+Se verifica en `scr_crear_personaje_combate` al crear el struct de combate, y se aplica en `scr_calcular_dano` y `scr_actualizar_esencia`.
+
+---
+
+## 17. Sistema de Parry Enemigo + Anti-Spam IA
+
+### 17.1. Parry Enemigo
+
+Los enemigos pueden bloquear parcialmente ataques del jugador. La probabilidad varía por rareza:
+
+| Rareza | `parry_chance` | Reducción de daño |
+| ------ | -------------- | ----------------- |
+| Común  | 0.06 (6%)      | 70%               |
+| Élite  | 0.12 (12%)     | 70%               |
+| Jefe   | 0.20 (20%)     | 70%               |
+
+El cooldown entre parries (`parry_cd_timer`) evita parries consecutivos inmediatos.
+
+### 17.2. Anti-Spam IA
+
+Si el jugador repite la misma habilidad consecutivamente:
+
+```gml
+// En scr_ejecutar_habilidad, al recibir habilidad del jugador:
+if (_id == _def.antispam_ultima_hab) {
+    _def.antispam_repeticiones++;
+    _def.antispam_bloqueo_bonus += 0.02;  // +2% parry por repetición
+} else {
+    _def.antispam_ultima_hab = _id;
+    _def.antispam_repeticiones = 0;
+    _def.antispam_bloqueo_bonus = 0;
+}
+```
+
+El bonus de anti-spam se suma a `parry_chance` para penalizar el spam de una sola habilidad.
+
+---
+
+## 18. Sistema de Combos
+
+### 18.1. Mecánica
+
+Cada vez que el jugador golpea exitosamente dentro de una ventana de tiempo, el contador de combos se incrementa:
+
+```gml
+_p.combo++;
+_p.timer_combo = room_speed * 1.0;  // ventana de 1 segundo
+```
+
+El combo se reinicia cuando:
+
+- La ventana de tiempo expira (`timer_combo` llega a 0)
+- El enemigo realiza un parry exitoso
+
+### 18.2. Efectos del Combo
+
+- **Pasiva de Rayo:** Se activa al alcanzar combo ≥ 3 (`scr_activar_pasiva_afinidad(_p, "hit_rapido")`)
+- **Feedback visual:** Se muestra el contador de combo en la UI (×2, ×3, ×4...)
+
+---
+
+## 19. Zoom Dinámico + Blur en Súper
+
+### 19.1. Centralización Dinámica
+
+`scr_fx_activar_super(_afinidad, _atacante)` ahora recibe el struct del atacante y determina el foco:
+
+```gml
+var _es_jugador = variable_struct_exists(_atacante, "es_jugador") ? _atacante.es_jugador : true;
+_c.foco_quien = _es_jugador ? 1 : 2;  // 1=jugador, 2=enemigo
+```
+
+### 19.2. Blur de Escenario
+
+Variables en `scr_feedback_init`:
+
+- `super_blur_timer` — frames restantes del efecto
+- `super_blur_alpha` — opacidad del overlay (máx 0.85)
+- `super_blur_surface` — reservado para futuro blur por shader
+
+Activación en `scr_fx_activar_super`:
+
+```gml
+_c.super_blur_timer = HITSTOP_SUPER_FRAMES + round(GAME_FPS * 0.6);
+_c.super_blur_alpha = 0.85;
+```
+
+Render en `obj_control_ui_combate/Draw_64.gml` (después del fondo, antes de la UI):
+
+```gml
+if (_c.super_blur_timer > 0) {
+    // Overlay oscuro
+    draw_set_alpha(0.25 * _c.super_blur_alpha);
+    draw_set_colour(c_black);
+    draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+    // Tinte elemental
+    draw_set_alpha(0.08 * _c.super_blur_alpha);
+    draw_set_colour(_c.flash_color);
+    draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+    draw_set_alpha(1);
+}
+```
+
+---
+
+## 20. Jefes Nuevos (Heraldo de la Llama Negra / Leviatan Esporal)
+
+### 20.1. Heraldo de la Llama Negra
+
+| Campo       | Valor                                                                         |
+| ----------- | ----------------------------------------------------------------------------- |
+| Afinidades  | Fuego + Sombra                                                                |
+| HP          | Alto                                                                          |
+| Habilidades | Pulso de Fuego Negro, Llama Consumidora, Sombra Abrasadora, Detonación Oscura |
+
+### 20.2. Leviatán Esporal
+
+| Campo       | Valor                                                         |
+| ----------- | ------------------------------------------------------------- |
+| Afinidades  | Planta + Agua                                                 |
+| HP          | Muy alto                                                      |
+| Habilidades | Zarpa Esporal, Marea de Esporas, Raíz Abisal, Diluvio Fúngico |
+
+Ambos jefes están registrados en `obj_control_juego/Create_0.gml` y `obj_enemy_select/Create_0.gml`, con cooldowns en `scr_cooldown_habilidad` e implementaciones en `scr_ejecutar_habilidad`.

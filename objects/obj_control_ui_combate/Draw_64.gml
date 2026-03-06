@@ -32,6 +32,27 @@ if (!instance_exists(control_combate)) {
         display_get_gui_width() + 8, display_get_gui_height() + 8);
 }
 
+// ── Blur de escenario durante súper (surface-based fake blur) ──
+if (control_combate.super_blur_timer > 0 && control_combate.super_blur_alpha > 0) {
+    var _gw = display_get_gui_width();
+    var _gh = display_get_gui_height();
+    var _blur_a = control_combate.super_blur_alpha;
+
+    // Dibujar múltiples copias semi-transparentes del fondo con offset para simular blur
+    draw_set_alpha(_blur_a * 0.25);
+    draw_set_color(c_black);
+    draw_rectangle(0, 0, _gw, _gh, false);
+
+    // Desaturar ligeramente con tinte del color elemental del flash
+    if (variable_struct_exists(control_combate, "flash_pantalla_color")) {
+        draw_set_color(control_combate.flash_pantalla_color);
+        draw_set_alpha(_blur_a * 0.08);
+        draw_rectangle(0, 0, _gw, _gh, false);
+    }
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}
+
 draw_set_font(fnt_1);
 
 var pj = control_combate.personaje_jugador;
@@ -1074,6 +1095,9 @@ if (!control_combate.combate_terminado) {
 
     // Barks de combate (diálogos flotantes no bloqueantes)
     scr_barks_dibujar();
+
+    // Diálogo mid-combat (bloqueante, 50% HP)
+    scr_dial_mid_dibujar();
 } else {
     // Limpiar notificaciones y feedbacks para que no se acumulen al volver
     control_combate.notificaciones = [];

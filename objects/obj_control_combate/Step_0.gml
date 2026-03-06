@@ -115,6 +115,13 @@ if (personaje_enemigo.combo_timer > 0) {
 // Actualizar barks de combate
 scr_barks_actualizar();
 
+// ── DIÁLOGO MID-COMBAT (50% HP): bloquear combate mientras esté activo ──
+if (scr_dial_mid_actualizar()) {
+    scr_fx_zoom_actualizar();
+    scr_fx_particulas_actualizar();
+    exit;
+}
+
 // Reducir timer del enemigo manualmente si no se hace en scr_actualizar
 // (Ya no se necesita — los CDs del enemigo los gestiona scr_actualizar_personaje)
 

@@ -383,7 +383,7 @@ function scr_ejecutar_super(_atk, _def) {
     // ═══ FX VISUAL DE SÚPER ═══
     // Hitstop (0.2s) + screenshake + flash elemental de pantalla
     var _afi_super = variable_struct_exists(_atk, "afinidad") ? _atk.afinidad : "Neutra";
-    scr_fx_activar_super(_afi_super);
+    scr_fx_activar_super(_afi_super, _atk);
 
     // Bark de combate: línea de diálogo al usar la súper
     scr_bark_on_super(_atk);

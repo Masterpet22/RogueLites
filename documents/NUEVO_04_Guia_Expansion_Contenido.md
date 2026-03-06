@@ -241,9 +241,10 @@ scr_inventario_agregar_material(control_juego, personaje_enemigo.material_drop, 
 
 ### Checklist rápido — Enemigo
 
-- [ ] Datos en `scr_datos_enemigos`
+- [ ] Datos en `scr_datos_enemigos` (mín. 3 habilidades: básico + fija + secundaria)
 - [ ] Registrado en `obj_enemy_select` (categoría correcta)
 - [ ] Habilidad(es) implementadas en `scr_ejecutar_habilidad`
+- [ ] Cooldowns en `scr_cooldown_habilidad`
 - [ ] Material de drop existente o creado
 
 ---
@@ -392,14 +393,16 @@ Cada modo solo altera:
 
 ### Jefes pendientes
 
-| #   | Jefe                        | Afinidades      | Material Único          | Estado  |
-| --- | --------------------------- | --------------- | ----------------------- | ------- |
-| 1   | Titán de las Forjas Rotas   | Fuego + Tierra  | Núcleo de Forja Antigua | ✔ Datos |
-| 2   | Coloso del Fango Viviente   | Agua + Planta   | Corazón de Fango        | ✔ Datos |
-| 3   | Sentinela del Cielo Roto    | Rayo + Luz      | Fragmento Celestial     | ✔ Datos |
-| 4   | Oráculo Quebrado del Abismo | Sombra + Arcano | Cristal del Vacío       | ✔ Datos |
-| 5   | El Devorador                | Ninguna         | —                       | ✔ Datos |
-| 6   | El Primer Conductor         | Ninguna         | —                       | ✔ Datos |
+| #   | Jefe                        | Afinidades      | Material Único          | Estado                     |
+| --- | --------------------------- | --------------- | ----------------------- | -------------------------- |
+| 1   | Titán de las Forjas Rotas   | Fuego + Tierra  | Núcleo de Forja Antigua | ✔ Datos                    |
+| 2   | Coloso del Fango Viviente   | Agua + Planta   | Corazón de Fango        | ✔ Datos                    |
+| 3   | Sentinela del Cielo Roto    | Rayo + Luz      | Fragmento Celestial     | ✔ Datos                    |
+| 4   | Oráculo Quebrado del Abismo | Sombra + Arcano | Cristal del Vacío       | ✔ Datos                    |
+| 5   | El Devorador                | Ninguna         | —                       | ✔ Datos                    |
+| 6   | El Primer Conductor         | Ninguna         | —                       | ✔ Datos                    |
+| 7   | Heraldo de la Llama Negra   | Fuego + Sombra  | —                       | ✔ Datos + IA + Habilidades |
+| 8   | Leviatán Esporal            | Planta + Agua   | —                       | ✔ Datos + IA + Habilidades |
 
 ---
 

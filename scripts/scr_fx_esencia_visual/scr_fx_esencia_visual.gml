@@ -123,11 +123,12 @@ function scr_fx_esencia_actualizar() {
 
 
 // ══════════════════════════════════════════════════════════════
-//  scr_fx_activar_super()
+//  scr_fx_activar_super(afinidad, [atacante])
 //  Llamar cuando se ejecuta una Súper-Habilidad.
-//  Activa: hitstop + screenshake + flash elemental.
+//  Activa: hitstop + screenshake + flash elemental + zoom + blur.
+//  Si se pasa _atacante, el foco se centra en él (jugador o enemigo).
 // ══════════════════════════════════════════════════════════════
-function scr_fx_activar_super(_afinidad) {
+function scr_fx_activar_super(_afinidad, _atacante) {
     if (!instance_exists(obj_control_combate)) return;
     var _c = instance_find(obj_control_combate, 0);
 
@@ -145,18 +146,26 @@ function scr_fx_activar_super(_afinidad) {
     _c.flash_pantalla_color = _paleta.energia;
     _c.flash_pantalla_alpha = 0.6;
 
-    // ── Zoom dinámico: close-up al atacante, oscurecer fondo ──
-    // El jugador siempre usa la súper, así que foco en jugador
-    _c.foco_quien      = 1;      // 1 = jugador
+    // ── Zoom dinámico: close-up al atacante, oscurecer al otro ──
+    // Determinar quién usa la súper (jugador o enemigo)
+    var _es_jugador = true;
+    if (_atacante != undefined && variable_struct_exists(_atacante, "es_jugador")) {
+        _es_jugador = _atacante.es_jugador;
+    }
+    _c.foco_quien      = _es_jugador ? 1 : 2;
     _c.foco_escala_obj = 1.2;    // zoom 20%
-    _c.foco_dim_obj    = 0.25;   // oscurecer al enemigo al 25% alpha
+    _c.foco_dim_obj    = 0.25;   // oscurecer al otro al 25% alpha
     _c.foco_vel        = 0.08;   // interpolación rápida
 
     // Auto-restaurar foco después del hitstop (programar restauración)
     _c.foco_super_restore_timer = HITSTOP_SUPER_FRAMES + round(GAME_FPS * 0.8);
 
+    // ── Blur del escenario (surface-based) ──
+    _c.super_blur_timer = HITSTOP_SUPER_FRAMES + round(GAME_FPS * 0.6);
+    _c.super_blur_alpha = 0.85;
+
     // Efecto FX de súper
-    scr_feedback_fx(true, "super");
+    scr_feedback_fx(_es_jugador, "super");
 }
 
 

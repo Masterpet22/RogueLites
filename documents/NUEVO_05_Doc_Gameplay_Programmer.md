@@ -272,13 +272,17 @@ if (keyboard_check_pressed(ord("R")) && jugador.esencia >= 100) {
 
 ### 6.3. FX Visual de la Súper (Automático)
 
-Al ejecutar una súper, `scr_ejecutar_super` llama a `scr_fx_activar_super()` que activa:
+Al ejecutar una súper, `scr_ejecutar_super` llama a `scr_fx_activar_super(_afinidad, _atacante)` que activa:
 
 - **Hitstop:** 12 frames (~0.2s) de congelamiento total del combate
 - **Screenshake:** 20 frames de sacudida fuerte (12px)
 - **Flash elemental:** Pantalla completa con el color de energía de la afinidad del atacante
+- **Foco dinámico:** Centraliza la cámara en quien ejecuta la súper (`foco_quien` se determina por `_atacante.es_jugador`)
+- **Blur de escenario:** Overlay oscuro (25% alpha) + tinte elemental (8% alpha) sobre el fondo; dura ~0.6s tras el hitstop, fade-out gradual
 
 Estos efectos se gestionan automáticamente por `scr_fx_esencia_visual` y `scr_feedback_combate`.
+
+> **Nota:** El foco ya no está fijo en el jugador. Si un enemigo (jefe) ejecuta súper, el foco se centra en él.
 
 ### 6.4. Implementar una Súper-Habilidad
 
@@ -450,8 +454,9 @@ if (personaje_enemigo.vida_actual > 0 && personaje_jugador.vida_actual > 0) {
 
 Composición de habilidades:
 
-- **Comunes:** `["ataque_basico", habilidad_fija]` — 2 habilidades
-- **Élites:** `["ataque_basico", habilidad_fija, habilidad_secundaria]` — 3 habilidades (secundaria aplica estados)
+- **Comunes:** `["ataque_basico", habilidad_fija, habilidad_secundaria]` — 3 habilidades
+- **Élites:** `["ataque_basico", habilidad_fija, habilidad_secundaria, habilidad_3]` — 3–4 habilidades (secundaria aplica estados)
+- **Jefes:** 4–5 habilidades con mecánicas temáticas
 
 ### 9.2. IA por Patrones (Jefes)
 
@@ -501,18 +506,18 @@ jugador.pasiva_cooldown = room_speed * 8;
 
 ## 10. Mecánicas Avanzadas de Combate
 
-### 10.1. Sistema de Combos
+### 10.1. Sistema de Combos (Implementado)
 
-Para clases como Filotormenta o afinidad Rayo:
+El sistema de combos está completamente implementado. Funciona para todas las clases y afinidades:
 
 ```gml
 // En el struct del personaje:
 combo: 0,
 timer_combo: 0
 
-// Al usar habilidad exitosamente:
-_p.combo++;
-_p.timer_combo = room_speed * 1.0;  // ventana de combo
+// Al usar habilidad exitosamente (en scr_ejecutar_habilidad):
+_atk.combo++;
+_atk.timer_combo = room_speed * 1.0;  // ventana de 1 segundo
 
 // En scr_actualizar_personaje:
 if (_p.timer_combo > 0) {
@@ -526,6 +531,13 @@ if (_p.combo >= 3) {
     scr_activar_pasiva_afinidad(_p, "hit_rapido");
 }
 ```
+
+**Reset de combo:** El combo se reinicia a 0 cuando:
+
+- La ventana de tiempo expira (`timer_combo` = 0)
+- El enemigo realiza un parry exitoso contra el jugador
+
+**Feedback visual:** El contador de combo se muestra en la UI del combate (×2, ×3, etc.).
 
 ### 10.2. Habilidades con Carga (Hold/Charge)
 
@@ -549,7 +561,9 @@ if (keyboard_check_released(vk_space) && jugador.cargando) {
 }
 ```
 
-### 10.3. Parries y Contraataques (Duelista)
+### 10.3. Parries y Contraataques (Implementado)
+
+**Parry del Jugador (Duelista):**
 
 ```gml
 // Estado de parry (ventana corta):
@@ -564,6 +578,26 @@ if (_defensor.en_parry) {
     return;  // No recibe daño
 }
 ```
+
+**Parry del Enemigo (Todos los enemigos):**
+
+Los enemigos también pueden realizar parries con probabilidad basada en rareza:
+
+| Rareza | `parry_chance` | Reducción de daño |
+| ------ | -------------- | ----------------- |
+| Común  | 6%             | 70%               |
+| Élite  | 12%            | 70%               |
+| Jefe   | 20%            | 70%               |
+
+El parry enemigo se evalúa en `scr_ejecutar_habilidad` antes de aplicar daño. Si el parry tiene éxito:
+
+- Daño se reduce al 30% del original
+- El combo del jugador se resetea a 0
+- Se aplica cooldown al parry (`parry_cd_timer`)
+
+**Sistema Anti-Spam:**
+
+Si el jugador repite la misma habilidad, el enemigo gana +2% de parry_chance por repetición consecutiva (`antispam_bloqueo_bonus`). Esto incentiva al jugador a variar sus habilidades.
 
 ### 10.4. Integrar Animaciones sin Romper Lógica
 
@@ -627,11 +661,12 @@ fx.duracion = room_speed * 0.5;
 
 ### FX Visual y Feedback
 
-| Script                  | Descripción                                           |
-| ----------------------- | ----------------------------------------------------- |
-| `scr_feedback_combate`  | Números flotantes, shake, flash, tracking de vida     |
-| `scr_fx_esencia_visual` | Glow elemental, hitstop, flash pantalla, aura esencia |
-| `scr_paleta_afinidad`   | Colores dominante/secundario/energía por afinidad     |
+| Script                  | Descripción                                             |
+| ----------------------- | ------------------------------------------------------- |
+| `scr_feedback_combate`  | Números flotantes, shake, flash, tracking de vida, blur |
+| `scr_fx_esencia_visual` | Glow elemental, hitstop, flash pantalla, aura esencia   |
+| `scr_paleta_afinidad`   | Colores dominante/secundario/energía por afinidad       |
+| `scr_barks_combate`     | Barks flotantes + diálogo mid-combat (50% HP)           |
 
 ### Datos
 
@@ -682,3 +717,56 @@ fx.duracion = room_speed * 0.5;
 
 □ ¿Afecta la IA del enemigo?
 → obj_control_combate (Step, sección IA)
+
+---
+
+## 13. Sistema de Barks de Combate
+
+### 13.1. Concepto
+
+Textos flotantes no bloqueantes que aparecen sobre los personajes durante el combate. Gestionados por `scr_barks_combate`.
+
+### 13.2. Scripts
+
+| Función                | Descripción                                             |
+| ---------------------- | ------------------------------------------------------- |
+| `scr_barks_init`       | Inicializa variables de barks y diálogo mid-combat      |
+| `scr_barks_actualizar` | Evalúa condiciones de trigger (inicio, súper, 50% HP)   |
+| `scr_barks_dibujar`    | Renderiza texto flotante sobre actor con alpha y sombra |
+
+### 13.3. Agregar un Bark Nuevo
+
+1. Añadir flag `bark_disparado_*` en `scr_barks_init`
+2. Añadir condición de trigger en `scr_barks_actualizar`
+3. Asignar `bark_texto`, `bark_quien`, `bark_timer`
+
+---
+
+## 14. Diálogo Mid-Combat (50% HP)
+
+Sistema bloqueante que pausa el combate cuando cualquiera alcanza 50% HP. Se activa una sola vez por combate.
+
+### 14.1. Scripts
+
+| Función                   | Descripción                                                    |
+| ------------------------- | -------------------------------------------------------------- |
+| `scr_dial_mid_iniciar`    | Selecciona hablante aleatorio, detecta tono ganador/perdedor   |
+| `scr_dial_mid_actualizar` | Update bloqueante: retorna `true` mientras diálogo esté activo |
+| `scr_dial_mid_dibujar`    | Renderiza cuadro de diálogo completo con fade y nombre         |
+
+### 14.2. Integración en el Pipeline
+
+```gml
+// En obj_control_combate/Step_0.gml, después de scr_barks_actualizar():
+if (scr_dial_mid_actualizar()) {
+    scr_fx_zoom_actualizar();
+    scr_fx_particulas_actualizar();
+    exit;  // Pausa el combate
+}
+```
+
+---
+
+## 15. Sincronía Elemental
+
+Bonus pasivo cuando la afinidad del personaje coincide con la de su arma equipada. Se calcula al crear el struct de combate y se aplica automáticamente en el cálculo de daño y carga de esencia.

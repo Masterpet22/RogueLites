@@ -64,6 +64,11 @@ function scr_feedback_init() {
     // Timer para restaurar foco después de zoom de súper
     _c.foco_super_restore_timer = 0;
 
+    // ── Blur de escenario durante súper ──
+    _c.super_blur_timer   = 0;
+    _c.super_blur_alpha   = 0;
+    _c.super_blur_surface = -1;  // surface para blur fake
+
     // Inicializar sistema de esencia visual (glow, hitstop, flash pantalla)
     scr_fx_esencia_init();
 }
@@ -243,6 +248,15 @@ function scr_feedback_actualizar() {
             _c.foco_quien      = 0;
             _c.foco_escala_obj = 1.0;
             _c.foco_dim_obj    = 1.0;
+        }
+    }
+
+    // ── Blur de escenario durante súper ──
+    if (_c.super_blur_timer > 0) {
+        _c.super_blur_timer--;
+        // Fade-out del blur en los últimos 10 frames
+        if (_c.super_blur_timer < 10) {
+            _c.super_blur_alpha = clamp(_c.super_blur_timer / 10, 0, 1) * 0.85;
         }
     }
 
