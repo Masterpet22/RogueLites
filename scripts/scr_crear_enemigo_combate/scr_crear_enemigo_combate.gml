@@ -32,8 +32,26 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
     // Construir array de habilidades dinámicamente
     var _habs = ["ataque_basico", _data_enemigo.habilidad_fija];
     var _cds  = [0, 0];
+
+    // Habilidades adicionales (comunes: habilidad_2, habilidad_3)
+    if (variable_struct_exists(_data_enemigo, "habilidad_2")) {
+        array_push(_habs, _data_enemigo.habilidad_2);
+        array_push(_cds, 0);
+    }
+    if (variable_struct_exists(_data_enemigo, "habilidad_3")) {
+        array_push(_habs, _data_enemigo.habilidad_3);
+        array_push(_cds, 0);
+    }
+
+    // Habilidad secundaria (élites)
     if (variable_struct_exists(_data_enemigo, "habilidad_secundaria")) {
         array_push(_habs, _data_enemigo.habilidad_secundaria);
+        array_push(_cds, 0);
+    }
+
+    // Habilidad 4 (jefes)
+    if (variable_struct_exists(_data_enemigo, "habilidad_4")) {
+        array_push(_habs, _data_enemigo.habilidad_4);
         array_push(_cds, 0);
     }
 
@@ -75,6 +93,14 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
         parry_timer:       0,
         gcd_timer:         0,
 
+        // ── Parry enemigo (probabilístico) ──
+        parry_chance:      (_rango == "Jefe") ? 0.20 : ((_rango == "Elite") ? 0.12 : 0.06),
+        parry_cd_timer:    0,      // cooldown entre parries del enemigo
+
+        // ── Anti-spam: tracking de habilidades del jugador ──
+        antispam_tracking: ds_map_create(),  // {hab_id → uso_consecutivo}
+        antispam_bloqueo_bonus: 0,           // bonus de bloqueo acumulado
+
         // ── Stun ──
         stun_activo:       false,
         stun_timer:        0,
@@ -94,6 +120,11 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
         carga_drenaje_acum: 0,
         micro_stun_timer:  0,
         hab_actual_id:     "",
+
+        // ── Sistema de Combos ──
+        combo_contador:    0,
+        combo_timer:       0,
+        combo_max:         0,
 
 		habilidades_arma: _habs,
 		habilidades_cd:   _cds,

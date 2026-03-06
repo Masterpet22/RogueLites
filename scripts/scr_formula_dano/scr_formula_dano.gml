@@ -191,6 +191,47 @@ function scr_formula_dano(_atacante, _defensor, _p) {
         _dano_final = scr_parry_evaluar(_defensor, _atacante, _dano_final);
     }
 
+    // ─── Paso 9e2: Parry enemigo (probabilístico) ───
+    // Si el atacante es jugador y el defensor es enemigo en ia_preparando
+    if (_atacante.es_jugador && !_defensor.es_jugador
+        && variable_struct_exists(_defensor, "parry_chance")
+        && _defensor.ia_estado == "ia_preparando"
+        && _defensor.parry_cd_timer <= 0) {
+
+        // Chance base + bonus anti-spam
+        var _chance_total = _defensor.parry_chance + _defensor.antispam_bloqueo_bonus;
+        if (random(1.0) < _chance_total) {
+            _dano_final = round(_dano_final * 0.3);  // Bloqueo parcial: -70% daño
+            _defensor.parry_cd_timer = round(GAME_FPS * 3);  // CD de 3s entre parries
+            scr_notif_agregar(_defensor.nombre, "¡BLOQUEO!", c_aqua);
+            // Resetear combo del jugador
+            _atacante.combo_contador = 0;
+            _atacante.combo_timer = 0;
+            show_debug_message("🛡 ENEMY PARRY: " + _defensor.nombre + " bloquea a " + _atacante.nombre
+                + " (chance=" + string(round(_chance_total*100)) + "%)");
+        }
+    }
+
+    // ─── Paso 9e3: Anti-spam tracking ───
+    // Registrar uso de habilidad del jugador para ajustar bloqueo enemigo
+    if (_atacante.es_jugador && !_defensor.es_jugador
+        && variable_struct_exists(_defensor, "antispam_tracking")
+        && variable_struct_exists(_atacante, "hab_actual_id")
+        && _atacante.hab_actual_id != "") {
+
+        var _hab_usada = _atacante.hab_actual_id;
+        var _map = _defensor.antispam_tracking;
+        var _usos = ds_map_exists(_map, _hab_usada) ? _map[? _hab_usada] : 0;
+        _map[? _hab_usada] = _usos + 1;
+
+        // Si abusa de la misma técnica (3+ usos), aumentar bloqueo
+        if (_usos + 1 >= 3) {
+            _defensor.antispam_bloqueo_bonus = min(0.30, (_usos + 1 - 2) * 0.05);
+        } else {
+            _defensor.antispam_bloqueo_bonus = 0;
+        }
+    }
+
     // ─── Paso 9f: Interrumpir carga del jugador si recibe daño ───
     if (_defensor.es_jugador && variable_struct_exists(_defensor, "carga_activa") && _defensor.carga_activa && _dano_final > 0) {
         scr_carga_interrumpir_por_dano(_defensor);
@@ -224,6 +265,13 @@ function scr_formula_dano(_atacante, _defensor, _p) {
         + " crit=" + string(_mult_crit)
         + (_tipo_crit == -1 ? " [ROZADO]" : "")
         + " FINAL=" + string(_dano_final));
+
+    // ─── Paso 10b: Sistema de Combos ───
+    if (_dano_final > 0) {
+        _atacante.combo_contador++;
+        _atacante.combo_timer = GAME_FPS * 2;  // 2 segundos para mantener combo
+        _atacante.combo_max = max(_atacante.combo_max, _atacante.combo_contador);
+    }
 
     // Generar esencia dinámica
     //   base (del param) + % del daño + bonus velocidad + bonus poder (si mágico)

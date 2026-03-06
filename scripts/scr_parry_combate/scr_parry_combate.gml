@@ -132,6 +132,13 @@ function scr_parry_evaluar(_defensor, _atacante, _dano) {
         show_debug_message("🛡✨ " + _defensor.nombre + " — PARRY PERFECTO vs " + _atacante.nombre
             + " | +energía:" + string(_energia_ganada) + " +esencia:" + string(_esencia_ganada));
 
+        // Resetear combo del atacante (parry rompe racha)
+        _atacante.combo_contador = 0;
+        _atacante.combo_timer = 0;
+
+        // Bark de combate: reacción al parry perfecto
+        scr_bark_on_parry_perfecto(_defensor, _atacante);
+
     } else {
         // ══════════════════════════════════
         //  BLOQUEO (temprano/impreciso)

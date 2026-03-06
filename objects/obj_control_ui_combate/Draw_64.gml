@@ -1012,6 +1012,54 @@ if (control_combate.combate_terminado) {
 }
 
 // ===========================
+//  COMBO COUNTER
+// ===========================
+if (!control_combate.combate_terminado) {
+    // Combo del jugador (esquina izquierda, debajo del retrato)
+    if (pj.combo_contador >= 2) {
+        var _combo_x = 40;
+        var _combo_y = 260;
+        var _combo_alpha = clamp(pj.combo_timer / (GAME_FPS * 0.5), 0.4, 1.0);
+        var _combo_scale = 1.0 + min(pj.combo_contador * 0.05, 0.5);
+
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+        draw_set_alpha(_combo_alpha);
+
+        // Color escala según cantidad
+        var _combo_col = c_white;
+        if (pj.combo_contador >= 10) _combo_col = make_color_rgb(255, 60, 60);
+        else if (pj.combo_contador >= 5) _combo_col = c_orange;
+        else if (pj.combo_contador >= 3) _combo_col = c_yellow;
+
+        draw_set_color(_combo_col);
+        draw_text_transformed(_combo_x, _combo_y, string(pj.combo_contador) + " COMBO", _combo_scale, _combo_scale, 0);
+        draw_set_alpha(1);
+    }
+
+    // Combo del enemigo (esquina derecha)
+    if (en.combo_contador >= 2) {
+        var _en_combo_x = _gui_w - 40;
+        var _en_combo_y = 260;
+        var _en_combo_alpha = clamp(en.combo_timer / (GAME_FPS * 0.5), 0.4, 1.0);
+
+        draw_set_halign(fa_right);
+        draw_set_valign(fa_top);
+        draw_set_alpha(_en_combo_alpha);
+
+        var _en_combo_col = c_white;
+        if (en.combo_contador >= 10) _en_combo_col = make_color_rgb(255, 60, 60);
+        else if (en.combo_contador >= 5) _en_combo_col = c_orange;
+        else if (en.combo_contador >= 3) _en_combo_col = c_yellow;
+
+        draw_set_color(_en_combo_col);
+        draw_text(_en_combo_x, _en_combo_y, string(en.combo_contador) + " COMBO");
+        draw_set_alpha(1);
+        draw_set_halign(fa_left);
+    }
+}
+
+// ===========================
 //  NOTIFICACIONES (ocultar si el combate terminó)
 // ===========================
 if (!control_combate.combate_terminado) {
@@ -1023,6 +1071,9 @@ if (!control_combate.combate_terminado) {
 
     // Diálogos pre-combate (overlay sobre todo)
     scr_dialogos_dibujar();
+
+    // Barks de combate (diálogos flotantes no bloqueantes)
+    scr_barks_dibujar();
 } else {
     // Limpiar notificaciones y feedbacks para que no se acumulen al volver
     control_combate.notificaciones = [];

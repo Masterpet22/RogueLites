@@ -139,12 +139,21 @@ function scr_fx_activar_super(_afinidad) {
     // Screenshake fuerte
     _c.fb_shake_timer[0] = SHAKE_SUPER_FRAMES;
     _c.fb_shake_timer[1] = SHAKE_SUPER_FRAMES;
-    // Temporalmente aumentar la fuerza (se usa en scr_feedback_actualizar)
 
     // Flash elemental de pantalla completa
     _c.flash_pantalla_timer = FLASH_SUPER_FRAMES;
     _c.flash_pantalla_color = _paleta.energia;
     _c.flash_pantalla_alpha = 0.6;
+
+    // ── Zoom dinámico: close-up al atacante, oscurecer fondo ──
+    // El jugador siempre usa la súper, así que foco en jugador
+    _c.foco_quien      = 1;      // 1 = jugador
+    _c.foco_escala_obj = 1.2;    // zoom 20%
+    _c.foco_dim_obj    = 0.25;   // oscurecer al enemigo al 25% alpha
+    _c.foco_vel        = 0.08;   // interpolación rápida
+
+    // Auto-restaurar foco después del hitstop (programar restauración)
+    _c.foco_super_restore_timer = HITSTOP_SUPER_FRAMES + round(GAME_FPS * 0.8);
 
     // Efecto FX de súper
     scr_feedback_fx(true, "super");

@@ -61,6 +61,9 @@ function scr_feedback_init() {
     _c.foco_offset_pj_x_obj = 0; // offset X objetivo del jugador
     _c.foco_offset_en_x_obj = 0; // offset X objetivo del enemigo
 
+    // Timer para restaurar foco después de zoom de súper
+    _c.foco_super_restore_timer = 0;
+
     // Inicializar sistema de esencia visual (glow, hitstop, flash pantalla)
     scr_fx_esencia_init();
 }
@@ -230,6 +233,16 @@ function scr_feedback_actualizar() {
     for (var _f = 0; _f < 2; _f++) {
         if (_c.fb_flash_timer[_f] > 0) {
             _c.fb_flash_timer[_f] -= 1;
+        }
+    }
+
+    // ── Restaurar foco después de zoom de súper ──
+    if (_c.foco_super_restore_timer > 0) {
+        _c.foco_super_restore_timer--;
+        if (_c.foco_super_restore_timer <= 0) {
+            _c.foco_quien      = 0;
+            _c.foco_escala_obj = 1.0;
+            _c.foco_dim_obj    = 1.0;
         }
     }
 

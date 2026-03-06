@@ -77,10 +77,14 @@ function scr_ia_enemigo(_en, _jug) {
 
         // =============================================
         //  ESTADO 2 — PREPARANDO (wind-up)
+        //  ── Enemy Parry: puede bloquearte durante wind-up ──
         // =============================================
         case "ia_preparando":
 
             _en.ia_prep_timer -= 1;
+
+            // Decrementar cooldown de parry enemigo
+            if (_en.parry_cd_timer > 0) _en.parry_cd_timer--;
 
             if (_en.ia_prep_timer <= 0) {
                 _en.ia_estado = "ia_atacando";

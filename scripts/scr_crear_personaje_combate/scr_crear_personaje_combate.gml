@@ -43,6 +43,19 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
     var _sinergia = (_afinidad_arma == _afinidad);   // true/false
     var _mult_sin = _sinergia ? 1.15 : 1.0;
 
+    // ===================================================================
+    // Sincronía elemental: arma de elemento distinto pero compatible
+    //   Desbloquea una habilidad de sincronía adicional
+    // ===================================================================
+    var _sincronia_data = scr_sincronia_elemental(_afinidad, _afinidad_arma);
+    if (_sincronia_data != undefined) {
+        // Aplicar multiplicador de personalidad a la potencia
+        _sincronia_data.potencia *= _pers_data.mult_ataque;
+        array_push(_habilidades, _sincronia_data.nombre_habilidad);
+        array_push(_hab_cd, 0);
+        _cant_hab = array_length(_habilidades);
+    }
+
     // Bonus defensivos del arma (con fallback para armas sin el campo)
     var _def_arma = variable_struct_exists(_arma_data, "defensa_bonus") ? _arma_data.defensa_bonus : 0;
     var _hp_arma  = variable_struct_exists(_arma_data, "vida_bonus")    ? _arma_data.vida_bonus    : 0;
@@ -70,6 +83,7 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
 
         sinergia_arma:  _sinergia,
         sinergia_pasiva_permanente: _sinergia,  // Si hay sinergia, pasiva elemental es permanente
+        sincronia_data: _sincronia_data,  // datos de sincronía elemental (o undefined)
 
         vida_max:       _vida_total,
         vida_actual:    _vida_total,
@@ -113,6 +127,11 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
 
         // ── Tracking de habilidad actual ──
         hab_actual_id:     "",
+
+        // ── Sistema de Combos ──
+        combo_contador:    0,
+        combo_timer:       0,      // frames restantes antes de resetear combo
+        combo_max:         0,      // récord de combo en este combate
 
 		// Buffs / estados
         estados:             [],     // array de estados alterados

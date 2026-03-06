@@ -1382,6 +1382,18 @@
         "name": "spr_slot_runa",
         "path": "sprites/spr_slot_runa/spr_slot_runa.yy"
       }
+    },
+    {
+      "id": {
+        "name": "scr_sincronia_elemental",
+        "path": "scripts/scr_sincronia_elemental/scr_sincronia_elemental.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_barks_combate",
+        "path": "scripts/scr_barks_combate/scr_barks_combate.yy"
+      }
     }
   ],
   "resourceType": "GMProject",

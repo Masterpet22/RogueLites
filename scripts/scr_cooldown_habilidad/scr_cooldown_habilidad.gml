@@ -80,13 +80,29 @@ function scr_cooldown_habilidad(_id) {
         // 3. HABILIDADES DE ENEMIGOS COMUNES
         // ==========================================
         case "golpe_fuego":             return round(GAME_FPS * 1.0);  // Soldado Igneo
+        case "chispa_ignea":            return round(GAME_FPS * 1.5);  // Soldado Igneo
+        case "escudo_ceniza":           return round(GAME_FPS * 3.0);  // Soldado Igneo
         case "mirada_gelida":           return round(GAME_FPS * 1.2);  // Vigia Boreal
+        case "oleaje_menor":            return round(GAME_FPS * 1.5);  // Vigia Boreal
+        case "rocio_curativo":          return round(GAME_FPS * 4.0);  // Vigia Boreal
         case "rafaga_cortante":         return round(GAME_FPS * 0.8);  // Halito Verde
+        case "espina_veloz":            return round(GAME_FPS * 1.2);  // Halito Verde
+        case "semilla_parasita":        return round(GAME_FPS * 3.5);  // Halito Verde
         case "chispazo":                return round(GAME_FPS * 0.9);  // Bestia Tronadora
+        case "arco_voltaico":           return round(GAME_FPS * 1.5);  // Bestia Tronadora
+        case "aullido_electrico":       return round(GAME_FPS * 3.0);  // Bestia Tronadora
         case "muro_piedra":             return round(GAME_FPS * 2.0);  // Guardian Terracota
+        case "lanzar_rocas":            return round(GAME_FPS * 1.5);  // Guardian Terracota
+        case "temblor_menor":           return round(GAME_FPS * 2.5);  // Guardian Terracota
         case "abrazo_vacio":            return round(GAME_FPS * 1.5);  // Naufrago
+        case "sombra_fugaz":            return round(GAME_FPS * 1.8);  // Naufrago
+        case "pulso_nocturno":          return round(GAME_FPS * 3.0);  // Naufrago
         case "destello_debil":          return round(GAME_FPS * 1.0);  // Paladin Marchito
+        case "golpe_sagrado":           return round(GAME_FPS * 1.5);  // Paladin Marchito
+        case "aura_debilitante":        return round(GAME_FPS * 3.5);  // Paladin Marchito
         case "pulso_arcano":            return round(GAME_FPS * 1.2);  // Errante Runico
+        case "distorsion_arcana":       return round(GAME_FPS * 2.0);  // Errante Runico
+        case "silencio_runico":         return round(GAME_FPS * 3.5);  // Errante Runico
 
         // ==========================================
         // 4. HABILIDADES DE ENEMIGOS ELITE
@@ -145,6 +161,24 @@ function scr_cooldown_habilidad(_id) {
         case "resonancia_conductor":    return round(GAME_FPS * 5.0);
         case "armonia_invertida":       return round(GAME_FPS * 5.0);
         case "genesis_final":           return round(GAME_FPS * 8.0);
+        // ── Heraldo de la Llama Negra ──
+        case "lanza_oscura":            return round(GAME_FPS * 2.0);
+        case "inmolacion_sombria":      return round(GAME_FPS * 3.5);
+        case "cortina_cenizas":         return round(GAME_FPS * 4.0);
+        case "pira_abismal":            return round(GAME_FPS * 6.0);
+        // ── Leviatan Esporal ──
+        case "latigo_electrico":        return round(GAME_FPS * 2.0);
+        case "descarga_esporal":        return round(GAME_FPS * 3.0);
+        case "barrera_fotovoltaica":    return round(GAME_FPS * 4.5);
+        case "genesis_esporal":         return round(GAME_FPS * 6.0);
+
+        // ==========================================
+        // HABILIDADES DE SINCRONÍA ELEMENTAL
+        // ==========================================
+        case "sincronia_magma":          return round(GAME_FPS * 4.0);   // Fuego + Tierra
+        case "sincronia_brote":          return round(GAME_FPS * 3.5);   // Agua + Planta
+        case "sincronia_fulgor":         return round(GAME_FPS * 4.0);   // Rayo + Luz
+        case "sincronia_vacio":          return round(GAME_FPS * 4.5);   // Sombra + Arcano
     }
 
     // Fallback — habilidad sin cooldown registrado

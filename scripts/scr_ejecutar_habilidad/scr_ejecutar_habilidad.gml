@@ -588,6 +588,176 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         }
         break;
 
+        // ── Soldado Igneo — habilidad 2: chispa DoT fuego ──
+        case "chispa_ignea":
+        {
+            var _p = { stat1:"ataque", escala1:0.6, stat2:"ninguno", escala2:0, base_fija:3,
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 3), 0);
+        }
+        break;
+
+        // ── Soldado Igneo — habilidad 3: buff defensa propio ──
+        case "escudo_ceniza":
+        {
+            scr_aplicar_estado(_atacante, "muro_tierra", round(GAME_FPS * 4), 2);
+        }
+        break;
+
+        // ── Vigia Boreal — habilidad 2: ataque de agua ──
+        case "oleaje_menor":
+        {
+            var _p = { stat1:"ataque", escala1:0.8, stat2:"ninguno", escala2:0, base_fija:5,
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "ralentizacion", round(GAME_FPS * 2), 0);
+        }
+        break;
+
+        // ── Vigia Boreal — habilidad 3: curación propia ──
+        case "rocio_curativo":
+        {
+            var _p = { stat1:"ninguno", escala1:0, stat2:"ninguno", escala2:0, base_fija:12,
+                       mult_poder:1.0, esencia_gen:0, es_arma:false };
+            var cura = scr_formula_beneficio(_atacante, _p);
+            _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + cura);
+        }
+        break;
+
+        // ── Halito Verde — habilidad 2: ataque rápido planta ──
+        case "espina_veloz":
+        {
+            var _p = { stat1:"ataque", escala1:1.1, stat2:"ninguno", escala2:0, base_fija:0,
+                       mult_poder:1.0, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+        }
+        break;
+
+        // ── Halito Verde — habilidad 3: veneno DoT ──
+        case "semilla_parasita":
+        {
+            var _p = { stat1:"ataque", escala1:0.4, stat2:"ninguno", escala2:0, base_fija:2,
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "veneno", round(GAME_FPS * 4), 1);
+        }
+        break;
+
+        // ── Bestia Tronadora — habilidad 2: ataque rayo + stun ──
+        case "arco_voltaico":
+        {
+            var _p = { stat1:"ataque", escala1:0.9, stat2:"ninguno", escala2:0, base_fija:5,
+                       mult_poder:1.0, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "aceleracion_rayo", round(GAME_FPS * 0), 0);
+            // Stun visual: ralentizacion breve
+            scr_aplicar_estado(_defensor, "ralentizacion", round(GAME_FPS * 1.5), 0);
+        }
+        break;
+
+        // ── Bestia Tronadora — habilidad 3: aullido = debuff poder ──
+        case "aullido_electrico":
+        {
+            var _p = { stat1:"ninguno", escala1:0, stat2:"ninguno", escala2:0, base_fija:6,
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "supresion_arcana", round(GAME_FPS * 3), 0);
+        }
+        break;
+
+        // ── Guardian Terracota — habilidad 2: ataque rango tierra ──
+        case "lanzar_rocas":
+        {
+            var _p = { stat1:"ataque", escala1:1.2, stat2:"ninguno", escala2:0, base_fija:6,
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+        }
+        break;
+
+        // ── Guardian Terracota — habilidad 3: temblor + ralentizar ──
+        case "temblor_menor":
+        {
+            var _p = { stat1:"ataque", escala1:0.7, stat2:"ninguno", escala2:0, base_fija:4,
+                       mult_poder:1.0, penetracion:0.3, esencia_gen:0, es_arma:false, tipo_dano:"fisico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "ralentizacion", round(GAME_FPS * 2), 0);
+        }
+        break;
+
+        // ── Naufrago — habilidad 2: evasión + ataque sombra ──
+        case "sombra_fugaz":
+        {
+            var _p = { stat1:"ataque", escala1:0.8, stat2:"ninguno", escala2:0, base_fija:5,
+                       mult_poder:1.0, penetracion:0.8, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            // Buff propio: muro defensivo temporal
+            scr_aplicar_estado(_atacante, "muro_tierra", round(GAME_FPS * 2), 1);
+        }
+        break;
+
+        // ── Naufrago — habilidad 3: pulso oscuridad + vulnerabilidad ──
+        case "pulso_nocturno":
+        {
+            var _p = { stat1:"ataque", escala1:0.6, stat2:"ninguno", escala2:0, base_fija:8,
+                       mult_poder:1.0, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "vulnerabilidad", round(GAME_FPS * 3), 0);
+        }
+        break;
+
+        // ── Paladin Marchito — habilidad 2: golpe sagrado fuerte ──
+        case "golpe_sagrado":
+        {
+            var _p = { stat1:"ataque", escala1:1.3, stat2:"ninguno", escala2:0, base_fija:5,
+                       mult_poder:1.0, penetracion:0.3, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+        }
+        break;
+
+        // ── Paladin Marchito — habilidad 3: debuff defensa al jugador ──
+        case "aura_debilitante":
+        {
+            var _p = { stat1:"ninguno", escala1:0, stat2:"ninguno", escala2:0, base_fija:3,
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "vulnerabilidad", round(GAME_FPS * 4), 0);
+        }
+        break;
+
+        // ── Errante Runico — habilidad 2: distorsión arcana ──
+        case "distorsion_arcana":
+        {
+            var _p = { stat1:"ataque", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:10,
+                       mult_poder:1.1, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+        }
+        break;
+
+        // ── Errante Runico — habilidad 3: supresión arcana ──
+        case "silencio_runico":
+        {
+            var _p = { stat1:"ataque", escala1:0.5, stat2:"ninguno", escala2:0, base_fija:5,
+                       mult_poder:1.0, penetracion:0, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "supresion_arcana", round(GAME_FPS * 4), 0);
+        }
+        break;
+
         // ==========================================================
         //  4.  E N E M I G O S   É L I T E
         // ==========================================================
@@ -1096,6 +1266,144 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
             scr_aplicar_estado(_defensor, "ralentizacion", round(GAME_FPS * 3), 0);
             scr_notif_agregar(_atacante.nombre, "¡¡GÉNESIS FINAL!!", make_color_rgb(255, 215, 0));
             show_debug_message("👑 PRIMER CONDUCTOR — ¡¡GÉNESIS FINAL!! (daño " + string(dano) + ", full drain)");
+        }
+        break;
+
+        // ── Heraldo de la Llama Negra ──
+        case "lanza_oscura": // Ataque básico fuego-sombra
+        {
+            var _p = { stat1:"ataque", escala1:1.2, stat2:"ninguno", escala2:0, base_fija:12,
+                       mult_poder:1.2, penetracion:0.3, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+        }
+        break;
+
+        case "inmolacion_sombria": // DoT fuego + vulnerabilidad
+        {
+            var _p = { stat1:"ataque", escala1:0.8, stat2:"poder", escala2:0.5, base_fija:8,
+                       mult_poder:1.1, penetracion:0.2, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 4), 2);
+            scr_aplicar_estado(_defensor, "vulnerabilidad", round(GAME_FPS * 3), 0);
+        }
+        break;
+
+        case "cortina_cenizas": // Buff defensa propio + ralentizar enemigo
+        {
+            scr_aplicar_estado(_atacante, "muro_tierra", round(GAME_FPS * 5), 4);
+            scr_aplicar_estado(_defensor, "ralentizacion", round(GAME_FPS * 3), 0);
+        }
+        break;
+
+        case "pira_abismal": // Ultimate — daño masivo fuego-sombra
+        {
+            var _p = { stat1:"ataque", escala1:2.0, stat2:"poder", escala2:1.0, base_fija:20,
+                       mult_poder:1.4, penetracion:0.5, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 5), 3);
+            scr_aplicar_estado(_defensor, "vulnerabilidad", round(GAME_FPS * 4), 0);
+            scr_notif_agregar(_atacante.nombre, "¡¡PIRA ABISMAL!!", make_color_rgb(180, 40, 20));
+        }
+        break;
+
+        // ── Leviatán Esporal ──
+        case "latigo_electrico": // Ataque básico rayo-planta
+        {
+            var _p = { stat1:"ataque", escala1:1.0, stat2:"ninguno", escala2:0, base_fija:10,
+                       mult_poder:1.1, penetracion:0.3, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "ralentizacion", round(GAME_FPS * 1.5), 0);
+        }
+        break;
+
+        case "descarga_esporal": // Ataque DoT veneno + rayo
+        {
+            var _p = { stat1:"ataque", escala1:0.7, stat2:"poder", escala2:0.5, base_fija:6,
+                       mult_poder:1.2, penetracion:0.2, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "veneno", round(GAME_FPS * 4), 2);
+        }
+        break;
+
+        case "barrera_fotovoltaica": // Buff defensa + regeneración propia
+        {
+            scr_aplicar_estado(_atacante, "muro_tierra", round(GAME_FPS * 4), 3);
+            scr_aplicar_estado(_atacante, "regeneracion", round(GAME_FPS * 4), 1);
+        }
+        break;
+
+        case "genesis_esporal": // Ultimate — daño + veneno + supresión
+        {
+            var _p = { stat1:"ataque", escala1:1.8, stat2:"poder", escala2:0.8, base_fija:18,
+                       mult_poder:1.3, penetracion:0.4, esencia_gen:0, es_arma:false, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "veneno", round(GAME_FPS * 5), 3);
+            scr_aplicar_estado(_defensor, "supresion_arcana", round(GAME_FPS * 3), 0);
+            scr_notif_agregar(_atacante.nombre, "¡¡GÉNESIS ESPORAL!!", make_color_rgb(50, 200, 80));
+        }
+        break;
+
+        // ==========================================================
+        //  HABILIDADES DE SINCRONÍA ELEMENTAL
+        // ==========================================================
+
+        // ── Fuego + Tierra: Erupción de Magma ──
+        case "sincronia_magma":
+        {
+            var _pot = (_atacante.sincronia_data != undefined) ? _atacante.sincronia_data.potencia : 1.15;
+            var _p = { stat1:"ataque", escala1:0.8, stat2:"poder", escala2:1.0, base_fija:0,
+                       mult_poder:_pot, penetracion:0.15, esencia_gen:18, es_arma:true, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "quemadura_fuego", round(GAME_FPS * 3), round(_atacante.poder_elemental * 0.3));
+            scr_notif_agregar(_atacante.nombre, "¡Erupción de Magma!", make_color_rgb(255, 120, 40));
+        }
+        break;
+
+        // ── Agua + Planta: Brote Torrencial ──
+        case "sincronia_brote":
+        {
+            var _pot = (_atacante.sincronia_data != undefined) ? _atacante.sincronia_data.potencia : 1.15;
+            var _p = { stat1:"ataque", escala1:0.6, stat2:"poder", escala2:0.8, base_fija:0,
+                       mult_poder:_pot, penetracion:0, esencia_gen:15, es_arma:true, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            // Regenerar HP al atacante
+            var _regen = round(_atacante.vida_max * 0.08);
+            _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + _regen);
+            scr_notif_agregar(_atacante.nombre, "¡Brote Torrencial! (+" + string(_regen) + " HP)", make_color_rgb(80, 220, 120));
+        }
+        break;
+
+        // ── Rayo + Luz: Fulgor Relampagueante ──
+        case "sincronia_fulgor":
+        {
+            var _pot = (_atacante.sincronia_data != undefined) ? _atacante.sincronia_data.potencia : 1.15;
+            var _p = { stat1:"ataque", escala1:0.7, stat2:"poder", escala2:1.2, base_fija:0,
+                       mult_poder:_pot, penetracion:0.1, esencia_gen:18, es_arma:true, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "stun", round(GAME_FPS * 1.5), 0);
+            scr_notif_agregar(_atacante.nombre, "¡Fulgor Relampagueante!", make_color_rgb(255, 255, 100));
+        }
+        break;
+
+        // ── Sombra + Arcano: Vacío Arcano ──
+        case "sincronia_vacio":
+        {
+            var _pot = (_atacante.sincronia_data != undefined) ? _atacante.sincronia_data.potencia : 1.15;
+            var _p = { stat1:"poder", escala1:1.2, stat2:"ataque", escala2:0.4, base_fija:0,
+                       mult_poder:_pot, penetracion:0.2, esencia_gen:20, es_arma:true, tipo_dano:"magico" };
+            var dano = scr_formula_dano(_atacante, _defensor, _p);
+            _defensor.vida_actual = max(0, _defensor.vida_actual - dano);
+            scr_aplicar_estado(_defensor, "vulnerabilidad", round(GAME_FPS * 3), 0);
+            scr_notif_agregar(_atacante.nombre, "¡Vacío Arcano!", make_color_rgb(160, 80, 255));
         }
         break;
 

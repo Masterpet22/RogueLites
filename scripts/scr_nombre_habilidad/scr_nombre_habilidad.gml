@@ -80,13 +80,29 @@ function scr_nombre_habilidad(_id) {
         // 3. HABILIDADES DE ENEMIGOS COMUNES
         // ==========================================
         case "golpe_fuego":             return "Golpe Fuego";        // Soldado Igneo
+        case "chispa_ignea":            return "Chispa Ígnea";       // Soldado Igneo
+        case "escudo_ceniza":           return "Escudo Ceniza";      // Soldado Igneo
         case "mirada_gelida":           return "Mirada Gélida";      // Vigia Boreal
+        case "oleaje_menor":            return "Oleaje Menor";       // Vigia Boreal
+        case "rocio_curativo":          return "Rocío Curativo";     // Vigia Boreal
         case "rafaga_cortante":         return "Ráfaga Cortante";    // Halito Verde
+        case "espina_veloz":            return "Espina Veloz";       // Halito Verde
+        case "semilla_parasita":        return "Semilla Parásita";   // Halito Verde
         case "chispazo":                return "Chispazo";           // Bestia Tronadora
+        case "arco_voltaico":           return "Arco Voltaico";      // Bestia Tronadora
+        case "aullido_electrico":       return "Aullido Eléctrico";  // Bestia Tronadora
         case "muro_piedra":             return "Muro de Piedra";     // Guardian Terracota
+        case "lanzar_rocas":            return "Lanzar Rocas";       // Guardian Terracota
+        case "temblor_menor":           return "Temblor Menor";      // Guardian Terracota
         case "abrazo_vacio":            return "Abrazo Vacío";       // Naufrago
+        case "sombra_fugaz":            return "Sombra Fugaz";       // Naufrago
+        case "pulso_nocturno":          return "Pulso Nocturno";     // Naufrago
         case "destello_debil":          return "Destello Débil";     // Paladin Marchito
+        case "golpe_sagrado":           return "Golpe Sagrado";      // Paladin Marchito
+        case "aura_debilitante":        return "Aura Debilitante";   // Paladin Marchito
         case "pulso_arcano":            return "Pulso Arcano";       // Errante Runico
+        case "distorsion_arcana":       return "Distorsión Arcana";  // Errante Runico
+        case "silencio_runico":         return "Silencio Rúnico";    // Errante Runico
 
         // ==========================================
         // 4. HABILIDADES DE ENEMIGOS ELITE
@@ -145,6 +161,25 @@ function scr_nombre_habilidad(_id) {
         case "resonancia_conductor":    return "Resonancia";
         case "armonia_invertida":       return "Armonía Invertida";
         case "genesis_final":           return "Génesis Final";
+
+        // ── Heraldo de la Llama Negra (Fuego-Sombra) ──
+        case "lanza_oscura":            return "Lanza Oscura";
+        case "inmolacion_sombria":      return "Inmolación Sombría";
+        case "cortina_cenizas":         return "Cortina de Cenizas";
+        case "pira_abismal":            return "Pira Abismal";
+        // ── Leviatan Esporal (Planta-Rayo) ──
+        case "latigo_electrico":        return "Látigo Eléctrico";
+        case "descarga_esporal":        return "Descarga Esporal";
+        case "barrera_fotovoltaica":    return "Barrera Fotovolt.";
+        case "genesis_esporal":         return "Génesis Esporal";
+
+        // ==========================================
+        // HABILIDADES DE SINCRONÍA ELEMENTAL
+        // ==========================================
+        case "sincronia_magma":          return "Erupción de Magma";   // Fuego + Tierra
+        case "sincronia_brote":          return "Brote Torrencial";    // Agua + Planta
+        case "sincronia_fulgor":         return "Fulgor Relámpago";    // Rayo + Luz
+        case "sincronia_vacio":          return "Vacío Arcano";        // Sombra + Arcano
     }
 
     // Fallback — habilidad sin nombre registrado

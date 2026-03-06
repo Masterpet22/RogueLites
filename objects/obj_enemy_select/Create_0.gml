@@ -34,7 +34,9 @@ var _all_jefe = [
     "Titan de las Forjas Rotas",  // Fuego + Tierra
 	"Coloso del Fango Viviente", // Agua + Planta
 	"Sentinela del Cielo Roto",	 // Rayo + Luz
-	"Oraculo Quebrado del Abismo" // Sombra + Arcano
+"Oraculo Quebrado del Abismo", // Sombra + Arcano
+    "Heraldo de la Llama Negra",    // Fuego + Sombra
+    "Leviatan Esporal"               // Planta + Rayo
 ];
 
 // Filtrar: solo mostrar los desbloqueados

@@ -249,7 +249,108 @@ draw_text(40, 20, "SELECCIÓN DE PERSONAJE");
 // Instrucciones
 if (estado == SelState.PERSONAJE) {
     draw_set_color(c_yellow);
-    draw_text(40, h_gui - 40, "ENTER: Seleccionar arma  |  ESC: Volver al menú");
+    draw_text(40, h_gui - 40, "ENTER: Elegir personalidad  |  ESC: Volver al menú");
+}
+
+// =========================
+// POPUP DE PERSONALIDAD
+// =========================
+if (estado == SelState.PERSONALIDAD_POPUP) {
+
+    var _n_pers = array_length(personalidades_lista);
+
+    // Descripciones por personalidad
+    var _desc_pers = ds_map_create();
+    _desc_pers[? "Agresivo"]  = "Más daño, menor defensa.";
+    _desc_pers[? "Metodico"]  = "Equilibrado, sin penalizaciones.";
+    _desc_pers[? "Temerario"] = "Alta velocidad, menor HP.";
+    _desc_pers[? "Resuelto"]  = "Mayor defensa, menor ataque.";
+
+    // Dimensiones del popup
+    var _pw = 420;
+    var _ph = 320;
+    var _pcx = w_gui / 2;
+    var _pcy = h_gui / 2;
+    var _px1 = _pcx - _pw / 2;
+    var _py1 = _pcy - _ph / 2;
+
+    // Fondo oscurecido
+    draw_set_color(c_black);
+    draw_set_alpha(0.8);
+    draw_rectangle(0, 0, w_gui, h_gui, false);
+    draw_set_alpha(1);
+
+    // Panel principal
+    draw_set_color(make_color_rgb(18, 18, 28));
+    draw_roundrect_ext(_px1, _py1, _px1 + _pw, _py1 + _ph, 8, 8, false);
+    draw_set_color(make_color_rgb(90, 90, 140));
+    draw_roundrect_ext(_px1, _py1, _px1 + _pw, _py1 + _ph, 8, 8, true);
+
+    // Barra de título
+    draw_set_color(make_color_rgb(30, 30, 50));
+    draw_roundrect_ext(_px1, _py1, _px1 + _pw, _py1 + 36, 8, 8, false);
+    draw_set_color(make_color_rgb(90, 90, 140));
+    draw_line(_px1, _py1 + 36, _px1 + _pw, _py1 + 36);
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_white);
+    draw_text(_pcx, _py1 + 18, "PERSONALIDAD DE " + personajes[indice_personaje]);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+
+    // Lista de personalidades
+    var _list_y = _py1 + 52;
+    var _item_h = 50;
+
+    for (var i = 0; i < _n_pers; i++) {
+        var _iy = _list_y + i * _item_h;
+        var _is_sel = (i == indice_personalidad);
+        var _pers_name = personalidades_lista[i];
+
+        // Fondo del item
+        draw_set_color(_is_sel ? make_color_rgb(50, 50, 80) : make_color_rgb(22, 22, 34));
+        draw_set_alpha(_is_sel ? 0.9 : 0.5);
+        draw_roundrect_ext(_px1 + 16, _iy, _px1 + _pw - 16, _iy + _item_h - 4, 4, 4, false);
+        draw_set_alpha(1);
+
+        // Borde de selección
+        if (_is_sel) {
+            draw_set_color(c_yellow);
+            draw_roundrect_ext(_px1 + 16, _iy, _px1 + _pw - 16, _iy + _item_h - 4, 4, 4, true);
+        }
+
+        // Indicador y nombre
+        draw_set_valign(fa_middle);
+        if (_is_sel) {
+            draw_set_color(c_white);
+            draw_text(_px1 + 26, _iy + 14, ">");
+        }
+        draw_set_color(_is_sel ? c_yellow : c_ltgray);
+        draw_text(_px1 + 42, _iy + 14, _pers_name);
+
+        // Actualizar Súper nombre según personalidad
+        var _super_prev = scr_nombre_super(perfil.clase, _pers_name);
+        draw_set_color(make_color_rgb(180, 120, 255));
+        draw_text(_px1 + 180, _iy + 14, "Súper: " + _super_prev);
+
+        // Descripción
+        draw_set_color(_is_sel ? c_white : make_color_rgb(120, 120, 140));
+        draw_text(_px1 + 42, _iy + 34, _desc_pers[? _pers_name]);
+        draw_set_valign(fa_top);
+    }
+
+    // Instrucciones
+    draw_set_color(make_color_rgb(60, 60, 80));
+    draw_line(_px1 + 16, _py1 + _ph - 40, _px1 + _pw - 16, _py1 + _ph - 40);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_ltgray);
+    draw_text(_pcx, _py1 + _ph - 22, "Arriba/Abajo: Elegir   ENTER: Confirmar   ESC: Volver");
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+
+    ds_map_destroy(_desc_pers);
 }
 
 // =========================

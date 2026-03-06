@@ -144,6 +144,8 @@ ds_map_add(enemigos_desbloqueados, "Titan de las Forjas Rotas", true);
 ds_map_add(enemigos_desbloqueados, "Coloso del Fango Viviente", true);
 ds_map_add(enemigos_desbloqueados, "Sentinela del Cielo Roto", true);
 ds_map_add(enemigos_desbloqueados, "Oraculo Quebrado del Abismo", true);
+ds_map_add(enemigos_desbloqueados, "Heraldo de la Llama Negra", true);
+ds_map_add(enemigos_desbloqueados, "Leviatan Esporal", true);
 // Jefe Final + Secreto
 ds_map_add(enemigos_desbloqueados, "El Devorador", true);
 ds_map_add(enemigos_desbloqueados, "El Primer Conductor", true);

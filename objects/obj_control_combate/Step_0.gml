@@ -102,6 +102,19 @@ scr_actualizar_pasivas(personaje_enemigo);
 scr_actualizar_estados(personaje_jugador);
 scr_actualizar_estados(personaje_enemigo);
 
+// Actualizar combo timers
+if (personaje_jugador.combo_timer > 0) {
+    personaje_jugador.combo_timer--;
+    if (personaje_jugador.combo_timer <= 0) personaje_jugador.combo_contador = 0;
+}
+if (personaje_enemigo.combo_timer > 0) {
+    personaje_enemigo.combo_timer--;
+    if (personaje_enemigo.combo_timer <= 0) personaje_enemigo.combo_contador = 0;
+}
+
+// Actualizar barks de combate
+scr_barks_actualizar();
+
 // Reducir timer del enemigo manualmente si no se hace en scr_actualizar
 // (Ya no se necesita — los CDs del enemigo los gestiona scr_actualizar_personaje)
 

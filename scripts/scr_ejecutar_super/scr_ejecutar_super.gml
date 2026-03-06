@@ -385,6 +385,9 @@ function scr_ejecutar_super(_atk, _def) {
     var _afi_super = variable_struct_exists(_atk, "afinidad") ? _atk.afinidad : "Neutra";
     scr_fx_activar_super(_afi_super);
 
+    // Bark de combate: línea de diálogo al usar la súper
+    scr_bark_on_super(_atk);
+
     // Hook: Mecánica de Absorción de Esencia del defensor
     if (_atk.es_jugador && variable_struct_exists(_def, "mecanicas")) {
         var _dano_super = max(0, _vida_def_pre - _def.vida_actual);

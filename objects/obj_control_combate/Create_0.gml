@@ -160,6 +160,9 @@ scr_fx_impacto_init();
 // 8c. Sistema de diálogos pre-combate
 scr_dialogos_init();
 
+// 8e. Sistema de barks de combate (diálogos no bloqueantes)
+scr_barks_init();
+
 // 8d. Sistema dramático de fin de combate
 scr_fin_combate_init();
 

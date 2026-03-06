@@ -234,9 +234,10 @@ else if (estado == SelState.OBJETOS_POPUP) {
         }
     }
 
-    // ESC: volver a selección de personalidad
+    // ESC: volver a selección de arma sin equipar objetos
     if (keyboard_check_pressed(vk_escape)) {
-        estado = SelState.PERSONALIDAD_POPUP;
+        objetos_seleccionados = [];
+        estado = SelState.ARMA_POPUP;
     }
 }
 

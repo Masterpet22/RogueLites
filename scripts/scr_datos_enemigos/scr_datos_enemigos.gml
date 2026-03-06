@@ -13,6 +13,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 4, poder_elemental: 5,
                 afinidad: "Fuego",
                 habilidad_fija: "golpe_fuego",
+                habilidad_2: "chispa_ignea",
+                habilidad_3: "escudo_ceniza",
                 oro_min: 10, oro_max: 25,
                 precio: 200,
                 drops: [
@@ -27,6 +29,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 3, poder_elemental: 7,
                 afinidad: "Agua",
                 habilidad_fija: "mirada_gelida",
+                habilidad_2: "oleaje_menor",
+                habilidad_3: "rocio_curativo",
                 oro_min: 10, oro_max: 25,
                 precio: 200,
                 drops: [
@@ -41,6 +45,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 6, poder_elemental: 4,
                 afinidad: "Planta",
                 habilidad_fija: "rafaga_cortante",
+                habilidad_2: "espina_veloz",
+                habilidad_3: "semilla_parasita",
                 oro_min: 10, oro_max: 20,
                 precio: 150,
                 drops: [
@@ -55,6 +61,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 7, poder_elemental: 3,
                 afinidad: "Rayo",
                 habilidad_fija: "chispazo",
+                habilidad_2: "arco_voltaico",
+                habilidad_3: "aullido_electrico",
                 oro_min: 12, oro_max: 28,
                 precio: 200,
                 drops: [
@@ -69,6 +77,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 2, poder_elemental: 3,
                 afinidad: "Tierra",
                 habilidad_fija: "muro_piedra",
+                habilidad_2: "lanzar_rocas",
+                habilidad_3: "temblor_menor",
                 oro_min: 15, oro_max: 30,
                 precio: 250,
                 drops: [
@@ -83,6 +93,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 4, poder_elemental: 6,
                 afinidad: "Sombra",
                 habilidad_fija: "abrazo_vacio",
+                habilidad_2: "sombra_fugaz",
+                habilidad_3: "pulso_nocturno",
                 oro_min: 12, oro_max: 25,
                 precio: 200,
                 drops: [
@@ -97,6 +109,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 3, poder_elemental: 5,
                 afinidad: "Luz",
                 habilidad_fija: "destello_debil",
+                habilidad_2: "golpe_sagrado",
+                habilidad_3: "aura_debilitante",
                 oro_min: 15, oro_max: 30,
                 precio: 250,
                 drops: [
@@ -111,6 +125,8 @@ function scr_datos_enemigos(_e) {
                 velocidad: 4, poder_elemental: 8,
                 afinidad: "Arcano",
                 habilidad_fija: "pulso_arcano",
+                habilidad_2: "distorsion_arcana",
+                habilidad_3: "silencio_runico",
                 oro_min: 12, oro_max: 28,
                 precio: 200,
                 drops: [
@@ -349,6 +365,53 @@ function scr_datos_enemigos(_e) {
         // JEFE FINAL — El Devorador (sin afinidad)
         //   Roba esencia, desactiva pasivas, espejea al jugador
         // =============================================================
+
+        // ── Nuevo Jefe: Heraldo de la Llama Negra (Fuego-Sombra) ──
+        case "Heraldo de la Llama Negra":
+            return {
+                vida: 1100, ataque: 24, defensa: 15, defensa_magica: 16,
+                velocidad: 5, poder_elemental: 16,
+                afinidad: "Fuego-Sombra",
+                habilidad_fija: "lanza_oscura",
+                habilidad_2: "inmolacion_sombria",
+                habilidad_3: "cortina_cenizas",
+                habilidad_4: "pira_abismal",
+                patron: ["lanza_oscura", "inmolacion_sombria", "lanza_oscura",
+                         "cortina_cenizas", "inmolacion_sombria", "pira_abismal"],
+                oro_min: 230, oro_max: 460,
+                precio: 3000,
+                mecanicas: ["mec_reflejo_diferido"],
+                timer_limite: 190,
+                drops: [
+                    { material: "Ascua del Abismo",         cant_min: 1, cant_max: 1, chance: 100 },
+                    { material: "Brasa Carmesi",            cant_min: 2, cant_max: 3, chance: 70  },
+                    { material: "Materia Oscura",           cant_min: 2, cant_max: 3, chance: 70  },
+                ]
+            };
+
+        // ── Nuevo Jefe: Leviatan Esporal (Planta-Rayo) ──
+        case "Leviatan Esporal":
+            return {
+                vida: 950, ataque: 20, defensa: 17, defensa_magica: 15,
+                velocidad: 4, poder_elemental: 14,
+                afinidad: "Planta-Rayo",
+                habilidad_fija: "latigo_electrico",
+                habilidad_2: "descarga_esporal",
+                habilidad_3: "barrera_fotovoltaica",
+                habilidad_4: "genesis_esporal",
+                patron: ["latigo_electrico", "descarga_esporal", "latigo_electrico",
+                         "barrera_fotovoltaica", "descarga_esporal", "genesis_esporal"],
+                oro_min: 210, oro_max: 430,
+                precio: 2800,
+                mecanicas: ["mec_penalizacion_repeticion", "mec_escalado_vida_jugador"],
+                timer_limite: 195,
+                drops: [
+                    { material: "Semilla Voltaica",         cant_min: 1, cant_max: 1, chance: 100 },
+                    { material: "Raiz Primigenia",          cant_min: 2, cant_max: 3, chance: 70  },
+                    { material: "Colmillo de Rayo",         cant_min: 2, cant_max: 3, chance: 70  },
+                ]
+            };
+
         case "El Devorador":
             return {
                 vida: 1350, ataque: 27, defensa: 20, defensa_magica: 20,
