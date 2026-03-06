@@ -11,3 +11,7 @@ guia_anim_vel = 0.06;     // velocidad de animación
 // Posición del icono "?" (esquina inferior derecha)
 guia_ico_size = 36;
 guia_ico_margin = 14;
+
+// ── FX del menú: partículas de fondo flotantes ──
+menu_particulas = [];
+menu_fx_timer = 0;

@@ -295,6 +295,10 @@ function scr_feedback_actualizar() {
         if (_pj_diff > _pj.vida_max * 0.25) _tipo_golpe = "fuerte";
         if (_pj_diff > _pj.vida_max * 0.40) _tipo_golpe = "critico";
         scr_fx_impacto_golpe(true, _tipo_golpe, _afi_enemigo);
+        // ── Flash elemental con shader (intensidad según daño) ──
+        if (_pj_diff > _pj.vida_max * 0.10) {
+            scr_fx_flash_elemental(_afi_enemigo);
+        }
     } else if (_pj_diff < 0) {
         // Jugador se curó
         scr_feedback_agregar(true, abs(_pj_diff), "cura");
@@ -321,6 +325,10 @@ function scr_feedback_actualizar() {
         if (_en_diff > _en.vida_max * 0.25) _tipo_golpe_en = "fuerte";
         if (_en_diff > _en.vida_max * 0.40) _tipo_golpe_en = "critico";
         scr_fx_impacto_golpe(false, _tipo_golpe_en, _afi_jugador);
+        // ── Flash elemental con shader (intensidad según daño) ──
+        if (_en_diff > _en.vida_max * 0.10) {
+            scr_fx_flash_elemental(_afi_jugador);
+        }
     } else if (_en_diff < 0) {
         // Enemigo se curó
         scr_feedback_agregar(false, abs(_en_diff), "cura");

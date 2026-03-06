@@ -28,8 +28,35 @@ if (!instance_exists(control_combate)) {
         _bg_shake_y = (control_combate.fb_shake_offset_y[0] + control_combate.fb_shake_offset_y[1]) * 0.35;
     }
 
+    // ── Shader tinte ambiental del fondo según arena temática ──
+    var _bg_tint_on = false;
+    if (shader_is_compiled(shd_color_tint)) {
+        var _tr = 0.6; var _tg = 0.6; var _tb = 0.6; var _tmix = 0.0;
+        switch (_arena) {
+            case 0:  // Forjas Rotas — Fuego/Tierra: tinte cálido rojizo
+                _tr = 1.0; _tg = 0.55; _tb = 0.3; _tmix = 0.08; break;
+            case 1:  // Fango Viviente — Agua/Planta: tinte verde azulado
+                _tr = 0.3; _tg = 0.85; _tb = 0.6; _tmix = 0.07; break;
+            case 2:  // Cielo Roto — Rayo/Luz: tinte azul eléctrico
+                _tr = 0.4; _tg = 0.7; _tb = 1.0; _tmix = 0.08; break;
+            case 3:  // Abismo Quebrado — Sombra/Arcano: tinte púrpura
+                _tr = 0.6; _tg = 0.2; _tb = 0.8; _tmix = 0.09; break;
+            case 4:  // Nexo Final — Neutra: tinte dorado sutil
+                _tr = 1.0; _tg = 0.9; _tb = 0.5; _tmix = 0.06; break;
+        }
+        // Pulso sutil del tinte
+        var _bg_pulse = 0.5 + 0.5 * sin(current_time / 800);
+        _tmix *= (0.8 + 0.4 * _bg_pulse);
+        if (_tmix > 0) {
+            scr_shader_tint_set(_tr, _tg, _tb, _tmix);
+            _bg_tint_on = true;
+        }
+    }
+
     draw_sprite_stretched(_bg_spr, 0, _bg_shake_x - 4, _bg_shake_y - 4,
         display_get_gui_width() + 8, display_get_gui_height() + 8);
+
+    if (_bg_tint_on) shader_reset();
 }
 
 // ── Blur de escenario durante súper (shader-based) ──
@@ -417,6 +444,24 @@ if (!control_combate.combate_terminado || control_combate.fin_fase < 2) {
     scr_fx_zoom_restaurar();
 
     if (_chrom_on) shader_reset();
+
+    // ── Destello elemental (tint de pantalla completa al impactar) ──
+    if (global.fx_flash_elem_activo && global.fx_flash_elem_timer > 0) {
+        var _fe_t = global.fx_flash_elem_timer / 12.0;
+        var _fe_alpha = _fe_t * 0.18;
+        gpu_set_blendmode(bm_add);
+        draw_set_color(
+            make_color_rgb(
+                round(global.fx_flash_elem_r * 255),
+                round(global.fx_flash_elem_g * 255),
+                round(global.fx_flash_elem_b * 255)
+            )
+        );
+        draw_set_alpha(_fe_alpha);
+        draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+        draw_set_alpha(1);
+        gpu_set_blendmode(bm_normal);
+    }
 }
 
 // ╔═══════════════════════════════════════════════════════════════╗

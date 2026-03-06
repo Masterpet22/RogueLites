@@ -177,7 +177,7 @@ function scr_esencia_barra_dibujar(_pj) {
     var _pulse_rapido = 0.5 + 0.5 * sin(_t / 180);
 
     // ════════════════════════════════════════
-    //  1. GLOW DETRÁS DE LA BARRA (additive)
+    //  1. GLOW DETRÁS DE LA BARRA (additive) + Shader elemental
     // ════════════════════════════════════════
     if (_tier >= 1) {
         var _glow_alpha = 0.0;
@@ -187,6 +187,17 @@ function scr_esencia_barra_dibujar(_pj) {
             case 2: _glow_alpha = 0.15 + 0.08 * _pulse; _glow_expand = 4; break;
             case 3: _glow_alpha = 0.25 + 0.15 * _pulse; _glow_expand = 6; break;
         }
+
+        // Shader tint elemental sobre el glow
+        var _glow_shader_on = false;
+        if (_tier >= 2 && shader_is_compiled(shd_color_tint)) {
+            var _rgb = scr_color_afinidad_rgb(_afinidad);
+            var _glow_mix = (_tier == 3) ? 0.6 : 0.4;
+            _glow_mix += 0.15 * _pulse;
+            scr_shader_tint_set(_rgb[0], _rgb[1], _rgb[2], _glow_mix);
+            _glow_shader_on = true;
+        }
+
         gpu_set_blendmode(bm_add);
         draw_set_color(_col_glow);
         draw_set_alpha(_glow_alpha);
@@ -197,6 +208,7 @@ function scr_esencia_barra_dibujar(_pj) {
         );
         draw_set_alpha(1);
         gpu_set_blendmode(bm_normal);
+        if (_glow_shader_on) shader_reset();
     }
 
     // ════════════════════════════════════════
@@ -226,10 +238,22 @@ function scr_esencia_barra_dibujar(_pj) {
     draw_set_alpha(1);
 
     // ════════════════════════════════════════
-    //  4. RELLENO DE ESENCIA (gradiente elemental)
+    //  4. RELLENO DE ESENCIA (gradiente elemental + shader tint)
     // ════════════════════════════════════════
     if (_ratio_display > 0) {
         var _fill_w = _bw * _ratio_display;
+
+        // Shader tint elemental sobre el relleno
+        var _fill_shader_on = false;
+        if (shader_is_compiled(shd_color_tint)) {
+            var _rgb = scr_color_afinidad_rgb(_afinidad);
+            // Mezcla más intensa a mayor tier: T0=0.15, T1=0.25, T2=0.35, T3=0.5
+            var _fill_mix = 0.15 + _tier * 0.12;
+            // Pulso sutil del tinte
+            _fill_mix += 0.05 * _pulse;
+            scr_shader_tint_set(_rgb[0], _rgb[1], _rgb[2], _fill_mix);
+            _fill_shader_on = true;
+        }
 
         // Relleno principal — color base
         draw_set_color(_col_base);
@@ -244,6 +268,8 @@ function scr_esencia_barra_dibujar(_pj) {
         draw_rectangle(_bx + 2, _by + 1, _bx + _fill_w - 2, _by + _bh * 0.35, false);
         draw_set_alpha(1);
 
+        if (_fill_shader_on) shader_reset();
+
         // ── Borde brillante del frente de la barra (edge glow) ──
         if (_ratio_display < 0.98) {
             var _edge_x = _bx + _fill_w;
@@ -257,9 +283,17 @@ function scr_esencia_barra_dibujar(_pj) {
     }
 
     // ════════════════════════════════════════
-    //  5. PARTÍCULAS INTERNAS
+    //  5. PARTÍCULAS INTERNAS (con shader tint elemental)
     // ════════════════════════════════════════
     if (array_length(ese_bar_particulas) > 0) {
+        // Shader tint elemental sobre las partículas
+        var _part_shader_on = false;
+        if (_tier >= 1 && shader_is_compiled(shd_color_tint)) {
+            var _rgb = scr_color_afinidad_rgb(_afinidad);
+            scr_shader_tint_set(_rgb[0], _rgb[1], _rgb[2], 0.3 + _tier * 0.1);
+            _part_shader_on = true;
+        }
+
         gpu_set_blendmode(bm_add);
         for (var i = 0; i < array_length(ese_bar_particulas); i++) {
             var _p = ese_bar_particulas[i];
@@ -272,6 +306,7 @@ function scr_esencia_barra_dibujar(_pj) {
         }
         draw_set_alpha(1);
         gpu_set_blendmode(bm_normal);
+        if (_part_shader_on) shader_reset();
     }
 
     // ════════════════════════════════════════
@@ -381,7 +416,7 @@ function scr_esencia_barra_dibujar(_pj) {
     draw_set_valign(fa_top);
 
     // ════════════════════════════════════════
-    //  9. EFECTO ESPECIAL AL 100%: onda de energía recurrente
+    //  9. EFECTO ESPECIAL AL 100%: onda de energía + chromatic
     // ════════════════════════════════════════
     if (_tier == 3) {
         // Onda que se expande periódicamente
@@ -390,6 +425,14 @@ function scr_esencia_barra_dibujar(_pj) {
             var _wave_progress = _wave_cycle / 0.4;
             var _wave_alpha = (1 - _wave_progress) * 0.2;
             var _wave_expand = _wave_progress * 6;
+
+            // Shader tint con color elemental sobre la onda
+            var _wave_shader_on = false;
+            if (shader_is_compiled(shd_color_tint)) {
+                var _rgb = scr_color_afinidad_rgb(_afinidad);
+                scr_shader_tint_set(_rgb[0], _rgb[1], _rgb[2], 0.5);
+                _wave_shader_on = true;
+            }
 
             gpu_set_blendmode(bm_add);
             draw_set_color(_col_glow);
@@ -401,6 +444,21 @@ function scr_esencia_barra_dibujar(_pj) {
             );
             draw_set_alpha(1);
             gpu_set_blendmode(bm_normal);
+            if (_wave_shader_on) shader_reset();
         }
+
+        // Barra de energía elemental pulsante al borde (línea inferior brillante)
+        var _line_pulse = 0.5 + 0.5 * sin(_t / 150);
+        var _rgb = scr_color_afinidad_rgb(_afinidad);
+        gpu_set_blendmode(bm_add);
+        draw_set_color(make_color_rgb(
+            round(_rgb[0] * 255),
+            round(_rgb[1] * 255),
+            round(_rgb[2] * 255)
+        ));
+        draw_set_alpha(0.15 + 0.12 * _line_pulse);
+        draw_line_width(_bx + 4, _by + _bh + 2, _bx + _bw - 4, _by + _bh + 2, 1.5);
+        draw_set_alpha(1);
+        gpu_set_blendmode(bm_normal);
     }
 }

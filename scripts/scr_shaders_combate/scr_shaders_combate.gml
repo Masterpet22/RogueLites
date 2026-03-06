@@ -73,6 +73,13 @@ function scr_shaders_init() {
     global.chromatic_activo = false;
     global.chromatic_timer  = 0;
     global.chromatic_max    = 0.004;
+
+    // ── Estado de flash elemental (tint por habilidad) ──
+    global.fx_flash_elem_activo = false;
+    global.fx_flash_elem_timer  = 0;
+    global.fx_flash_elem_r      = 1.0;
+    global.fx_flash_elem_g      = 1.0;
+    global.fx_flash_elem_b      = 1.0;
 }
 
 
@@ -209,6 +216,14 @@ function scr_shaders_actualizar() {
             global.chromatic_activo = false;
         }
     }
+
+    // Flash elemental (tint por habilidad)
+    if (global.fx_flash_elem_activo) {
+        global.fx_flash_elem_timer--;
+        if (global.fx_flash_elem_timer <= 0) {
+            global.fx_flash_elem_activo = false;
+        }
+    }
 }
 
 
@@ -283,10 +298,50 @@ function scr_color_afinidad_rgb(_afinidad) {
     switch (_afinidad) {
         case "Fuego":    return [1.0, 0.3, 0.1];
         case "Agua":     return [0.2, 0.6, 1.0];
+        case "Planta":   return [0.2, 0.85, 0.3];
+        case "Rayo":     return [0.3, 0.6, 1.0];
         case "Tierra":   return [0.7, 0.5, 0.2];
-        case "Viento":   return [0.5, 0.9, 0.6];
+        case "Sombra":   return [0.5, 0.2, 0.7];
         case "Luz":      return [1.0, 0.95, 0.6];
-        case "Oscuridad": return [0.5, 0.2, 0.7];
+        case "Arcano":   return [0.6, 0.1, 0.9];
+        case "Viento":   return [0.5, 0.9, 0.6];
         default:         return [0.8, 0.8, 0.8]; // Neutra
     }
+}
+
+
+// ══════════════════════════════════════════════════════════════
+//  scr_fx_flash_elemental(afinidad)
+//  Dispara una ráfaga visual de shader: chromatic + tint del
+//  elemento. Se usa al conectar habilidades significativas.
+//  Gestiona global.fx_flash_elem_* para dibujar en el frame.
+// ══════════════════════════════════════════════════════════════
+function scr_fx_flash_elemental(_afinidad) {
+    var _rgb = scr_color_afinidad_rgb(_afinidad);
+    global.fx_flash_elem_activo = true;
+    global.fx_flash_elem_timer  = 12;   // frames de duración
+    global.fx_flash_elem_r      = _rgb[0];
+    global.fx_flash_elem_g      = _rgb[1];
+    global.fx_flash_elem_b      = _rgb[2];
+    // También disparar aberración cromática breve
+    scr_shader_chromatic_disparar(8);
+}
+
+
+/// @function scr_fx_flash_elemental_aplicar()
+/// @description Aplica el tint elemental a lo que se dibuje si está activo.
+///              Devuelve true → shader activo, llamar shader_reset() después.
+function scr_fx_flash_elemental_aplicar() {
+    if (global.fx_flash_elem_activo && global.fx_flash_elem_timer > 0) {
+        var _t = global.fx_flash_elem_timer / 12.0;
+        var _mix = _t * 0.35;  // intensidad decrece con el tiempo
+        scr_shader_tint_set(
+            global.fx_flash_elem_r,
+            global.fx_flash_elem_g,
+            global.fx_flash_elem_b,
+            _mix
+        );
+        return true;
+    }
+    return false;
 }

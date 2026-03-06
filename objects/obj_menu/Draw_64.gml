@@ -1,7 +1,91 @@
 /// DRAW GUI - obj_menu
 
+var _gw_full = display_get_gui_width();
+var _gh_full = display_get_gui_height();
+
 // Fondo
-draw_sprite_stretched(spr_bg_menu, 0, 0, 0, display_get_gui_width(), display_get_gui_height());
+draw_sprite_stretched(spr_bg_menu, 0, 0, 0, _gw_full, _gh_full);
+
+// ── FX del menú: viñeta oscura en las esquinas ──
+{
+    var _vig_alpha = 0.35;
+    draw_set_alpha(_vig_alpha);
+    draw_set_color(c_black);
+    // Degradado superior
+    for (var _v = 0; _v < 80; _v++) {
+        draw_set_alpha(_vig_alpha * (1 - _v / 80));
+        draw_line_width(0, _v, _gw_full, _v, 1);
+    }
+    // Degradado inferior
+    for (var _v = 0; _v < 60; _v++) {
+        draw_set_alpha(_vig_alpha * 0.6 * (1 - _v / 60));
+        draw_line_width(0, _gh_full - _v, _gw_full, _gh_full - _v, 1);
+    }
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}
+
+// ── FX del menú: partículas flotantes luminosas ──
+{
+    menu_fx_timer++;
+
+    // Generar nuevas partículas periódicamente
+    if (menu_fx_timer mod 6 == 0 && array_length(menu_particulas) < 40) {
+        array_push(menu_particulas, {
+            x: random(_gw_full),
+            y: _gh_full + random(20),
+            vx: random_range(-0.3, 0.3),
+            vy: random_range(-0.6, -1.5),
+            size: random_range(1.5, 4),
+            alpha: random_range(0.15, 0.4),
+            color: choose(
+                make_color_rgb(100, 140, 255),   // azul
+                make_color_rgb(180, 120, 255),   // púrpura
+                make_color_rgb(255, 200, 80),    // dorado
+                make_color_rgb(80, 220, 180)     // turquesa
+            ),
+            life: irandom_range(180, 360),
+        });
+    }
+
+    // Dibujar y actualizar partículas
+    gpu_set_blendmode(bm_add);
+    for (var _pi = array_length(menu_particulas) - 1; _pi >= 0; _pi--) {
+        var _mp = menu_particulas[_pi];
+        _mp.x += _mp.vx;
+        _mp.y += _mp.vy;
+        _mp.vx += random_range(-0.02, 0.02);  // movimiento fluctuante
+        _mp.life--;
+        var _fade = clamp(_mp.life / 60, 0, 1);
+        draw_set_color(_mp.color);
+        draw_set_alpha(_mp.alpha * _fade);
+        draw_circle(_mp.x, _mp.y, _mp.size, false);
+        // Halo más grande y tenue
+        draw_set_alpha(_mp.alpha * _fade * 0.3);
+        draw_circle(_mp.x, _mp.y, _mp.size * 2.5, false);
+        if (_mp.life <= 0 || _mp.y < -20) {
+            array_delete(menu_particulas, _pi, 1);
+        }
+    }
+    draw_set_alpha(1);
+    gpu_set_blendmode(bm_normal);
+}
+
+// ── FX del menú: líneas de energía horizontales sutiles ──
+{
+    var _t = current_time;
+    gpu_set_blendmode(bm_add);
+    for (var _li = 0; _li < 3; _li++) {
+        var _ly = (_gh_full * 0.3) + _li * (_gh_full * 0.2);
+        var _wave = sin(_t * 0.001 + _li * 2.0) * 15;
+        var _la = 0.04 + 0.03 * sin(_t * 0.002 + _li);
+        draw_set_color(make_color_rgb(120, 100, 220));
+        draw_set_alpha(_la);
+        draw_line_width(0, _ly + _wave, _gw_full, _ly + _wave + sin(_t * 0.0015) * 8, 1.5);
+    }
+    draw_set_alpha(1);
+    gpu_set_blendmode(bm_normal);
+}
 draw_set_font(fnt_1)
 draw_set_halign(fa_center);
 draw_set_valign(fa_middle);

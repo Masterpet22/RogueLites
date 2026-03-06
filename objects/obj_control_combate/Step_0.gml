@@ -94,6 +94,18 @@ if (scr_dialogos_actualizar()) {
     exit;
 }
 
+// ── PAUSA DURANTE SÚPER: congelar habilidades y IA mientras dura la animación ──
+if (foco_super_restore_timer > 0) {
+    // Solo actualizar FX visuales (feedback, shaders, partículas) pero NO lógica de combate
+    scr_feedback_actualizar();
+    scr_shaders_actualizar();
+    scr_fx_zoom_actualizar();
+    scr_fx_particulas_actualizar();
+    scr_notif_actualizar();
+    scr_barks_actualizar();
+    exit;
+}
+
 // 1. Actualizar personajes (cooldowns, etc.)
 scr_actualizar_personaje(personaje_jugador);
 scr_actualizar_personaje(personaje_enemigo);

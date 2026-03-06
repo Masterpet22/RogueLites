@@ -196,22 +196,6 @@ function scr_fx_hitstop(_frames) {
 
 
 // ══════════════════════════════════════════════════════════════
-//  scr_fx_flash_elemental(afinidad)
-//  Flash de pantalla corto con el color de energía de la afinidad.
-//  Para habilidades elementales (no súper).
-// ══════════════════════════════════════════════════════════════
-function scr_fx_flash_elemental(_afinidad) {
-    if (!instance_exists(obj_control_combate)) return;
-    var _c = instance_find(obj_control_combate, 0);
-
-    var _paleta = scr_paleta_afinidad(_afinidad);
-    _c.flash_pantalla_timer = round(FLASH_SUPER_FRAMES * 0.5);
-    _c.flash_pantalla_color = _paleta.energia;
-    _c.flash_pantalla_alpha = 0.35;
-}
-
-
-// ══════════════════════════════════════════════════════════════
 //  scr_fx_esencia_dibujar_glow()
 //  Dibuja el glow elemental sobre el sprite del jugador.
 //  Usa additive blending para efecto de energía.
