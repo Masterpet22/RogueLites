@@ -102,10 +102,11 @@ function scr_ia_enemigo(_en, _jug) {
                 _en.p_index = (_en.p_index + 1) mod array_length(_en.patron);
             } else {
                 // ── Ejecución por prioridad ──
-                if (_en.ia_hab_elegida >= 0) {
-                    scr_usar_habilidad_indice(_en, _jug, _en.ia_hab_elegida);
+                var _idx = _en.ia_hab_elegida;
+                if (_idx >= 0) {
+                    scr_usar_habilidad_indice(_en, _jug, _idx);
                     show_debug_message("💥 " + _en.nombre + " usa: "
-                        + string(_en.habilidades_arma[_en.ia_hab_elegida]));
+                        + string(_en.habilidades_arma[_idx]));
                 }
             }
 

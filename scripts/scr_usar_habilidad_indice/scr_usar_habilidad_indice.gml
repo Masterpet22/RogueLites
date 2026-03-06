@@ -22,6 +22,9 @@ function scr_usar_habilidad_indice(_atacante, _defensor, _indice) {
     // ── Parry: no puede actuar si está en ventana de parry o vulnerable ──
     if (!scr_parry_puede_actuar(_atacante)) return;
 
+    // ── Micro-stun: no puede actuar si está aturdido ──
+    if (_atacante.es_jugador && !scr_jugador_puede_actuar(_atacante)) return;
+
     // ── Energía: verificar costo ──
     var _costo_energia = scr_energia_costo_habilidad(id_hab);
     if (_atacante.es_jugador && !scr_energia_puede_gastar(_atacante, _costo_energia)) {
@@ -34,6 +37,9 @@ function scr_usar_habilidad_indice(_atacante, _defensor, _indice) {
     if (_atacante.es_jugador) {
         scr_energia_gastar(_atacante, _costo_energia);
     }
+
+    // Guardar ID de habilidad actual para postura/tracking
+    _atacante.hab_actual_id = id_hab;
 
     // Ejecutar habilidad
     scr_ejecutar_habilidad(_atacante, _defensor, id_hab);

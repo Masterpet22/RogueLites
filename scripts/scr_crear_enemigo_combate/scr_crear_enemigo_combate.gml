@@ -75,6 +75,26 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
         parry_timer:       0,
         gcd_timer:         0,
 
+        // ── Stun ──
+        stun_activo:       false,
+        stun_timer:        0,
+        stun_tipo:         "",
+
+        // ── Postura (barra de postura) ──
+        postura:           POSTURA_BASE,
+        postura_max:       POSTURA_BASE,
+        postura_sin_golpe_timer: 0,
+
+        // ── Carga (campos de compat) ──
+        carga_activa:      false,
+        carga_indice:      -1,
+        carga_timer:       0,
+        carga_mult_temp:   1.0,
+        carga_nivel_temp:  1,
+        carga_drenaje_acum: 0,
+        micro_stun_timer:  0,
+        hab_actual_id:     "",
+
 		habilidades_arma: _habs,
 		habilidades_cd:   _cds,
 

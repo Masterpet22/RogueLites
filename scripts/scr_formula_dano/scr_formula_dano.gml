@@ -158,10 +158,26 @@ function scr_formula_dano(_atacante, _defensor, _p) {
         // Runa Vampírica: -40% generación de esencia (aplicado abajo)
     }
 
-    // ─── Paso 8c: Evaluación de PARRY del defensor ───
+    // ─── Paso 8c: Multiplicador de CARGA PROGRESIVA ───
+    // Si el atacante tiene una carga temporal activa, multiplicar daño
+    if (variable_struct_exists(_atacante, "carga_mult_temp") && _atacante.carga_mult_temp > 1.0) {
+        _dano_final = round(_dano_final * _atacante.carga_mult_temp);
+    }
+
+    // ─── Paso 8d: Vulnerabilidad por CARGA (defensor cargando recibe +25%) ───
+    if (_defensor.es_jugador && variable_struct_exists(_defensor, "carga_activa") && _defensor.carga_activa) {
+        _dano_final = round(_dano_final * CARGA_VULN_RECIBIDO);
+    }
+
+    // ─── Paso 8e: Evaluación de PARRY del defensor ───
     // Si el defensor (jugador) está en ventana de parry, evaluar resultado
     if (_defensor.es_jugador && _defensor.parry_estado == "ventana") {
         _dano_final = scr_parry_evaluar(_defensor, _atacante, _dano_final);
+    }
+
+    // ─── Paso 8f: Interrumpir carga del jugador si recibe daño ───
+    if (_defensor.es_jugador && variable_struct_exists(_defensor, "carga_activa") && _defensor.carga_activa && _dano_final > 0) {
+        scr_carga_interrumpir_por_dano(_defensor);
     }
 
     // ─── Paso 9: Mecánicas especiales de combate ───
@@ -264,6 +280,29 @@ function scr_formula_dano(_atacante, _defensor, _p) {
         if (_esen_def > 0) {
             _defensor.esencia = clamp(_defensor.esencia + _esen_def, 0, _defensor.esencia_llena);
         }
+    }
+
+    // ── Reducir POSTURA del enemigo al recibir daño del jugador ──
+    if (_atacante.es_jugador && !_defensor.es_jugador && _dano_final > 0) {
+        var _id_hab_actual = variable_struct_exists(_atacante, "hab_actual_id") ? _atacante.hab_actual_id : "";
+        var _postura_dano = scr_postura_dano_habilidad(_id_hab_actual);
+        scr_postura_reducir(_defensor, _postura_dano);
+    }
+
+    // ── Bonificación SINERGIA: carga máxima + enemigo stunned → x2 esencia ──
+    if (_atacante.es_jugador && !_defensor.es_jugador
+        && variable_struct_exists(_atacante, "carga_nivel_temp") && _atacante.carga_nivel_temp >= 3
+        && scr_esta_stunned(_defensor)) {
+        var _bonus_sinergia = round(_atacante.esencia_llena * 0.05); // +5% extra base
+        _bonus_sinergia = round(_bonus_sinergia * STUN_ESENCIA_MULT);
+        _atacante.esencia = clamp(_atacante.esencia + _bonus_sinergia, 0, _atacante.esencia_llena);
+        scr_notif_agregar(_atacante.nombre, "¡COMBO MAESTRO! +" + string(_bonus_sinergia) + " esencia", c_yellow);
+    }
+
+    // Resetear multiplicador temporal de carga tras aplicar
+    if (_atacante.es_jugador && variable_struct_exists(_atacante, "carga_mult_temp")) {
+        _atacante.carga_mult_temp = 1.0;
+        _atacante.carga_nivel_temp = 1;
     }
 
     return _dano_final;

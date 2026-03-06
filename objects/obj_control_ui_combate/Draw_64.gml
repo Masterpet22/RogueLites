@@ -243,10 +243,47 @@ draw_set_alpha(1);
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
 
+    // ── BARRA DE POSTURA del enemigo (debajo de barra IA) ──
+    var _pos_bar_y = _ia_bar_y + _ia_bar_h + 4;
+    var _pos_bar_w = _ia_bar_w;
+    var _pos_bar_h = 5;
+    var _pos_bar_x = _ia_bar_x;
+
+    if (variable_struct_exists(en, "postura") && en.postura_max > 0) {
+        var _pos_ratio = clamp(en.postura / max(1, en.postura_max), 0, 1);
+
+        // Fondo
+        draw_set_color(make_color_rgb(20, 10, 10));
+        draw_rectangle(_pos_bar_x, _pos_bar_y, _pos_bar_x + _pos_bar_w, _pos_bar_y + _pos_bar_h, false);
+
+        // Relleno (naranja → rojo cuando baja)
+        var _pos_col = merge_color(c_red, c_orange, _pos_ratio);
+        draw_set_color(_pos_col);
+        draw_rectangle(_pos_bar_x, _pos_bar_y,
+            _pos_bar_x + _pos_bar_w * _pos_ratio, _pos_bar_y + _pos_bar_h, false);
+
+        // Borde
+        draw_set_color(make_color_rgb(120, 80, 40));
+        draw_rectangle(_pos_bar_x, _pos_bar_y, _pos_bar_x + _pos_bar_w, _pos_bar_y + _pos_bar_h, true);
+    }
+
+    // ── INDICADOR STUN del enemigo ──
+    if (variable_struct_exists(en, "stun_activo") && en.stun_activo) {
+        var _stun_secs = en.stun_timer / GAME_FPS;
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_top);
+        var _stun_blink = ((current_time div 150) mod 2 == 0) ? c_yellow : c_aqua;
+        draw_set_color(_stun_blink);
+        draw_text(_pos_bar_x + _pos_bar_w / 2, _pos_bar_y + _pos_bar_h + 3,
+            "STUN " + string_format(_stun_secs, 1, 1) + "s");
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+    }
+
     // ── ESTADOS ALTERADOS DEL ENEMIGO (iconos debajo de la barra IA) ──
     if (is_array(en.estados)) {
         var _est_x = _en_frame_x;
-        var _est_y = _ia_bar_y + _ia_bar_h + 4;
+        var _est_y = _pos_bar_y + _pos_bar_h + 22;
         var _est_size = 28;
         var _est_gap = 4;
         var _est_count = 0;
@@ -499,6 +536,30 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
             draw_set_color(pj.energia >= _costo_en ? make_color_rgb(100, 180, 255) : c_red);
             draw_text(sx1 + 3, sy2 - 2, string(_costo_en));
         }
+
+        // Indicador de habilidad cargable (esquina superior-derecha)
+        if (scr_carga_es_cargable(id_hab)) {
+            draw_set_halign(fa_right);
+            draw_set_valign(fa_top);
+            draw_set_color(make_color_rgb(255, 200, 60));
+            draw_text(sx2 - 3, sy1 + 2, "C");
+        }
+
+        // Glow activo cuando esta habilidad se está cargando
+        if (pj.carga_activa && pj.carga_indice == i) {
+            var _cn = scr_carga_nivel(pj.carga_timer);
+            var _glow_col = c_white;
+            if (_cn == 2) _glow_col = c_yellow;
+            if (_cn == 3) _glow_col = c_orange;
+            var _glow_pulse = 0.3 + 0.2 * abs(sin(current_time * 0.006));
+            draw_set_color(_glow_col);
+            draw_set_alpha(_glow_pulse);
+            draw_rectangle(sx1, sy1, sx2, sy2, false);
+            draw_set_alpha(1);
+            // Marco brillante
+            draw_set_color(_glow_col);
+            draw_rectangle(sx1 - 1, sy1 - 1, sx2 + 1, sy2 + 1, true);
+        }
     }
 
     draw_set_halign(fa_left);
@@ -563,7 +624,7 @@ if (!control_combate.combate_terminado) {
 }
 
 // ===========================
-//  INDICADOR PARRY + GCD (arriba de barra de energía)
+//  INDICADOR PARRY + GCD + CARGA + STUN (zona inferior)
 // ===========================
 if (!control_combate.combate_terminado) {
     var _parry_x = 320;
@@ -573,11 +634,11 @@ if (!control_combate.combate_terminado) {
     if (pj.parry_estado == "ventana") {
         draw_set_color(c_aqua);
         var _parry_secs = pj.parry_timer / GAME_FPS;
-        draw_text(_parry_x, _parry_y, "🛡 PARRY [" + string_format(_parry_secs, 1, 1) + "s]");
+        draw_text(_parry_x, _parry_y, "[SPACE] PARRY [" + string_format(_parry_secs, 1, 1) + "s]");
     } else if (pj.parry_estado == "vulnerable") {
         draw_set_color(c_red);
         var _vuln_secs = pj.parry_timer / GAME_FPS;
-        draw_text(_parry_x, _parry_y, "⚠ VULNERABLE [" + string_format(_vuln_secs, 1, 1) + "s]");
+        draw_text(_parry_x, _parry_y, "VULNERABLE [" + string_format(_vuln_secs, 1, 1) + "s]");
     } else {
         draw_set_color(c_ltgray);
         draw_text(_parry_x, _parry_y, "[SPACE] Parry");
@@ -587,7 +648,54 @@ if (!control_combate.combate_terminado) {
     if (pj.gcd_timer > 0) {
         draw_set_color(c_yellow);
         var _gcd_secs = pj.gcd_timer / GAME_FPS;
-        draw_text(_parry_x + 160, _parry_y, "GCD: " + string_format(_gcd_secs, 1, 1) + "s");
+        draw_text(_parry_x + 170, _parry_y, "GCD: " + string_format(_gcd_secs, 1, 1) + "s");
+    }
+
+    // ── Indicador CARGA PROGRESIVA ──
+    if (pj.carga_activa) {
+        var _c_y = _parry_y - 18;
+        var _nivel = scr_carga_nivel(pj.carga_timer);
+        var _mult  = scr_carga_multiplicador(_nivel);
+        var _c_col = c_ltgray;
+        if (_nivel == 2) _c_col = c_yellow;
+        if (_nivel == 3) _c_col = c_orange;
+
+        // Barra de carga
+        var _max_frames = round(GAME_FPS * CARGA_NIVEL3_SEG);
+        var _c_ratio = clamp(pj.carga_timer / _max_frames, 0, 1);
+
+        draw_set_color(make_color_rgb(15, 15, 30));
+        draw_set_alpha(0.85);
+        draw_roundrect_ext(_parry_x, _c_y, _parry_x + 200, _c_y + 12, 3, 3, false);
+        draw_set_alpha(1);
+
+        draw_set_color(_c_col);
+        draw_roundrect_ext(_parry_x, _c_y, _parry_x + 200 * _c_ratio, _c_y + 12, 3, 3, false);
+
+        // Borde
+        draw_set_color(make_color_rgb(180, 140, 40));
+        draw_roundrect_ext(_parry_x, _c_y, _parry_x + 200, _c_y + 12, 3, 3, true);
+
+        // Texto
+        draw_set_color(c_white);
+        draw_text(_parry_x + 205, _c_y, "N" + string(_nivel) + " x" + string(_mult));
+
+        // Brillo pulsante en nivel 3
+        if (_nivel == 3) {
+            var _pulse = 0.3 + 0.3 * abs(sin(current_time * 0.008));
+            draw_set_color(c_yellow);
+            draw_set_alpha(_pulse);
+            draw_roundrect_ext(_parry_x - 2, _c_y - 2, _parry_x + 202, _c_y + 14, 4, 4, false);
+            draw_set_alpha(1);
+        }
+    }
+
+    // ── Indicador Micro-Stun del jugador ──
+    if (variable_struct_exists(pj, "micro_stun_timer") && pj.micro_stun_timer > 0) {
+        var _ms_secs = pj.micro_stun_timer / GAME_FPS;
+        var _ms_blink = ((current_time div 150) mod 2 == 0) ? c_red : c_maroon;
+        draw_set_color(_ms_blink);
+        draw_text(_parry_x, _parry_y + 14, "ATURDIDO " + string_format(_ms_secs, 1, 1) + "s");
     }
 
     draw_set_halign(fa_left);

@@ -20,6 +20,11 @@ function scr_parry_intentar(_p) {
     // No se puede hacer parry si el GCD está activo
     if (_p.gcd_timer > 0) return false;
 
+    // Cancelar carga activa al hacer parry (prioridad defensiva)
+    if (_p.carga_activa) {
+        scr_carga_cancelar(_p);
+    }
+
     _p.parry_estado = "ventana";
     _p.parry_timer  = round(GAME_FPS * PARRY_VENTANA_SEG);
 
@@ -115,6 +120,9 @@ function scr_parry_evaluar(_defensor, _atacante, _dano) {
 
         // Notificación
         scr_notif_agregar(_defensor.nombre, "¡PARRY PERFECTO! +" + string(_energia_ganada) + " energía", c_aqua);
+
+        // ── Stun de Reacción al atacante ──
+        scr_stun_aplicar(_atacante, STUN_PARRY_SEG, "parry");
 
         show_debug_message("🛡✨ " + _defensor.nombre + " — PARRY PERFECTO vs " + _atacante.nombre
             + " | +energía:" + string(_energia_ganada) + " +esencia:" + string(_esencia_ganada));

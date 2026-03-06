@@ -21,8 +21,8 @@ if (super_deny_timer > 0) {
     super_deny_shake = 0;
 }
 
-// ── PAUSA (Espacio) ──
-if (keyboard_check_pressed(vk_space)) {
+// ── PAUSA (Escape) ──
+if (keyboard_check_pressed(vk_escape)) {
     if (!control_combate.combate_terminado) {
         pausado = !pausado;
         pausa_opcion = 0;

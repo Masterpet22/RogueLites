@@ -437,6 +437,18 @@
     },
     {
       "id": {
+        "name": "scr_carga_progresiva",
+        "path": "scripts/scr_carga_progresiva/scr_carga_progresiva.yy"
+      }
+    },
+    {
+      "id": {
+        "name": "scr_stun_postura",
+        "path": "scripts/scr_stun_postura/scr_stun_postura.yy"
+      }
+    },
+    {
+      "id": {
         "name": "scr_ejecutar_super",
         "path": "scripts/scr_ejecutar_super/scr_ejecutar_super.yy"
       }

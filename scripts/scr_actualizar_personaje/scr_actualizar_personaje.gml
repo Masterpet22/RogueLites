@@ -36,4 +36,12 @@ function scr_actualizar_personaje(_p) {
 
     // ── Parry: actualizar timers ──
     scr_parry_actualizar(_p);
+
+    // ── Stun / Postura: actualizar timers + regeneración ──
+    scr_stun_actualizar(_p);
+
+    // ── Carga Progresiva: actualizar drenaje (solo jugador) ──
+    if (_p.es_jugador && _p.carga_activa) {
+        scr_carga_actualizar(_p);
+    }
 }

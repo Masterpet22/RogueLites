@@ -22,6 +22,26 @@
 // ── GCD (Global Cooldown) ──
 #macro GCD_DURACION_SEG         0.5    // duración del cooldown global (segundos)
 
+// ── Daño Progresivo (Carga) ──
+#macro CARGA_DRENAJE_ENERGIA    10     // energía por segundo mientras carga
+#macro CARGA_NIVEL2_SEG         1.0    // segundos para alcanzar nivel 2
+#macro CARGA_NIVEL3_SEG         2.0    // segundos para alcanzar nivel 3 (máximo)
+#macro CARGA_MULT_N1            1.0    // multiplicador nivel 1 (toque rápido)
+#macro CARGA_MULT_N2            1.5    // multiplicador nivel 2 (1s carga)
+#macro CARGA_MULT_N3            2.5    // multiplicador nivel 3 (2s carga, máximo)
+#macro CARGA_VULN_RECIBIDO      1.25   // +25% daño recibido mientras carga
+#macro CARGA_MICRO_STUN_SEG     0.5    // micro-stun si recibe golpe cargando
+
+// ── Stun (Aturdimiento) ──
+#macro STUN_PARRY_SEG           1.2    // duración stun por parry perfecto
+#macro STUN_POSTURA_SEG         3.0    // duración stun por ruptura de postura (3-4s)
+#macro STUN_ESENCIA_MULT        2.0    // multiplicador de esencia al golpear stunned con carga máx
+
+// ── Postura (Barra de Postura del Enemigo) ──
+#macro POSTURA_BASE             100    // postura base por defecto
+#macro POSTURA_REGEN_SEG        5      // postura se regenera tras X segundos sin recibir
+#macro POSTURA_REGEN_RATE       0.10   // % de postura regenerada por segundo
+
 // ── Esencia dinámica ──
 #macro ESENCIA_PCT_DANO       0.05   // 5% del daño final se suma como esencia
 #macro ESENCIA_MULT_VEL       0.3    // velocidad × 0.3 se suma por acción

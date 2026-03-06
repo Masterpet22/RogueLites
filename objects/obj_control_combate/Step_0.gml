@@ -141,34 +141,82 @@ if (keyboard_check_pressed(vk_space)) {
     scr_parry_intentar(personaje_jugador);
 }
 
+// ══════════════════════════════════════════════════════════════
+//  MICRO-STUN CHECK: si el jugador está en micro-stun, no puede actuar
+// ══════════════════════════════════════════════════════════════
+var _puede_actuar = scr_jugador_puede_actuar(personaje_jugador);
+
+// ══════════════════════════════════════════════════════════════
+//  CARGA PROGRESIVA: Liberar tecla → disparar carga
+// ══════════════════════════════════════════════════════════════
+if (personaje_jugador.carga_activa && _puede_actuar) {
+    var _carga_key = -1;
+    switch (personaje_jugador.carga_indice) {
+        case 0: _carga_key = ord("Q"); break;
+        case 1: _carga_key = ord("W"); break;
+        case 2: _carga_key = ord("E"); break;
+        case 3: _carga_key = ord("R"); break;
+    }
+    // Si soltó la tecla → disparar
+    if (_carga_key != -1 && keyboard_check_released(_carga_key)) {
+        scr_carga_disparar(personaje_jugador);
+    }
+}
+
 
 // INPUT HABILIDADES JUGADOR
+if (_puede_actuar && !personaje_jugador.carga_activa) {
 
-// Slot 0 (Clase) → Q
-if (keyboard_check_pressed(ord("Q"))) {
-    scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 0);
-}
+    // Slot 0 (Clase) → Q — mantener para carga o toque rápido
+    if (keyboard_check_pressed(ord("Q"))) {
+        var _hab_q = personaje_jugador.habilidades_arma[0];
+        if (scr_carga_es_cargable(_hab_q)) {
+            scr_carga_iniciar(personaje_jugador, 0);
+        } else {
+            scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 0);
+        }
+    }
 
-// Slot 1 (Arma hab 1) → W
-if (keyboard_check_pressed(ord("W"))) {
-    scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 1);
-}
+    // Slot 1 (Arma hab 1) → W — siempre toque rápido (R1 no carga)
+    if (keyboard_check_pressed(ord("W"))) {
+        scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 1);
+    }
 
-// Slot 2 (Arma hab 2, R2+) → E
-if (keyboard_check_pressed(ord("E"))) {
-    scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 2);
-}
+    // Slot 2 (Arma hab 2, R2+) → E — mantener para carga
+    if (keyboard_check_pressed(ord("E"))) {
+        if (array_length(personaje_jugador.habilidades_arma) > 2) {
+            var _hab_e = personaje_jugador.habilidades_arma[2];
+            if (scr_carga_es_cargable(_hab_e)) {
+                scr_carga_iniciar(personaje_jugador, 2);
+            } else {
+                scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 2);
+            }
+        }
+    }
 
-// Slot 3 (Arma hab 3, R3) → R
-if (keyboard_check_pressed(ord("R"))) {
-    scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 3);
+    // Slot 3 (Arma hab 3, R3) → R — mantener para carga
+    if (keyboard_check_pressed(ord("R"))) {
+        if (array_length(personaje_jugador.habilidades_arma) > 3) {
+            var _hab_r = personaje_jugador.habilidades_arma[3];
+            if (scr_carga_es_cargable(_hab_r)) {
+                scr_carga_iniciar(personaje_jugador, 3);
+            } else {
+                scr_usar_habilidad_indice(personaje_jugador, personaje_enemigo, 3);
+            }
+        }
+    }
+
+} else if (personaje_jugador.carga_activa) {
+    // Si está cargando y presiona Parry → prioridad defensa (ya gestionado en scr_parry_intentar)
 }
 
 // SÚPER-HABILIDAD → TAB (requiere al menos 50% de esencia)
-if (keyboard_check_pressed(vk_tab)) {
+if (_puede_actuar && keyboard_check_pressed(vk_tab)) {
     // Chequear GCD y Parry antes del Súper
     if (personaje_jugador.gcd_timer > 0 || !scr_parry_puede_actuar(personaje_jugador)) {
         // Bloqueado por GCD o Parry
+    } else if (personaje_jugador.carga_activa) {
+        // No se puede usar Súper mientras carga
     } else if (personaje_jugador.esencia >= personaje_jugador.esencia_llena * 0.5) {
         scr_ejecutar_super(personaje_jugador, personaje_enemigo);
         // Activar GCD tras usar Súper
@@ -184,20 +232,24 @@ if (keyboard_check_pressed(vk_tab)) {
 }
 
 // OBJETOS EQUIPADOS → teclas 1, 2, 3
-if (keyboard_check_pressed(ord("1"))) {
-    scr_usar_objeto_combate(0);
+if (_puede_actuar) {
+    if (keyboard_check_pressed(ord("1"))) {
+        scr_usar_objeto_combate(0);
+    }
+    if (keyboard_check_pressed(ord("2"))) {
+        scr_usar_objeto_combate(1);
+    }
+    if (keyboard_check_pressed(ord("3"))) {
+        scr_usar_objeto_combate(2);
+    }
 }
-if (keyboard_check_pressed(ord("2"))) {
-    scr_usar_objeto_combate(1);
-}
-if (keyboard_check_pressed(ord("3"))) {
-    scr_usar_objeto_combate(2);
-}
-
 
 
 // 3. IA del enemigo — Máquina de estados (esperando → preparando → atacando)
-scr_ia_enemigo(personaje_enemigo, personaje_jugador);
+// Si el enemigo está stunned, no ejecutar IA
+if (!scr_esta_stunned(personaje_enemigo)) {
+    scr_ia_enemigo(personaje_enemigo, personaje_jugador);
+}
 
 // 3b. Actualizar mecánicas especiales del enemigo
 scr_mec_actualizar(personaje_enemigo);

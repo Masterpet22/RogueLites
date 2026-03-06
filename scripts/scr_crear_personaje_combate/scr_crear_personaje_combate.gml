@@ -96,6 +96,23 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
         // ── GCD (Global Cooldown) ──
         gcd_timer:         0,
 
+        // ── Daño Progresivo (Carga) ──
+        carga_activa:      false,
+        carga_indice:      -1,
+        carga_timer:       0,
+        carga_mult_temp:   1.0,
+        carga_nivel_temp:  1,
+        carga_drenaje_acum: 0,
+
+        // ── Stun / Micro-stun ──
+        stun_activo:       false,
+        stun_timer:        0,
+        stun_tipo:         "",
+        micro_stun_timer:  0,
+
+        // ── Tracking de habilidad actual ──
+        hab_actual_id:     "",
+
 		// Buffs / estados
         estados:             [],     // array de estados alterados
         defensa_bonus_temp:  0,
