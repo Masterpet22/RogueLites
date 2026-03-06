@@ -470,7 +470,27 @@ function scr_feedback_dibujar_sprites() {
             _blend = c_red;
         }
 
+        // ── Shader: flash de golpe (reemplaza merge_color básico) ──
+        var _shader_on = false;
+        if (_c.fb_flash_timer[0] > 0 && shader_is_compiled(shd_flash)) {
+            var _fr = _c.fb_flash_timer[0] / FB_FLASH_FRAMES;
+            var _fc = _c.fb_flash_color[0];
+            scr_shader_flash_set(
+                color_get_red(_fc) / 255,
+                color_get_green(_fc) / 255,
+                color_get_blue(_fc) / 255,
+                _fr * 0.85
+            );
+            _blend = c_white; // el shader se encarga del tinte
+            _shader_on = true;
+        } else if (_c.fin_activado && _c.foco_quien == 1 && shader_is_compiled(shd_desaturate)) {
+            // Perdedor: desaturar progresivamente
+            scr_shader_desaturate_set(0.7);
+            _shader_on = true;
+        }
+
         draw_sprite_ext(_spr_j, 0, _sx, _sy, _escala_j, _escala_j, 0, _blend, _alpha);
+        if (_shader_on) shader_reset();
     }
 
     // ── ENEMIGO BODY SPRITE ──
@@ -502,6 +522,24 @@ function scr_feedback_dibujar_sprites() {
             _blend = c_red;
         }
 
+        // ── Shader: flash de golpe al enemigo ──
+        var _shader_en_on = false;
+        if (_c.fb_flash_timer[1] > 0 && shader_is_compiled(shd_flash)) {
+            var _fr = _c.fb_flash_timer[1] / FB_FLASH_FRAMES;
+            var _fc = _c.fb_flash_color[1];
+            scr_shader_flash_set(
+                color_get_red(_fc) / 255,
+                color_get_green(_fc) / 255,
+                color_get_blue(_fc) / 255,
+                _fr * 0.85
+            );
+            _blend = c_white;
+            _shader_en_on = true;
+        } else if (_c.fin_activado && _c.foco_quien == 2 && shader_is_compiled(shd_desaturate)) {
+            scr_shader_desaturate_set(0.7);
+            _shader_en_on = true;
+        }
+
         // ── FX especiales según rango ──
         var _rc = (variable_struct_exists(_c.personaje_enemigo, "recolor_elite"))
                   ? _c.personaje_enemigo.recolor_elite : undefined;
@@ -518,6 +556,7 @@ function scr_feedback_dibujar_sprites() {
             // Dibujar normal (flip horizontal para enemigos)
             draw_sprite_ext(_spr_e, 0, _sx, _sy, -_escala_e, _escala_e, 0, _blend, _alpha);
         }
+        if (_shader_en_on) shader_reset();
     }
 
     // ── GLOW ELEMENTAL de esencia sobre el jugador (additive blending) ──

@@ -72,6 +72,11 @@ function scr_aplicar_estado(_p, _id, _duracion, _pot_extra) {
     if (nuevo.tipo == "debuff_poder" && nuevo.poder_penalty != 0) {
         _p.poder_elemental = max(0, _p.poder_elemental - nuevo.poder_penalty);
     }
+    if (nuevo.tipo == "stun") {
+        _p.stun_activo = true;
+        _p.stun_timer  = _duracion;
+        _p.stun_tipo   = "estado";
+    }
 
     array_push(_p.estados, nuevo);
 }

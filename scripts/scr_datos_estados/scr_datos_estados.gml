@@ -63,7 +63,11 @@ function scr_datos_estados(_id) {
                 poder_penalty: 3,                     // -3 poder_elemental mientras dure
             };
 
-        // Aquí vas añadiendo más estados en el futuro
+        case "stun":
+            return {
+                id: _id,
+                tipo: "stun",
+            };
 
     }
 

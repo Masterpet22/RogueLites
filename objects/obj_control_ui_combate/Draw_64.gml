@@ -374,6 +374,12 @@ if (!control_combate.combate_terminado || control_combate.fin_fase < 2) {
     var _shockwave_on = scr_shaders_dibujar_fondo_fx();
     if (_shockwave_on) shader_reset();
 
+    // Aberración cromática global durante súpers
+    var _chrom_on = false;
+    if (global.chromatic_activo && shader_is_compiled(shd_chromatic)) {
+        _chrom_on = scr_shader_aplicar_chromatic_pantalla();
+    }
+
     // Aplicar zoom de impacto (centrado en pantalla)
     scr_fx_zoom_aplicar();
 
@@ -390,6 +396,8 @@ if (!control_combate.combate_terminado || control_combate.fin_fase < 2) {
 
     // Restaurar zoom de impacto
     scr_fx_zoom_restaurar();
+
+    if (_chrom_on) shader_reset();
 }
 
 // ╔═══════════════════════════════════════════════════════════════╗

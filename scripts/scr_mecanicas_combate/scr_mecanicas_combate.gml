@@ -236,8 +236,8 @@ function scr_mec_modificar_dano_infligido(_en, _jug, _dano) {
     if (scr_mec_tiene(_en, "mec_espejo_clase")) {
         // Bonus: +15% por cada stat del jugador que supere 10
         var _stat_bonus = 0;
-        if (_jug.ataque > 10) { _stat_bonus += 1; }
-        if (_jug.defensa > 10) { _stat_bonus += 1; }
+        if (_jug.ataque_base > 10) { _stat_bonus += 1; }
+        if (_jug.defensa_base > 10) { _stat_bonus += 1; }
         if (_jug.poder_elemental > 10) { _stat_bonus += 1; }
         if (_jug.velocidad > 5) { _stat_bonus += 1; }
         var _espejo_mult = 1.0 + (_stat_bonus * MEC_ESPEJO_MULT);

@@ -1167,7 +1167,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "espejo_voraz": // Espejo — Usa los stats del jugador en su contra
         {
             // El Devorador refleja: daño basado en el ataque/poder DEL DEFENSOR
-            var _atk_ref = max(_defensor.ataque, _defensor.poder_elemental);
+            var _atk_ref = max(_defensor.ataque_base, _defensor.poder_elemental);
             var _dano_espejo = round(_atk_ref * 1.5) + 15;
             _defensor.vida_actual = max(0, _defensor.vida_actual - _dano_espejo);
             // Autocuración modesta
@@ -1206,9 +1206,9 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "golpe_primordial": // Adaptativo — Usa el mayor stat entre ataque y poder
         {
             // El Primer Conductor imita: escala con su stat más alto
-            var _stat_max = max(_atacante.ataque, _atacante.poder_elemental);
+            var _stat_max = max(_atacante.ataque_base, _atacante.poder_elemental);
             var _tipo = "fisico";
-            if (_atacante.poder_elemental > _atacante.ataque) { _tipo = "magico"; }
+            if (_atacante.poder_elemental > _atacante.ataque_base) { _tipo = "magico"; }
             var _p = { stat1:"ataque", escala1:1.5, stat2:"poder", escala2:1.5, base_fija:15,
                        mult_poder:1.2, penetracion:0.2, esencia_gen:0, es_arma:false, tipo_dano:_tipo };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
