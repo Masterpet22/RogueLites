@@ -34,19 +34,19 @@ if (!instance_exists(control_combate)) {
         var _tr = 0.6; var _tg = 0.6; var _tb = 0.6; var _tmix = 0.0;
         switch (_arena) {
             case 0:  // Forjas Rotas — Fuego/Tierra: tinte cálido rojizo
-                _tr = 1.0; _tg = 0.55; _tb = 0.3; _tmix = 0.08; break;
+                _tr = 1.0; _tg = 0.45; _tb = 0.2; _tmix = 0.18; break;
             case 1:  // Fango Viviente — Agua/Planta: tinte verde azulado
-                _tr = 0.3; _tg = 0.85; _tb = 0.6; _tmix = 0.07; break;
+                _tr = 0.2; _tg = 0.8; _tb = 0.5; _tmix = 0.16; break;
             case 2:  // Cielo Roto — Rayo/Luz: tinte azul eléctrico
-                _tr = 0.4; _tg = 0.7; _tb = 1.0; _tmix = 0.08; break;
+                _tr = 0.3; _tg = 0.6; _tb = 1.0; _tmix = 0.18; break;
             case 3:  // Abismo Quebrado — Sombra/Arcano: tinte púrpura
-                _tr = 0.6; _tg = 0.2; _tb = 0.8; _tmix = 0.09; break;
+                _tr = 0.55; _tg = 0.15; _tb = 0.85; _tmix = 0.20; break;
             case 4:  // Nexo Final — Neutra: tinte dorado sutil
-                _tr = 1.0; _tg = 0.9; _tb = 0.5; _tmix = 0.06; break;
+                _tr = 1.0; _tg = 0.85; _tb = 0.4; _tmix = 0.14; break;
         }
-        // Pulso sutil del tinte
-        var _bg_pulse = 0.5 + 0.5 * sin(current_time / 800);
-        _tmix *= (0.8 + 0.4 * _bg_pulse);
+        // Pulso del tinte ambiental
+        var _bg_pulse = 0.5 + 0.5 * sin(current_time / 600);
+        _tmix *= (0.85 + 0.3 * _bg_pulse);
         if (_tmix > 0) {
             scr_shader_tint_set(_tr, _tg, _tb, _tmix);
             _bg_tint_on = true;
@@ -560,13 +560,17 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
     var slots = array_length(habs);
     if (slots > 4) slots = 4;
 
-    var _hab_w = 80;
-    var _hab_h = 50;
-    var _hab_gap = 8;
+    var _hab_w = 82;
+    var _hab_h = 54;
+    var _hab_gap = 10;
     var _hab_x_start = 30;
-    var _hab_y_start = h_gui - 110;
+    var _hab_y_start = h_gui - 135;
 
     var key_labels = ["Q", "W", "E", "R"];
+
+    // Colores de afinidad del jugador para estilo
+    var _pj_afi = variable_struct_exists(pj, "afinidad") ? pj.afinidad : "Neutra";
+    var _pj_pal = scr_paleta_afinidad(_pj_afi);
 
     for (var i = 0; i < slots; i++) {
 
@@ -579,6 +583,31 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
         var cd_actual = cds[i];
         var es_clase = (i == 0);
 
+        var _btn_col  = es_clase ? _pj_pal.dominante : make_color_rgb(45, 40, 65);
+        var _btn_borde = es_clase ? _pj_pal.energia : make_color_rgb(90, 80, 120);
+        var _en_disponible = true;
+        var _costo_en = scr_energia_costo_habilidad(id_hab);
+        if (_costo_en > 0 && pj.energia < _costo_en) _en_disponible = false;
+
+        // ── Sombra del botón ──
+        draw_set_color(c_black);
+        draw_set_alpha(0.4);
+        draw_roundrect_ext(sx1 + 2, sy1 + 3, sx2 + 2, sy2 + 3, 5, 5, false);
+        draw_set_alpha(1);
+
+        // ── Fondo del botón (gradiente simulado) ──
+        // Base oscura
+        draw_set_color(make_color_rgb(12, 10, 22));
+        draw_set_alpha(0.9);
+        draw_roundrect_ext(sx1, sy1, sx2, sy2, 5, 5, false);
+        draw_set_alpha(1);
+
+        // Reflejo de color en mitad superior
+        draw_set_color(_btn_col);
+        draw_set_alpha(0.18);
+        draw_roundrect_ext(sx1 + 2, sy1 + 2, sx2 - 2, sy1 + _hab_h * 0.45, 4, 4, false);
+        draw_set_alpha(1);
+
         // Icono de habilidad
         var _hab_ico = -1;
         if (es_clase) _hab_ico = spr_ico_hab_clase;
@@ -587,81 +616,106 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
         else if (i == 3) _hab_ico = spr_ico_hab_arma_3;
 
         if (_hab_ico != -1) {
-            draw_sprite_stretched(_hab_ico, 0, sx1 + 1, sy1 + 1, _hab_w - 2, _hab_h - 2);
-        } else {
-            draw_set_color(es_clase ? make_color_rgb(50, 35, 10) : make_color_rgb(30, 30, 30));
-            draw_rectangle(sx1 + 1, sy1 + 1, sx2 - 1, sy2 - 1, false);
+            draw_sprite_stretched(_hab_ico, 0, sx1 + 4, sy1 + 4, _hab_w - 8, _hab_h - 20);
         }
 
-        // Marco
-        draw_set_color(es_clase ? c_orange : c_white);
-        draw_rectangle(sx1, sy1, sx2, sy2, true);
+        // ── Marco con doble borde ──
+        draw_set_color(make_color_rgb(20, 18, 30));
+        draw_roundrect_ext(sx1 - 1, sy1 - 1, sx2 + 1, sy2 + 1, 6, 6, true);
+        draw_set_color(_btn_borde);
+        draw_roundrect_ext(sx1, sy1, sx2, sy2, 5, 5, true);
 
         // Nombre habilidad
         var nombre = scr_nombre_habilidad(id_hab);
-        draw_set_color(es_clase ? c_orange : c_white);
+        // Sombra del nombre
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
-        draw_text((sx1 + sx2) / 2, sy1 + 18, nombre);
+        draw_set_color(c_black);
+        draw_text((sx1 + sx2) / 2 + 1, sy1 + 16 + 1, nombre);
+        // Texto principal
+        draw_set_color(es_clase ? _pj_pal.energia : c_white);
+        draw_text((sx1 + sx2) / 2, sy1 + 16, nombre);
 
-        // Tecla
+        // ── Badge de tecla (pill redondeada) ──
+        var _key_w = 22;
+        var _key_h = 14;
+        var _key_x = (sx1 + sx2) / 2 - _key_w / 2;
+        var _key_y = sy2 - _key_h - 4;
+        draw_set_color(make_color_rgb(25, 22, 40));
+        draw_set_alpha(0.85);
+        draw_roundrect_ext(_key_x, _key_y, _key_x + _key_w, _key_y + _key_h, 4, 4, false);
+        draw_set_alpha(1);
+        draw_set_color(make_color_rgb(180, 160, 60));
+        draw_roundrect_ext(_key_x, _key_y, _key_x + _key_w, _key_y + _key_h, 4, 4, true);
         draw_set_color(c_yellow);
-        draw_text((sx1 + sx2) / 2, sy2 - 10, key_labels[i]);
+        draw_text(_key_x + _key_w / 2, _key_y + _key_h / 2, key_labels[i]);
 
-        // Cooldown overlay
+        // ── Cooldown overlay ──
         var cd_base = scr_cooldown_habilidad(id_hab);
         if (cd_actual > 0 && cd_base > 0) {
             var ratio = clamp(cd_actual / cd_base, 0, 1);
             draw_set_color(c_black);
-            draw_set_alpha(0.7);
+            draw_set_alpha(0.65);
             var fill_h = _hab_h * ratio;
-            draw_rectangle(sx1 + 1, sy2 - fill_h, sx2 - 1, sy2 - 1, false);
+            draw_roundrect_ext(sx1 + 2, sy2 - fill_h, sx2 - 2, sy2 - 2, 4, 4, false);
             draw_set_alpha(1);
 
+            // Texto CD restante
             var secs = cd_actual / GAME_FPS;
             draw_set_color(c_aqua);
-            draw_text((sx1 + sx2) / 2, sy1 + 5, string_format(secs, 1, 1));
+            draw_text((sx1 + sx2) / 2, (sy1 + sy2) / 2, string_format(secs, 1, 1));
         }
 
-        // GCD overlay (semi-transparente sobre todas las habilidades)
+        // GCD overlay
         if (pj.gcd_timer > 0 && cd_actual <= 0) {
-            draw_set_color(make_color_rgb(60, 60, 20));
-            draw_set_alpha(0.45);
-            draw_rectangle(sx1 + 1, sy1 + 1, sx2 - 1, sy2 - 1, false);
+            draw_set_color(make_color_rgb(40, 40, 15));
+            draw_set_alpha(0.4);
+            draw_roundrect_ext(sx1 + 2, sy1 + 2, sx2 - 2, sy2 - 2, 4, 4, false);
+            draw_set_alpha(1);
+        }
+
+        // ── Sin energía: tinte rojo ──
+        if (!_en_disponible && cd_actual <= 0) {
+            draw_set_color(c_red);
+            draw_set_alpha(0.15);
+            draw_roundrect_ext(sx1 + 2, sy1 + 2, sx2 - 2, sy2 - 2, 4, 4, false);
             draw_set_alpha(1);
         }
 
         // Coste de energía (esquina inferior-izquierda)
-        var _costo_en = scr_energia_costo_habilidad(id_hab);
         if (_costo_en > 0) {
             draw_set_halign(fa_left);
             draw_set_valign(fa_bottom);
-            draw_set_color(pj.energia >= _costo_en ? make_color_rgb(100, 180, 255) : c_red);
-            draw_text(sx1 + 3, sy2 - 2, string(_costo_en));
+            draw_set_color(c_black);
+            draw_text(sx1 + 5, sy2 - 4 + 1, string(_costo_en));
+            draw_set_color(_en_disponible ? make_color_rgb(80, 160, 240) : c_red);
+            draw_text(sx1 + 4, sy2 - 5, string(_costo_en));
         }
 
-        // Indicador de habilidad cargable (esquina superior-derecha)
+        // Indicador cargable (esquina superior-derecha)
         if (scr_carga_es_cargable(id_hab)) {
             draw_set_halign(fa_right);
             draw_set_valign(fa_top);
             draw_set_color(make_color_rgb(255, 200, 60));
-            draw_text(sx2 - 3, sy1 + 2, "C");
+            draw_text(sx2 - 5, sy1 + 3, "C");
         }
 
-        // Glow activo cuando esta habilidad se está cargando
+        // ── Glow de carga activa ──
         if (pj.carga_activa && pj.carga_indice == i) {
             var _cn = scr_carga_nivel(pj.carga_timer);
             var _glow_col = c_white;
             if (_cn == 2) _glow_col = c_yellow;
             if (_cn == 3) _glow_col = c_orange;
-            var _glow_pulse = 0.3 + 0.2 * abs(sin(current_time * 0.006));
+            var _glow_pulse = 0.25 + 0.2 * abs(sin(current_time * 0.006));
+            gpu_set_blendmode(bm_add);
             draw_set_color(_glow_col);
             draw_set_alpha(_glow_pulse);
-            draw_rectangle(sx1, sy1, sx2, sy2, false);
+            draw_roundrect_ext(sx1 - 2, sy1 - 2, sx2 + 2, sy2 + 2, 6, 6, false);
             draw_set_alpha(1);
+            gpu_set_blendmode(bm_normal);
             // Marco brillante
             draw_set_color(_glow_col);
-            draw_rectangle(sx1 - 1, sy1 - 1, sx2 + 1, sy2 + 1, true);
+            draw_roundrect_ext(sx1 - 1, sy1 - 1, sx2 + 1, sy2 + 1, 6, 6, true);
         }
     }
 
@@ -681,8 +735,8 @@ if (!control_combate.combate_terminado) {
 // ===========================
 if (!control_combate.combate_terminado) {
     var _en_bar_x = 30;
-    var _en_bar_y = h_gui - 55;
-    var _en_bar_w = 280;
+    var _en_bar_y = h_gui - 70;
+    var _en_bar_w = 260;
     var _en_bar_h = 10;
 
     var _energia_ratio = clamp(pj.energia / max(1, pj.energia_max), 0, 1);
@@ -730,8 +784,8 @@ if (!control_combate.combate_terminado) {
 //  INDICADOR PARRY + GCD + CARGA + STUN (zona inferior)
 // ===========================
 if (!control_combate.combate_terminado) {
-    var _parry_x = 320;
-    var _parry_y = h_gui - 55;
+    var _parry_x = 380;
+    var _parry_y = h_gui - 70;
 
     // Estado de Parry
     if (pj.parry_estado == "ventana") {
@@ -754,9 +808,9 @@ if (!control_combate.combate_terminado) {
         draw_text(_parry_x + 170, _parry_y, "GCD: " + string_format(_gcd_secs, 1, 1) + "s");
     }
 
-    // ── Indicador CARGA PROGRESIVA ──
+    // ── Indicador CARGA PROGRESIVA (encima de los botones de habilidad) ──
     if (pj.carga_activa) {
-        var _c_y = _parry_y - 18;
+        var _c_y = h_gui - 150;
         var _nivel = scr_carga_nivel(pj.carga_timer);
         var _mult  = scr_carga_multiplicador(_nivel);
         var _c_col = c_ltgray;
