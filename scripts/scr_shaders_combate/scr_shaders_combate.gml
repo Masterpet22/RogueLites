@@ -57,6 +57,11 @@ function scr_shaders_init() {
     global.u_wave_width    = shader_get_uniform(shd_shockwave, "u_wave_width");
     global.u_wave_strength = shader_get_uniform(shd_shockwave, "u_wave_strength");
 
+    // ── shd_blur ──
+    global.u_blur_texel  = shader_get_uniform(shd_blur, "u_texel_size");
+    global.u_blur_amount = shader_get_uniform(shd_blur, "u_blur_amount");
+    global.u_blur_darken = shader_get_uniform(shd_blur, "u_darken");
+
     // ── Estado de shockwave activo ──
     global.shockwave_activo   = false;
     global.shockwave_timer    = 0;
@@ -204,6 +209,16 @@ function scr_shaders_actualizar() {
             global.chromatic_activo = false;
         }
     }
+}
+
+
+/// @function scr_shader_blur_set(texel_w, texel_h, amount, darken)
+/// @description Aplica blur gaussiano. amount ~1.5..3.0 para efecto visible. darken 0..1.
+function scr_shader_blur_set(_tw, _th, _amount, _darken) {
+    shader_set(shd_blur);
+    shader_set_uniform_f(global.u_blur_texel, _tw, _th);
+    shader_set_uniform_f(global.u_blur_amount, _amount);
+    shader_set_uniform_f(global.u_blur_darken, _darken);
 }
 
 

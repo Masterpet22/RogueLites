@@ -157,6 +157,18 @@ function scr_fx_activar_super(_afinidad, _atacante) {
     _c.foco_dim_obj    = 0.25;   // oscurecer al otro al 25% alpha
     _c.foco_vel        = 0.08;   // interpolación rápida
 
+    // ── Mover al atacante al centro de la pantalla ──
+    var _gui_w = display_get_gui_width();
+    if (_es_jugador) {
+        // Jugador está en 0.22, moverlo a 0.50
+        _c.foco_offset_pj_x_obj = _gui_w * 0.28;
+        _c.foco_offset_en_x_obj = 0;
+    } else {
+        // Enemigo está en 0.78, moverlo a 0.50
+        _c.foco_offset_en_x_obj = -_gui_w * 0.28;
+        _c.foco_offset_pj_x_obj = 0;
+    }
+
     // Auto-restaurar foco después del hitstop (programar restauración)
     _c.foco_super_restore_timer = HITSTOP_SUPER_FRAMES + round(GAME_FPS * 0.8);
 

@@ -248,6 +248,9 @@ function scr_feedback_actualizar() {
             _c.foco_quien      = 0;
             _c.foco_escala_obj = 1.0;
             _c.foco_dim_obj    = 1.0;
+            // Devolver sprites a su posición original
+            _c.foco_offset_pj_x_obj = 0;
+            _c.foco_offset_en_x_obj = 0;
         }
     }
 
@@ -257,6 +260,11 @@ function scr_feedback_actualizar() {
         // Fade-out del blur en los últimos 10 frames
         if (_c.super_blur_timer < 10) {
             _c.super_blur_alpha = clamp(_c.super_blur_timer / 10, 0, 1) * 0.85;
+        }
+        // Liberar surface cuando termina el blur
+        if (_c.super_blur_timer <= 0 && surface_exists(_c.super_blur_surface)) {
+            surface_free(_c.super_blur_surface);
+            _c.super_blur_surface = -1;
         }
     }
 
@@ -483,6 +491,10 @@ function scr_feedback_dibujar_sprites() {
             );
             _blend = c_white; // el shader se encarga del tinte
             _shader_on = true;
+        } else if (_c.foco_quien == 2 && _c.super_blur_timer > 0 && shader_is_compiled(shd_desaturate)) {
+            // Objetivo del súper: oscurecer con desaturación
+            scr_shader_desaturate_set(0.85);
+            _shader_on = true;
         } else if (_c.fin_activado && _c.foco_quien == 1 && shader_is_compiled(shd_desaturate)) {
             // Perdedor: desaturar progresivamente
             scr_shader_desaturate_set(0.7);
@@ -534,6 +546,10 @@ function scr_feedback_dibujar_sprites() {
                 _fr * 0.85
             );
             _blend = c_white;
+            _shader_en_on = true;
+        } else if (_c.foco_quien == 1 && _c.super_blur_timer > 0 && shader_is_compiled(shd_desaturate)) {
+            // Objetivo del súper: oscurecer con desaturación
+            scr_shader_desaturate_set(0.85);
             _shader_en_on = true;
         } else if (_c.fin_activado && _c.foco_quien == 2 && shader_is_compiled(shd_desaturate)) {
             scr_shader_desaturate_set(0.7);

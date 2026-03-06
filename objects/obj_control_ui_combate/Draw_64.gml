@@ -32,18 +32,37 @@ if (!instance_exists(control_combate)) {
         display_get_gui_width() + 8, display_get_gui_height() + 8);
 }
 
-// ── Blur de escenario durante súper (surface-based fake blur) ──
+// ── Blur de escenario durante súper (shader-based) ──
 if (control_combate.super_blur_timer > 0 && control_combate.super_blur_alpha > 0) {
     var _gw = display_get_gui_width();
     var _gh = display_get_gui_height();
     var _blur_a = control_combate.super_blur_alpha;
 
-    // Dibujar múltiples copias semi-transparentes del fondo con offset para simular blur
-    draw_set_alpha(_blur_a * 0.25);
-    draw_set_color(c_black);
-    draw_rectangle(0, 0, _gw, _gh, false);
+    // Capturar el fondo actual a una surface y redibujar con blur
+    if (shader_is_compiled(shd_blur)) {
+        // Crear o reutilizar surface del blur
+        if (!surface_exists(control_combate.super_blur_surface)) {
+            control_combate.super_blur_surface = surface_create(_gw, _gh);
+        }
+        // Copiar lo dibujado hasta ahora (fondo) a la surface
+        surface_copy(control_combate.super_blur_surface, 0, 0, application_surface);
 
-    // Desaturar ligeramente con tinte del color elemental del flash
+        // Dibujar la surface con shader blur sobre el fondo
+        var _tw = 1.0 / _gw;
+        var _th = 1.0 / _gh;
+        scr_shader_blur_set(_tw, _th, 2.5 * _blur_a, _blur_a * 0.4);
+        draw_surface_stretched(control_combate.super_blur_surface, 0, 0, _gw, _gh);
+        shader_reset();
+    } else {
+        // Fallback sin shader: overlay negro
+        draw_set_alpha(_blur_a * 0.25);
+        draw_set_color(c_black);
+        draw_rectangle(0, 0, _gw, _gh, false);
+        draw_set_alpha(1);
+        draw_set_color(c_white);
+    }
+
+    // Tinte elemental sutil
     if (variable_struct_exists(control_combate, "flash_pantalla_color")) {
         draw_set_color(control_combate.flash_pantalla_color);
         draw_set_alpha(_blur_a * 0.08);

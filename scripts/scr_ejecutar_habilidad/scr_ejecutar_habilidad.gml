@@ -6,6 +6,9 @@
 
 function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
 
+    // Reproducir efecto de sonido de la habilidad
+    scr_sonido_habilidad(_id);
+
     switch (_id) {
 
         // ==========================================================

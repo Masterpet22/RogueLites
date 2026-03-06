@@ -385,6 +385,9 @@ function scr_ejecutar_super(_atk, _def) {
     var _afi_super = variable_struct_exists(_atk, "afinidad") ? _atk.afinidad : "Neutra";
     scr_fx_activar_super(_afi_super, _atk);
 
+    // Sonido épico de súper
+    scr_sonido_super();
+
     // Bark de combate: línea de diálogo al usar la súper
     scr_bark_on_super(_atk);
 

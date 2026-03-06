@@ -1,6 +1,6 @@
 {
   "$GMSound":"v2",
-  "%Name":"snd_4",
+  "%Name":"snd_default",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
@@ -10,9 +10,9 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.7564172,
+  "duration":0.46650794,
   "exportDir":"",
-  "name":"snd_4",
+  "name":"snd_default",
   "parent":{
     "name":"sonidos",
     "path":"folders/sonidos.yy",
@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"snd_4.wav",
+  "soundFile":"snd_default.wav",
   "volume":1.0,
 }
