@@ -261,8 +261,8 @@ if (estado == SelState.ARMA_POPUP) {
     var _n_armas = array_length(armas);
 
     // Dimensiones del popup
-    var _pw = 560;
-    var _ph = 380;
+    var _pw = 620;
+    var _ph = 520;
     var _pcx = w_gui / 2;
     var _pcy = h_gui / 2;
     var _px1 = _pcx - _pw / 2;
@@ -293,14 +293,36 @@ if (estado == SelState.ARMA_POPUP) {
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
 
-    // Zona izquierda: lista de armas
+    // Zona izquierda: lista de armas CON SCROLL
     var _list_x = _px1 + 16;
     var _list_y = _py1 + 48;
-    var _list_w = 200;
-    var _item_h = 36;
+    var _list_w = 220;
+    var _item_h = 32;
+    var _list_h_max = _ph - 48 - 50;  // altura visible de la lista
+    var _items_visibles = floor(_list_h_max / _item_h);
 
-    for (var i = 0; i < _n_armas; i++) {
-        var _iy = _list_y + i * _item_h;
+    // Calcular offset de scroll para mantener selección visible
+    var _scroll_offset = 0;
+    if (_n_armas > _items_visibles) {
+        _scroll_offset = clamp(indice_arma - floor(_items_visibles / 2), 0, _n_armas - _items_visibles);
+    }
+
+    // Indicadores de scroll
+    if (_scroll_offset > 0) {
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(c_yellow);
+        draw_text(_list_x + _list_w * 0.5, _list_y - 8, "▲ " + string(_scroll_offset) + " más");
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+    }
+
+    var _i_start = _scroll_offset;
+    var _i_end = min(_n_armas, _scroll_offset + _items_visibles);
+
+    for (var i = _i_start; i < _i_end; i++) {
+        var _draw_idx = i - _scroll_offset;
+        var _iy = _list_y + _draw_idx * _item_h;
         var _is_sel = (i == indice_arma);
         var _arma_datos = scr_datos_armas(armas[i]);
 
@@ -334,16 +356,27 @@ if (estado == SelState.ARMA_POPUP) {
         // Nombre del arma
         draw_set_color(_is_sel ? _rar_col : make_color_rgb(140, 140, 160));
         var _arma_txt = armas[i];
-        if (string_length(_arma_txt) > 18) _arma_txt = string_copy(_arma_txt, 1, 18);
+        if (string_length(_arma_txt) > 20) _arma_txt = string_copy(_arma_txt, 1, 20);
         draw_text(_list_x + 24, _iy + _item_h * 0.5, _arma_txt);
+        draw_set_valign(fa_top);
+    }
+
+    // Indicador de scroll inferior
+    var _restantes_abajo = _n_armas - _i_end;
+    if (_restantes_abajo > 0) {
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(c_yellow);
+        draw_text(_list_x + _list_w * 0.5, _list_y + _items_visibles * _item_h + 6, "▼ " + string(_restantes_abajo) + " más");
+        draw_set_halign(fa_left);
         draw_set_valign(fa_top);
     }
 
     // Zona derecha: info del arma seleccionada
     if (_n_armas > 0) {
-        var _info_x = _px1 + _list_w + 36;
+        var _info_x = _px1 + _list_w + 40;
         var _info_y = _py1 + 48;
-        var _info_w = _pw - _list_w - 52;
+        var _info_w = _pw - _list_w - 56;
         var _lh = 21;
 
         var _sel_arma = armas[indice_arma];

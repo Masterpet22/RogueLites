@@ -315,6 +315,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "drenar_alma":  // Robo de vida basado en % HP del defensor (especial)
         {
             var robo = round(_defensor.vida_actual * 0.12);
+            robo = min(robo, _atacante.poder_elemental * 15);  // Cap: POW×15
             _defensor.vida_actual = max(0, _defensor.vida_actual - robo);
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + robo);
             _atacante.esencia = clamp(_atacante.esencia + 10, 0, _atacante.esencia_llena);
@@ -334,6 +335,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
         case "eclipse_total":  // Robo de vida basado en % HP del defensor (especial)
         {
             var robo = round(_defensor.vida_actual * 0.20);
+            robo = min(robo, _atacante.poder_elemental * 15);  // Cap: POW×15
             _defensor.vida_actual = max(0, _defensor.vida_actual - robo);
             _atacante.vida_actual = min(_atacante.vida_max, _atacante.vida_actual + round(robo * 0.7));
             _atacante.esencia = clamp(_atacante.esencia + 25, 0, _atacante.esencia_llena);
@@ -464,7 +466,7 @@ function scr_ejecutar_habilidad(_atacante, _defensor, _id) {
 
         case "corte_rapido": // Filotormenta
         {
-            var _p = { stat1:"ataque", escala1:0.7, stat2:"velocidad", escala2:0.6, base_fija:0,
+            var _p = { stat1:"ataque", escala1:0.9, stat2:"velocidad", escala2:0.8, base_fija:0,
                        mult_poder:1.0, penetracion:1.0, esencia_gen:8, es_arma:false, tipo_dano:"fisico" };
             var dano = scr_formula_dano(_atacante, _defensor, _p);
             _defensor.vida_actual = max(0, _defensor.vida_actual - dano);

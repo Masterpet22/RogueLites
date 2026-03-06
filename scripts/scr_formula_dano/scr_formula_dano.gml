@@ -15,23 +15,22 @@
 ///
 /// Flujo:
 ///   1. Daño bruto = stat1×esc1 + stat2×esc2 + base_fija
-///   2. Reducción  = DEF_defensor × FACTOR_DEF × (1 − penetración)
-///   3. Neto       = max(1, bruto − reducción)
-///   4. ×mult_poder  ×mult_rareza  ×mult_afinidad  ×mult_pasivas
-///   5. ×varianza aleatoria (±VAR_RANGO)
-///   6. ×crítico (positivo o negativo, según prob.)
-///   7. Final      = max(1, round(todo))
+///   2. ×mult_poder  ×mult_rareza  ×mult_afinidad  ×mult_pasivas
+///   3. ×varianza aleatoria (±VAR_RANGO)
+///   4. ×crítico (solo positivo) + carga progresiva (N1/N2/N3)
+///   5. Mitigación = Bruto_amplificado × (K / (K + DEF_efectiva))
+///   6. Golpe Rozado (VEL defensor >> VEL atacante)
+///   7. Final = max(1, round(todo))
 
 // ══════════════════════════════════════════════════════════════
 //  PALANCAS GLOBALES  — modifica estos macros para balancear
 // ══════════════════════════════════════════════════════════════
-#macro FACTOR_DEF_GLOBAL  0.55    // Peso de la defensa en todo el juego (antes 0.50)
+#macro K_MITIGACION       40      // Constante K de mitigación porcentual (40 DEF = 50% reducción)
 #macro VAR_RANGO          0.15    // Varianza aleatoria ±15 %  (0.85 – 1.15)
 #macro VAR_MIN_ABS        2       // Spread mínimo absoluto (±2 pts) — evita que daños bajos se sientan fijos
-#macro CRIT_POS_CHANCE    5       // % probabilidad de crítico positivo  (antes 10)
 #macro CRIT_POS_MULT      1.50    // ×1.5 daño en crítico positivo
-#macro CRIT_NEG_CHANCE    3       // % probabilidad de crítico negativo  (antes 5)
-#macro CRIT_NEG_MULT      0.60    // ×0.6 daño en crítico negativo
+#macro GOLPE_ROZADO_MULT  0.70    // ×0.7 daño cuando el defensor es mucho más rápido
+#macro GOLPE_ROZADO_VEL_DIF 5     // diferencia de VEL mínima para activar golpe rozado
 
 function scr_formula_dano(_atacante, _defensor, _p) {
 
@@ -40,43 +39,29 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     var _val2 = scr_get_stat(_atacante, _p.stat2) * _p.escala2;
     var _dano_bruto = _val1 + _val2 + _p.base_fija;
 
-    // ─── Paso 2: Reducción por defensa del defensor ───
-    //   tipo_dano "fisico" → usa defensa; "magico" → usa defensa_magica
-    var _def_total;
-    if (variable_struct_exists(_p, "tipo_dano") && _p.tipo_dano == "magico") {
-        _def_total = _defensor.defensa_magica_base + _defensor.defensa_magica_bonus_temp;
-    } else {
-        _def_total = _defensor.defensa_base + _defensor.defensa_bonus_temp;
-    }
-    var _reduccion = _def_total * FACTOR_DEF_GLOBAL * (1.0 - _p.penetracion);
-    var _dano_neto = max(1, _dano_bruto - _reduccion);
-
-    // ─── Paso 3: Multiplicador de rareza del arma (solo hab. de arma) ───
+    // ─── Paso 2: Multiplicador de rareza del arma (solo hab. de arma) ───
     //   R0 = 1.0 │ R1 = 1.10 │ R2 = 1.20 │ R3 = 1.30
     var _mult_rareza = 1.0;
     if (_p.es_arma && variable_struct_exists(_atacante, "arma_data") && _atacante.arma_data != undefined) {
         _mult_rareza = 1.0 + (_atacante.arma_data.rareza * 0.10);
     }
 
-    // ─── Paso 4: Ventaja/desventaja de afinidad elemental ───
+    // ─── Paso 3: Ventaja/desventaja de afinidad elemental ───
     var _mult_afi = 1.0;
     if (_p.es_arma
         && variable_struct_exists(_atacante, "arma_data")
         && _atacante.arma_data != undefined
         && _atacante.arma_data.afinidad != "Neutra") {
-        // Habilidad de arma → afinidad del ARMA vs defensor
         _mult_afi = scr_multiplicador_afinidad(_atacante.arma_data.afinidad, _defensor.afinidad);
-        // Checa afinidad secundaria del defensor (jefes duales)
         if (variable_struct_exists(_defensor, "afinidad_secundaria") && _defensor.afinidad_secundaria != "none") {
             var _alt = scr_multiplicador_afinidad(_atacante.arma_data.afinidad, _defensor.afinidad_secundaria);
             _mult_afi = max(_mult_afi, _alt);
         }
     } else {
-        // Habilidad de clase / enemigo → afinidad del PERSONAJE vs defensor
         _mult_afi = scr_multiplicador_afinidad_dual(_atacante, _defensor);
     }
 
-    // ─── Paso 5: Pasivas de afinidad (lee bono de scr_datos_afinidades) ───
+    // ─── Paso 4: Pasivas de afinidad ───
     var _mult_pas = 1.0;
 
     var _atk_afi2 = variable_struct_exists(_atacante, "afinidad_secundaria")
@@ -84,52 +69,91 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     var _def_afi2 = variable_struct_exists(_defensor, "afinidad_secundaria")
                     ? _defensor.afinidad_secundaria : "none";
 
-    // Bonus ofensivos del atacante (Fuego, Rayo, Sombra, Arcano)
     if (_atacante.pasiva_activa) {
         var _afi_atk = _atacante.afinidad;
         var _ofensivas = ["Fuego", "Rayo", "Sombra", "Arcano"];
         for (var _oi = 0; _oi < 4; _oi++) {
             if (_afi_atk == _ofensivas[_oi] || _atk_afi2 == _ofensivas[_oi]) {
-                var _bono = scr_datos_afinidades(_ofensivas[_oi]).bono;  // ej: 1.10, 1.15, 1.25, 1.20
+                var _bono = scr_datos_afinidades(_ofensivas[_oi]).bono;
                 _mult_pas *= _bono;
             }
         }
     }
 
-    // Bonus defensivo del defensor (Tierra: reduce daño recibido)
     if (_defensor.pasiva_activa && (_defensor.afinidad == "Tierra" || _def_afi2 == "Tierra")) {
-        var _bono_tierra = scr_datos_afinidades("Tierra").bono;  // 1.20
-        _mult_pas *= (2.0 - _bono_tierra);  // 1.20 → 0.80 (reduce 20%)
+        var _bono_tierra = scr_datos_afinidades("Tierra").bono;
+        _mult_pas *= (2.0 - _bono_tierra);
     }
 
-    // ─── Paso 6: Varianza aleatoria ───
-    //   Usa el MAYOR entre spread porcentual (±VAR_RANGO) y spread absoluto (±VAR_MIN_ABS)
-    //   Así golpes débiles (~5-8 daño) igualmente sienten variación.
-    var _dano_pre = _dano_neto * _p.mult_poder * _mult_rareza * _mult_afi * _mult_pas;
-    var _spread_pct = _dano_pre * VAR_RANGO;            // spread porcentual
-    var _spread     = max(_spread_pct, VAR_MIN_ABS);    // garantiza mínimo ±VAR_MIN_ABS pts
+    // ─── Paso 5: Varianza aleatoria ───
+    var _dano_pre = _dano_bruto * _p.mult_poder * _mult_rareza * _mult_afi * _mult_pas;
+    var _spread_pct = _dano_pre * VAR_RANGO;
+    var _spread     = max(_spread_pct, VAR_MIN_ABS);
     var _dano_var   = _dano_pre + random_range(-_spread, _spread);
 
-    // ─── Paso 7: Crítico (positivo o negativo) ───
-    //   Crit chance dinámica: base + floor(ataque / divisor)
+    // ─── Paso 6: Crítico (solo positivo) + Carga Progresiva ───
+    //   Crit y Carga se aplican ANTES de defensa para que funcionen como "rompe-defensas"
     var _crit_chance = CRIT_BASE_CHANCE + floor(_atacante.ataque_base / CRIT_ATK_DIVISOR);
     var _mult_crit = 1.0;
-    var _tipo_crit = 0;  // 0 = normal, 1 = crit+, -1 = crit-
+    var _tipo_crit = 0;
     var _roll = irandom(99);
     if (_roll < _crit_chance) {
         _mult_crit = CRIT_POS_MULT;
         _tipo_crit = 1;
-        // Emitir evento de golpe critico para pasiva de Sombra
         scr_activar_pasiva_afinidad(_atacante, "golpe_critico");
-    } else if (_roll >= (100 - CRIT_NEG_CHANCE)) {
-        _mult_crit = CRIT_NEG_MULT;
-        _tipo_crit = -1;
     }
 
-    // ─── Paso 8: Resultado final ───
-    var _dano_final = max(1, round(_dano_var * _mult_crit));
+    // Multiplicador de CARGA PROGRESIVA (aplicado antes de defensa)
+    var _mult_carga = 1.0;
+    if (variable_struct_exists(_atacante, "carga_mult_temp") && _atacante.carga_mult_temp > 1.0) {
+        _mult_carga = _atacante.carga_mult_temp;
+    }
 
-    // ─── Paso 8b: Modificadores de RUNAS ───
+    var _dano_amplificado = _dano_var * _mult_crit * _mult_carga;
+
+    // ─── Paso 7: Mitigación porcentual por Defensa ───
+    //   Daño = bruto_amplificado × (K / (K + DEF_efectiva))
+    //   Con K = 40: DEF 40 = 50% reducción, DEF 80 = 33% reducción, DEF 0 = 0% reducción
+    var _def_total;
+    if (variable_struct_exists(_p, "tipo_dano") && _p.tipo_dano == "magico") {
+        _def_total = _defensor.defensa_magica_base + _defensor.defensa_magica_bonus_temp;
+    } else {
+        _def_total = _defensor.defensa_base + _defensor.defensa_bonus_temp;
+    }
+    var _def_efectiva = _def_total * (1.0 - _p.penetracion);
+    var _reduccion = _def_efectiva;  // guardamos para esencia del Centinela
+    var _factor_mitigacion = K_MITIGACION / (K_MITIGACION + max(0, _def_efectiva));
+    var _dano_neto = _dano_amplificado * _factor_mitigacion;
+
+    // ─── Paso 8: Golpe Rozado (reemplazo de crítico negativo) ───
+    //   Si la VEL del defensor supera la del atacante por >= GOLPE_ROZADO_VEL_DIF, hay probabilidad de rozar
+    var _vel_atk = variable_struct_exists(_atacante, "velocidad") ? _atacante.velocidad : 0;
+    var _vel_def = variable_struct_exists(_defensor, "velocidad") ? _defensor.velocidad : 0;
+    var _vel_dif = _vel_def - _vel_atk;
+    if (_vel_dif >= GOLPE_ROZADO_VEL_DIF) {
+        var _prob_rozado = min(25, _vel_dif * 3);  // 3% por punto de diferencia, máx 25%
+        if (irandom(99) < _prob_rozado) {
+            _dano_neto *= GOLPE_ROZADO_MULT;
+            _tipo_crit = -1;  // Marcamos como rozado para feedback
+        }
+    }
+
+    // ─── Paso 9: Resultado final ───
+    var _dano_final = max(1, round(_dano_neto));
+
+    // Pasiva de Vanguardia: Contraataque (tras bloqueo exitoso → 50% penetración)
+    if (_atacante.es_jugador && variable_struct_exists(_atacante, "contraataque_activo") && _atacante.contraataque_activo) {
+        // Ya está incorporada la penetración extra en _def_efectiva arriba? No,
+        // el contraataque reduce la defensa percibida DESPUES del cálculo normal.
+        // Recalcular con 50% menos defensa efectiva.
+        var _def_contra = _def_efectiva * 0.5;
+        var _factor_contra = K_MITIGACION / (K_MITIGACION + max(0, _def_contra));
+        _dano_final = max(1, round(_dano_amplificado * _factor_contra));
+        _atacante.contraataque_activo = false;
+        scr_notif_agregar(_atacante.nombre, "¡CONTRAATAQUE! Ignora 50% DEF", c_orange);
+    }
+
+    // ─── Paso 9b: Modificadores de RUNAS ───
     if (instance_exists(obj_control_combate)) {
         var _cc = instance_find(obj_control_combate, 0);
 
@@ -154,33 +178,25 @@ function scr_formula_dano(_atacante, _defensor, _p) {
                 _dano_final = round(_dano_final * 1.50);
             }
         }
-
-        // Runa Vampírica: -40% generación de esencia (aplicado abajo)
     }
 
-    // ─── Paso 8c: Multiplicador de CARGA PROGRESIVA ───
-    // Si el atacante tiene una carga temporal activa, multiplicar daño
-    if (variable_struct_exists(_atacante, "carga_mult_temp") && _atacante.carga_mult_temp > 1.0) {
-        _dano_final = round(_dano_final * _atacante.carga_mult_temp);
-    }
-
-    // ─── Paso 8d: Vulnerabilidad por CARGA (defensor cargando recibe +25%) ───
+    // ─── Paso 9c: Vulnerabilidad por CARGA (defensor cargando recibe +25%) ───
     if (_defensor.es_jugador && variable_struct_exists(_defensor, "carga_activa") && _defensor.carga_activa) {
         _dano_final = round(_dano_final * CARGA_VULN_RECIBIDO);
     }
 
-    // ─── Paso 8e: Evaluación de PARRY del defensor ───
+    // ─── Paso 9e: Evaluación de PARRY del defensor ───
     // Si el defensor (jugador) está en ventana de parry, evaluar resultado
     if (_defensor.es_jugador && _defensor.parry_estado == "ventana") {
         _dano_final = scr_parry_evaluar(_defensor, _atacante, _dano_final);
     }
 
-    // ─── Paso 8f: Interrumpir carga del jugador si recibe daño ───
+    // ─── Paso 9f: Interrumpir carga del jugador si recibe daño ───
     if (_defensor.es_jugador && variable_struct_exists(_defensor, "carga_activa") && _defensor.carga_activa && _dano_final > 0) {
         scr_carga_interrumpir_por_dano(_defensor);
     }
 
-    // ─── Paso 9: Mecánicas especiales de combate ───
+    // ─── Paso 10: Mecánicas especiales de combate ───
     // Si el defensor es un enemigo con mecánicas → modificar daño recibido
     if (!_defensor.es_jugador && variable_struct_exists(_defensor, "mecanicas")) {
         var _afi_ataque = _atacante.afinidad; // afinidad del ataque
@@ -203,9 +219,10 @@ function scr_formula_dano(_atacante, _defensor, _p) {
     // Debug: mostrar varianza real para verificar aleatoriedad
     show_debug_message("⚔ " + _atacante.nombre + " → " + _defensor.nombre
         + " | pre=" + string(round(_dano_pre*100)/100)
-        + " spread=±" + string(round(_spread*100)/100)
-        + " var=" + string(round(_dano_var*100)/100)
+        + " amp=" + string(round(_dano_amplificado*100)/100)
+        + " mitig=" + string(round(_factor_mitigacion*100)/100)
         + " crit=" + string(_mult_crit)
+        + (_tipo_crit == -1 ? " [ROZADO]" : "")
         + " FINAL=" + string(_dano_final));
 
     // Generar esencia dinámica

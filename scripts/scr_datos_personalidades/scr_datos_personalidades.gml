@@ -16,7 +16,7 @@ function scr_datos_personalidades(_personalidad) {
                 nombre: "Agresivo",
                 descripcion: "Favorece ataque y velocidad, penaliza defensa",
                 mult_vida:             0.90,   // -10% vida
-                mult_ataque:           1.20,   // +20% ataque
+                mult_ataque:           1.35,   // +35% ataque (antes +20%)
                 mult_defensa:          0.80,   // -20% defensa
                 mult_velocidad:        1.15,   // +15% velocidad
                 mult_poder_elemental:  1.10,   // +10% poder elemental
@@ -43,11 +43,11 @@ function scr_datos_personalidades(_personalidad) {
             return {
                 nombre: "Temerario",
                 descripcion: "Gran poder ofensivo a cambio de mayor riesgo",
-                mult_vida:             0.85,   // -15% vida (antes -20%)
-                mult_ataque:           1.30,   // +30% ataque
-                mult_defensa:          0.80,   // -20% defensa (antes -25%)
+                mult_vida:             0.70,   // -30% vida (antes -15%)
+                mult_ataque:           1.45,   // +45% ataque (antes +30%)
+                mult_defensa:          0.80,   // -20% defensa
                 mult_velocidad:        1.10,   // +10% velocidad
-                mult_poder_elemental:  1.20,   // +20% poder elemental
+                mult_poder_elemental:  1.45,   // +45% poder elemental (antes +20%)
             };
 
         // ===================================================

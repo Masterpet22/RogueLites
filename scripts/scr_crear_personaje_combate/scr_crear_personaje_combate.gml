@@ -69,6 +69,7 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
         pers_data:      _pers_data,
 
         sinergia_arma:  _sinergia,
+        sinergia_pasiva_permanente: _sinergia,  // Si hay sinergia, pasiva elemental es permanente
 
         vida_max:       _vida_total,
         vida_actual:    _vida_total,
@@ -131,9 +132,12 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
         },
 
         // Pasivas
-        pasiva_activa: false,
+        pasiva_activa: _sinergia,   // Si hay sinergia arma-personaje, pasiva empieza activa
         pasiva_timer: 0,
         pasiva_cooldown: 0,
+
+        // Pasiva de Vanguardia: contraataque tras bloqueo exitoso
+        contraataque_activo: false,
 
         estado:         "normal",
 

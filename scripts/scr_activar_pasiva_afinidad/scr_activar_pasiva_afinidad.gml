@@ -1,6 +1,12 @@
 /// scr_activar_pasiva_afinidad(personaje, tipo_activador)
 function scr_activar_pasiva_afinidad(_p, _event) {
 
+    // Si la pasiva ya es permanente (sinergia arma-personaje), siempre está activa
+    if (variable_struct_exists(_p, "sinergia_pasiva_permanente") && _p.sinergia_pasiva_permanente) {
+        _p.pasiva_activa = true;
+        return;
+    }
+
     if (_p.pasiva_cooldown > 0) return;
 
     switch (_p.afinidad) {

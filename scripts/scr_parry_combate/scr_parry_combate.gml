@@ -124,6 +124,11 @@ function scr_parry_evaluar(_defensor, _atacante, _dano) {
         // ── Stun de Reacción al atacante ──
         scr_stun_aplicar(_atacante, STUN_PARRY_SEG, "parry");
 
+        // ── Vanguardia: activar contraataque (siguiente habilidad ignora 50% DEF) ──
+        if (_defensor.clase == "Vanguardia") {
+            _defensor.contraataque_activo = true;
+        }
+
         show_debug_message("🛡✨ " + _defensor.nombre + " — PARRY PERFECTO vs " + _atacante.nombre
             + " | +energía:" + string(_energia_ganada) + " +esencia:" + string(_esencia_ganada));
 
@@ -135,6 +140,11 @@ function scr_parry_evaluar(_defensor, _atacante, _dano) {
 
         // Consume un poco de energía por el esfuerzo
         scr_energia_gastar(_defensor, PARRY_BLOQUEO_ENERGIA_COSTO);
+
+        // ── Vanguardia: activar contraataque incluso con bloqueo parcial ──
+        if (_defensor.clase == "Vanguardia") {
+            _defensor.contraataque_activo = true;
+        }
 
         scr_notif_agregar(_defensor.nombre, "Bloqueo parcial (-" + string(round((1 - PARRY_BLOQUEO_DANO_PCT) * 100)) + "% daño)", c_yellow);
 

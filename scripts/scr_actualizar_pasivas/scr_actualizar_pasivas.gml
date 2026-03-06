@@ -6,10 +6,15 @@ function scr_actualizar_pasivas(_p) {
         _p.pasiva_timer--;
 
         if (_p.pasiva_timer <= 0) {
-            _p.pasiva_activa = false;
-            // Restaurar penalizaciones al expirar
-            if (variable_struct_exists(_p, "pasiva_pen_aplicada") && _p.pasiva_pen_aplicada) {
-                scr_pasiva_revertir_penalizacion(_p);
+            // No desactivar si la sinergia es permanente
+            if (variable_struct_exists(_p, "sinergia_pasiva_permanente") && _p.sinergia_pasiva_permanente) {
+                _p.pasiva_timer = 0;  // Mantener en 0 pero activa
+            } else {
+                _p.pasiva_activa = false;
+                // Restaurar penalizaciones al expirar
+                if (variable_struct_exists(_p, "pasiva_pen_aplicada") && _p.pasiva_pen_aplicada) {
+                    scr_pasiva_revertir_penalizacion(_p);
+                }
             }
         }
     }

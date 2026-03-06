@@ -57,14 +57,67 @@ var p_brenn = scr_crear_perfil_personaje("Brenn", "Quebrador", "Planta", "Agresi
 ds_map_add(p_brenn.armas_obtenidas, "Hoja Rota", true);
 ds_map_add(perfiles_personaje, "Brenn", p_brenn);
 
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  MODO PRUEBA: Desbloquear TODAS las armas para cada perfil  ║
+// ╚══════════════════════════════════════════════════════════════╝
+var _todas_armas = scr_lista_armas_disponibles();
+var _todos_perfiles = [p_kael, p_lys, p_torvan, p_maelis, p_saren, p_nerya, p_thalys, p_brenn];
+for (var _p = 0; _p < array_length(_todos_perfiles); _p++) {
+    for (var _a = 0; _a < array_length(_todas_armas); _a++) {
+        if (!ds_map_exists(_todos_perfiles[_p].armas_obtenidas, _todas_armas[_a])) {
+            ds_map_add(_todos_perfiles[_p].armas_obtenidas, _todas_armas[_a], true);
+        }
+    }
+}
+
 // Personaje por defecto (luego tendremos menú)
 //personaje_seleccionado = "Kael";
 
 // INVENTARIO GLOBAL DE MATERIALES (NO POR PERSONAJE)
 inventario_materiales = ds_map_create();   // <- IMPORTANTE
 
+// ══ MODO PRUEBA: 500 de cada material ══
+// Comunes
+ds_map_add(inventario_materiales, "Fragmento Igneo", 500);
+ds_map_add(inventario_materiales, "Escama Glaciar", 500);
+ds_map_add(inventario_materiales, "Savia Espinosa", 500);
+ds_map_add(inventario_materiales, "Chispa Voltica", 500);
+ds_map_add(inventario_materiales, "Arcilla Ancestral", 500);
+ds_map_add(inventario_materiales, "Fragmento Sombrio", 500);
+ds_map_add(inventario_materiales, "Polvo Sagrado", 500);
+ds_map_add(inventario_materiales, "Runa Menor", 500);
+// Raros
+ds_map_add(inventario_materiales, "Brasa Carmesi", 500);
+ds_map_add(inventario_materiales, "Perla Abisal", 500);
+ds_map_add(inventario_materiales, "Raiz Primigenia", 500);
+ds_map_add(inventario_materiales, "Colmillo de Rayo", 500);
+ds_map_add(inventario_materiales, "Ladrillo de Jade", 500);
+ds_map_add(inventario_materiales, "Materia Oscura", 500);
+ds_map_add(inventario_materiales, "Reliquia de Oro", 500);
+ds_map_add(inventario_materiales, "Runa Mayor", 500);
+// Legendarios
+ds_map_add(inventario_materiales, "Nucleo de Forja Antigua", 500);
+ds_map_add(inventario_materiales, "Corazon de Fango", 500);
+ds_map_add(inventario_materiales, "Fragmento Celestial", 500);
+ds_map_add(inventario_materiales, "Cristal del Vacio", 500);
+ds_map_add(inventario_materiales, "Esencia del Vacio", 500);
+ds_map_add(inventario_materiales, "Eco del Primer Conductor", 500);
+
 // INVENTARIO GLOBAL DE OBJETOS / CONSUMIBLES
 inventario_objetos = ds_map_create();
+
+// ══ MODO PRUEBA: 500 de cada objeto/consumible y rúnico ══
+ds_map_add(inventario_objetos, "Pocion Basica", 500);
+ds_map_add(inventario_objetos, "Pocion Media", 500);
+ds_map_add(inventario_objetos, "Elixir de Esencia", 500);
+ds_map_add(inventario_objetos, "Tonico de Ataque", 500);
+ds_map_add(inventario_objetos, "Tonico de Defensa", 500);
+ds_map_add(inventario_objetos, "Runa de Furia", 500);
+ds_map_add(inventario_objetos, "Runa de Fortaleza", 500);
+ds_map_add(inventario_objetos, "Runa de Celeridad", 500);
+ds_map_add(inventario_objetos, "Runa del Ultimo Aliento", 500);
+ds_map_add(inventario_objetos, "Runa Vampirica", 500);
+ds_map_add(inventario_objetos, "Runa de Cristal", 500);
 
 // ENEMIGOS DESBLOQUEADOS PARA COMBATIR (TODOS — modo prueba)
 enemigos_desbloqueados = ds_map_create();
@@ -91,9 +144,12 @@ ds_map_add(enemigos_desbloqueados, "Titan de las Forjas Rotas", true);
 ds_map_add(enemigos_desbloqueados, "Coloso del Fango Viviente", true);
 ds_map_add(enemigos_desbloqueados, "Sentinela del Cielo Roto", true);
 ds_map_add(enemigos_desbloqueados, "Oraculo Quebrado del Abismo", true);
+// Jefe Final + Secreto
+ds_map_add(enemigos_desbloqueados, "El Devorador", true);
+ds_map_add(enemigos_desbloqueados, "El Primer Conductor", true);
 
 // ORO DEL JUGADOR
-oro = 100;
+oro = 50000;
 
 enemigo_seleccionado = ""; // Inicialización segura
 runa_equipada = "";       // Runa rúnica equipada para el próximo combate

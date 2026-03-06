@@ -110,6 +110,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Planta", rareza: 2,
                 ataque_bonus: 6, poder_elemental_bonus: 8,
+                defensa_bonus: 2, vida_bonus: 20,
                 habilidades_arma: ["enredadera_voraz", "drenaje_vital"],
                 receta: [
                     { material: "Savia Espinosa",  cantidad: 10 },
@@ -121,6 +122,7 @@ function scr_datos_armas(_arma) {
             return {
                 afinidad: "Planta", rareza: 3,
                 ataque_bonus: 10, poder_elemental_bonus: 14,
+                defensa_bonus: 4, vida_bonus: 35,
                 habilidades_arma: ["explosion_espora", "drenaje_vital", "selva_eterna"],
                 receta: [
                     { material: "Raiz Primigenia",  cantidad: 5 },

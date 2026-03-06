@@ -19,6 +19,7 @@ indice_arma = 0;
 // Estados de selección
 enum SelState {
     PERSONAJE,
+    PERSONALIDAD_POPUP,
     ARMA_POPUP,
     OBJETOS_POPUP,
     RUNA_POPUP
@@ -26,6 +27,10 @@ enum SelState {
 
 // Estado inicial: solo personaje
 estado = SelState.PERSONAJE;
+
+// --- SISTEMA DE PERSONALIDAD ---
+personalidades_lista = ["Agresivo", "Metodico", "Temerario", "Resuelto"];
+indice_personalidad = 0;
 
 // --- SISTEMA DE EQUIPAR OBJETOS ---
 // Objetos seleccionados para llevar al combate (máx 3)

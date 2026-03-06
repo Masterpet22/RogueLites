@@ -48,20 +48,51 @@ if (estado == SelState.PERSONAJE) {
     }
 
     if (keyboard_check_pressed(vk_enter)) {
-        // Entrar al popup de armas
-        var armas = scr_ds_map_keys_array(perfil.armas_obtenidas);
-        indice_arma = 0;
-        estado = SelState.ARMA_POPUP;
+        // Entrar al popup de personalidad
+        // Encontrar índice de la personalidad actual
+        indice_personalidad = 0;
+        for (var _pi = 0; _pi < array_length(personalidades_lista); _pi++) {
+            if (personalidades_lista[_pi] == perfil.personalidad) {
+                indice_personalidad = _pi;
+                break;
+            }
+        }
+        estado = SelState.PERSONALIDAD_POPUP;
 		io_clear();
-        
-        // OPCIONAL: io_clear(); // Limpia el estado de las teclas para este frame
     }
 
     if (keyboard_check_pressed(vk_escape)) {
         scr_transicion_ir(rm_menu);
     }
 }
-// AGREGAMOS "ELSE" AQUÍ PARA EVITAR LA CASCADA
+// ESTADO: SELECCIONAR PERSONALIDAD
+else if (estado == SelState.PERSONALIDAD_POPUP) {
+
+    var _n_pers = array_length(personalidades_lista);
+
+    if (keyboard_check_pressed(vk_up)) {
+        indice_personalidad = (indice_personalidad - 1 + _n_pers) mod _n_pers;
+    }
+    if (keyboard_check_pressed(vk_down)) {
+        indice_personalidad = (indice_personalidad + 1) mod _n_pers;
+    }
+
+    if (keyboard_check_pressed(vk_escape)) {
+        estado = SelState.PERSONAJE;
+    }
+
+    if (keyboard_check_pressed(vk_enter)) {
+        // Aplicar personalidad elegida al perfil
+        perfil.personalidad = personalidades_lista[indice_personalidad];
+
+        // Entrar al popup de armas
+        var armas = scr_ds_map_keys_array(perfil.armas_obtenidas);
+        indice_arma = 0;
+        estado = SelState.ARMA_POPUP;
+        io_clear();
+    }
+}
+// ESTADO: SELECCIONAR ARMA
 else if (estado == SelState.ARMA_POPUP) {
 
     var armas = scr_ds_map_keys_array(perfil.armas_obtenidas);
@@ -80,7 +111,7 @@ else if (estado == SelState.ARMA_POPUP) {
     }
 
     if (keyboard_check_pressed(vk_escape)) {
-        estado = SelState.PERSONAJE;
+        estado = SelState.PERSONALIDAD_POPUP;
     }
 
     if (keyboard_check_pressed(vk_enter)) {
@@ -203,10 +234,9 @@ else if (estado == SelState.OBJETOS_POPUP) {
         }
     }
 
-    // ESC: volver a selección de arma sin equipar objetos
+    // ESC: volver a selección de personalidad
     if (keyboard_check_pressed(vk_escape)) {
-        objetos_seleccionados = [];
-        estado = SelState.ARMA_POPUP;
+        estado = SelState.PERSONALIDAD_POPUP;
     }
 }
 

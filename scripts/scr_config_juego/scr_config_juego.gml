@@ -13,7 +13,7 @@
 // ── Parry ──
 #macro PARRY_VENTANA_SEG        0.3    // ventana activa para parry (segundos)
 #macro PARRY_VULNERABLE_SEG     0.6    // penalización por fallo (segundos)
-#macro PARRY_PERFECTO_ENERGIA   30     // % de energía recuperada en parry perfecto
+#macro PARRY_PERFECTO_ENERGIA   15     // % de energía recuperada en parry perfecto (ajustado de 30)
 #macro PARRY_PERFECTO_ESENCIA   5      // % base de esencia por parry perfecto
 #macro PARRY_PERFECTO_ESENCIA_MAX 10   // % máximo de esencia (ajustado por afinidad)
 #macro PARRY_BLOQUEO_DANO_PCT   0.40   // bloqueo temprano: recibe 40% del daño

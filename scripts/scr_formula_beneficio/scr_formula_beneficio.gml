@@ -61,9 +61,6 @@ function scr_formula_beneficio(_usuario, _p) {
     if (_roll < _crit_chance) {
         _mult_crit = CRIT_POS_MULT;
         _tipo_crit = 1;
-    } else if (_roll >= (100 - CRIT_NEG_CHANCE)) {
-        _mult_crit = CRIT_NEG_MULT;
-        _tipo_crit = -1;
     }
 
     // ─── Paso 6: Resultado final ───
