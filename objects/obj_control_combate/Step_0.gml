@@ -111,7 +111,7 @@ scr_actualizar_estados(personaje_enemigo);
 
 // ... al principio ya tienes checks de combate_terminado, actualización, etc.
 
-// Helper local para ejecutar habilidad por índice
+// Helper local para ejecutar habilidad por índice (LEGACY — ya no se usa directamente)
 function usar_habilidad_indice(_indice) {
 
     var habs = personaje_jugador.habilidades_arma;
@@ -131,6 +131,14 @@ function usar_habilidad_indice(_indice) {
 
     // Cooldown simple: 0.5 s para todo (luego lo afinamos por habilidad)
     cds[_indice] = round(GAME_FPS * 0.5);
+}
+
+
+// ══════════════════════════════════════════════════════════════
+//  PARRY → Spacebar
+// ══════════════════════════════════════════════════════════════
+if (keyboard_check_pressed(vk_space)) {
+    scr_parry_intentar(personaje_jugador);
 }
 
 
@@ -158,8 +166,13 @@ if (keyboard_check_pressed(ord("R"))) {
 
 // SÚPER-HABILIDAD → TAB (requiere al menos 50% de esencia)
 if (keyboard_check_pressed(vk_tab)) {
-    if (personaje_jugador.esencia >= personaje_jugador.esencia_llena * 0.5) {
+    // Chequear GCD y Parry antes del Súper
+    if (personaje_jugador.gcd_timer > 0 || !scr_parry_puede_actuar(personaje_jugador)) {
+        // Bloqueado por GCD o Parry
+    } else if (personaje_jugador.esencia >= personaje_jugador.esencia_llena * 0.5) {
         scr_ejecutar_super(personaje_jugador, personaje_enemigo);
+        // Activar GCD tras usar Súper
+        personaje_jugador.gcd_timer = round(GAME_FPS * GCD_DURACION_SEG);
     } else {
         // Feedback: no hay suficiente esencia
         if (instance_exists(obj_control_ui_combate)) {

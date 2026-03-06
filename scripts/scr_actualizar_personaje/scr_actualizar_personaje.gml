@@ -25,5 +25,15 @@ function scr_actualizar_personaje(_p) {
         }
     }
 
-    // Aquí podríamos tocar otras cosas del personaje (estados, DOT, etc.)
+    // ── GCD (Global Cooldown) ──
+    if (_p.gcd_timer > 0) {
+        _p.gcd_timer -= 1;
+        if (_p.gcd_timer < 0) _p.gcd_timer = 0;
+    }
+
+    // ── Energía: regeneración pasiva + agotamiento ──
+    scr_energia_actualizar(_p);
+
+    // ── Parry: actualizar timers ──
+    scr_parry_actualizar(_p);
 }

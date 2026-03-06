@@ -4,6 +4,24 @@
 
 #macro GAME_FPS 60
 
+// ── Sistema de Energía ──
+#macro ENERGIA_MAX              100    // capacidad máxima de la barra de energía
+#macro ENERGIA_REGEN_PCT        0.05   // regeneración pasiva: 5% por segundo
+#macro ENERGIA_AGOTAMIENTO_SEG  1.5    // penalización si llega a 0 (segundos sin regen)
+#macro ENERGIA_ESENCIA_RATIO    10     // cada 10 energía gastada → +1% esencia
+
+// ── Parry ──
+#macro PARRY_VENTANA_SEG        0.3    // ventana activa para parry (segundos)
+#macro PARRY_VULNERABLE_SEG     0.6    // penalización por fallo (segundos)
+#macro PARRY_PERFECTO_ENERGIA   30     // % de energía recuperada en parry perfecto
+#macro PARRY_PERFECTO_ESENCIA   5      // % base de esencia por parry perfecto
+#macro PARRY_PERFECTO_ESENCIA_MAX 10   // % máximo de esencia (ajustado por afinidad)
+#macro PARRY_BLOQUEO_DANO_PCT   0.40   // bloqueo temprano: recibe 40% del daño
+#macro PARRY_BLOQUEO_ENERGIA_COSTO 5   // bloqueo temprano: pierde 5 de energía
+
+// ── GCD (Global Cooldown) ──
+#macro GCD_DURACION_SEG         0.5    // duración del cooldown global (segundos)
+
 // ── Esencia dinámica ──
 #macro ESENCIA_PCT_DANO       0.05   // 5% del daño final se suma como esencia
 #macro ESENCIA_MULT_VEL       0.3    // velocidad × 0.3 se suma por acción

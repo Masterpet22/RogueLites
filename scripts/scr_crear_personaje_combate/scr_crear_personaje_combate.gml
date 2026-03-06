@@ -59,6 +59,7 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
 
         clase:          _clase,
         afinidad:       _afinidad,
+        afinidad_secundaria: "Neutra",
         arma:           _arma,
         personalidad:   _personalidad,
 
@@ -81,6 +82,20 @@ function scr_crear_personaje_combate(_nombre, _es_jugador, _clase, _afinidad, _a
 
         esencia:        0,
         esencia_llena:  100,
+
+        // ── Sistema de Energía ──
+        energia:           ENERGIA_MAX,
+        energia_max:       ENERGIA_MAX,
+        energia_agotamiento_timer: 0,
+        energia_gastada_acum: 0,   // acumulador para generar esencia
+
+        // ── Parry ──
+        parry_estado:      "inactivo",  // inactivo | ventana | vulnerable
+        parry_timer:       0,
+
+        // ── GCD (Global Cooldown) ──
+        gcd_timer:         0,
+
 		// Buffs / estados
         estados:             [],     // array de estados alterados
         defensa_bonus_temp:  0,

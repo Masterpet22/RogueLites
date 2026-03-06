@@ -158,6 +158,12 @@ function scr_formula_dano(_atacante, _defensor, _p) {
         // Runa Vampírica: -40% generación de esencia (aplicado abajo)
     }
 
+    // ─── Paso 8c: Evaluación de PARRY del defensor ───
+    // Si el defensor (jugador) está en ventana de parry, evaluar resultado
+    if (_defensor.es_jugador && _defensor.parry_estado == "ventana") {
+        _dano_final = scr_parry_evaluar(_defensor, _atacante, _dano_final);
+    }
+
     // ─── Paso 9: Mecánicas especiales de combate ───
     // Si el defensor es un enemigo con mecánicas → modificar daño recibido
     if (!_defensor.es_jugador && variable_struct_exists(_defensor, "mecanicas")) {

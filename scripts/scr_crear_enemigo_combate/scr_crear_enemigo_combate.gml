@@ -6,7 +6,7 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
     // Detectar afinidad dual (jefes: "Fuego-Tierra" → separar)
     var _afi_raw = _data_enemigo.afinidad;
     var _afi_primaria   = _afi_raw;
-    var _afi_secundaria = "none";
+    var _afi_secundaria = "Neutra";
 
     var _sep = string_pos("-", _afi_raw);
     if (_sep > 0) {
@@ -15,7 +15,7 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
     }
 
     var _afinidad_data  = scr_datos_afinidades(_afi_primaria);
-    var _afinidad_data2 = (_afi_secundaria != "none") ? scr_datos_afinidades(_afi_secundaria) : undefined;
+    var _afinidad_data2 = scr_datos_afinidades(_afi_secundaria);
 
     // Determinar rango del enemigo según sus datos
     var _rango = "Común";
@@ -63,6 +63,18 @@ function scr_crear_enemigo_combate(_nombre_enemigo) {
 
         esencia:        0,
         esencia_llena:  100,
+
+        // ── Sistema de Energía ──
+        energia:           ENERGIA_MAX,
+        energia_max:       ENERGIA_MAX,
+        energia_agotamiento_timer: 0,
+        energia_gastada_acum: 0,
+
+        // ── Parry / GCD (enemigos no los usan activamente, pero existen por compat) ──
+        parry_estado:      "inactivo",
+        parry_timer:       0,
+        gcd_timer:         0,
+
 		habilidades_arma: _habs,
 		habilidades_cd:   _cds,
 

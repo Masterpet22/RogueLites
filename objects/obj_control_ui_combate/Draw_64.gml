@@ -482,6 +482,23 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
             draw_set_color(c_aqua);
             draw_text((sx1 + sx2) / 2, sy1 + 5, string_format(secs, 1, 1));
         }
+
+        // GCD overlay (semi-transparente sobre todas las habilidades)
+        if (pj.gcd_timer > 0 && cd_actual <= 0) {
+            draw_set_color(make_color_rgb(60, 60, 20));
+            draw_set_alpha(0.45);
+            draw_rectangle(sx1 + 1, sy1 + 1, sx2 - 1, sy2 - 1, false);
+            draw_set_alpha(1);
+        }
+
+        // Coste de energía (esquina inferior-izquierda)
+        var _costo_en = scr_energia_costo_habilidad(id_hab);
+        if (_costo_en > 0) {
+            draw_set_halign(fa_left);
+            draw_set_valign(fa_bottom);
+            draw_set_color(pj.energia >= _costo_en ? make_color_rgb(100, 180, 255) : c_red);
+            draw_text(sx1 + 3, sy2 - 2, string(_costo_en));
+        }
     }
 
     draw_set_halign(fa_left);
@@ -493,6 +510,88 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
 // ===========================
 if (!control_combate.combate_terminado) {
     scr_esencia_barra_dibujar(pj);
+}
+
+// ===========================
+//  BARRA DE ENERGÍA (debajo de habilidades)
+// ===========================
+if (!control_combate.combate_terminado) {
+    var _en_bar_x = 30;
+    var _en_bar_y = h_gui - 55;
+    var _en_bar_w = 280;
+    var _en_bar_h = 10;
+
+    var _energia_ratio = clamp(pj.energia / max(1, pj.energia_max), 0, 1);
+
+    // Fondo
+    draw_set_color(make_color_rgb(15, 15, 30));
+    draw_set_alpha(0.85);
+    draw_roundrect_ext(_en_bar_x - 1, _en_bar_y - 1, _en_bar_x + _en_bar_w + 1, _en_bar_y + _en_bar_h + 1, 3, 3, false);
+    draw_set_alpha(1);
+
+    // Relleno energía (azul → cyan)
+    var _col_energia = merge_color(make_color_rgb(30, 80, 200), make_color_rgb(60, 200, 255), _energia_ratio);
+    if (pj.energia_agotamiento_timer > 0) {
+        // Agotamiento: parpadeo rojo
+        var _blink = ((current_time div 200) mod 2 == 0) ? 0.6 : 1.0;
+        _col_energia = merge_color(c_red, c_maroon, _blink);
+    }
+    draw_set_color(_col_energia);
+    draw_roundrect_ext(_en_bar_x, _en_bar_y, _en_bar_x + _en_bar_w * _energia_ratio, _en_bar_y + _en_bar_h, 3, 3, false);
+
+    // Borde
+    draw_set_color(make_color_rgb(80, 120, 200));
+    draw_roundrect_ext(_en_bar_x - 1, _en_bar_y - 1, _en_bar_x + _en_bar_w + 1, _en_bar_y + _en_bar_h + 1, 3, 3, true);
+
+    // Texto
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_white);
+    draw_text(_en_bar_x + _en_bar_w + 6, _en_bar_y + _en_bar_h / 2,
+        string(round(pj.energia)) + "/" + string(round(pj.energia_max)));
+
+    // Indicador agotamiento
+    if (pj.energia_agotamiento_timer > 0) {
+        draw_set_color(c_red);
+        var _agot_s = pj.energia_agotamiento_timer / GAME_FPS;
+        draw_text(_en_bar_x + _en_bar_w + 60, _en_bar_y + _en_bar_h / 2,
+            "AGOTADO " + string_format(_agot_s, 1, 1) + "s");
+    }
+
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+}
+
+// ===========================
+//  INDICADOR PARRY + GCD (arriba de barra de energía)
+// ===========================
+if (!control_combate.combate_terminado) {
+    var _parry_x = 320;
+    var _parry_y = h_gui - 55;
+
+    // Estado de Parry
+    if (pj.parry_estado == "ventana") {
+        draw_set_color(c_aqua);
+        var _parry_secs = pj.parry_timer / GAME_FPS;
+        draw_text(_parry_x, _parry_y, "🛡 PARRY [" + string_format(_parry_secs, 1, 1) + "s]");
+    } else if (pj.parry_estado == "vulnerable") {
+        draw_set_color(c_red);
+        var _vuln_secs = pj.parry_timer / GAME_FPS;
+        draw_text(_parry_x, _parry_y, "⚠ VULNERABLE [" + string_format(_vuln_secs, 1, 1) + "s]");
+    } else {
+        draw_set_color(c_ltgray);
+        draw_text(_parry_x, _parry_y, "[SPACE] Parry");
+    }
+
+    // Indicador GCD
+    if (pj.gcd_timer > 0) {
+        draw_set_color(c_yellow);
+        var _gcd_secs = pj.gcd_timer / GAME_FPS;
+        draw_text(_parry_x + 160, _parry_y, "GCD: " + string_format(_gcd_secs, 1, 1) + "s");
+    }
+
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
 }
 
 // ===========================
