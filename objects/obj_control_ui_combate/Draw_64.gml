@@ -578,11 +578,11 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
     var slots = array_length(habs);
     if (slots > 4) slots = 4;
 
-    var _hab_w = 82;
-    var _hab_h = 54;
+    var _hab_w = 64;
+    var _hab_h = 64;
     var _hab_gap = 10;
     var _hab_x_start = 30;
-    var _hab_y_start = h_gui - 135;
+    var _hab_y_start = h_gui - 145;
 
     var key_labels = ["Q", "W", "E", "R"];
 
@@ -634,7 +634,7 @@ if (!control_combate.combate_terminado && is_array(pj.habilidades_arma)) {
         else if (i == 3) _hab_ico = spr_ico_hab_arma_3;
 
         if (_hab_ico != -1) {
-            draw_sprite_stretched(_hab_ico, 0, sx1 + 4, sy1 + 4, _hab_w - 8, _hab_h - 20);
+            draw_sprite_stretched(_hab_ico, 0, sx1 + 4, sy1 + 4, _hab_w - 8, _hab_h - 8);
         }
 
         // ── Marco con doble borde ──
@@ -894,7 +894,7 @@ if (!control_combate.combate_terminado) {
     if (pj.carga_activa) {
         var _carga_bar_x = 30;  // _hab_x_start
         var _carga_bar_w = 200;
-        var _c_y = h_gui - 135 - 20;  // _hab_y_start - 20
+        var _c_y = h_gui - 145 - 20;  // _hab_y_start - 20
         var _nivel = scr_carga_nivel(pj.carga_timer);
         var _mult  = scr_carga_multiplicador(_nivel);
         var _c_col = c_ltgray;

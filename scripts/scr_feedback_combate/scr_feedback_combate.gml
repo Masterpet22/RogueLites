@@ -463,24 +463,24 @@ function scr_feedback_dibujar_sprites() {
         var _shadow_col = c_black;
         var _shadow_a_base = 0.35;
 
-        // Sombra jugador
+        // Sombra jugador (centrada en la línea de suelo)
         draw_set_color(_shadow_col);
         draw_set_alpha(_shadow_a_base * _pj_foco_alpha);
         draw_ellipse(
             _pj_x + _c.fb_shake_offset_x[0] - _shadow_rx,
-            _suelo_y - _shadow_ry + 4,
+            _suelo_y - _shadow_ry,
             _pj_x + _c.fb_shake_offset_x[0] + _shadow_rx,
-            _suelo_y + _shadow_ry + 4,
+            _suelo_y + _shadow_ry,
             false
         );
 
-        // Sombra enemigo
+        // Sombra enemigo (centrada en la línea de suelo)
         draw_set_alpha(_shadow_a_base * _en_foco_alpha);
         draw_ellipse(
             _en_x + _c.fb_shake_offset_x[1] - _shadow_rx,
-            _suelo_y - _shadow_ry + 4,
+            _suelo_y - _shadow_ry,
             _en_x + _c.fb_shake_offset_x[1] + _shadow_rx,
-            _suelo_y + _shadow_ry + 4,
+            _suelo_y + _shadow_ry,
             false
         );
 
