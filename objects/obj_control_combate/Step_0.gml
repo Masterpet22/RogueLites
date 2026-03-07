@@ -305,6 +305,9 @@ scr_particulas_actualizar();
 // 3h. Actualizar shaders temporales (shockwave, chromatic)
 scr_shaders_actualizar();
 
+// 3i. Actualizar efectos de mundo (partículas ambientales, viñeta)
+scr_fx_mundo_actualizar();
+
 
 // 4. Comprobar fin de combate
 

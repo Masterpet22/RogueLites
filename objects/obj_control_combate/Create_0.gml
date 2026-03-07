@@ -190,3 +190,6 @@ if (instance_exists(control_juego)) {
     control_juego.combate_arena_ultimo = combate_arena_idx;
 }
 show_debug_message("🏟 Arena de combate #" + string(combate_arena_idx));
+
+// 8f. Sistema de efectos visuales de mundo (partículas, viñeta, rayos)
+scr_fx_mundo_init();

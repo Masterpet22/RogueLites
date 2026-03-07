@@ -101,6 +101,7 @@
     {"id":{"name":"scr_formula_dano","path":"scripts/scr_formula_dano/scr_formula_dano.yy",},},
     {"id":{"name":"scr_fx_esencia_visual","path":"scripts/scr_fx_esencia_visual/scr_fx_esencia_visual.yy",},},
     {"id":{"name":"scr_fx_impacto","path":"scripts/scr_fx_impacto/scr_fx_impacto.yy",},},
+    {"id":{"name":"scr_fx_mundo","path":"scripts/scr_fx_mundo/scr_fx_mundo.yy",},},
     {"id":{"name":"scr_fx_jefe","path":"scripts/scr_fx_jefe/scr_fx_jefe.yy",},},
     {"id":{"name":"scr_get_perfil_activo","path":"scripts/scr_get_perfil_activo/scr_get_perfil_activo.yy",},},
     {"id":{"name":"scr_get_stat","path":"scripts/scr_get_stat/scr_get_stat.yy",},},

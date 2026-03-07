@@ -456,6 +456,38 @@ function scr_feedback_dibujar_sprites() {
     _pj_x += _c.foco_offset_pj_x;
     _en_x += _c.foco_offset_en_x;
 
+    // ── SOMBRAS DE SUELO ──
+    {
+        var _shadow_rx = 40;  // radio X de la elipse
+        var _shadow_ry = 8;   // radio Y (aplastada)
+        var _shadow_col = c_black;
+        var _shadow_a_base = 0.35;
+
+        // Sombra jugador
+        draw_set_color(_shadow_col);
+        draw_set_alpha(_shadow_a_base * _pj_foco_alpha);
+        draw_ellipse(
+            _pj_x + _c.fb_shake_offset_x[0] - _shadow_rx,
+            _suelo_y - _shadow_ry + 4,
+            _pj_x + _c.fb_shake_offset_x[0] + _shadow_rx,
+            _suelo_y + _shadow_ry + 4,
+            false
+        );
+
+        // Sombra enemigo
+        draw_set_alpha(_shadow_a_base * _en_foco_alpha);
+        draw_ellipse(
+            _en_x + _c.fb_shake_offset_x[1] - _shadow_rx,
+            _suelo_y - _shadow_ry + 4,
+            _en_x + _c.fb_shake_offset_x[1] + _shadow_rx,
+            _suelo_y + _shadow_ry + 4,
+            false
+        );
+
+        draw_set_alpha(1);
+        draw_set_color(c_white);
+    }
+
     // ── JUGADOR BODY SPRITE ──
     {
         // Usar sprite individual del personaje si existe
@@ -486,18 +518,25 @@ function scr_feedback_dibujar_sprites() {
             _blend = c_red;
         }
 
-        // ── Shader: flash de golpe (reemplaza merge_color básico) ──
+        // ── Shader: flash de golpe (blanco sólido → transición a color) ──
         var _shader_on = false;
         if (_c.fb_flash_timer[0] > 0 && shader_is_compiled(shd_flash)) {
-            var _fr = _c.fb_flash_timer[0] / FB_FLASH_FRAMES;
-            var _fc = _c.fb_flash_color[0];
-            scr_shader_flash_set(
-                color_get_red(_fc) / 255,
-                color_get_green(_fc) / 255,
-                color_get_blue(_fc) / 255,
-                _fr * 0.85
-            );
-            _blend = c_white; // el shader se encarga del tinte
+            var _ft = _c.fb_flash_timer[0];
+            var _fr = _ft / FB_FLASH_FRAMES;
+            if (_ft >= 5) {
+                // Primeros ~6 frames: flash blanco sólido (impacto)
+                scr_shader_flash_set(1.0, 1.0, 1.0, 1.0);
+            } else {
+                // Transición a color elemental con fade-out
+                var _fc = _c.fb_flash_color[0];
+                scr_shader_flash_set(
+                    color_get_red(_fc) / 255,
+                    color_get_green(_fc) / 255,
+                    color_get_blue(_fc) / 255,
+                    _fr * 0.85
+                );
+            }
+            _blend = c_white;
             _shader_on = true;
         } else if (_c.foco_quien == 2 && _c.super_blur_timer > 0 && shader_is_compiled(shd_desaturate)) {
             // Objetivo del súper: oscurecer con desaturación
@@ -542,17 +581,22 @@ function scr_feedback_dibujar_sprites() {
             _blend = c_red;
         }
 
-        // ── Shader: flash de golpe al enemigo ──
+        // ── Shader: flash de golpe al enemigo (blanco sólido → color) ──
         var _shader_en_on = false;
         if (_c.fb_flash_timer[1] > 0 && shader_is_compiled(shd_flash)) {
-            var _fr = _c.fb_flash_timer[1] / FB_FLASH_FRAMES;
-            var _fc = _c.fb_flash_color[1];
-            scr_shader_flash_set(
-                color_get_red(_fc) / 255,
-                color_get_green(_fc) / 255,
-                color_get_blue(_fc) / 255,
-                _fr * 0.85
-            );
+            var _ft = _c.fb_flash_timer[1];
+            var _fr = _ft / FB_FLASH_FRAMES;
+            if (_ft >= 5) {
+                scr_shader_flash_set(1.0, 1.0, 1.0, 1.0);
+            } else {
+                var _fc = _c.fb_flash_color[1];
+                scr_shader_flash_set(
+                    color_get_red(_fc) / 255,
+                    color_get_green(_fc) / 255,
+                    color_get_blue(_fc) / 255,
+                    _fr * 0.85
+                );
+            }
             _blend = c_white;
             _shader_en_on = true;
         } else if (_c.foco_quien == 1 && _c.super_blur_timer > 0 && shader_is_compiled(shd_desaturate)) {

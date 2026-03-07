@@ -426,11 +426,26 @@ if (!control_combate.combate_terminado || control_combate.fin_fase < 2) {
         _chrom_on = scr_shader_aplicar_chromatic_pantalla();
     }
 
+    // Aberración cromática por vida baja del jugador (<25% HP)
+    if (!_chrom_on && shader_is_compiled(shd_chromatic)) {
+        var _hp_ratio = pj.vida_actual / max(1, pj.vida_max);
+        if (_hp_ratio < 0.25 && _hp_ratio > 0) {
+            var _low_intensity = (1.0 - (_hp_ratio / 0.25));  // 0..1
+            var _low_offset = 0.002 + 0.004 * _low_intensity;
+            var _low_pulse = sin(current_time / 400) * 0.3 + 0.7;
+            scr_shader_chromatic_set(_low_offset * _low_pulse, current_time * 0.002);
+            _chrom_on = true;
+        }
+    }
+
     // Aplicar zoom de impacto (centrado en pantalla)
     scr_fx_zoom_aplicar();
 
     // Partículas ambientales (debajo de sprites)
     scr_particulas_dibujar_bajo();
+
+    // Efectos de mundo bajo sprites (rayos de luz, niebla, iluminación cueva)
+    scr_fx_mundo_dibujar_bajo();
 
     scr_feedback_dibujar_sprites();
 
@@ -462,6 +477,9 @@ if (!control_combate.combate_terminado || control_combate.fin_fase < 2) {
         draw_set_alpha(1);
         gpu_set_blendmode(bm_normal);
     }
+
+    // Efectos de mundo sobre sprites (partículas ambientales, viñeta)
+    scr_fx_mundo_dibujar_sobre();
 }
 
 // ╔═══════════════════════════════════════════════════════════════╗
@@ -785,10 +803,10 @@ if (!control_combate.combate_terminado) {
 if (!control_combate.combate_terminado) {
     var _parry_x = 380;
     var _parry_y = h_gui - 100;
+    var _par_w = 140;
 
     // Estado de Parry — Botón estilizado
     {
-        var _par_w = 140;
         var _par_h = 28;
         var _par_x1 = _parry_x;
         var _par_y1 = _parry_y - 4;
